@@ -1,0 +1,32 @@
+name: Supabase keep-alive
+
+# Supabase's FREE tier pauses a project after ~7 days with no requests.
+# This workflow pings the project once a day so it never pauses, at $0 cost.
+# It activates automatically once this repo is pushed to GitHub.
+#
+# The anon key below is a PUBLIC key (it already ships inside the app), so it is
+# safe to commit. To override, add repo secrets SUPABASE_URL / SUPABASE_ANON_KEY.
+
+on:
+  schedule:
+    - cron: '23 7 * * *'   # daily at 07:23 UTC
+  workflow_dispatch: {}      # allow manual runs from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST endpoint
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://dutlcoxtxmnqektttffg.supabase.co' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1dGxjb3h0eG1ucWVrdHR0ZmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTk2MzcsImV4cCI6MjA5NTc5NTYzN30.zWEkDSfSH8IS8IuhTx7f3bzoRkwo9FnILvOk2aGmxoM' }}
+        run: |
+          code=$(curl -sS -o /dev/null -w "%{http_code}" \
+            "${SUPABASE_URL}/rest/v1/tasks?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+          echo "Supabase responded with HTTP $code"
+          # Any HTTP response (even 401 from RLS) counts as project activity.
+          if [ -z "$code" ] || [ "$code" = "000" ]; then
+            echo "No response — ping failed"; exit 1
+          fi
