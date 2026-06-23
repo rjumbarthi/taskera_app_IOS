@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Focus – Dashboard · p-dash</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Focus – Dashboard</b>
+  <span class="pill">id: p-dash</span>
+  <span class="pill">section: Focus</span>
+  <span class="pill">parent: —</span>
+  <a class="pill" href="../screens_png/02-01_focus_dashboard.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-dash</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-dash" >
+  <div class="sbg"></div>
+
+  <div class="top-bar">
+    <div class="top-bar-row1">
+      <div class="pg-title" style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:600;letter-spacing:-.5px;line-height:1;white-space:nowrap;flex-shrink:0">Focus</div>
+      <div class="top-bar-right">
+        <div id="sync-status" style="display:flex;align-items:center;gap:3px;padding:2px 6px;border-radius:10px;background:rgba(127,186,0,.12);border:.5px solid rgba(127,186,0,.25);cursor:pointer" onclick="showSyncStatus()"><div id="sync-dot" style="width:5px;height:5px;border-radius:50%;background:#9fcd44"></div><div id="sync-label" style="font-size:var(--fs-xs);font-weight:600;color:#9fcd44">Synced</div></div>
+      <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="top-ico" onclick="nav('settings')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+      </div>
+    </div>
+    <div class="top-bar-row2"><div class="pg-sub" style="letter-spacing:.2px">Saturday, 28 March · 🔥 14d streak</div></div>
+  </div>
+      <div class="content" style="gap:5px">
+    <div class="stat-row" id="focus-today-stats">
+      <div class="sc" onclick="openFocusFilter('today')" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)"><div class="sc-n" style="color:var(--ink);font-family:var(--font-display)">11</div><div class="sc-l">Today</div></div>
+      <div class="sc" onclick="openFocusFilter('active')" style="background:rgba(10,132,255,.07);border-color:rgba(10,132,255,.2)"><div class="sc-n" style="color:var(--acc2);font-family:var(--font-display)">9</div><div class="sc-l" style="color:var(--acc2)">Active</div></div>
+      <div class="sc" onclick="openFocusFilter('done')" style="background:rgba(127,186,0,.07);border-color:rgba(127,186,0,.2)"><div class="sc-n" style="color:#9fcd44;font-family:var(--font-display)">2</div><div class="sc-l" style="color:#9fcd44">Done</div></div>
+      <div class="sc" onclick="openFocusFilter('overdue')" style="background:rgba(255,69,58,.07);border-color:rgba(255,69,58,.2)"><div class="sc-n" style="color:#FF6B6B;font-family:var(--font-display)">1</div><div class="sc-l" style="color:#FF6B6B">Overdue</div></div>
+    </div>
+
+    <div onclick="window._goalsOrigin='focus';nav('goals')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surf);border-radius:12px;border:.5px solid var(--bdr);cursor:pointer">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)">🎯 Goals</div>
+          <div style="font-size:var(--fs-sm);color:var(--acc2);background:var(--acc-bg);padding:1px 7px;border-radius:5px">3 active</div>
+        </div>
+        <div style="display:flex;gap:8px;width:100%">
+          <div style="flex:1;text-align:center"><div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:var(--q2)">60%</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Launch MVP</div></div>
+          <div style="width:.5px;background:var(--bdr)"></div>
+          <div style="flex:1;text-align:center"><div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:#BF5AF2">43%</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Exercise</div></div>
+          <div style="width:.5px;background:var(--bdr)"></div>
+          <div style="flex:1;text-align:center"><div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:var(--acc2)">25%</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Reading</div></div>
+        </div>
+      </div>
+      <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="var(--ink3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+
+    <div id="do-this-now-card" style="--dtn-color:var(--q1);--dtn-bg:var(--surf);--dtn-border:var(--bdr);--dtn-chip:rgba(242,80,34,.12);--dtn-btn:var(--acc);background:var(--dtn-bg);border-radius:14px;border:.5px solid var(--dtn-border);position:relative">
+
+      <div id="dtn-inline-timer" style="display:none;position:absolute;top:10px;right:12px;align-items:center;justify-content:center;background:transparent">
+        <div id="dtn-timer-display" style="font-size:11px;font-weight:700;color:var(--dtn-color);font-variant-numeric:tabular-nums;letter-spacing:.5px"></div>
+      </div>
+
+      <div style="padding:10px 14px 10px">
+
+        <div style="display:flex;align-items:center;margin-bottom:4px">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--dtn-chip);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 22 22" fill="none" stroke="var(--dtn-color)" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div style="flex:1;text-align:center;font-size:var(--fs-xl);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--dtn-color)">Do This Now</div>
+          <div style="width:36px;flex-shrink:0"></div>
+        </div>
+
+        <div style="text-align:center;padding:2px 0 4px">
+          <div id="dtn-title" style="font-size:17px;font-weight:600;color:var(--ink);line-height:1.35;cursor:pointer;margin-bottom:6px" onclick="(function(){var q=(DTN_TASKS[window._dtnIdx||0]||{quad:'q1'}).quad;var task=DTN_TASKS[window._dtnIdx||0]||{};window._taskdetailOrigin='focus';window._currentTaskQuad=q;window._tdTask.quad=q;window._tdTask.title=task.title||window._tdTask.title;applyTaskDetailQuad(q);nav('taskdetail');})()">Submit assignment before deadline</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;left:0;right:0;bottom:12px;padding:0 12px">
+        <div id="dtn-info-row" style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:8px;flex-wrap:wrap"><span id="dtn-quad-inline" style="font-size:var(--fs-xs);color:var(--dtn-color);font-weight:600">Q1 · Urgent</span><span style="color:var(--ink4);font-size:var(--fs-xs)">·</span><span id="dtn-due-inline" style="font-size:var(--fs-xs);color:var(--ink3)">Overdue</span><span style="color:var(--ink4);font-size:var(--fs-xs)">·</span><span id="dtn-score-inline" style="font-size:var(--fs-xs);color:var(--ink3)">Score 9.2</span><span id="dtn-time-separator" style="color:var(--ink4);font-size:var(--fs-xs)">·</span><span id="dtn-time-inline" style="font-size:var(--fs-xs);color:var(--ink3)">25 min</span></div>
+        <div id="dtn-action-row">
+          <button class="dtn-side-action" onclick="skipDTN()">Skip</button>
+          <button id="dtn-start-btn" onclick="dtnStartInline()" style="flex:1;padding:10px;background:transparent;border:.5px solid var(--dtn-color);border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit">
+            <svg width="11" height="11" viewBox="0 0 22 22" fill="var(--dtn-color)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span style="font-size:var(--fs-sm);font-weight:700;color:var(--dtn-color)">Start Now</span>
+          </button>
+          <button id="dtn-pause-btn" onclick="dtnToggleTimer()" style="display:none;flex:1;padding:10px;background:transparent;border:.5px solid var(--dtn-color);border-radius:11px;cursor:pointer;font-size:var(--fs-sm);font-weight:700;color:var(--dtn-color);font-family:inherit;align-items:center;justify-content:center;gap:6px">⏸ Pause</button>
+          <button id="dtn-complete-btn" onclick="dtnHandleComplete()" style="display:none;flex:1;padding:10px;background:rgba(127,186,0,.12);border:.5px solid rgba(127,186,0,.3);border-radius:11px;cursor:pointer;font-size:var(--fs-sm);font-weight:700;color:var(--q2);font-family:inherit;align-items:center;justify-content:center;gap:6px">✓ Done</button>
+          <button class="dtn-side-action" onclick="nav('tasks')">View all</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quad-grid">
+      <div class="qcard q1c ai-urgent" onclick="openQuad('q1','p-dash')">
+        <div class="qc-top">
+          <div class="qc-ico">⚡</div>
+          <div class="qc-body"><span class="qc-lbl">Q1 · Do Now</span><span class="qc-meta" style="margin-bottom:0">3 overdue · 10 tasks</span></div>
+        </div>
+        <div class="qc-bar" style="margin-top:6px"><div class="qc-fill" style="width:30%"></div></div>
+        <div class="qc-ai-badge">⚠ Overdue</div>
+        <span class="qc-count">10</span>
+      </div>
+      <div class="qcard q2c ai-focus" onclick="openQuad('q2','p-dash')">
+        <div class="qc-top">
+          <div class="qc-ico">🎯</div>
+          <div class="qc-body"><span class="qc-lbl">Q2 · Schedule</span><span class="qc-meta" style="margin-bottom:0">10 tasks · on track</span></div>
+        </div>
+        <div class="qc-bar" style="margin-top:6px"><div class="qc-fill" style="width:60%"></div></div>
+        <div class="qc-ai-badge">✦ Focus today</div>
+        <span class="qc-count">10</span>
+      </div>
+      <div class="qcard q3c" onclick="openQuad('q3','p-dash')">
+        <div class="qc-top">
+          <div class="qc-ico">🤝</div>
+          <div class="qc-body"><span class="qc-lbl">Q3 · Delegate</span><span class="qc-meta" style="margin-bottom:0">10 tasks</span></div>
+        </div>
+        <div class="qc-bar" style="margin-top:6px"><div class="qc-fill" style="width:40%"></div></div>
+        <span class="qc-count">10</span>
+      </div>
+      <div class="qcard q4c" onclick="openQuad('q4','p-dash')">
+        <div class="qc-top">
+          <div class="qc-ico">🗑</div>
+          <div class="qc-body"><span class="qc-lbl">Q4 · Eliminate</span><span class="qc-meta" style="margin-bottom:0">10 tasks</span></div>
+        </div>
+        <div class="qc-bar" style="margin-top:6px"><div class="qc-fill" style="width:10%"></div></div>
+        <span class="qc-count">10</span>
+      </div>
+    </div>
+
+    <div class="quad-grid">
+      <div class="qcard" id="focus-today-card" onclick="window._lastTab=window._lastTab||'focus';openFocusFilter('today')" style="border-color:rgba(10,132,255,.3);position:relative">
+        <div class="qc-top">
+          <div class="qc-ico" style="background:rgba(10,132,255,.14)">📅</div>
+          <div class="qc-body"><span class="qc-lbl" style="color:var(--acc2)">Today</span><span class="qc-meta" style="color:var(--ink3);margin-bottom:0">Tasks · habits · invites</span></div>
+        </div>
+        <span class="qc-count" style="color:var(--acc2);font-size:var(--fs-lg)!important">11</span>
+        <div class="qc-bar" style="margin-top:6px;background:rgba(10,132,255,.12)"><div class="qc-fill" style="width:33%;background:var(--acc2)"></div></div>
+      </div>
+      <div class="qcard" id="focus-peak-card" onclick="nav('predictive')" style="border-color:rgba(88,86,214,.4)">
+        <div class="qc-top">
+          <div class="qc-ico" style="background:rgba(88,86,214,.14)">✦</div>
+          <div class="qc-body"><span class="qc-lbl" style="color:#5856D6">Peak · 9–11 AM</span><span class="qc-meta" style="color:var(--ink3);margin-bottom:0">23 days data</span></div>
+        </div>
+        <div class="qc-bar" style="margin-top:6px;background:rgba(88,86,214,.12)"><div class="qc-fill" style="width:80%;background:#5856D6"></div></div>
+      </div>
+      <div class="qcard focus-compact-card" id="focus-timer-card" onclick="window._pomodoroOrigin='focus';nav('pomodoro')" style="border-color:rgba(10,132,255,.3)">
+        <div class="qc-top">
+          <div class="qc-ico" style="background:rgba(10,132,255,.14)">⏱</div>
+          <div class="qc-body"><span class="qc-lbl" style="color:var(--acc2)">Focus Timer</span><span class="qc-meta" style="color:var(--ink3);margin-bottom:0">Pomodoro · 25 min</span></div>
+        </div>
+      </div>
+      <div class="qcard focus-compact-card" id="focus-braindump-card" onclick="nav('braindump')" style="border-color:rgba(191,90,242,.3)">
+        <div class="qc-top">
+          <div class="qc-ico" style="background:rgba(191,90,242,.14)">🧠</div>
+          <div class="qc-body"><span class="qc-lbl" style="color:#BF5AF2">Brain Dump</span><span class="qc-meta" style="color:var(--ink3);margin-bottom:0">Dump · sort later</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="today-progress-card" style="background:var(--surf);border-radius:11px;padding:9px 12px;border:none">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink3)">Today's progress</div>
+        <div style="flex:1;font-size:var(--fs-xs);font-weight:700;color:var(--ink);text-align:center">2 / 11 tasks</div>
+        <div style="font-size:var(--fs-sm);font-weight:700;color:#9fcd44">25%</div>
+      </div>
+      <div style="height:3px;background:var(--surf3);border-radius:2px;overflow:hidden">
+        <div style="width:25%;height:100%;background:linear-gradient(90deg,var(--q2),#9fcd44);border-radius:2px;transition:width .4s ease"></div>
+      </div>
+    </div>
+
+    <div id="focus-custom-cards" style="display:flex;flex-direction:column;gap:6px"></div>
+  </div>
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

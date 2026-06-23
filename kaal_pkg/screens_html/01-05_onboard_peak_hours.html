@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboard – Peak Hours · p-onboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Onboard – Peak Hours</b>
+  <span class="pill">id: p-onboard</span>
+  <span class="pill">section: Onboarding & Auth</span>
+  <span class="pill">parent: —</span>
+  <a class="pill" href="../screens_png/01-05_onboard_peak_hours.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-onboard</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. <br><br><b>State note:</b> Step 3 — see PNG
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-onboard" >
+  <div style="flex:1;overflow-y:auto;padding:24px 20px 32px;display:flex;flex-direction:column">
+
+    <div id="ob-steps" style="display:flex;gap:4px;margin-bottom:24px;flex-shrink:0">
+      <div id="obs-1" style="flex:1;height:3px;border-radius:2px;background:var(--acc)"></div>
+      <div id="obs-2" style="flex:1;height:3px;border-radius:2px;background:var(--surf3)"></div>
+      <div id="obs-3" style="flex:1;height:3px;border-radius:2px;background:var(--surf3)"></div>
+      <div id="obs-4" style="flex:1;height:3px;border-radius:2px;background:var(--surf3)"></div>
+    </div>
+
+    <div id="ob-step1" style="flex:1;display:flex;flex-direction:column">
+      <div style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.2">Who are you?</div>
+      <div style="font-size:var(--fs-md);color:var(--ink3);margin-bottom:20px;line-height:1.5">Kaal adapts to your workflow</div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+        <div class="ob-opt" onclick="obSelect(this,'role','professional')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">💼</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Professional / PM / Founder</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Projects, meetings, deadlines</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'role','student')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">📚</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Student</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Exams, assignments, study goals</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'role','freelancer')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🚀</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Freelancer / Solopreneur</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Clients, income goals, time tracking</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'role','adhd')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">⚡</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">ADHD / Overwhelmed</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Focus, one task at a time, gentle nudges</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'role','discipline')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">💪</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Building discipline</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Habits, routines, consistency</div></div>
+        </div>
+      </div>
+      <button onclick="obNext(2)" style="margin-top:20px;width:100%;padding:13px;border-radius:11px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit">Continue →</button>
+    </div>
+
+    <div id="ob-step2" style="display:none;flex:1;flex-direction:column">
+      <div style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--ink);margin-bottom:6px">Your focus style</div>
+      <div style="font-size:var(--fs-md);color:var(--ink3);margin-bottom:20px">How do you work best?</div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+        <div class="ob-opt" onclick="obSelect(this,'focus','deep')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🎯</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Deep work blocks</div><div style="font-size:var(--fs-sm);color:var(--ink3)">2–4h uninterrupted sessions</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'focus','pomodoro')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🍅</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Pomodoro (25/5 min)</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Short bursts with breaks</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'focus','tasks')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">✅</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Task-by-task</div><div style="font-size:var(--fs-sm);color:var(--ink3)">One at a time, no timers</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'focus','flexible')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🌊</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Flexible / Flow state</div><div style="font-size:var(--fs-sm);color:var(--ink3)">No structure, just track time</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        <button onclick="obBack(1)" style="padding:13px 20px;border-radius:11px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">← Back</button>
+        <button onclick="obNext(3)" style="flex:1;padding:13px;border-radius:11px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit">Continue →</button>
+      </div>
+    </div>
+
+    <div id="ob-step3" style="display:none;flex:1;flex-direction:column">
+      <div style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--ink);margin-bottom:6px">Your peak hours</div>
+      <div style="font-size:var(--fs-md);color:var(--ink3);margin-bottom:20px">When are you most productive?</div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+        <div class="ob-opt" onclick="obSelect(this,'peak','early')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🌅</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Early bird · 5–9 AM</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'peak','morning')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">☀️</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Morning · 9 AM–12 PM</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'peak','afternoon')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🌤</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Afternoon · 1–5 PM</div></div>
+        </div>
+        <div class="ob-opt" onclick="obSelect(this,'peak','evening')" style="background:var(--surf);border-radius:12px;padding:12px 14px;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;gap:10px">
+          <div style="font-size:var(--fs-lg)">🌙</div><div><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Night owl · 6 PM–midnight</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        <button onclick="obBack(2)" style="padding:13px 20px;border-radius:11px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">← Back</button>
+        <button onclick="obNext(4)" style="flex:1;padding:13px;border-radius:11px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit">Continue →</button>
+      </div>
+    </div>
+
+    <div id="ob-step4" style="display:none;flex:1;flex-direction:column">
+      <div style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--ink);margin-bottom:6px">Set your first goal</div>
+      <div style="font-size:var(--fs-md);color:var(--ink3);margin-bottom:16px">What do you most want to achieve right now?</div>
+      <input id="ob-goal-input" placeholder="e.g. Launch my MVP by June" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:11px;background:var(--surf2);border:1.5px solid var(--bdr2);color:var(--ink);font-size:var(--fs-md);font-family:inherit;margin-bottom:10px">
+      <div style="font-size:var(--fs-sm);color:var(--ink3);margin-bottom:6px">Which quadrant drives this goal?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px">
+        <div class="ob-opt" onclick="obSelect(this,'goalq','q1')" style="background:rgba(242,80,34,.1);border-radius:10px;padding:9px 10px;border:1.5px solid rgba(242,80,34,.25);cursor:pointer;text-align:center"><div style="font-size:var(--fs-xs);font-weight:700;color:var(--q1)">Q1 · Do Now</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Urgent</div></div>
+        <div class="ob-opt" onclick="obSelect(this,'goalq','q2')" style="background:rgba(127,186,0,.1);border-radius:10px;padding:9px 10px;border:1.5px solid rgba(127,186,0,.25);cursor:pointer;text-align:center"><div style="font-size:var(--fs-xs);font-weight:700;color:var(--q2)">Q2 · Schedule</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Important</div></div>
+        <div class="ob-opt" onclick="obSelect(this,'goalq','q3')" style="background:rgba(0,164,239,.08);border-radius:10px;padding:9px 10px;border:1.5px solid rgba(0,164,239,.2);cursor:pointer;text-align:center"><div style="font-size:var(--fs-xs);font-weight:700;color:var(--q3)">Q3 · Delegate</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Defer</div></div>
+        <div class="ob-opt" onclick="obSelect(this,'goalq','q4')" style="background:rgba(255,185,0,.08);border-radius:10px;padding:9px 10px;border:1.5px solid rgba(255,185,0,.2);cursor:pointer;text-align:center"><div style="font-size:var(--fs-xs);font-weight:700;color:var(--q4)">Q4 · Eliminate</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Remove</div></div>
+      </div>
+      <div style="background:rgba(10,132,255,.07);border-radius:10px;padding:10px 12px;border:.5px solid rgba(10,132,255,.2);margin-bottom:16px">
+        <div style="font-size:var(--fs-sm);color:var(--acc2);font-weight:600;margin-bottom:3px">✦ Kaal AI tip</div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3);line-height:1.5">Most important goals live in Q2. Don't let urgent Q1 tasks crowd them out.</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:auto">
+        <button onclick="obBack(3)" style="padding:13px 20px;border-radius:11px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">← Back</button>
+        <button onclick="obNext(5)" style="flex:1;padding:13px;border-radius:11px;background:var(--q2);color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit">Start using Kaal 🚀</button>
+      </div>
+    </div>
+
+    <div id="ob-step5" style="display:none;flex:1;flex-direction:column">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:var(--fs-2xl);margin-bottom:8px">✦</div>
+        <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:700;color:var(--ink);margin-bottom:4px">One more thing</div>
+        <div style="font-size:var(--fs-md);color:var(--ink3);line-height:1.5">Your goal has been created. Kaal AI just scored and sorted it — this is what Pro does for every task, every day.</div>
+      </div>
+      <div style="background:var(--surf);border-radius:12px;padding:12px 14px;border:.5px solid var(--bdr2);margin-bottom:14px;display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:var(--q2)"></div><div style="font-size:var(--fs-sm);color:var(--ink2);flex:1">Unlimited AI task scoring</div><div style="font-size:var(--fs-xs);color:var(--ink3)">vs 5/day free</div></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:var(--acc)"></div><div style="font-size:var(--fs-sm);color:var(--ink2);flex:1">Home screen widget</div><div style="font-size:var(--fs-xs);color:var(--q2)">Exclusive</div></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#BF5AF2"></div><div style="font-size:var(--fs-sm);color:var(--ink2);flex:1">Brain Dump + auto-schedule</div><div style="font-size:var(--fs-xs);color:var(--q2)">Exclusive</div></div>
+      </div>
+      <button onclick="obFinish();setTimeout(()=>showUpgrade('focus'),300)" style="width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,#5856D6,var(--acc));color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit;margin-bottom:8px;box-shadow:0 4px 16px rgba(88,86,214,.35)">Try Pro free for 7 days →</button>
+      <button onclick="obFinish()" style="width:100%;padding:11px;border-radius:11px;background:transparent;color:var(--ink3);font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">Continue with free plan</button>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

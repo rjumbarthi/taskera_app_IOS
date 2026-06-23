@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inbox Panel · p-inbox</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Inbox Panel</b>
+  <span class="pill">id: p-inbox</span>
+  <span class="pill">section: Tasks</span>
+  <span class="pill">parent: tasks</span>
+  <a class="pill" href="../screens_png/03-14_inbox_panel.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-inbox</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-inbox" data-parent="tasks" >
+  <div class="inherited-bar"></div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 4px;flex-shrink:0">
+    <button class="add-back" onclick="nav(window._lastTab||'tasks')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div>
+      <div class="pg-title">Inbox</div>
+      <div class="pg-sub">Unprocessed captures</div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+    <div onclick="nav('quickadd')" style="display:flex;align-items:center;gap:8px;margin:0 11px 8px;padding:10px 13px;background:var(--surf2);border-radius:11px;border:.5px solid var(--bdr2);cursor:pointer">
+      <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span style="font-size:var(--fs-md);color:var(--ink3)">Capture a thought…</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;margin:0 11px 8px;padding:8px 12px;background:rgba(10,132,255,.07);border-radius:9px;border:.5px solid rgba(10,132,255,.22);flex-shrink:0">
+      <svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div style="flex:1;font-size:var(--fs-sm);color:var(--acc2)">AI suggests quadrant — tap to confirm</div>
+      <div style="font-size:var(--fs-sm);font-weight:700;color:var(--acc2);background:var(--acc-bg);padding:2px 7px;border-radius:5px;cursor:pointer">Sort all</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 12px 72px;display:flex;flex-direction:column;gap:5px">
+      <div style="background:var(--surf);border-radius:11px;padding:10px 11px;border:.5px solid var(--bdr)">
+        <div style="display:flex;align-items:flex-start;gap:8px"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid var(--ink3);flex-shrink:0;margin-top:2px"></div><div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Read Atomic Habits chapter 4</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Captured 2h ago · No quadrant</div></div></div>
+        <div style="display:flex;gap:4px;margin-top:8px;padding-left:21px">
+          <div onclick="sortToQuad(this,'Q1')" style="padding:3px 8px;border-radius:6px;background:rgba(242,80,34,.1);border:.5px solid rgba(242,80,34,.25);font-size:var(--fs-sm);font-weight:600;color:var(--q1);cursor:pointer">Q1</div>
+          <div onclick="sortToQuad(this,'Q2')" style="padding:3px 8px;border-radius:6px;background:rgba(127,186,0,.12);border:.5px solid rgba(127,186,0,.3);font-size:var(--fs-sm);font-weight:600;color:var(--q2);cursor:pointer">Q2 ✦</div>
+          <div onclick="sortToQuad(this,'Q3')" style="padding:3px 8px;border-radius:6px;background:rgba(0,164,239,.1);border:.5px solid rgba(0,164,239,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q3);cursor:pointer">Q3</div>
+          <div onclick="sortToQuad(this,'Q4')" style="padding:3px 8px;border-radius:6px;background:rgba(255,185,0,.1);border:.5px solid rgba(255,185,0,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q4);cursor:pointer">Q4</div>
+          <div onclick="dismissInbox(this)" style="padding:3px 8px;border-radius:6px;background:var(--surf2);font-size:var(--fs-sm);color:var(--ink3);cursor:pointer;margin-left:auto">✕</div>
+        </div>
+      </div>
+      <div style="background:var(--surf);border-radius:11px;padding:10px 11px;border:.5px solid var(--bdr)">
+        <div style="display:flex;align-items:flex-start;gap:8px"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid var(--ink3);flex-shrink:0;margin-top:2px"></div><div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Call mom this weekend</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Captured yesterday · No quadrant</div></div></div>
+        <div style="display:flex;gap:4px;margin-top:8px;padding-left:21px">
+          <div onclick="sortToQuad(this,'Q1')" style="padding:3px 8px;border-radius:6px;background:rgba(242,80,34,.1);border:.5px solid rgba(242,80,34,.25);font-size:var(--fs-sm);font-weight:600;color:var(--q1);cursor:pointer">Q1</div>
+          <div onclick="sortToQuad(this,'Q2')" style="padding:3px 8px;border-radius:6px;background:rgba(127,186,0,.12);border:.5px solid rgba(127,186,0,.3);font-size:var(--fs-sm);font-weight:600;color:var(--q2);cursor:pointer">Q2</div>
+          <div onclick="sortToQuad(this,'Q3')" style="padding:3px 8px;border-radius:6px;background:rgba(0,164,239,.1);border:.5px solid rgba(0,164,239,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q3);cursor:pointer">Q3 ✦</div>
+          <div onclick="sortToQuad(this,'Q4')" style="padding:3px 8px;border-radius:6px;background:rgba(255,185,0,.1);border:.5px solid rgba(255,185,0,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q4);cursor:pointer">Q4</div>
+          <div onclick="dismissInbox(this)" style="padding:3px 8px;border-radius:6px;background:var(--surf2);font-size:var(--fs-sm);color:var(--ink3);cursor:pointer;margin-left:auto">✕</div>
+        </div>
+      </div>
+      <div style="background:var(--surf);border-radius:11px;padding:10px 11px;border:.5px solid var(--bdr)">
+        <div style="display:flex;align-items:flex-start;gap:8px"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid var(--ink3);flex-shrink:0;margin-top:2px"></div><div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Research standing desk</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Captured 3d ago · No quadrant</div></div></div>
+        <div style="display:flex;gap:4px;margin-top:8px;padding-left:21px">
+          <div onclick="sortToQuad(this,'Q1')" style="padding:3px 8px;border-radius:6px;background:rgba(242,80,34,.1);border:.5px solid rgba(242,80,34,.25);font-size:var(--fs-sm);font-weight:600;color:var(--q1);cursor:pointer">Q1</div>
+          <div onclick="sortToQuad(this,'Q2')" style="padding:3px 8px;border-radius:6px;background:rgba(127,186,0,.12);border:.5px solid rgba(127,186,0,.3);font-size:var(--fs-sm);font-weight:600;color:var(--q2);cursor:pointer">Q2</div>
+          <div onclick="sortToQuad(this,'Q3')" style="padding:3px 8px;border-radius:6px;background:rgba(0,164,239,.1);border:.5px solid rgba(0,164,239,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q3);cursor:pointer">Q3</div>
+          <div onclick="sortToQuad(this,'Q4')" style="padding:3px 8px;border-radius:6px;background:rgba(255,185,0,.1);border:.5px solid rgba(255,185,0,.2);font-size:var(--fs-sm);font-weight:600;color:var(--q4);cursor:pointer">Q4 ✦</div>
+          <div onclick="dismissInbox(this)" style="padding:3px 8px;border-radius:6px;background:var(--surf2);font-size:var(--fs-sm);color:var(--ink3);cursor:pointer;margin-left:auto">✕</div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <button class="fab" onclick="openFab()">+</button>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

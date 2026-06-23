@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Edit Habit · p-addhabit</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Edit Habit</b>
+  <span class="pill">id: p-addhabit</span>
+  <span class="pill">section: Habits</span>
+  <span class="pill">parent: habits</span>
+  <a class="pill" href="../screens_png/06-04_edit_habit.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-addhabit</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. <br><br><b>State note:</b> Same form as Add Habit, with prefilled fields. Title changes to 'Edit Habit'.
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-addhabit" data-parent="habits" >
+  <div class="inherited-bar"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 6px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="add-back" id="ahb-back" onclick="nav(window._lastTab==='tasks'?'tasks':'habits')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div id="ahb-title" class="pg-title">New habit</div>
+    </div>
+    <button id="ahb-save-btn" onclick="saveHabitForm()" style="padding:5px 14px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-sm);font-weight:700;border:none;cursor:pointer;font-family:inherit">Save</button>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;padding:6px 12px 80px;display:flex;flex-direction:column;gap:0">
+    <div class="habit-form">
+
+      <div class="hf-row">
+        <div class="hf-label">Habit name</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="ahb-name" class="hf-input" placeholder="e.g. Morning journaling" style="flex:1">
+          <div id="ahb-icon-display" onclick="toggleIconPicker()" style="width:42px;height:42px;border-radius:10px;background:var(--surf2);border:1.5px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);cursor:pointer;flex-shrink:0">🏃</div>
+        </div>
+        <div id="ahb-icon-picker" style="display:none;flex-wrap:wrap;gap:5px;background:var(--surf2);border-radius:10px;padding:8px;border:.5px solid var(--bdr);width:100%;margin-top:6px">
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🏃')">🏃</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('💧')">💧</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('📚')">📚</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🧘')">🧘</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('💪')">💪</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('✍️')">✍️</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🎯')">🎯</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🍎')">🍎</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('😴')">😴</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('☕')">☕</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🎵')">🎵</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🌿')">🌿</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🧠')">🧠</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('💊')">💊</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🚴')">🚴</span>
+            <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="pickIcon('🌅')">🌅</span>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Colour</div>
+        <div class="hf-color-row">
+          <div class="hf-color on" style="background:#7FBA00" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FF8080" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#0A84FF" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#BF5AF2" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FFB900" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FF6B00" onclick="selColor(this)"></div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Quadrant</div>
+        <div class="hf-chips-row" data-group="quad">
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--q1)">Q1 · Do Now</div>
+          <div class="hf-chip on" onclick="selChip(this)" style="color:var(--q2)">Q2 · Schedule</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--q3)">Q3 · Delegate</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--ink3)">None</div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Priority</div>
+        <div class="hf-chips-row" data-group="pri">
+          <div class="hf-chip" onclick="selChip(this)" style="color:#FF6B6B">P1 Urgent</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:#FF9500">P2 High</div>
+          <div class="hf-chip on" onclick="selChip(this)" style="color:var(--acc2)">P3 Medium</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--ink3)">P4 Low</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Labels</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px">
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">#gym</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">#fitness</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">#work</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">#personal</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">#mindset</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">+ New</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Frequency</div>
+        <div class="hf-chips-row" data-group="freq">
+          <div class="hf-chip on" onclick="selChip(this)">Daily</div>
+          <div class="hf-chip" onclick="selChip(this)">Weekdays</div>
+          <div class="hf-chip" onclick="selChip(this)">Weekends</div>
+          <div class="hf-chip" onclick="selChip(this)">Mon · Wed · Fri</div>
+          <div class="hf-chip" onclick="selChip(this)">Tue · Thu · Sat</div>
+          <div class="hf-chip" onclick="selChip(this)">Weekly</div>
+          <div class="hf-chip" onclick="selChip(this)">Custom</div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Active days</div>
+        <div class="hf-chips-row">
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">Mon</div>
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">Tue</div>
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">Wed</div>
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">Thu</div>
+          <div class="hf-chip on" onclick="this.classList.toggle('on')">Fri</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">Sat</div>
+          <div class="hf-chip" onclick="this.classList.toggle('on')">Sun</div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Daily goal</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+          <button onclick="stepGoal(-1)" style="width:30px;height:30px;border-radius:50%;background:var(--surf2);border:.5px solid var(--bdr);font-size:var(--fs-md);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">−</button>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input id="ahb-goal-val" type="number" min="1" max="99" value="1" style="width:42px;text-align:center;background:var(--surf2);border:.5px solid var(--bdr);border-radius:8px;padding:5px;font-size:var(--fs-md);color:var(--ink);font-family:inherit">
+            <select id="ahb-goal-unit" style="background:var(--surf2);border:.5px solid var(--bdr);border-radius:8px;padding:5px 8px;font-size:var(--fs-sm);color:var(--ink);font-family:inherit">
+              <option>times</option>
+              <option>glasses</option>
+              <option>minutes</option>
+              <option>hours</option>
+              <option>pages</option>
+              <option>km</option>
+            </select>
+          </div>
+          <button onclick="stepGoal(1)" style="width:30px;height:30px;border-radius:50%;background:var(--surf2);border:.5px solid var(--bdr);font-size:var(--fs-md);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">+</button>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Duration</div>
+        <div class="hf-chips-row" data-group="dur">
+          <div class="hf-chip" onclick="selChip(this)">5 min</div>
+          <div class="hf-chip" onclick="selChip(this)">15 min</div>
+          <div class="hf-chip on" onclick="selChip(this)">30 min</div>
+          <div class="hf-chip" onclick="selChip(this)">45 min</div>
+          <div class="hf-chip" onclick="selChip(this)">1 hr</div>
+          <div class="hf-chip" onclick="selChip(this)">Open-ended</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="hf-label" style="margin-bottom:0">Reminder</div>
+          <div id="ahb-reminder-tog" onclick="toggleReminder()" data-on="1" style="width:36px;height:21px;border-radius:11px;background:var(--acc);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div style="position:absolute;right:2px;top:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:right .2s"></div></div>
+        </div>
+        <input id="ahb-reminder-time" type="time" value="06:30" class="hf-input" style="width:auto;margin-top:8px">
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Target streak</div>
+        <div class="hf-chips-row" data-group="goal">
+          <div class="hf-chip" onclick="selChip(this)">7 days</div>
+          <div class="hf-chip" onclick="selChip(this)">21 days</div>
+          <div class="hf-chip on" onclick="selChip(this)">30 days</div>
+          <div class="hf-chip" onclick="selChip(this)">66 days</div>
+          <div class="hf-chip" onclick="selChip(this)">90 days</div>
+          <div class="hf-chip" onclick="selChip(this)">∞ Forever</div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">Rest days</div>
+        <div class="hf-chips-row" data-group="rest">
+          <div class="hf-chip" onclick="selChip(this)">Sun only</div>
+          <div class="hf-chip on" onclick="selChip(this)">Sat + Sun</div>
+          <div class="hf-chip" onclick="selChip(this)">No fixed rest</div>
+        </div>
+      </div>
+
+      <div class="hf-row" style="display:none">
+        <div class="hf-label">If I skip a day</div>
+        <div class="hf-chips-row" data-group="skip-rule">
+          <div class="hf-chip on" onclick="selChip(this)">Protect streak</div>
+          <div class="hf-chip" onclick="selChip(this)">Move to next day</div>
+          <div class="hf-chip" onclick="selChip(this)">Move to alternate day</div>
+          <div class="hf-chip" onclick="selChip(this)">Ask me</div>
+        </div>
+      </div>
+
+      <!-- Implementation Intentions -->
+      <div class="hf-row">
+        <div class="hf-label">When &amp; Where <span style="font-weight:400;color:var(--ink4)">· cue</span></div>
+        <input id="ahb-cue-when" class="hf-input" placeholder='e.g. "After morning coffee"' style="margin-bottom:5px">
+        <input id="ahb-cue-where" class="hf-input" placeholder='e.g. "At my desk / gym / kitchen"'>
+        <div style="margin-top:5px;font-size:var(--fs-xs);color:var(--ink4);line-height:1.45">Habits stick when tied to a specific time + place cue.</div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Notes</div>
+        <input id="ahb-notes" class="hf-input" placeholder="Optional notes or motivation…">
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:-8px;padding-bottom:8px">
+      <button onclick="saveHabitForm()" class="hf-save">Save habit</button>
+      <button id="ahb-delete-btn" onclick="deleteHabitConfirm()" style="display:none;width:100%;padding:11px;border-radius:11px;background:rgba(255,69,58,.1);color:#FF453A;font-size:var(--fs-md);font-weight:600;border:.5px solid rgba(255,69,58,.3);cursor:pointer;font-family:inherit">Delete habit</button>
+
+    </div>
+
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

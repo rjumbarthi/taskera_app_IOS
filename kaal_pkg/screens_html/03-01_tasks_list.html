@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tasks – List View · p-tasks</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Tasks – List View</b>
+  <span class="pill">id: p-tasks</span>
+  <span class="pill">section: Tasks</span>
+  <span class="pill">parent: —</span>
+  <a class="pill" href="../screens_png/03-01_tasks_list.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-tasks</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-tasks" >
+  <div class="sbg"></div>
+  <div class="top-bar">
+    <div class="top-bar-row1">
+      <div class="pg-title">Tasks</div>
+      <div class="top-bar-right">
+      <div class="top-ico" onclick="window._analyticsOrigin='tasks';nav('analytics')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="4" height="8"/><rect x="9" y="7" width="4" height="13"/><rect x="16" y="2" width="4" height="18"/></svg></div>
+      <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="top-ico" onclick="nav('settings')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+      </div>
+    </div>
+    <div class="top-bar-row2" style="justify-content:space-between;align-items:center">
+      <div class="pg-sub">6 active · 8 completed · ✅ 82% on-time</div>
+      <div style="display:flex;gap:3px;background:transparent;border-radius:7px;padding:2px">
+        <div id="tv-list" onclick="setTaskView('list',this)" style="font-size:var(--fs-xs);font-weight:600;padding:3px 8px;border-radius:5px;cursor:pointer;background:transparent;color:var(--ink)">≡ List</div>
+        <div id="tv-quad" onclick="setTaskView('quad',this)" style="font-size:var(--fs-xs);font-weight:600;padding:3px 8px;border-radius:5px;cursor:pointer;background:transparent;color:var(--ink3)">⊞ 2×2</div>
+      </div>
+    </div>
+  </div>
+<div id="tasks-filter-chips" style="padding:0 12px 4px;flex-shrink:0;display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;gap:4px">
+      <div onclick="nav('schedule')" style="font-size:var(--fs-sm);font-weight:600;color:#FFB900;background:rgba(255,185,0,.1);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid rgba(255,185,0,.2)">⚡ Auto</div>
+      <div onclick="nav('board')" style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);background:var(--surf2);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid var(--bdr)">📌 Board</div>
+      <div onclick="nav('upcoming')" style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);background:var(--surf2);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid var(--bdr)">📅 7 days</div>
+      <div onclick="nav('labels')" style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);background:var(--surf2);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid var(--bdr)">🏷 Labels</div>
+      <div onclick="nav('filters')" style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);background:var(--surf2);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid var(--bdr);display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Filters</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <div onclick="nav('inbox')" style="font-size:var(--fs-sm);font-weight:600;color:var(--acc2);background:var(--acc-bg);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid rgba(10,132,255,.2)">📥 Inbox <span style="background:rgba(255,69,58,.2);color:#FF8080;border-radius:3px;padding:0 3px">5</span></div>
+      <div onclick="window._goalsOrigin='tasks';nav('goals')" style="font-size:var(--fs-sm);font-weight:600;color:#9fcd44;background:rgba(127,186,0,.1);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid rgba(127,186,0,.2);display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><circle cx="11" cy="11" r="4"/><circle cx="11" cy="11" r="1" fill="#9fcd44" stroke="none"/></svg>Goals</div>
+      <div onclick="window._timetrackOrigin='tasks';nav('timetrack')" style="font-size:var(--fs-sm);font-weight:600;color:var(--acc2);background:var(--acc-bg);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid rgba(10,132,255,.2)">⏱ Time Log</div>
+      <div onclick="nav('history')" style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);background:var(--surf2);padding:3px 9px;border-radius:6px;cursor:pointer;border:.5px solid var(--bdr);display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 6v5l3 2"/></svg>History</div>
+    </div>
+  </div>
+  <div id="tasks-list-view" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:0 0 70px;-webkit-overflow-scrolling:touch">
+    <div style="flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:0 12px">
+
+      <div class="quad-row tg-urgent open q1-row" id="qr1">
+        <div class="quad-hdr" onclick="openQuad('q1','p-tasks')">
+          <div class="quad-hdr-dot" style="background:var(--q1)"></div>
+          <div class="quad-hdr-name">Q1 · Do Now</div>
+          <span class="quad-ai-badge q-ai-r">⚠ Overdue</span>
+          <span class="quad-hdr-count" style="margin-left:auto">10</span>
+          <span class="quad-hdr-meta"> active</span>
+          <div class="quad-chev" onclick="event.stopPropagation();togQ('qr1')" style="padding:6px 8px;margin:-6px -4px"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="quad-prog"><div class="quad-prog-fill" style="width:30%;background:var(--q1)"></div></div>
+        <div class="quad-body" data-quad-body="q1">
+          <div class="tr tr-focus" id="tr-inv" data-quad="q1" onclick="window._taskdetailOrigin='tasks';window._currentTaskQuad='q1';applyTaskDetailQuad('q1');nav('taskdetail')">
+            <div class="tr-cb" style="border-color:var(--q1);background:rgba(242,80,34,.08)" onclick="event.stopPropagation();completeTask('tr-inv')"></div>
+            <div style="flex:1">
+              <div class="tr-title">Submit assignment before deadline</div>
+              <div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due ov">Today · Overdue · Score 9.2</span></div>
+              <div class="sub-list" onclick="event.stopPropagation()">
+                <div class="sub-item"><div class="sub-cb dn" onclick="event.stopPropagation();togSubCb(this)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><span class="sub-done">Executive summary</span></div>
+                <div class="sub-item"><div class="sub-cb" onclick="event.stopPropagation();togSubCb(this)"></div><span>Financial projections</span></div>
+                <div class="sub-item"><div class="sub-cb" onclick="event.stopPropagation();togSubCb(this)"></div><span>Q&amp;A prep</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Fix gym app bug #482</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Today · Score 7.8</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Submit tax return before deadline</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due ov">Today · Overdue · Score 9.0</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Call client about urgent contract issue</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due ov">Today · Overdue · Score 8.7</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Reply to investor email</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Today · Score 8.5</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Renew passport — expires Friday</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Tomorrow · Score 8.3</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Hospital prescription refill</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due ov">Today · Overdue · Score 8.0</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Fix production outage ticket</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Today · Score 7.5</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Pay rent before late fee</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Tomorrow · Score 7.2</span></div></div></div>
+          <div class="tr" data-quad="q1"><div class="tr-cb" style="border-color:var(--q1)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Reschedule cancelled flight</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q1)">Q1</span><span class="tr-due">Today · Score 7.0</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="quad-row tg-focus open q2-row" id="qr2">
+        <div class="quad-hdr" onclick="openQuad('q2','p-tasks')">
+          <div class="quad-hdr-dot" style="background:var(--q2)"></div>
+          <div class="quad-hdr-name">Q2 · Schedule</div>
+          <span class="quad-ai-badge q-ai-g">✦ Focus</span>
+          <span class="quad-hdr-count" style="margin-left:auto">10</span>
+          <span class="quad-hdr-meta"> active</span>
+          <div class="quad-chev" onclick="event.stopPropagation();togQ('qr2')" style="padding:6px 8px;margin:-6px -4px"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="quad-prog"><div class="quad-prog-fill" style="width:60%;background:var(--q2)"></div></div>
+        <div class="quad-body" data-quad-body="q2">
+          <div class="tr tr-focus" data-quad="q2" onclick="window._taskdetailOrigin='tasks';window._currentTaskQuad='q2';applyTaskDetailQuad('q2');nav('taskdetail')"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Study for exam — Chapter 4</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Today · Score 8.4</span><span class="pill p-cal">AI</span><div class="pomo-chip" onclick="event.stopPropagation();window._pomodoroOrigin='tasks';window._currentFocusTask={title:'Study for exam — Chapter 4',meta:'Q2 · Score 8.4',quad:'Q2'};nav('pomodoro')"><svg width="7" height="7" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg>25 min</div></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Morning journaling</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Today</span><span class="pill p-rec">↻ Daily</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Pay gym membership fees</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due ov">Apr 14 ⏰</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Plan next quarter roadmap</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">This week · Score 8.1</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Write blog post on focus</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Fri · Score 7.6</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Annual health checkup</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Next week · Score 7.4</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Strategic planning session</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Thu · Score 7.2</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Learn new framework (2hr)</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Sat</span><span class="pill p-rec">↻ Weekly</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">Review investment portfolio</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Sun · Score 6.9</span></div></div></div>
+          <div class="tr" data-quad="q2"><div class="tr-cb" style="border-color:var(--q2)" onclick="event.stopPropagation();markTrDone(this)"></div><div style="flex:1"><div class="tr-title">1:1 with mentor</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q2)">Q2</span><span class="tr-due">Wed · Score 6.7</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:4px;padding:0 12px;flex-shrink:0">
+      <div class="quad-row open q3-row" id="qr3">
+        <div class="quad-hdr" onclick="openQuad('q3','p-tasks')">
+          <div class="quad-hdr-dot" style="background:var(--q3)"></div>
+          <div class="quad-hdr-name">Q3 · Delegate</div>
+          <span class="quad-hdr-count" style="margin-left:auto">10</span>
+          <span class="quad-hdr-meta"> active</span>
+          <div class="quad-chev" onclick="event.stopPropagation();togQ('qr3')" style="padding:6px 8px;margin:-6px -4px"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="quad-prog"><div class="quad-prog-fill" style="width:40%;background:var(--q3)"></div></div>
+        <div class="quad-body" data-quad-body="q3">
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Reply to group project messages</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Today</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Update family WhatsApp group</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">This week</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Book physio appointment</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Tomorrow</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Send thank you email to coach</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Today</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Forward expense reports to finance</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Today</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Schedule team interviews</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">This week</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Confirm vendor meeting time</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Tomorrow</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Respond to recruiter inquiries</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">This week</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Coordinate office lunch order</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Fri</span></div></div></div>
+          <div class="tr" data-quad="q3"><div class="tr-cb" style="border-color:var(--q3)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Acknowledge LinkedIn requests</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q3)">Q3</span><span class="tr-due">Today</span></div></div></div>
+        </div>
+      </div>
+      <div class="quad-row open q4-row" id="qr4">
+        <div class="quad-hdr" onclick="openQuad('q4','p-tasks')">
+          <div class="quad-hdr-dot" style="background:var(--q4)"></div>
+          <div class="quad-hdr-name">Q4 · Eliminate</div>
+          <span class="quad-hdr-count" style="margin-left:auto">10</span>
+          <span class="quad-hdr-meta"> active</span>
+          <div class="quad-chev" onclick="event.stopPropagation();togQ('qr4')" style="padding:6px 8px;margin:-6px -4px"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="quad-prog"><div class="quad-prog-fill" style="width:10%;background:var(--q4)"></div></div>
+        <div class="quad-body" data-quad-body="q4">
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Reorganise desktop folders</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Clean up old screenshots</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Sort through old emails</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Browse productivity tools (again)</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Reorganise photo library</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Update social media bios</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Watch tutorial videos (saved 12)</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Tidy bookmarks folder</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Read 47 unread newsletters</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+          <div class="tr" data-quad="q4"><div class="tr-cb" style="border-color:var(--q4)" onclick="event.stopPropagation();markTrDone(this)"></div><div><div class="tr-title">Clear phone notifications backlog</div><div class="task-meta-row"><span class="task-quad-tag" style="color:var(--q4)">Q4</span><span class="tr-due">Someday</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:0 12px;flex-shrink:0">
+      <div class="bottom-section" id="bs-comp">
+        <div class="bs-hdr" onclick="togBS('bs-comp')">
+          <div class="bs-icon"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="bs-title" style="color:var(--ink3)"><span style="font-size:var(--fs-md)">Completed</span></div>
+          <div class="bs-meta">8 tasks</div>
+          <div class="bs-chev"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div onclick="event.stopPropagation();openPanel('comp')" style="padding:3px 7px;border-radius:5px;background:var(--surf3);font-size:var(--fs-xs);color:var(--ink3);margin-left:4px;cursor:pointer">All</div>
+        </div>
+        <div class="bs-body"><div class="comp-inner">
+          <div class="done-src"><div class="dsrc-dot" style="background:var(--q2)"></div>Q2 · Schedule</div>
+          <div class="tr tr-done" data-done data-quad="Q2"><div class="tr-cb" style="background:var(--q2);border-color:var(--q2)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Morning journaling</div><div ><span class="tr-due">Done today</span><span class="pill p-rec">↻</span></div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+          <div class="tr tr-done" data-done data-quad="Q2"><div class="tr-cb" style="background:var(--q2);border-color:var(--q2)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Weekly review</div><div class="tr-due">Done yesterday</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+          <div class="done-src"><div class="dsrc-dot" style="background:var(--q1)"></div>Q1 · Do Now</div>
+          <div class="tr tr-done" data-done data-quad="Q1"><div class="tr-cb" style="background:var(--q1);border-color:var(--q1)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Fix server migration</div><div class="tr-due">Done 2d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+          <div class="done-src"><div class="dsrc-dot" style="background:var(--q3)"></div>Q3 · Delegate</div>
+          <div class="tr tr-done" data-done data-quad="Q3"><div class="tr-cb" style="background:var(--q3);border-color:var(--q3)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Send project update email</div><div class="tr-due">Done 3d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+          <div class="tr tr-done" data-done data-quad="Q3"><div class="tr-cb" style="background:var(--q3);border-color:var(--q3)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Review vendor contracts</div><div class="tr-due">Done this week</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- FRICTION ASYMMETRY: Stale task pruning -->
+    <div style="padding:0 12px;flex-shrink:0">
+      <div class="prune-card" id="prune-card">
+        <div class="prune-header">
+          <div class="prune-ico">🧹</div>
+          <div>
+            <div class="prune-title">3 tasks haven't moved in 7+ days</div>
+            <div class="prune-sub">Keep, move, or cut — your list, your call.</div>
+          </div>
+          <button onclick="document.getElementById('prune-card').style.display='none'" style="background:transparent;border:none;cursor:pointer;color:var(--ink4);font-size:var(--fs-lg);padding:0 0 0 6px;line-height:1">×</button>
+        </div>
+        <div class="prune-item">
+          <div class="prune-item-title">Research competitor pricing</div>
+          <div class="prune-item-age">12d</div>
+          <button class="prune-act prune-act-move" onclick="showToast('Moved to Q4 · Eliminate')">Q4 →</button>
+          <button class="prune-act prune-act-del" onclick="this.closest('.prune-item').style.display='none';showToast('Deleted')">Del</button>
+        </div>
+        <div class="prune-item">
+          <div class="prune-item-title">Fix onboarding copy</div>
+          <div class="prune-item-age">9d</div>
+          <button class="prune-act prune-act-move" onclick="showToast('Moved to Q2 · Schedule')">Q2 →</button>
+          <button class="prune-act prune-act-del" onclick="this.closest('.prune-item').style.display='none';showToast('Deleted')">Del</button>
+        </div>
+        <div class="prune-item">
+          <div class="prune-item-title">Update LinkedIn profile</div>
+          <div class="prune-item-age">8d</div>
+          <button class="prune-act prune-act-move" onclick="showToast('Moved to Q4 · Eliminate')">Q4 →</button>
+          <button class="prune-act prune-act-del" onclick="this.closest('.prune-item').style.display='none';showToast('Deleted')">Del</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div id="tasks-quad-view" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 12px 76px;flex-direction:column;min-height:0;gap:6px">
+    <div id="tasks-2x2-grid" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;padding-top:6px;flex:1 1 auto;min-height:0;overflow:hidden"></div>
+    <div id="tasks-comp-panel" style="flex-shrink:0;background:var(--surf2);border-radius:11px;overflow:hidden;border:.5px solid var(--bdr);margin-top:6px">
+      <div onclick="(function(el){var p=document.getElementById('tasks-comp-panel');var b=p.querySelector('.comp-body');var c=p.querySelector('.comp-chev');var open=b.style.display!=='none';b.style.display=open?'none':'flex';c.style.transform=open?'rotate(0deg)':'rotate(90deg)';if(!open){setTimeout(function(){var w=document.getElementById('tasks-quad-view');if(w)w.scrollTo({top:w.scrollHeight,behavior:'smooth'});},60);}})(this)" style="display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span style="font-size:var(--fs-sm);color:var(--ink3);flex:1">Completed</span>
+        <span style="font-size:var(--fs-xs);color:var(--ink4);background:var(--surf3);padding:2px 7px;border-radius:5px">8</span>
+        <svg class="comp-chev" width="8" height="8" viewBox="0 0 10 10" fill="none" style="transition:transform .2s"><path d="M3 2l4 3-4 3" stroke="#636366" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="comp-body" style="display:none;flex-direction:column;gap:2px;padding:0 10px 8px">
+        <div class="tr tr-done" data-done data-quad="Q2"><div class="tr-cb" style="background:var(--q2);border-color:var(--q2)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Morning journaling</div><div class="tr-due">Done today</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q2"><div class="tr-cb" style="background:var(--q2);border-color:var(--q2)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Weekly review</div><div class="tr-due">Done yesterday</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q1"><div class="tr-cb" style="background:var(--q1);border-color:var(--q1)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Fix server migration</div><div class="tr-due">Done 2d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q3"><div class="tr-cb" style="background:var(--q3);border-color:var(--q3)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Send project update email</div><div class="tr-due">Done 3d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q3"><div class="tr-cb" style="background:var(--q3);border-color:var(--q3)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Review vendor contracts</div><div class="tr-due">Done this week</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q2"><div class="tr-cb" style="background:var(--q2);border-color:var(--q2)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Plan Q4 OKRs</div><div class="tr-due">Done 4d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q4"><div class="tr-cb" style="background:var(--q4);border-color:var(--q4)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Unsubscribe from newsletters</div><div class="tr-due">Done 5d ago</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div class="tr tr-done" data-done data-quad="Q1"><div class="tr-cb" style="background:var(--q1);border-color:var(--q1)"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="tr-title">Submit bug fix PR</div><div class="tr-due">Done last week</div></div><button onclick="restoreTask(this)" class="restore-btn" title="Restore task"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5A8.5 8.5 0 1 1 5.5 4.3"/><polyline points="3 4 3 10 9 10"/></svg></button></div>
+        <div onclick="event.stopPropagation();nav('panel-comp')" style="padding:8px;text-align:center;font-size:var(--fs-sm);color:var(--acc);cursor:pointer;border-top:.5px solid var(--bdr);margin-top:4px">View all completed →</div>
+      </div>
+    </div>
+    <div id="prune-card-quad" style="display:none;margin-top:7px"></div>
+  </div>
+  
+  <button class="fab" onclick="openFab()">+</button>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cal Sync · p-calsync</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Cal Sync</b>
+  <span class="pill">id: p-calsync</span>
+  <span class="pill">section: Calendar</span>
+  <span class="pill">parent: cal</span>
+  <a class="pill" href="../screens_png/07-03_cal_sync.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-calsync</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-calsync" data-parent="cal" >
+  <div class="inherited-bar"></div>
+
+  <div style="flex:1;overflow-y:auto;padding:8px 12px 72px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <button class="add-back" onclick="nav('settings')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div><div class="pg-title">Calendar sync</div><div class="pg-sub">Two-way · Google Calendar</div></div>
+    </div>
+
+    <div style="background:rgba(127,186,0,.07);border-radius:12px;padding:10px 12px;border:.5px solid rgba(127,186,0,.25);margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h16"/></svg></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:600;color:var(--ink)">Google Calendar</div><div style="font-size:var(--fs-sm);color:#9fcd44">● Connected · Last synced: now</div></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;background:var(--surf2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:var(--fs-xl);font-weight:700;color:var(--ink);font-family:var(--font-display)">12</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Tasks → Calendar</div></div>
+        <div style="flex:1;background:var(--surf2);border-radius:8px;padding:8px;text-align:center"><div style="font-size:var(--fs-xl);font-weight:700;color:var(--acc2);font-family:var(--font-display)">3</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Events → Tasks</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Events → task suggestions</div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+      <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid rgba(10,132,255,.2)">
+        <div style="font-size:var(--fs-sm);color:var(--ink3);margin-bottom:4px">Calendar event · Tomorrow 10 AM</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:5px">Product Roadmap Review</div>
+        <div style="font-size:var(--fs-sm);color:var(--acc2);margin-bottom:7px">✦ Suggested: "Prep for Roadmap Review" → Q2, today by 5 PM</div>
+        <div style="display:flex;gap:5px">
+          <button onclick="acceptCal()" style="flex:1;padding:6px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">✓ Create prep task</button>
+          <button onclick="this.closest('[style*=border-radius:11px]').style.opacity='.4'" style="padding:6px 10px;border-radius:8px;background:var(--surf2);color:var(--ink3);font-size:var(--fs-sm);border:none;cursor:pointer;font-family:inherit">Skip</button>
+        </div>
+      </div>
+      <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid rgba(10,132,255,.15)">
+        <div style="font-size:var(--fs-sm);color:var(--ink3);margin-bottom:4px">Calendar event · Fri 2 PM</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:5px">Design sync</div>
+        <div style="font-size:var(--fs-sm);color:var(--acc2);margin-bottom:7px">✦ Suggested: "Design sync prep" → Q2, Thu by EOD</div>
+        <div style="display:flex;gap:5px">
+          <button onclick="this.closest('[style*=border-radius:11px]').querySelector('[style*=font-size:var(--fs-md)]').style.textDecoration='line-through';showToast('Task created')" style="flex:1;padding:6px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">✓ Create prep task</button>
+          <button onclick="this.closest('[style*=border-radius:11px]').style.opacity='.4'" style="padding:6px 10px;border-radius:8px;background:var(--surf2);color:var(--ink3);font-size:var(--fs-sm);border:none;cursor:pointer;font-family:inherit">Skip</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Sync settings</div>
+    <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr)">
+      <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px">
+        <div style="font-size:var(--fs-md);color:var(--ink2)">Sync direction</div>
+        <div class="vt">
+          <div class="vt-b on" id="sync-both" onclick="selVt(this,'sync-dir')">Both ways</div>
+          <div class="vt-b" id="sync-push" onclick="selVt(this,'sync-dir')">Tasks → Cal only</div>
+          <div class="vt-b" id="sync-pull" onclick="selVt(this,'sync-dir')">Cal → Tasks only</div>
+        </div>
+      </div>
+      <div class="set-row"><div class="set-lbl">Suggest prep tasks from events</div><div class="sw on" id="cal-prep" onclick="tg('cal-prep')"></div></div>
+
+      <div class="set-row"><div class="set-lbl">Conflict detection</div><div class="sw on" id="cal-conflict" onclick="tg('cal-conflict')"></div></div>
+    </div>
+  </div>
+
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

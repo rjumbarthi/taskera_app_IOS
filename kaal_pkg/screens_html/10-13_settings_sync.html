@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sync & Data · p-settings</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Sync & Data</b>
+  <span class="pill">id: p-settings</span>
+  <span class="pill">section: Settings</span>
+  <span class="pill">parent: —</span>
+  <a class="pill" href="../screens_png/10-13_settings_sync.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-settings</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. <br><br><b>State note:</b> Sgrp expanded
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-settings" >
+  <div class="sbg"></div>
+  <div class="top-bar">
+    <div class="top-bar-row1">
+      <div class="pg-title">Settings</div>
+      <div class="top-bar-right">
+        <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="top-ico"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(10,132,255,.12)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="3" width="18" height="14" rx="2"/><path d="M8 21h6M12 17v4"/></svg></div>
+    <div class="sgrp-title">Display</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-sec">Theme &amp; Appearance</div>
+      <div class="set-card">
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div style="font-size:var(--fs-md);color:var(--ink2)">Theme</div>
+          <div class="vt"><div class="vt-b on" id="theme-dark" onclick="setTheme('dark',this)">🌙 Dark</div><div class="vt-b" id="theme-light" onclick="setTheme('light',this)">☀️ Light</div><div class="vt-b" id="theme-glass" onclick="setTheme('glass',this)">🪟 Glass</div><div class="vt-b" id="theme-system" onclick="setTheme('system',this)">📱 System</div></div>
+        </div>
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div style="font-size:var(--fs-md);color:var(--ink2)">Accent colour</div>
+          <div class="color-swatches">
+            <div class="csw on" style="background:#0A84FF" onclick="setAccent('#0A84FF','#409CFF',this)"></div>
+            <div class="csw" style="background:#7FBA00" onclick="setAccent('#7FBA00','#9fcd44',this)"></div>
+            <div class="csw" style="background:#FF6B00" onclick="setAccent('#FF6B00','#FF9040',this)"></div>
+            <div class="csw" style="background:#BF5AF2" onclick="setAccent('#BF5AF2','#D48CFF',this)"></div>
+            <div class="csw" style="background:#FF2D55" onclick="setAccent('#FF2D55','#FF6B80',this)"></div>
+            <div class="csw" style="background:#00BCD4" onclick="setAccent('#00BCD4','#40D4E8',this)"></div>
+          </div>
+        </div>
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div style="font-size:var(--fs-md);color:var(--ink2)">Font style</div>
+          <div class="vt">
+            <div class="vt-b on" id="font-system" onclick="setFont('system',this)">System</div>
+            <div class="vt-b" id="font-serif" onclick="setFont('serif',this)" style="font-family:var(--font-display)">Serif</div>
+            <div class="vt-b" id="font-rounded" onclick="setFont('rounded',this)" style="font-family:ui-rounded,sans-serif">Rounded</div>
+            <div class="vt-b" id="font-mono" onclick="setFont('mono',this)" style="font-family:ui-monospace,monospace">Mono</div>
+          </div>
+        </div>
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:10px">
+          <div style="font-size:var(--fs-md);font-weight:600;color:var(--ink2)">Typography sizes</div>
+
+          <div id="typo-picker-backdrop" onclick="closeTypoPicker()" style="display:none;position:fixed;inset:0;z-index:998"></div>
+          <div id="typo-picker-popup" style="display:none;position:absolute;right:12px;background:var(--surf2);border:.5px solid var(--bdr2);border-radius:12px;padding:8px;z-index:999;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.4)"></div>
+
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Page titles</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-title','sm',this,'title')" data-type="title" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">sm</div><div onclick="setTypeSize('--fs-title','md',this,'title')" data-type="title" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">md</div><div onclick="setTypeSize('--fs-title','lg',this,'title')" data-type="title" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">lg</div><div onclick="setTypeSize('--fs-title','xl',this,'title')" data-type="title" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-title','2xl',this,'title')" data-type="title" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">2xl</div></div><div id="typo-num-title" onclick="openTypoPicker('title',this)" style="min-width:28px;text-align:right;font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">29</div></div>
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Sections</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-section','sm',this,'section')" data-type="section" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">sm</div><div onclick="setTypeSize('--fs-section','md',this,'section')" data-type="section" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">md</div><div onclick="setTypeSize('--fs-section','lg',this,'section')" data-type="section" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">lg</div><div onclick="setTypeSize('--fs-section','xl',this,'section')" data-type="section" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-section','2xl',this,'section')" data-type="section" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">2xl</div></div><div id="typo-num-section" onclick="openTypoPicker('section',this)" style="min-width:28px;text-align:right;font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">18</div></div>
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Body</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-body','sm',this,'body')" data-type="body" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">sm</div><div onclick="setTypeSize('--fs-body','md',this,'body')" data-type="body" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">md</div><div onclick="setTypeSize('--fs-body','lg',this,'body')" data-type="body" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">lg</div><div onclick="setTypeSize('--fs-body','xl',this,'body')" data-type="body" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-body','2xl',this,'body')" data-type="body" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">2xl</div></div><div id="typo-num-body" onclick="openTypoPicker('body',this)" style="min-width:28px;text-align:right;font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">16</div></div>
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Labels</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-label','sm',this,'label')" data-type="label" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">sm</div><div onclick="setTypeSize('--fs-label','md',this,'label')" data-type="label" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">md</div><div onclick="setTypeSize('--fs-label','lg',this,'label')" data-type="label" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">lg</div><div onclick="setTypeSize('--fs-label','xl',this,'label')" data-type="label" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-label','2xl',this,'label')" data-type="label" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">2xl</div></div><div id="typo-num-label" onclick="openTypoPicker('label',this)" style="min-width:28px;text-align:right;font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">13</div></div>
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Tags</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-tag','sm',this,'tag')" data-type="tag" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">sm</div><div onclick="setTypeSize('--fs-tag','md',this,'tag')" data-type="tag" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">md</div><div onclick="setTypeSize('--fs-tag','lg',this,'tag')" data-type="tag" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">lg</div><div onclick="setTypeSize('--fs-tag','xl',this,'tag')" data-type="tag" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-tag','2xl',this,'tag')" data-type="tag" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">2xl</div></div><div id="typo-num-tag" onclick="openTypoPicker('tag',this)" style="min-width:28px;text-align:right;font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">13</div></div>
+          <div class="typo-row" style="display:flex;align-items:center;gap:6px"><div style="font-size:9px;color:var(--ink3);min-width:58px">Numbers</div><div style="flex:1;display:flex;gap:2px"><div onclick="setTypeSize('--fs-number','sm',this,'number')" data-type="number" data-sz="sm" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">sm</div><div onclick="setTypeSize('--fs-number','md',this,'number')" data-type="number" data-sz="md" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">md</div><div onclick="setTypeSize('--fs-number','lg',this,'number')" data-type="number" data-sz="lg" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">lg</div><div onclick="setTypeSize('--fs-number','xl',this,'number')" data-type="number" data-sz="xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:9px;color:var(--ink3)">xl</div><div onclick="setTypeSize('--fs-number','2xl',this,'number')" data-type="number" data-sz="2xl" class="fst-btn" style="flex:1;padding:3px 0;border-radius:5px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:9px;color:var(--acc2)" data-active="1">2xl</div></div><div id="typo-num-number" onclick="openTypoPicker('number',this)" style="min-width:28px;text-align:right;font-family:var(--font-display);font-size:var(--fs-sm);font-weight:700;color:var(--acc2);cursor:pointer;line-height:1;text-decoration:underline dotted">42</div></div>
+
+          <div style="display:flex;gap:3px"><div id="fs-xs" onclick="setFontSize('xs',this)" style="flex:1;padding:5px 0;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:var(--fs-xs);color:var(--ink3)">A<br><span style="font-size:var(--fs-xs);color:var(--ink4)">XS</span></div><div id="fs-small" onclick="setFontSize('small',this)" style="flex:1;padding:5px 0;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:var(--fs-md);color:var(--ink3)">A<br><span style="font-size:var(--fs-xs);color:var(--ink4)">S</span></div><div id="fs-medium" onclick="setFontSize('medium',this)" style="flex:1;padding:5px 0;border-radius:8px;background:var(--acc-bg);border:.5px solid rgba(10,132,255,.3);text-align:center;cursor:pointer;font-size:var(--fs-lg);color:var(--acc2)">A<br><span style="font-size:var(--fs-xs);color:var(--acc2)">M</span></div><div id="fs-large" onclick="setFontSize('large',this)" style="flex:1;padding:5px 0;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:var(--fs-xl);color:var(--ink3)">A<br><span style="font-size:var(--fs-xs);color:var(--ink4)">L</span></div><div id="fs-xl" onclick="setFontSize('xl',this)" style="flex:1;padding:5px 0;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer;font-size:var(--fs-xl);color:var(--ink3)">A<br><span style="font-size:var(--fs-xs);color:var(--ink4)">XL</span></div></div>
+        </div>
+        <div class="set-row" style="align-items:center"><div style="flex:1"><div style="font-size:var(--fs-md);color:var(--ink2)">Simple mode</div><div style="font-size:var(--fs-sm);color:var(--ink3);margin-top:2px">Hides AI scores, badges</div></div><div class="sw" id="simple-mode" onclick="toggleSimpleMode(this)"></div></div>
+        <div class="set-row" onclick="isPro()?nav('widget'):showUpgrade('settings','Home screen widgets are a Pro feature.')" style="cursor:pointer"><div class="set-ico" style="background:rgba(127,186,0,.12)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="12" y="3" width="7" height="7" rx="1"/><rect x="3" y="12" width="7" height="7" rx="1"/><rect x="12" y="12" width="7" height="7" rx="1"/></svg></div><div class="set-lbl">Widget preview</div><div class="set-val">›</div></div>
+      </div>
+      <div class="set-sec">Language</div>
+      <div class="set-card">
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div class="vt" style="flex-wrap:wrap;gap:4px">
+            <div class="vt-b on" id="lang-en" onclick="setLang('en',this)">English</div><div class="vt-b" id="lang-hi" onclick="setLang('hi',this)">हिन्दी</div><div class="vt-b" id="lang-te" onclick="setLang('te',this)">తెలుగు</div><div class="vt-b" id="lang-ta" onclick="setLang('ta',this)">தமிழ்</div><div class="vt-b" id="lang-kn" onclick="setLang('kn',this)">ಕನ್ನಡ</div><div class="vt-b" id="lang-ml" onclick="setLang('ml',this)">മലയാളം</div><div class="vt-b" id="lang-mr" onclick="setLang('mr',this)">मराठी</div><div class="vt-b" id="lang-gu" onclick="setLang('gu',this)">ગુજરાતી</div><div class="vt-b" id="lang-bn" onclick="setLang('bn',this)">বাংলা</div><div class="vt-b" id="lang-es" onclick="setLang('es',this)">Español</div><div class="vt-b" id="lang-fr" onclick="setLang('fr',this)">Français</div><div class="vt-b" id="lang-de" onclick="setLang('de',this)">Deutsch</div><div class="vt-b" id="lang-zh" onclick="setLang('zh',this)">中文</div><div class="vt-b" id="lang-ja" onclick="setLang('ja',this)">日本語</div><div class="vt-b" id="lang-ar" onclick="setLang('ar',this)">العربية</div><div class="vt-b" id="lang-pt" onclick="setLang('pt',this)">Português</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="wallpaper-setting" style="display:block">
+        <div class="set-sec">Wallpaper <span style="font-size:var(--fs-xs);color:var(--acc2);background:var(--acc-bg);padding:1px 6px;border-radius:4px;margin-left:4px">All themes</span></div>
+        <div class="set-card">
+          <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+            <div style="font-size:var(--fs-md);color:var(--ink2)">Background image</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <div onclick="setWallpaper('none',this)" class="wp-btn on" style="flex:1;min-width:60px;height:44px;border-radius:8px;background:linear-gradient(135deg,#0d0d1a,#12122a);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);color:rgba(255,255,255,.5);cursor:pointer;border:1.5px solid var(--acc)">None</div>
+              <div onclick="setWallpaper('galaxy',this)" class="wp-btn" style="flex:1;min-width:60px;height:44px;border-radius:8px;background:radial-gradient(ellipse at top,#1a0533 0%,#0d0d1a 60%);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);color:rgba(255,255,255,.6);cursor:pointer;border:.5px solid rgba(255,255,255,.1)">Galaxy</div>
+              <div onclick="setWallpaper('ocean',this)" class="wp-btn" style="flex:1;min-width:60px;height:44px;border-radius:8px;background:linear-gradient(135deg,#001a2c 0%,#003a5c 50%,#001a2c 100%);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);color:rgba(255,255,255,.6);cursor:pointer;border:.5px solid rgba(255,255,255,.1)">Ocean</div>
+              <div onclick="setWallpaper('aurora',this)" class="wp-btn" style="flex:1;min-width:60px;height:44px;border-radius:8px;background:linear-gradient(135deg,#001a1a 0%,#003320 40%,#0d0d2e 100%);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);color:rgba(255,255,255,.6);cursor:pointer;border:.5px solid rgba(255,255,255,.1)">Aurora</div>
+            </div>
+          </div>
+          <div class="set-row" style="align-items:center"><div style="flex:1"><div style="font-size:var(--fs-md);color:var(--ink2)">Blur intensity</div></div><div style="font-size:var(--fs-sm);font-weight:600;color:var(--acc2);cursor:pointer;background:var(--acc-bg);padding:3px 10px;border-radius:6px" onclick="cycleBlur(this)">Medium</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(242,80,34,.12)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="var(--q1)" stroke-width="1.6" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+    <div class="sgrp-title">Tasks</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-sec">Tasks view</div>
+      <div class="set-card">
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div style="font-size:var(--fs-md);color:var(--ink2)">Layout</div>
+          <div class="vt"><div class="vt-b on" id="view-list" onclick="setTaskView('list',this)">≡ List view</div><div class="vt-b" id="view-quad" onclick="setTaskView('quad',this)">⊞ 2×2 Quad</div></div>
+        </div>
+        <div class="set-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <div style="font-size:var(--fs-md);color:var(--ink2)">Quadrant names</div>
+          <div class="vt"><div class="vt-b on" id="qname-covey" onclick="setQuadNames('covey',this)">Covey</div><div class="vt-b" id="qname-eisenhower" onclick="setQuadNames('eisenhower',this)">Eisenhower</div></div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3);line-height:1.5" id="qname-preview">Q1 Do Now · Q2 Schedule · Q3 Delegate · Q4 Eliminate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="12" height="12" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    <div class="sgrp-title">AI &amp; Smart features</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row"><div class="set-ico" style="background:var(--acc-bg)"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="set-lbl">Score-based recommendation</div><div class="sw on" id="s-fp" onclick="tg('s-fp')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:var(--acc-bg)"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl">Quote splash on open</div><div class="sw on" id="s-qs" onclick="tg('s-qs')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:var(--acc-bg)"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl">EOD reflection prompt</div><div onclick="nav('reflect')" style="font-size:var(--fs-xs);color:var(--acc2);background:var(--acc-bg);padding:2px 7px;border-radius:4px;cursor:pointer;margin-right:6px">Preview</div><div class="sw on" id="s-eod" onclick="tg('s-eod')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(191,90,242,.14)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#BF5AF2" stroke-width="1.6" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="set-lbl">Habits tracker</div><input type="checkbox" checked class="focus-card-switch" id="f-habits" onchange="toggleMainFeature('habits',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(10,132,255,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h16"/></svg></div><div class="set-lbl">Calendar tab</div><input type="checkbox" checked class="focus-card-switch" id="f-calendar" onchange="toggleMainFeature('calendar',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(255,185,0,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#FFB900" stroke-width="1.6" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="set-lbl">Notes tab</div><input type="checkbox" checked class="focus-card-switch" id="f-notes" onchange="toggleMainFeature('notes',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(127,186,0,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="set-lbl">Inbox</div><input type="checkbox" checked class="focus-card-switch" id="f-inbox" onchange="toggleMainFeature('inbox',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(10,132,255,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M8 10h8M8 14h5"/></svg></div><div class="set-lbl">Focus Today cards</div><input type="checkbox" checked class="focus-card-switch" id="f-focusToday" onchange="toggleFocusCard('today',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(88,86,214,.14)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#5856D6" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v4M12 16v4M4 12H2M20 12h-2M5.64 5.64L4.22 4.22M17.78 17.78l-1.42-1.42M16.36 5.64l1.42-1.42M4.22 17.78l1.42-1.42"/><circle cx="12" cy="12" r="4"/></svg></div><div class="set-lbl">Peak card</div><input type="checkbox" checked class="focus-card-switch" id="f-focusPeak" onchange="toggleFocusCard('peak',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(10,132,255,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl">Focus Timer card</div><input type="checkbox" checked class="focus-card-switch" id="f-focusTimer" onchange="toggleFocusCard('timer',this)"></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(191,90,242,.14)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#BF5AF2" stroke-width="1.6" stroke-linecap="round"><path d="M9 18h6M10 22h4"/><path d="M8.5 14a6 6 0 1 1 7 0c-.8.6-1.5 1.5-1.5 2.5h-4c0-1-.7-1.9-1.5-2.5z"/></svg></div><div class="set-lbl">Brain Dump card</div><input type="checkbox" checked class="focus-card-switch" id="f-focusBrainDump" onchange="toggleFocusCard('brain',this)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="12" height="12" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+    <div class="sgrp-title">Integrations</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row" onclick="nav('integrations')" style="cursor:pointer;background:var(--acc-bg)"><div class="set-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div class="set-lbl" style="color:var(--acc2)">Manage integrations</div><div class="set-val" style="color:var(--acc2)">›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="connectIntegration(this,'Google Calendar')"><div class="set-ico" style="background:rgba(66,133,244,.14)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#4285F4" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h16"/></svg></div><div class="set-lbl">Google Calendar</div><div style="font-size:var(--fs-xs);font-weight:600;color:#9fcd44;padding:2px 6px;border-radius:4px;background:rgba(127,186,0,.1)">Connected</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="connectIntegration(this,'Gmail')"><div class="set-ico" style="background:#EA4335"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="set-lbl">Gmail</div><div style="font-size:var(--fs-xs);color:var(--ink3);cursor:pointer">Connect ›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="connectIntegration(this,'Notion')"><div class="set-ico" style="background:var(--surf3)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="16" height="16" rx="2"/><path d="M7 7h8M7 11h6M7 15h4"/></svg></div><div class="set-lbl">Notion</div><div style="font-size:var(--fs-xs);color:var(--ink3);cursor:pointer">Connect ›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="connectIntegration(this,'Slack')"><div class="set-ico" style="background:rgba(74,21,75,.5)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#E01E5A" stroke-width="1.6" stroke-linecap="round"><path d="M14.5 10a1.5 1.5 0 1 1 0-3h4a1.5 1.5 0 0 1 0 3"/><path d="M14.5 10H3.5M7.5 10V4a1.5 1.5 0 0 1 3 0v6"/></svg></div><div class="set-lbl">Slack</div><div style="font-size:var(--fs-xs);color:var(--ink3);cursor:pointer">Connect ›</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(10,132,255,.12)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h16"/></svg></div>
+    <div class="sgrp-title">Calendar &amp; Inbox</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row" style="cursor:pointer" onclick="nav('calsync')"><div class="set-ico" style="background:var(--acc-bg)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h16"/></svg></div><div class="set-lbl">Calendar sync</div><div class="set-val" style="font-size:var(--fs-sm);color:#9fcd44">Connected</div><div class="set-val">›</div></div>
+
+        <div class="set-row" onclick="nav('email')" style="cursor:pointer;background:var(--acc-bg)"><div class="set-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="set-lbl" style="color:var(--acc2)">Open Inbox</div><div style="font-size:var(--fs-sm);background:rgba(255,69,58,.14);color:#FF8080;padding:2px 6px;border-radius:4px;font-weight:700">4 new</div><div class="set-val" style="color:var(--acc2)">›</div></div>
+        <div class="set-row"><div class="set-ico" style="background:#EA4335"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="set-lbl">Gmail sync</div><div class="sw on" id="s-gmail" onclick="tg('s-gmail')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="set-lbl">Suggest tasks from inbox</div><div class="sw on" id="s-inbtask" onclick="tg('s-inbtask')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:linear-gradient(135deg,#34C759,#30B050)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none"><path d="M3 4C3 3.44772 3.44772 3 4 3H18C18.5523 3 19 3.44772 19 4V14C19 14.5523 18.5523 15 18 15H13L8 19V15H4C3.44772 15 3 14.5523 3 14V4Z" fill="#fff"/></svg></div><div class="set-lbl">Messages (SMS/iMessage)</div><div class="sw on" id="s-msg" onclick="tg('s-msg')"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(127,186,0,.12)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 13"/></svg></div>
+    <div class="sgrp-title">Sync &amp; Data</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row"><div class="set-ico" style="background:rgba(127,186,0,.12)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 13"/></svg></div><div class="set-lbl">Real-time sync</div><div id="sync-dot-settings" style="width:7px;height:7px;border-radius:50%;background:#9fcd44;margin-right:4px"></div><div id="sync-lbl-settings" style="font-size:var(--fs-sm);color:#9fcd44;font-weight:600">Live</div></div>
+        <div class="set-row"><div class="set-ico" style="background:var(--acc-bg)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg></div><div class="set-lbl">Cloud sync</div><div class="sw on" id="p-sync" onclick="tg('p-sync')"></div></div>
+        <div class="set-row" style="cursor:pointer" onclick="showDevices()"><div class="set-ico" style="background:var(--surf2)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div><div class="set-lbl">Connected devices</div><div class="set-val" style="font-size:var(--fs-sm);color:var(--acc2)">2 active</div><div class="set-val">›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="runBackup()"><div class="set-ico" style="background:var(--acc-bg)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="set-lbl">Back up now</div><div class="set-val" style="font-size:var(--fs-sm);color:var(--ink3)">Last: today 9:41</div><div class="set-val">›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="nav('reschedule')"><div class="set-ico" style="background:rgba(255,185,0,.12)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#FFB900" stroke-width="1.6" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-5.83"/></svg></div><div class="set-lbl">Missed task reschedule</div><div class="set-val" style="font-size:var(--fs-sm);color:#FFB900">3 pending</div><div class="set-val">›</div></div>
+        <div class="set-row" style="cursor:pointer" onclick="exportData()"><div class="set-ico" style="background:var(--surf2)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div><div class="set-lbl">Export as JSON</div><div class="set-val">›</div></div>
+        <div class="set-row" onclick="nav('studentmode')" style="cursor:pointer"><div class="set-ico" style="background:rgba(127,186,0,.1)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="set-lbl">Student Mode</div><div style="font-size:var(--fs-xs);background:rgba(127,186,0,.12);color:#9fcd44;padding:1px 7px;border-radius:4px;font-weight:600;margin-right:4px">UPSC · JEE</div><div class="set-val">›</div></div>
+        <div class="set-row" onclick="isPro()?nav('widget'):showUpgrade('settings','Home screen widgets are a Pro feature.')" style="cursor:pointer"><div class="set-ico" style="background:rgba(127,186,0,.12)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="12" y="3" width="7" height="7" rx="1"/><rect x="3" y="12" width="7" height="7" rx="1"/><rect x="12" y="12" width="7" height="7" rx="1"/></svg></div><div class="set-lbl">Widget preview</div><div class="set-val">›</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)" style="background:linear-gradient(90deg,rgba(88,86,214,.08),transparent)">
+    <div class="sgrp-ico" style="background:linear-gradient(135deg,#5856D6,var(--acc))"><svg width="13" height="13" viewBox="0 0 22 22" fill="#fff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    <div class="sgrp-title" style="color:var(--acc2)">Kaal Pro</div>
+    <div style="font-size:var(--fs-xs);background:linear-gradient(135deg,#5856D6,var(--acc));color:#fff;padding:2px 8px;border-radius:5px;font-weight:700;margin-right:6px">✦ PRO</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div style="padding:8px 4px 4px">
+          <div style="font-size:var(--fs-md);font-weight:700;color:var(--ink);margin-bottom:3px">Free plan</div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
+            <div style="font-size:var(--fs-sm);color:var(--ink3)">✓ Tasks, Habits, Calendar, Notes</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink3)">✓ 5 AI uses/day (scoring, Brain Dump)</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink3)">✓ Basic widgets</div>
+          </div>
+          <div style="height:.5px;background:var(--bdr);margin-bottom:10px"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div style="font-size:var(--fs-md);font-weight:700;color:var(--acc2)">✦ Pro — <span class="price-annual">$2.99/mo</span></div>
+            <div style="font-size:var(--fs-xs);color:var(--q2);font-weight:600">Annual · Save 50%</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
+            <div style="font-size:var(--fs-sm);color:var(--ink2)">✦ Unlimited AI features</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink2)">✦ Home screen widget</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink2)">✦ Export / share (PDF, image)</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink2)">✦ Pro badge + custom themes</div>
+            <div style="font-size:var(--fs-sm);color:var(--ink2)">✦ Gmail deep sync</div>
+          </div>
+          <button onclick="showUpgrade('settings','Upgrade to unlock all Pro features.')" style="width:100%;padding:11px;border-radius:11px;background:linear-gradient(135deg,#5856D6,var(--acc));color:#fff;font-size:var(--fs-md);font-weight:700;border:none;cursor:pointer;font-family:inherit;box-shadow:0 3px 14px rgba(88,86,214,.35)" id="settings-upgrade-btn">Start 7-day free trial</button>
+          <button onclick="nav('referral')" style="width:100%;padding:8px;margin-top:6px;border-radius:11px;background:var(--surf2);color:var(--acc2);font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">🎁 Invite → both get 1 month free</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(255,107,107,.14)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+    <div class="sgrp-title">Account</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row" onclick="nav('signin')" style="cursor:pointer"><div class="set-ico" style="background:rgba(255,107,107,.14)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></div><div class="set-lbl" style="color:#FF8080">Sign out</div><div class="set-val">›</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sgrp">
+  <div class="sgrp-hdr" onclick="toggleSGrp(this)">
+    <div class="sgrp-ico" style="background:rgba(255,107,107,.14)"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+    <div class="sgrp-title">Notifications</div>
+    <div class="sgrp-chev">›</div>
+  </div>
+  <div class="sgrp-body">
+    <div style="padding:0 12px 8px">
+      <div class="set-card">
+        <div class="set-row"><div class="set-ico" style="background:rgba(255,107,107,.14)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="set-lbl">Q1 urgent alerts</div><div class="sw on" id="s-n1" onclick="tg('s-n1')"></div></div>
+        <div class="set-row" style="flex-wrap:wrap;gap:4px"><div class="set-ico" style="background:var(--acc-bg)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl" style="flex:1">Q2 daily nudge</div><div onclick="cycleNotifTime(this)" style="font-size:var(--fs-xs);font-weight:600;color:var(--acc2);background:var(--acc-bg);padding:2px 7px;border-radius:5px;cursor:pointer">8:00 AM</div><div class="sw on" id="s-n2" onclick="tg('s-n2')"></div></div>
+        <div class="set-row" style="flex-wrap:wrap;gap:4px"><div class="set-ico" style="background:rgba(255,107,107,.1)"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#FF8080" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl" style="flex:1">Task reminders</div><div onclick="cycleNotifTime(this)" style="font-size:var(--fs-xs);font-weight:600;color:#FF8080;background:rgba(255,107,107,.1);padding:2px 7px;border-radius:5px;cursor:pointer">10 min before</div><div class="sw on" id="s-rem" onclick="tg('s-rem')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(255,149,0,.12)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#FF9500" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg></div><div class="set-lbl"><div style="font-size:var(--fs-md)">Task due but not started</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Alert when due in 24h and unbegun</div></div><div class="sw on" id="sn-notstarted" onclick="tg('sn-notstarted')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(242,80,34,.1)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--q1)" stroke-width="1.6" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="set-lbl"><div style="font-size:var(--fs-md)">Q1 overload warning</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Alert when Q1 has 4+ tasks</div></div><div class="sw on" id="sn-overload" onclick="tg('sn-overload')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:rgba(127,186,0,.1)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="set-lbl"><div style="font-size:var(--fs-md)">Q2 neglect nudge</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Alert if no Q2 completed in 3 days</div></div><div class="sw on" id="sn-q2nudge" onclick="tg('sn-q2nudge')"></div></div>
+        <div class="set-row"><div class="set-ico" style="background:var(--surf2)"><svg width="10" height="10" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/></svg></div><div class="set-lbl">Max alerts per day</div><div style="font-size:var(--fs-sm);font-weight:600;color:var(--acc2);background:var(--acc-bg);padding:2px 8px;border-radius:5px;cursor:pointer" onclick="cycleMaxNotif(this)">2 / day</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

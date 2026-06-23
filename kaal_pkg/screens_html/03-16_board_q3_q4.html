@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Board – Q3+Q4 · p-board</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Board – Q3+Q4</b>
+  <span class="pill">id: p-board</span>
+  <span class="pill">section: Tasks</span>
+  <span class="pill">parent: tasks</span>
+  <a class="pill" href="../screens_png/03-16_board_q3_q4.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-board</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. <br><br><b>State note:</b> Scrolled to bottom
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-board" data-parent="tasks" >
+  <div class="inherited-bar"></div>
+
+    <div class="top-bar">
+    <div class="top-bar-left" style="flex-direction:row;align-items:center;gap:7px"><button class="add-back" onclick="nav(window._lastTab||'tasks')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><div>
+      <div class="pg-title">Board</div>
+      <div class="pg-sub">Kanban view</div>
+
+    </div></div>
+    <div class="top-bar-right">
+      <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="top-ico" onclick="nav('settings')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-x:auto;display:flex;gap:8px;padding:4px 12px 8px">
+      <div style="min-width:148px;display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(242,80,34,.1);border-radius:8px;border:.5px solid rgba(242,80,34,.3)"><div style="font-size:var(--fs-sm);font-weight:700;color:var(--q1)">Q1 · Do Now</div><div style="font-size:var(--fs-sm);color:var(--q1);font-weight:700">2</div></div>
+        <div onclick="window._currentTaskQuad='q1';window._taskdetailOrigin=window._lastTab||'tasks';nav('taskdetail')" style="background:rgba(242,80,34,.07);border-radius:9px;padding:9px 10px;border:.5px solid rgba(242,80,34,.2);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Assignment submission</div><div style="font-size:var(--fs-xs);color:#FF6B6B">Overdue · P1</div></div>
+        <div style="background:rgba(242,80,34,.05);border-radius:9px;padding:9px 10px;border:.5px solid rgba(242,80,34,.12);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Fix bug #482</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Today · P2</div></div>
+        <div onclick="nav('quickadd')" style="border-radius:9px;padding:8px;border:.5px dashed var(--bdr2);text-align:center;cursor:pointer"><div style="font-size:var(--fs-sm);color:var(--ink3)">+ Add</div></div>
+      </div>
+      <div style="min-width:148px;display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(127,186,0,.1);border-radius:8px;border:.5px solid rgba(127,186,0,.3)"><div style="font-size:var(--fs-sm);font-weight:700;color:var(--q2)">Q2 · Schedule</div><div style="font-size:var(--fs-sm);color:var(--q2);font-weight:700">3</div></div>
+        <div style="background:rgba(127,186,0,.06);border-radius:9px;padding:9px 10px;border:.5px solid rgba(127,186,0,.18);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Prep: Roadmap</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Today · P3</div></div>
+        <div style="background:rgba(127,186,0,.06);border-radius:9px;padding:9px 10px;border:.5px solid rgba(127,186,0,.12);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Morning journaling</div><div style="font-size:var(--fs-xs);color:var(--ink3)">↻ Daily</div></div>
+        <div onclick="nav('quickadd')" style="border-radius:9px;padding:8px;border:.5px dashed var(--bdr2);text-align:center;cursor:pointer"><div style="font-size:var(--fs-sm);color:var(--ink3)">+ Add</div></div>
+      </div>
+      <div style="min-width:148px;display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(0,164,239,.08);border-radius:8px;border:.5px solid rgba(0,164,239,.25)"><div style="font-size:var(--fs-sm);font-weight:700;color:var(--q3)">Q3 · Delegate</div><div style="font-size:var(--fs-sm);color:var(--q3);font-weight:700">4</div></div>
+        <div style="background:rgba(0,164,239,.06);border-radius:9px;padding:9px 10px;border:.5px solid rgba(0,164,239,.14);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Reply to group project messages</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Today · P4</div></div>
+        <div onclick="nav('quickadd')" style="border-radius:9px;padding:8px;border:.5px dashed var(--bdr2);text-align:center;cursor:pointer"><div style="font-size:var(--fs-sm);color:var(--ink3)">+ Add</div></div>
+      </div>
+      <div style="min-width:148px;display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(255,185,0,.08);border-radius:8px;border:.5px solid rgba(255,185,0,.25)"><div style="font-size:var(--fs-sm);font-weight:700;color:var(--q4)">Q4 · Eliminate</div><div style="font-size:var(--fs-sm);color:var(--q4);font-weight:700">2</div></div>
+        <div style="background:rgba(255,185,0,.05);border-radius:9px;padding:9px 10px;border:.5px solid rgba(255,185,0,.14);cursor:pointer"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink);margin-bottom:3px">Reorganise desktop</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Someday</div></div>
+        <div onclick="nav('quickadd')" style="border-radius:9px;padding:8px;border:.5px dashed var(--bdr2);text-align:center;cursor:pointer"><div style="font-size:var(--fs-sm);color:var(--ink3)">+ Add</div></div>
+      </div>
+    </div>
+  
+  <button class="fab" onclick="openFab()">+</button>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

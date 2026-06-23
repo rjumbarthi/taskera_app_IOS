@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Edit Goal · p-editgoal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Edit Goal</b>
+  <span class="pill">id: p-editgoal</span>
+  <span class="pill">section: Focus</span>
+  <span class="pill">parent: goaldetail</span>
+  <a class="pill" href="../screens_png/02-11_edit_goal.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-editgoal</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-editgoal" data-parent="goaldetail" >
+  <div class="inherited-bar"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 6px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="add-back" onclick="nav('goaldetail')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="pg-title">Edit goal</div>
+      <div id="eg-quality" style="font-family:var(--font-display);font-size:var(--fs-sm);font-weight:700;color:var(--ink3);margin-left:6px">—</div>
+    </div>
+    <button onclick="saveEditGoal()" style="padding:5px 14px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-sm);font-weight:700;border:none;cursor:pointer;font-family:inherit">Save</button>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;padding:6px 12px 80px;display:flex;flex-direction:column;gap:0">
+
+    <div class="habit-form">
+
+      <div class="hf-row">
+        <div class="hf-label">Goal name <span style="color:#FF6B6B">*</span></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="eg-name" class="hf-input" placeholder="e.g. Hit $100k MRR" style="flex:1" oninput="egScoreGoal()">
+          <div id="eg-icon-display" onclick="egToggleIconPicker()" style="width:42px;height:42px;border-radius:10px;background:var(--surf2);border:1.5px solid #BF5AF2;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);cursor:pointer;flex-shrink:0">🎯</div>
+        </div>
+        <div id="eg-icon-picker" style="display:none;flex-wrap:wrap;gap:5px;background:var(--surf2);border-radius:10px;padding:8px;border:.5px solid var(--bdr);width:100%;margin-top:6px">
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🎯')">🎯</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🚀')">🚀</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('💰')">💰</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('💪')">💪</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('📚')">📚</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🏆')">🏆</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🧠')">🧠</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🌱')">🌱</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('✈️')">✈️</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🏃')">🏃</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('💼')">💼</span>
+          <span style="font-size:var(--fs-lg);cursor:pointer;padding:4px" onclick="egPickIcon('🎨')">🎨</span>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Category</div>
+        <div class="hf-chips-row" data-group="eg-cat">
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:#BF5AF2">🚀 Launch</div>
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:#FF8080">💪 Health</div>
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:var(--acc2)">📚 Learning</div>
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:#9fcd44">💰 Finance</div>
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:#FFB900">🎯 Career</div>
+          <div class="hf-chip" onclick="selChip(this);egScoreGoal()" style="color:var(--ink3)">🌱 Other</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Colour</div>
+        <div class="hf-color-row">
+          <div class="hf-color" style="background:#BF5AF2" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#7FBA00" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FF8080" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#0A84FF" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FFB900" onclick="selColor(this)"></div>
+          <div class="hf-color" style="background:#FF6B00" onclick="selColor(this)"></div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Why this matters <span style="color:var(--ink4);font-weight:400">· keeps you anchored</span></div>
+        <textarea id="eg-why" class="hf-input" placeholder='e.g. "Financial freedom by 35 → time with family"' style="resize:none;min-height:54px;line-height:1.4" oninput="egScoreGoal()"></textarea>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Measurable outcome <span style="color:#FF6B6B">*</span></div>
+        <div style="display:flex;gap:5px">
+          <input id="eg-target" class="hf-input" placeholder="100" style="flex:0 0 80px;text-align:center" oninput="egScoreGoal()">
+          <input id="eg-unit" class="hf-input" placeholder="unit (k MRR / kg / books)" style="flex:1" oninput="egScoreGoal()">
+        </div>
+        <div style="display:flex;gap:5px;margin-top:5px">
+          <input id="eg-start" class="hf-input" placeholder="start: 12" style="flex:1;text-align:center;font-size:var(--fs-sm)" oninput="egScoreGoal()">
+          <div style="display:flex;align-items:center;color:var(--ink3);font-size:var(--fs-sm)">→</div>
+          <input id="eg-curr" class="hf-input" placeholder="now: 28" style="flex:1;text-align:center;font-size:var(--fs-sm)" oninput="egScoreGoal()">
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Deadline <span style="color:#FF6B6B">*</span></div>
+        <input id="eg-deadline" type="date" class="hf-input" oninput="egScoreGoal()">
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+          <div class="hf-chip" onclick="egSetDeadline(30);">30 days</div>
+          <div class="hf-chip" onclick="egSetDeadline(90);">Q (90d)</div>
+          <div class="hf-chip" onclick="egSetDeadline(180);">6 months</div>
+          <div class="hf-chip" onclick="egSetDeadline(365);">1 year</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Linked quadrant</div>
+        <div class="hf-chips-row" data-group="eg-quad">
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--q1)">Q1 · Do Now</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--q2)">Q2 · Schedule</div>
+          <div class="hf-chip" onclick="selChip(this)" style="color:var(--q3)">Q3 · Delegate</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Milestones <span style="color:var(--ink4);font-weight:400">· break into ≤ 5</span></div>
+        <div id="eg-milestones" style="display:flex;flex-direction:column;gap:5px"></div>
+        <div onclick="egAddMilestone()" style="font-size:var(--fs-sm);color:#BF5AF2;cursor:pointer;padding:4px 0;margin-top:3px">＋ Add milestone</div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Supporting tasks <span style="color:var(--ink4);font-weight:400">· concrete next steps</span></div>
+        <div id="eg-tasks-list" style="display:flex;flex-direction:column;gap:5px"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+          <input id="eg-new-task" class="hf-input" placeholder="Add a task linked to this goal…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();egAddTask()}">
+          <button onclick="egAddTask()" style="padding:7px 11px;border-radius:8px;background:var(--acc-bg);color:var(--acc2);font-size:var(--fs-sm);font-weight:700;border:.5px solid rgba(10,132,255,.3);cursor:pointer;font-family:inherit;white-space:nowrap">＋ Add</button>
+        </div>
+        <div onclick="nav('quickadd')" style="font-size:var(--fs-sm);color:var(--acc2);cursor:pointer;padding:4px 2px;margin-top:1px">＋ Create full task →</div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Supporting habits <span style="color:var(--ink4);font-weight:400">· daily compound</span></div>
+        <div id="eg-habits-list" style="display:flex;flex-direction:column;gap:5px"></div>
+        <div onclick="nav('addhabit')" style="background:var(--surf2);border:.5px dashed var(--bdr2);border-radius:9px;padding:7px 10px;font-size:var(--fs-sm);color:var(--ink3);text-align:center;cursor:pointer;margin-top:5px">＋ Create new habit</div>
+      </div>
+
+      <div class="hf-row">
+        <div class="hf-label">Check-in cadence</div>
+        <div class="hf-chips-row" data-group="eg-checkin">
+          <div class="hf-chip" onclick="selChip(this)">Daily</div>
+          <div class="hf-chip" onclick="selChip(this)">Weekly</div>
+          <div class="hf-chip" onclick="selChip(this)">Bi-weekly</div>
+          <div class="hf-chip" onclick="selChip(this)">Monthly</div>
+        </div>
+      </div>
+
+      <div class="hf-row">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="hf-label" style="margin-bottom:0">Public accountability</div>
+          <div id="eg-public-toggle" onclick="this.classList.toggle('on');this.querySelector('div').style.right=this.classList.contains('on')?'2px':'17px';this.style.background=this.classList.contains('on')?'var(--acc)':'var(--surf3)'" style="width:36px;height:21px;border-radius:11px;background:var(--surf3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div style="position:absolute;right:17px;top:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:right .2s"></div></div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:var(--ink4);margin-top:5px;line-height:1.4">Share progress on weekly digest. Studies show 65% higher follow-through.</div>
+      </div>
+
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:-4px;padding-bottom:8px">
+      <button onclick="saveEditGoal()" class="hf-save">Save changes</button>
+      <button onclick="if(confirm('Archive this goal?')){showToast('Goal archived');nav('goals')}" style="width:100%;padding:11px;border-radius:10px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:600;border:.5px solid var(--bdr);cursor:pointer;font-family:inherit">Archive goal</button>
+      <button onclick="if(confirm('Delete this goal? This cannot be undone.')){showToast('Goal deleted');nav('goals')}" style="width:100%;padding:11px;border-radius:10px;background:transparent;color:#FF6B6B;font-size:var(--fs-md);font-weight:600;border:.5px solid rgba(255,107,107,.3);cursor:pointer;font-family:inherit">Delete goal</button>
+    </div>
+
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

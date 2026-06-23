@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Habits · p-habits</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Habits</b>
+  <span class="pill">id: p-habits</span>
+  <span class="pill">section: Habits</span>
+  <span class="pill">parent: —</span>
+  <a class="pill" href="../screens_png/06-01_habits.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-habits</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-habits" >
+  <div class="sbg"></div>
+  <div class="top-bar">
+    <div class="top-bar-row1">
+      <div class="pg-title">Habits</div>
+      <div class="top-bar-right">
+        <div class="top-ico" onclick="nav('habitstats')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="top-ico" onclick="nav('settings')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+      </div>
+    </div>
+    <div class="top-bar-row2"><div class="pg-sub">4 active · Mon/Wed/Fri · 🔥 14d streak</div></div>
+  </div>
+
+  <div style="display:flex;gap:3px;padding:6px 12px 6px;flex-shrink:0">
+    <div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">M</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:rgba(127,186,0,.2);border:.5px solid rgba(127,186,0,.4);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">T</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:rgba(127,186,0,.2);border:.5px solid rgba(127,186,0,.4);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">W</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:rgba(127,186,0,.2);border:.5px solid rgba(127,186,0,.4);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">T</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:rgba(127,186,0,.2);border:.5px solid rgba(127,186,0,.4);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">F</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:rgba(127,186,0,.2);border:.5px solid rgba(127,186,0,.4);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">S</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:var(--surf3);border:.5px solid var(--bdr);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div></div><div style="flex:1;text-align:center"><div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:2px">S</div><div style="width:18px;height:18px;border-radius:50%;margin:0 auto;background:var(--surf3);border:.5px solid var(--bdr);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:4px 12px 8px;flex-shrink:0">
+    <div style="background:var(--surf);border-radius:10px;padding:8px 6px;border:.5px solid var(--bdr2);text-align:center">
+      <div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:#9fcd44;line-height:1">14🔥</div>
+      <div style="font-size:var(--fs-xs);color:var(--ink3);margin-top:2px">Streak</div>
+    </div>
+    <div style="background:var(--surf);border-radius:10px;padding:8px 6px;border:.5px solid var(--bdr2);text-align:center">
+      <div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:var(--acc2);line-height:1">3/4</div>
+      <div style="font-size:var(--fs-xs);color:var(--ink3);margin-top:2px">Today</div>
+    </div>
+    <div style="background:var(--surf);border-radius:10px;padding:8px 6px;border:.5px solid var(--bdr2);text-align:center">
+      <div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:#BF5AF2;line-height:1">82%</div>
+      <div style="font-size:var(--fs-xs);color:var(--ink3);margin-top:2px">This week</div>
+    </div>
+    <div style="background:var(--surf);border-radius:10px;padding:8px 6px;border:.5px solid var(--bdr2);text-align:center">
+      <div style="font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:#FFB900;line-height:1">4</div>
+      <div style="font-size:var(--fs-xs);color:var(--ink3);margin-top:2px">Active</div>
+    </div>
+  </div>
+
+  <div id="streak-banner" style="margin:0 12px 6px;background:linear-gradient(135deg,rgba(255,185,0,.14),rgba(255,149,0,.08));border-radius:11px;padding:9px 12px;border:.5px solid rgba(255,185,0,.3);display:flex;align-items:center;gap:7px;cursor:pointer" onclick="checkStreakMilestone(14)">
+    <div style="font-size:var(--fs-lg)">🔥</div>
+    <div style="flex:1"><div style="font-size:var(--fs-sm);font-weight:700;color:#FFB900">14-day streak!</div><div style="font-size:var(--fs-xs);color:var(--ink3)">Keep going · Enable reminders to protect it</div></div>
+    <button onclick="event.stopPropagation();showToast('🔔 Streak reminders enabled!')" style="background:rgba(255,185,0,.2);border:none;border-radius:7px;padding:5px 8px;font-size:var(--fs-xs);font-weight:700;color:#FFB900;cursor:pointer;font-family:inherit;flex-shrink:0">🔔 Remind</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:0 12px 72px;display:flex;flex-direction:column;gap:5px">
+
+          <div data-habit style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid #7FBA0033;cursor:pointer" onclick="nav('habitdetail')">
+        <div style="font-size:var(--fs-md);font-weight:600;color:var(--ink);margin-bottom:7px">Gym workout 💪</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#7FBA001a;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);flex-shrink:0">🏃</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">Mon · Wed · Fri · 60 min · Q2</div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:#9fcd44">🔥 14d</div>
+          <div onclick="event.stopPropagation();showHabitMenu(this,'Gym workout')" style="cursor:pointer;color:var(--ink3);font-size:var(--fs-lg);padding:2px 6px;line-height:1">⋯</div><div onclick="event.stopPropagation();this.closest('[data-habit]').querySelector('[data-sub]').style.display=this.closest('[data-habit]').querySelector('[data-sub]').style.display==='none'?'block':'none';this.style.transform=this.style.transform==='rotate(90deg)'?'rotate(0deg)':'rotate(90deg');" style="cursor:pointer;transition:.2s;color:var(--ink3);font-size:var(--fs-sm);padding:2px 4px">›</div><button onclick="event.stopPropagation();markHabitDone(this)" style="width:28px;height:28px;border-radius:50%;background:#7FBA001a;border:.5px solid #7FBA0066;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#7FBA00" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></button>
+        </div>
+        <div style="display:flex;gap:2px"><div style="flex:1;height:5px;border-radius:2px;background:#7FBA00;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#7FBA00;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#7FBA00;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#7FBA00;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#7FBA00;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div></div>
+        <div data-sub style="display:none;margin-top:8px;padding-top:8px;border-top:.5px solid var(--bdr)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px">Today's routine</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Warm up 10 min</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);background:rgba(127,186,0,.2);border-color:rgba(127,186,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);text-decoration:line-through;opacity:.5">Cold shower</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Log distance</div>
+            </div>
+        </div>
+      </div>
+          <div data-habit style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid #0A84FF33;cursor:pointer" onclick="nav('habitdetail')">
+        <div style="font-size:var(--fs-md);font-weight:600;color:var(--ink);margin-bottom:7px">Morning journaling</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#0A84FF1a;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);flex-shrink:0">✍️</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">Daily · 15 min · Q2</div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:var(--acc2)">🔥 7d</div>
+          <div onclick="event.stopPropagation();showHabitMenu(this,'Morning journaling')" style="cursor:pointer;color:var(--ink3);font-size:var(--fs-lg);padding:2px 6px;line-height:1">⋯</div><div onclick="event.stopPropagation();this.closest('[data-habit]').querySelector('[data-sub]').style.display=this.closest('[data-habit]').querySelector('[data-sub]').style.display==='none'?'block':'none';this.style.transform=this.style.transform==='rotate(90deg)'?'rotate(0deg)':'rotate(90deg)';" style="cursor:pointer;transition:.2s;color:var(--ink3);font-size:var(--fs-sm);padding:2px 4px">›</div><button onclick="event.stopPropagation();markHabitDone(this)" style="width:28px;height:28px;border-radius:50%;background:#0A84FF1a;border:.5px solid #0A84FF66;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></button>
+        </div>
+        <div style="display:flex;gap:2px"><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#0A84FF;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div></div>
+        <div data-sub style="display:none;margin-top:8px;padding-top:8px;border-top:.5px solid var(--bdr)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px">Sub-habits</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);background:rgba(127,186,0,.2);border-color:rgba(127,186,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);text-decoration:line-through;opacity:.5">Gratitude 3 items</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Intentions for the day</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Brain dump</div>
+            </div>
+        </div>
+      </div>
+          <div data-habit style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid #BF5AF233;cursor:pointer" onclick="nav('habitdetail')">
+        <div style="font-size:var(--fs-md);font-weight:600;color:var(--ink);margin-bottom:7px">Strength training</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#BF5AF21a;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);flex-shrink:0">💪</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">Mon · Wed · Fri · Q2</div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:#BF5AF2">🔥 3w</div>
+          <div onclick="event.stopPropagation();showHabitMenu(this,'Evening workout')" style="cursor:pointer;color:var(--ink3);font-size:var(--fs-lg);padding:2px 6px;line-height:1">⋯</div><div onclick="event.stopPropagation();this.closest('[data-habit]').querySelector('[data-sub]').style.display=this.closest('[data-habit]').querySelector('[data-sub]').style.display==='none'?'block':'none';this.style.transform=this.style.transform==='rotate(90deg)'?'rotate(0deg)':'rotate(90deg')" style="cursor:pointer;transition:.2s;color:var(--ink3);font-size:var(--fs-sm);padding:2px 4px">›</div><button onclick="event.stopPropagation();markHabitDone(this)" style="width:28px;height:28px;border-radius:50%;background:#BF5AF21a;border:.5px solid #BF5AF266;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#BF5AF2" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></button>
+        </div>
+        <div style="display:flex;gap:2px"><div style="flex:1;height:5px;border-radius:2px;background:#BF5AF2;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#BF5AF2;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#BF5AF2;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div></div>
+        <div data-sub style="display:none;margin-top:8px;padding-top:8px;border-top:.5px solid var(--bdr)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px">Sub-habits</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);background:rgba(127,186,0,.2);border-color:rgba(127,186,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);text-decoration:line-through;opacity:.5">Warm up 5 min</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);background:rgba(127,186,0,.2);border-color:rgba(127,186,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);text-decoration:line-through;opacity:.5">Main lifts</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Cool down + stretch</div>
+            </div>
+        </div>
+      </div>
+          <div data-habit style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid #FFB90033;cursor:pointer" onclick="nav('habitdetail')">
+        <div style="font-size:var(--fs-md);font-weight:600;color:var(--ink);margin-bottom:7px">Read 30 min</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#FFB9001a;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xl);flex-shrink:0">📚</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">Daily · Q2 · 60% this week</div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:#FFB900">↻ Adapt</div>
+          <div onclick="event.stopPropagation();showHabitMenu(this,'Weekly review')" style="cursor:pointer;color:var(--ink3);font-size:var(--fs-lg);padding:2px 6px;line-height:1">⋯</div><div onclick="event.stopPropagation();this.closest('[data-habit]').querySelector('[data-sub]').style.display=this.closest('[data-habit]').querySelector('[data-sub]').style.display==='none'?'block':'none';this.style.transform=this.style.transform==='rotate(90deg)'?'rotate(0deg)':'rotate(90deg')" style="cursor:pointer;transition:.2s;color:var(--ink3);font-size:var(--fs-sm);padding:2px 4px">›</div><button onclick="event.stopPropagation();markHabitDone(this)" style="width:28px;height:28px;border-radius:50%;background:#FFB9001a;border:.5px solid #FFB90066;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#FFB900" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></button>
+        </div>
+        <div style="display:flex;gap:2px"><div style="flex:1;height:5px;border-radius:2px;background:#FFB900;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#FFB900;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:#FFB900;opacity:.9"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div><div style="flex:1;height:5px;border-radius:2px;background:var(--surf3)"></div></div>
+        <div data-sub style="display:none;margin-top:8px;padding-top:8px;border-top:.5px solid var(--bdr)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px">Sub-habits</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Pick a chapter</div>
+            </div><div style="display:flex;align-items:center;gap:7px;padding:5px 0">
+              <div onclick="this.classList.toggle('sh-done')" style="width:16px;height:16px;border-radius:4px;border:.5px solid var(--bdr2);;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+              <div style="font-size:var(--fs-md);color:var(--ink2);">Take notes</div>
+            </div>
+        </div>
+      </div>
+    <div onclick="nav('addhabit')" style="border-radius:12px;padding:11px;border:.5px dashed var(--bdr2);display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;flex-shrink:0">
+      <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div style="font-size:var(--fs-md);color:var(--ink3)">Add new habit</div>
+    </div>
+
+    <div id="skip-day-banner" style="background:var(--surf);border:.5px solid var(--bdr);border-radius:12px;padding:10px 12px;margin-top:4px">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+        <div style="flex:1">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink3)">Something came up today?</div>
+          <div style="font-size:var(--fs-xs);color:var(--ink3);margin-top:1px;opacity:.7">Reschedule your workout — streaks stay protected</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <div onclick="skipEntireDay('tomorrow')" style="flex:1;padding:6px;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer">
+          <div style="font-size:var(--fs-sm)">📅</div>
+          <div style="font-size:var(--fs-xs);font-weight:600;color:var(--ink2);margin-top:2px">Tomorrow</div>
+        </div>
+        <div onclick="skipEntireDay('alternate')" style="flex:1;padding:6px;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer">
+          <div style="font-size:var(--fs-sm)">🔄</div>
+          <div style="font-size:var(--fs-xs);font-weight:600;color:var(--ink2);margin-top:2px">Next session</div>
+        </div>
+        <div onclick="skipEntireDay('skip')" style="flex:1;padding:6px;border-radius:8px;background:var(--surf2);border:.5px solid var(--bdr);text-align:center;cursor:pointer">
+          <div style="font-size:var(--fs-sm)">⏭</div>
+          <div style="font-size:var(--fs-xs);font-weight:600;color:var(--ink2);margin-top:2px">Skip day</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button class="fab" onclick="openFab()">+</button>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

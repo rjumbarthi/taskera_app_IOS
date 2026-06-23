@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pomodoro · p-pomodoro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Pomodoro</b>
+  <span class="pill">id: p-pomodoro</span>
+  <span class="pill">section: Focus</span>
+  <span class="pill">parent: focus</span>
+  <a class="pill" href="../screens_png/02-07_pomodoro.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-pomodoro</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-pomodoro" data-parent="focus" >
+  <div class="inherited-bar"></div>
+  <div class="pomo-title-bar" style="display:flex;align-items:center;gap:8px;padding:8px 16px 6px;flex-shrink:0">
+    <button class="add-back" onclick="nav(window._pomodoroOrigin||window._lastTab||'focus')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div style="flex:1"><div class="pg-title">Focus Timer</div></div>
+  </div>
+  <div class="pomo-content">
+    <div id="pomo-active-card" class="pomo-focus-card">
+      <div class="pomo-card-top">
+        <div class="pomo-ico">
+          <svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--acc2)" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 6v5l3 2"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="pomo-eyebrow">Now focusing</div>
+          <div id="pomo-task-title" class="pomo-title">Fix Login API Authentication Bug</div>
+          <div id="pomo-task-meta" class="pomo-meta">Q2 · Deep Work · Overdue</div>
+        </div>
+      </div>
+      <div class="pomo-time-wrap">
+        <div id="pomo-time">25:00</div>
+        <div style="height:3px;background:var(--surf3);border-radius:2px;margin-top:12px;overflow:hidden"><div id="pomo-ring-bar" style="width:100%;height:100%;background:var(--acc);border-radius:2px;transition:width .65s ease"></div></div>
+        <div class="pomo-mini-row">
+          <button class="pomo-mini" onclick="pomoEditTimer(this,15)">15m</button>
+          <button class="pomo-mini on" onclick="pomoEditTimer(this,25)" data-mins="25">25m</button>
+          <button class="pomo-mini" onclick="pomoEditTimer(this,45)">45m</button>
+        </div>
+      </div>
+      <div class="pomo-primary">
+        <button onclick="togglePomo()" id="pomo-btn" style="background:var(--acc);color:#fff;border:none;cursor:pointer;font-family:inherit">START</button>
+        <button class="pomo-icon-btn pomo-done" onclick="completePomoFocus()"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--q2)" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l4 4 8-8"/></svg></button>
+        <button class="pomo-icon-btn" onclick="requestPomoQuit()"><svg width="13" height="13" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+    <div class="pomo-queue-head">
+      <div class="pomo-section-title">Queue</div>
+      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--ink3)">5 tasks</div>
+    </div>
+    <div id="pomo-task-list" class="pomo-queue">
+      <div class="pomo-row active" data-title="Fix Login API Bug" data-meta="Q2 · P1" data-mins="25" data-color="var(--acc2)" onclick="selectPomoTaskFromRow(this)"><div class="pomo-dot"></div><div style="flex:1;min-width:0"><div class="pomo-row-title" style="color:var(--acc2)">Fix Login API Bug</div><div class="pomo-row-meta">Q2 · P1</div></div><button class="pomo-duration" onclick="event.stopPropagation();pomoEditTimer(this,25)" style="color:var(--acc2);background:var(--acc-bg);border-color:rgba(10,132,255,.25)">25m</button></div>
+      <div class="pomo-row" data-title="Review investor deck" data-meta="Q1 · P1" data-mins="25" data-color="var(--q1)" onclick="selectPomoTaskFromRow(this)"><div class="pomo-dot" style="background:var(--q1)"></div><div style="flex:1;min-width:0"><div class="pomo-row-title">Review investor deck</div><div class="pomo-row-meta">Q1 · P1</div></div><button class="pomo-duration" onclick="event.stopPropagation();pomoEditTimer(this,25)">25m</button></div>
+      <div class="pomo-row" data-title="Submit assignment" data-meta="Q1 · P2" data-mins="15" data-color="var(--q1)" onclick="selectPomoTaskFromRow(this)"><div class="pomo-dot" style="background:var(--q1)"></div><div style="flex:1;min-width:0"><div class="pomo-row-title">Submit assignment</div><div class="pomo-row-meta">Q1 · P2</div></div><button class="pomo-duration" onclick="event.stopPropagation();pomoEditTimer(this,15)">15m</button></div>
+      <div class="pomo-row" data-title="Block deep work time" data-meta="Q2 · P2" data-mins="30" data-color="var(--q2)" onclick="selectPomoTaskFromRow(this)"><div class="pomo-dot" style="background:var(--q2)"></div><div style="flex:1;min-width:0"><div class="pomo-row-title">Block deep work time</div><div class="pomo-row-meta">Q2 · P2</div></div><button class="pomo-duration" onclick="event.stopPropagation();pomoEditTimer(this,30)">30m</button></div>
+      <div class="pomo-row" data-title="Send weekly report" data-meta="Q2 · P3" data-mins="10" data-color="var(--q2)" onclick="selectPomoTaskFromRow(this)"><div class="pomo-dot" style="background:var(--q2)"></div><div style="flex:1;min-width:0"><div class="pomo-row-title">Send weekly report</div><div class="pomo-row-meta">Q2 · P3</div></div><button class="pomo-duration" onclick="event.stopPropagation();pomoEditTimer(this,10)">10m</button></div>
+    </div>
+    <div id="pomo-feedback" class="pomo-feedback-card">Ready for deep focus.</div>
+
+    <div style="display:none">
+      <div id="pomo-label"></div>
+      <div id="pomo-stats-header"></div>
+      <div id="pomo-stat-sessions">0</div>
+      <div id="pomo-stat-mins">0m</div>
+      <div id="pomo-stat-tasks">0</div>
+      <div id="pomo-session-list"></div>
+      <svg><circle id="pomo-ring"/></svg>
+    </div>
+  </div>
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

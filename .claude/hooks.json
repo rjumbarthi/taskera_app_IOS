@@ -1,0 +1,17 @@
+{
+  "_comment": "Optional auto-analyze hook. Drop this at <project-root>/.claude/hooks.json to run flutter analyze after every Dart file edit. Catches errors immediately.",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -qE '\\.dart$'; then echo '--- flutter analyze ---' && flutter analyze 2>&1 | tail -30; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

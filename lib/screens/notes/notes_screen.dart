@@ -1,0 +1,395 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:drift/drift.dart' show Value;
+import '../../data/database.dart' show Note, NoteTag, NotesCompanion;
+import '../../data/providers/database_provider.dart';
+import '../../data/providers/notes_provider.dart';
+import '../../services/activity_log_service.dart';
+import '../../routing/routes.dart';
+import '../../theme/kaal_colors.dart';
+import '../../theme/kaal_theme.dart';
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+class _Tag {
+  const _Tag(this.label, {required this.bg, required this.fg});
+  final String label;
+  final Color  bg;
+  final Color  fg;
+}
+
+class _Note {
+  const _Note({
+    required this.id,
+    required this.title,
+    required this.preview,
+    required this.time,
+    this.aiLabel,
+    this.tags = const [],
+    this.isPinned = false,
+  });
+  final int          id;
+  final String       title;
+  final String       preview;
+  final String       time;
+  final String?      aiLabel;  // e.g. '✦ AI summary'
+  final List<_Tag>   tags;
+  final bool         isPinned;
+}
+
+// ── DB → display model mapping ─────────────────────────────────────────────
+
+_Note _rowToNote(Note n, List<NoteTag> tags) => _Note(
+      id: n.id,
+      title: n.title,
+      preview: n.body.length > 120 ? '${n.body.substring(0, 120)}…' : n.body,
+      time: n.timeLabel,
+      aiLabel: n.aiLabel,
+      isPinned: n.isPinned,
+      tags: tags
+          .map((t) => _Tag(t.label,
+              bg: Color(t.bgColorValue), fg: Color(t.fgColorValue)))
+          .toList(),
+    );
+
+// ── Screen ────────────────────────────────────────────────────────────────────
+
+class NotesScreen extends ConsumerWidget {
+  const NotesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = KaalTheme.of(context).colors;
+    final noteRows = ref.watch(notesProvider).value ?? [];
+
+    final pinned = <_Note>[];
+    final recent = <_Note>[];
+    for (final n in noteRows) {
+      final tags = ref.watch(noteTagsProvider(n.id)).value ?? [];
+      final note = _rowToNote(n, tags);
+      if (n.isPinned) {
+        pinned.add(note);
+      } else {
+        recent.add(note);
+      }
+    }
+
+    return Stack(
+      children: [
+        RefreshIndicator(
+          color: KaalColors.acc,
+          backgroundColor: const Color(0xFF1C1C1E),
+          onRefresh: () async {
+            ref.invalidate(notesProvider);
+            await Future.delayed(const Duration(milliseconds: 400));
+          },
+          child: ListView(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 72),
+          children: [
+            _AIBanner(colors: colors),
+            const SizedBox(height: 8),
+            if (pinned.isNotEmpty) ...[
+              _SectionLabel(label: 'Pinned', colors: colors),
+              const SizedBox(height: 4),
+              for (var i = 0; i < pinned.length; i++) ...[
+                _NoteCard(note: pinned[i], prominent: i == 0, colors: colors),
+                const SizedBox(height: 4),
+              ],
+              const SizedBox(height: 3),
+            ],
+            if (recent.isNotEmpty) ...[
+              _SectionLabel(label: 'Recent', colors: colors),
+              const SizedBox(height: 4),
+              for (final n in recent) ...[
+                _NoteCard(note: n, colors: colors),
+                const SizedBox(height: 4),
+              ],
+            ],
+          ],
+        )),
+        Positioned(
+          right: 16,
+          bottom: 16 + MediaQuery.paddingOf(context).bottom,
+          child: GestureDetector(
+            onTap: () => context.push(KaalRoutes.notesEditor),
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: const BoxDecoration(
+                color: KaalColors.acc,
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 24),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── AI notice banner ──────────────────────────────────────────────────────────
+
+class _AIBanner extends StatelessWidget {
+  final KaalColors colors;
+  const _AIBanner({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
+      decoration: BoxDecoration(
+        color: const Color(0x120A84FF),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '✦ AI NOTICED FROM YOUR NOTES',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.4,
+              color: KaalColors.acc2,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 5),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
+              children: [
+                const TextSpan(text: 'Your meeting prep note mentions '),
+                const TextSpan(text: 'Product Roadmap', style: TextStyle(color: KaalColors.acc2)),
+                const TextSpan(text: ' — added to Q2 task. Note from last week has '),
+                TextSpan(text: '3 pending action items', style: TextStyle(color: colors.successFg)),
+                const TextSpan(text: '.'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Section label ─────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  final String label;
+  final KaalColors colors;
+  const _SectionLabel({required this.label, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label.toUpperCase(),
+      style: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.5,
+        color: colors.ink3,
+        height: 1,
+      ),
+    );
+  }
+}
+
+// ── Note card ─────────────────────────────────────────────────────────────────
+
+class _NoteCard extends ConsumerWidget {
+  final _Note note;
+  final bool  prominent;
+  final KaalColors colors;
+
+  const _NoteCard({required this.note, this.prominent = false, required this.colors});
+
+  void _showMenu(BuildContext context, WidgetRef ref) {
+    final dao = ref.read(appDatabaseProvider).notesDao;
+    final logNotifier = ref.read(activityLogProvider.notifier);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (sheetCtx) => _NoteMenuSheet(note: note, dao: dao, colors: colors,
+        onEdit: () { Navigator.pop(sheetCtx); context.push('${KaalRoutes.notesEditor}/${note.id}'); },
+        onLog: (msg) => logNotifier.add(msg, type: 'note'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () => context.push('${KaalRoutes.notesEditor}/${note.id}'),
+      onLongPress: () => _showMenu(context, ref),
+      onSecondaryTap: () => _showMenu(context, ref),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            width: 0.5,
+            color: prominent ? colors.bdr2 : colors.bdr,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header row: title + optional AI badge + timestamp
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    note.title,
+                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (note.aiLabel != null) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
+                    decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(4)),
+                    child: Text(note.aiLabel!, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: KaalColors.acc2, height: 1)),
+                  ),
+                ],
+                const SizedBox(width: 6),
+                Text(note.time, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+              ],
+            ),
+            const SizedBox(height: 5),
+            // Preview body (2-line clamp)
+            Text(
+              note.preview,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            // Tags
+            if (note.tags.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  for (int i = 0; i < note.tags.length; i++) ...[
+                    _TagChip(tag: note.tags[i]),
+                    if (i < note.tags.length - 1) const SizedBox(width: 4),
+                  ],
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Note context menu sheet ───────────────────────────────────────────────────
+
+class _NoteMenuSheet extends StatelessWidget {
+  final _Note note;
+  final dynamic dao;
+  final KaalColors colors;
+  final VoidCallback onEdit;
+  final void Function(String msg) onLog;
+
+  const _NoteMenuSheet({required this.note, required this.dao, required this.colors,
+      required this.onEdit, required this.onLog});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + MediaQuery.of(context).padding.bottom),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C1C1E),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        border: Border.all(width: 0.5, color: const Color(0x33FFFFFF)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
+          Text(note.title, maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+          const SizedBox(height: 14),
+          _MenuItem(icon: Icons.edit_rounded, label: 'Edit note', colors: colors, onTap: onEdit),
+          _MenuItem(
+            icon: note.isPinned ? Icons.push_pin_outlined : Icons.push_pin_rounded,
+            label: note.isPinned ? 'Unpin' : 'Pin to top',
+            colors: colors,
+            onTap: () async {
+              await dao.updateNote(note.id, NotesCompanion(isPinned: Value(!note.isPinned)));
+              onLog(note.isPinned ? 'Note "${note.title}" unpinned' : 'Note "${note.title}" pinned');
+              if (context.mounted) Navigator.pop(context);
+            },
+          ),
+          _MenuItem(
+            icon: Icons.delete_rounded,
+            label: 'Delete note',
+            colors: colors,
+            textColor: const Color(0xFFFF453A),
+            onTap: () async {
+              await dao.deleteNote(note.id);
+              onLog('Note "${note.title}" deleted');
+              if (context.mounted) Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MenuItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final KaalColors colors;
+  final Color? textColor;
+  final VoidCallback onTap;
+
+  const _MenuItem({required this.icon, required this.label, required this.colors, this.textColor, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = textColor ?? colors.ink2;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(4, 11, 4, 11),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.5, color: const Color(0x1AFFFFFF)))),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 12),
+            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: color, height: 1)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TagChip extends StatelessWidget {
+  final _Tag tag;
+  const _TagChip({required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+      decoration: BoxDecoration(color: tag.bg, borderRadius: BorderRadius.circular(4)),
+      child: Text(tag.label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: tag.fg, height: 1)),
+    );
+  }
+}

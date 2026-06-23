@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Integrations (Content) · p-integrations</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Integrations (Content)</b>
+  <span class="pill">id: p-integrations</span>
+  <span class="pill">section: Settings</span>
+  <span class="pill">parent: profile</span>
+  <a class="pill" href="../screens_png/10-12_settings_integrations_content.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-integrations</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. <br><br><b>State note:</b> Separate p-integrations screen
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-integrations" data-parent="profile" >
+  <div class="inherited-bar"></div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 4px;flex-shrink:0">
+    <button class="add-back" onclick="nav('settings')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div>
+      <div class="pg-title">Integrations</div>
+      <div class="pg-sub">Connect your tools</div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:8px 12px 72px">
+
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(127,186,0,.08);border-radius:10px;border:.5px solid rgba(127,186,0,.25);margin-bottom:14px">
+      <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="#9fcd44" stroke-width="1.6" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <div style="font-size:var(--fs-sm);color:#9fcd44;font-weight:600">2 integrations active</div>
+      <div style="font-size:var(--fs-sm);color:var(--ink3);margin-left:auto">Tasks syncing</div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Productivity</div>
+    <div class="set-card" style="margin-bottom:12px">
+
+      <div class="set-row" onclick="connectIntegration(this,'Notion')" style="cursor:pointer">
+        <div class="set-ico" style="background:#1a1a1a">
+          <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M12 18.6c2 2.4 2.7 2.2 6.4 2L82 16.7c1.3 0 1.4-.6.7-1.2L71.5 7.3c-2.1-1.7-3.1-2-6.3-1.7L8.5 9.7C7.2 9.9 7 10.6 7.5 11.3L12 18.6zM14.7 31.8v54.2c0 3 1.5 4.1 5 3.8l67.5-3.8c3.4-.2 3.8-2 3.8-4.5V28.3c0-2.4-.9-3.7-3-3.5l-70 4c-2.3.2-3.3 1.3-3.3 3zm66.3.7l.1 52-60.5 3.4-.1-52 60.5-3.4zM28.4 46.9c-2.4.1-2.9-1.6-.7-2.5l34-4.2c2.1-.2 2.3 1.1.8 1.8l-34.1 4.9zM27.3 59l-.1-2.1L63 53.8c2.2-.2 2.5 1.4.3 2.4L29.2 59.5l-1.9-.5z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Notion</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Sync pages as tasks · auto-capture action items</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:#9fcd44;font-weight:600;background:rgba(127,186,0,.12);padding:2px 7px;border-radius:4px">Connected</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Todoist')" style="cursor:pointer">
+        <div class="set-ico" style="background:#DB4035">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M21.2 0H2.8C1.3 0 0 1.3 0 2.8v18.4C0 22.7 1.3 24 2.8 24h18.4c1.5 0 2.8-1.3 2.8-2.8V2.8C24 1.3 22.7 0 21.2 0zM5.8 17.9l-2-1.1 5.7-3.3 2 1.1-5.7 3.3zm0-4.8l-2-1.1 5.7-3.3 2 1.1-5.7 3.3zm0-4.8l-2-1.1 5.7-3.3 2 1.1-5.7 3.3zm12.8 8.3l-7.4-4.3 7.4-4.3v8.6zm0-9.6l-7.4-4.3 7.4-4.3v8.6z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Todoist</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Import existing tasks · two-way sync</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Apple Reminders')" style="cursor:pointer">
+        <div class="set-ico" style="background:rgba(255,69,58,.9)">
+          <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 7v4l3 2"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Apple Reminders</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Sync iOS reminders as Kaal tasks</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Work &amp; Corporate</div>
+    <div class="set-card" style="margin-bottom:12px">
+
+      <div class="set-row" onclick="connectIntegration(this,'Slack')" style="cursor:pointer">
+        <div class="set-ico" style="background:#4A154B">
+          <svg width="11" height="11" viewBox="0 0 54 54" fill="white"><path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386"/><path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387"/><path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386"/><path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Slack</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Capture tasks from messages · /dhyana command</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:#9fcd44;font-weight:600;background:rgba(127,186,0,.12);padding:2px 7px;border-radius:4px">Connected</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Jira')" style="cursor:pointer">
+        <div class="set-ico" style="background:#0052CC">
+          <svg width="11" height="11" viewBox="0 0 32 32" fill="white"><path d="M15.999 0C7.163 0 0 7.163 0 16s7.163 16 15.999 16C24.837 32 32 24.837 32 16S24.837 0 15.999 0zm.001 6l5.758 9.685L16 24 10.242 15.685 16 6z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Jira</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Sync issues assigned to you → Q1/Q2 auto-sort</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Asana')" style="cursor:pointer">
+        <div class="set-ico" style="background:#F06A6A">
+          <svg width="11" height="11" viewBox="0 0 32 32" fill="white"><circle cx="16" cy="10" r="6"/><circle cx="7" cy="23" r="6"/><circle cx="25" cy="23" r="6"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Asana</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Import My Tasks · due dates preserved</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Linear')" style="cursor:pointer">
+        <div class="set-ico" style="background:#5E6AD2">
+          <svg width="11" height="11" viewBox="0 0 100 100" fill="white"><path d="M1.22 61.15a54.75 54.75 0 0 0 37.63 37.63L1.22 61.15zM0 49.11l50.89 50.89A55.13 55.13 0 0 0 61.1 98.8L1.2 38.9A55.13 55.13 0 0 0 0 49.11zM6.3 26.63 73.37 93.7a54.9 54.9 0 0 0 11.14-7.02L13.32 15.49A54.9 54.9 0 0 0 6.3 26.63zM19.63 10.96 89.04 80.37a54.84 54.84 0 0 0 7.87-10.25L29.88 3.09a54.84 54.84 0 0 0-10.25 7.87zM37.31 2.08 97.92 62.69A55 55 0 0 0 100 49.94V49A50 50 0 0 0 51 0h-.94A55 55 0 0 0 37.31 2.08z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Linear</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Engineering issues → tasks with sprint context</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Teams')" style="cursor:pointer">
+        <div class="set-ico" style="background:#6264A7">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M20 4.6a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0zM14 8h6v8h-2v-6h-4V8zM9.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM0 9h13v9.5H9.5V12H3.5v6.5H0V9z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Microsoft Teams</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Action items from meetings → auto-captured</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'GitHub')" style="cursor:pointer">
+        <div class="set-ico" style="background:#24292e">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.48.99.11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">GitHub</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Issues &amp; PRs assigned to you → tasks</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Calendar &amp; Email</div>
+    <div class="set-card" style="margin-bottom:12px">
+
+      <div class="set-row" onclick="connectIntegration(this,'Google Calendar')" style="cursor:pointer">
+        <div class="set-ico" style="background:#fff;border:.5px solid var(--bdr)">
+          <svg width="11" height="11" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2" fill="#4285F4"/><rect x="2" y="8" width="20" height="14" rx="0" fill="white"/><rect x="2" y="8" width="20" height="3" fill="#4285F4"/><text x="12" y="19" font-size="7" text-anchor="middle" fill="#4285F4" font-weight="bold">31</text></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Google Calendar</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Events → tasks · two-way deadline sync</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:#9fcd44;font-weight:600;background:rgba(127,186,0,.12);padding:2px 7px;border-radius:4px">Connected</div>
+      </div>
+
+      <div class="set-row" onclick="connectIntegration(this,'Outlook')" style="cursor:pointer">
+        <div class="set-ico" style="background:#0078D4">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M14 2v8h8L14 2zM13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8h-7V2zM8 10h8v1H8v-1zm0 3h8v1H8v-1zm0 3h5v1H8v-1z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Outlook &amp; Office 365</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Calendar &amp; email · corporate SSO supported</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+
+      <div class="set-row" style="cursor:pointer;background:var(--acc-bg)" onclick="isPro()?nav('gmail'):showUpgrade('settings','Gmail deep sync is a Pro feature.')">
+        <div class="set-ico" style="background:#EA4335">
+          <svg width="11" height="11" viewBox="0 0 24 24"><path fill="white" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl" style="color:var(--acc2)">Gmail</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">Emails parsed · 4 tasks ready</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:#9fcd44;font-weight:600;background:rgba(127,186,0,.12);padding:2px 7px;border-radius:4px">Active</div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">AI Assistants</div>
+    <div class="set-card" style="margin-bottom:12px">
+      <div class="set-row" onclick="connectIntegration(this,'ChatGPT')" style="cursor:pointer">
+        <div class="set-ico" style="background:#10A37F">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M22.28 9.28a6 6 0 0 0-.52-4.92 6.06 6.06 0 0 0-6.5-2.9A6 6 0 0 0 10.76 0a6.06 6.06 0 0 0-5.77 4.19 6 6 0 0 0-4 2.9 6.06 6.06 0 0 0 .74 7.1 6 6 0 0 0 .52 4.93 6.06 6.06 0 0 0 6.5 2.9A6 6 0 0 0 13.24 24a6.06 6.06 0 0 0 5.77-4.19 6 6 0 0 0 4-2.9 6.06 6.06 0 0 0-.73-7.63zM13.24 22.5a4.5 4.5 0 0 1-2.89-1.05l.14-.08 4.8-2.77a.8.8 0 0 0 .4-.68v-6.77l2.03 1.17a.07.07 0 0 1 .04.06v5.6a4.51 4.51 0 0 1-4.52 4.52zm-9.7-4.14a4.5 4.5 0 0 1-.54-3.02l.14.09 4.8 2.77a.77.77 0 0 0 .78 0l5.86-3.38v2.34a.08.08 0 0 1-.03.07l-4.85 2.8a4.51 4.51 0 0 1-6.16-1.67zm-1.26-9.9a4.49 4.49 0 0 1 2.35-1.98v5.7a.77.77 0 0 0 .39.67l5.84 3.37-2.03 1.17a.08.08 0 0 1-.07 0l-4.85-2.8a4.51 4.51 0 0 1-1.63-6.13zm16.68 3.87l-5.86-3.38 2.03-1.17a.08.08 0 0 1 .07 0l4.85 2.8a4.5 4.5 0 0 1-.7 8.12v-5.7a.78.78 0 0 0-.39-.67zm2.02-3.04l-.14-.08-4.8-2.77a.78.78 0 0 0-.78 0L9.4 10.83V8.49a.07.07 0 0 1 .03-.07l4.85-2.79a4.5 4.5 0 0 1 6.7 4.66zm-12.7 4.18l-2.03-1.17a.07.07 0 0 1-.04-.06v-5.6a4.5 4.5 0 0 1 7.38-3.46l-.14.08-4.8 2.77a.79.79 0 0 0-.39.68v6.76zm1.1-2.37L12 9.75l2.34 1.35v2.7L12 15.15l-2.34-1.35V11.1z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">ChatGPT / OpenAI</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">AI task decomposition · voice-to-tasks</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+      <div class="set-row" onclick="connectIntegration(this,'Siri')" style="cursor:pointer">
+        <div class="set-ico" style="background:linear-gradient(135deg,#5856D6,#0A84FF)">
+          <svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="set-lbl">Siri Shortcuts</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">"Hey Siri, add to Kaal" · voice capture</div>
+        </div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Connect ›</div>
+      </div>
+    </div>
+
+    <div style="background:rgba(10,132,255,.06);border:.5px solid rgba(10,132,255,.2);border-radius:11px;padding:11px 12px">
+      <div style="font-size:var(--fs-sm);font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--acc2);margin-bottom:8px">✦ How integrations work</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="width:16px;height:16px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><div style="font-size:var(--fs-xs);font-weight:700;color:#fff">1</div></div>
+          <div style="font-size:var(--fs-sm);color:var(--ink2);line-height:1.5">Connect your work tool — Kaal reads tasks/issues assigned to you</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="width:16px;height:16px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><div style="font-size:var(--fs-xs);font-weight:700;color:#fff">2</div></div>
+          <div style="font-size:var(--fs-sm);color:var(--ink2);line-height:1.5">AI scores each item and suggests Q1/Q2/Q3/Q4 based on deadline + importance</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="width:16px;height:16px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><div style="font-size:var(--fs-xs);font-weight:700;color:#fff">3</div></div>
+          <div style="font-size:var(--fs-sm);color:var(--ink2);line-height:1.5">You confirm — task lands in the right quadrant with full context from source</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

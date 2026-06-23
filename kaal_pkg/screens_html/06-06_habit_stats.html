@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Habit Stats · p-habitstats</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Habit Stats</b>
+  <span class="pill">id: p-habitstats</span>
+  <span class="pill">section: Habits</span>
+  <span class="pill">parent: habits</span>
+  <a class="pill" href="../screens_png/06-06_habit_stats.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-habitstats</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-habitstats" data-parent="habits" >
+  <div class="inherited-bar"></div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 6px;flex-shrink:0">
+    <button class="add-back" onclick="nav('habits')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="pg-title">Habit Statistics</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:6px 12px 70px;display:flex;flex-direction:column;gap:8px">
+
+    <div style="display:flex;background:var(--surf2);border-radius:9px;padding:2px;flex-shrink:0">
+      <div id="hst-week" onclick="selHabitStatTab('week')" style="flex:1;text-align:center;padding:6px;border-radius:7px;font-size:var(--fs-sm);font-weight:600;background:var(--surf);color:var(--ink);cursor:pointer">Week</div>
+      <div id="hst-month" onclick="selHabitStatTab('month')" style="flex:1;text-align:center;padding:6px;border-radius:7px;font-size:var(--fs-sm);font-weight:600;color:var(--ink3);cursor:pointer">Month</div>
+      <div id="hst-year" onclick="selHabitStatTab('year')" style="flex:1;text-align:center;padding:6px;border-radius:7px;font-size:var(--fs-sm);font-weight:600;color:var(--ink3);cursor:pointer">Year</div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+      <div style="width:22px;height:22px;border-radius:50%;background:var(--surf2);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink)">March 25 – 31, 2025</div>
+      <div style="width:22px;height:22px;border-radius:50%;background:var(--surf2);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="9" height="9" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></div>
+    </div>
+
+    <div style="background:var(--surf);border-radius:13px;padding:14px;border:.5px solid var(--bdr);text-align:center">
+      <div style="font-size:var(--fs-sm);color:var(--ink3);margin-bottom:4px">Completion Rate</div>
+      <div style="font-family:var(--font-display);font-size:var(--fs-hero);font-weight:700;color:#9fcd44;line-height:1">78%</div>
+
+      <div style="margin:10px auto 0;width:100%;height:44px;position:relative">
+        <svg viewBox="0 0 280 44" style="width:100%;height:44px" preserveAspectRatio="none">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9fcd44" stop-opacity=".35"/><stop offset="100%" stop-color="#9fcd44" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 38 C20 32, 40 10, 60 15 S100 35, 120 20 S160 8, 180 18 S220 30, 240 12 S260 6, 280 10" fill="none" stroke="#9fcd44" stroke-width="2" stroke-linecap="round"/>
+          <path d="M0 38 C20 32, 40 10, 60 15 S100 35, 120 20 S160 8, 180 18 S220 30, 240 12 S260 6, 280 10 L280 44 L0 44Z" fill="url(#sg)"/>
+        </svg>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:2px;padding:0 2px">
+        <div style="font-size:var(--fs-xs);color:var(--ink3)">Mar 1</div>
+        <div style="font-size:var(--fs-xs);color:var(--ink3)">Mar 16</div>
+        <div style="font-size:var(--fs-xs);color:var(--ink3)">Mar 31</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:var(--surf);border-radius:11px;padding:11px;border:.5px solid var(--bdr)">
+        <div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:3px">Longest Streak</div>
+        <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:700;color:var(--ink)">21 days 🔥</div>
+      </div>
+      <div style="background:var(--surf);border-radius:11px;padding:11px;border:.5px solid var(--bdr)">
+        <div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:3px">Habits Tracked</div>
+        <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:700;color:var(--ink)">4</div>
+      </div>
+      <div style="background:var(--surf);border-radius:11px;padding:11px;border:.5px solid var(--bdr)">
+        <div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:3px">Perfect Days</div>
+        <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:700;color:var(--acc2)">12</div>
+      </div>
+      <div style="background:var(--surf);border-radius:11px;padding:11px;border:.5px solid var(--bdr)">
+        <div style="font-size:var(--fs-xs);color:var(--ink3);margin-bottom:3px">Total Completions</div>
+        <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:700;color:var(--ink)">86</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr)">
+      <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink);margin-bottom:10px">Habit Completion</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:var(--fs-sm)">🏃</span><div style="flex:1;font-size:var(--fs-sm);color:var(--ink)">Morning run</div><div style="font-size:var(--fs-sm);font-weight:700;color:#9fcd44">87%</div></div><div style="height:5px;background:var(--surf3);border-radius:3px"><div style="width:87%;height:100%;background:#9fcd44;border-radius:3px"></div></div></div>
+        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:var(--fs-sm)">✍️</span><div style="flex:1;font-size:var(--fs-sm);color:var(--ink)">Morning journaling</div><div style="font-size:var(--fs-sm);font-weight:700;color:var(--acc2)">92%</div></div><div style="height:5px;background:var(--surf3);border-radius:3px"><div style="width:92%;height:100%;background:var(--acc2);border-radius:3px"></div></div></div>
+        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:var(--fs-sm)">💪</span><div style="flex:1;font-size:var(--fs-sm);color:var(--ink)">Strength training</div><div style="font-size:var(--fs-sm);font-weight:700;color:#BF5AF2">67%</div></div><div style="height:5px;background:var(--surf3);border-radius:3px"><div style="width:67%;height:100%;background:#BF5AF2;border-radius:3px"></div></div></div>
+        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:var(--fs-sm)">📚</span><div style="flex:1;font-size:var(--fs-sm);color:var(--ink)">Read 30 min</div><div style="font-size:var(--fs-sm);font-weight:700;color:var(--q3)">45%</div></div><div style="height:5px;background:var(--surf3);border-radius:3px"><div style="width:45%;height:100%;background:var(--q3);border-radius:3px"></div></div></div>
+      </div>
+    </div>
+
+    <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr)">
+      <div style="font-size:var(--fs-sm);font-weight:600;color:var(--ink);margin-bottom:8px">Best Days</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:50px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:36px;background:#9fcd44"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">M</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:30px;background:var(--surf3)"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">T</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:34px;background:#9fcd44"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">W</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:28px;background:var(--surf3)"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">T</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:38px;background:#9fcd44"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">F</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:16px;background:var(--surf3)"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">S</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;border-radius:3px 3px 0 0;height:14px;background:var(--surf3)"></div><div style="font-size:var(--fs-xs);color:var(--ink3)">S</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

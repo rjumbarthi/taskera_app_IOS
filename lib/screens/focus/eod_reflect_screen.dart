@@ -1,0 +1,353 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../routing/routes.dart';
+import '../../theme/kaal_colors.dart';
+import '../../theme/kaal_theme.dart';
+import '../../widgets/add_back_button.dart';
+
+class EodReflectScreen extends StatefulWidget {
+  const EodReflectScreen({super.key});
+
+  @override
+  State<EodReflectScreen> createState() => _EodReflectScreenState();
+}
+
+class _EodReflectScreenState extends State<EodReflectScreen> {
+  final _bestMomentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _bestMomentController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = KaalTheme.of(context).colors;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 4, 12, 4),
+          child: Row(
+            children: [
+              AddBackButton(onTap: () => context.go(KaalRoutes.focus)),
+              const SizedBox(width: 8),
+              Text(
+                'EOD Reflect',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                  color: colors.ink,
+                  height: 1.1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: const Color(0xEB0A0A0C),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _ReflectCard(
+                  colors: colors,
+                  controller: _bestMomentController,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Reflect card ──────────────────────────────────────────────────────────────
+
+class _ReflectCard extends StatelessWidget {
+  final KaalColors colors;
+  final TextEditingController controller;
+
+  const _ReflectCard({required this.colors, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1E),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(width: 0.5, color: colors.bdr2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: GestureDetector(
+              onTap: () => context.go(KaalRoutes.focus),
+              behavior: HitTestBehavior.opaque,
+              child: const SizedBox(
+                width: 28,
+                height: 28,
+                child: Center(
+                  child: Text(
+                    '×',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 22,
+                      color: Color(0x66FFFFFF),
+                      height: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          const Text('🌙', textAlign: TextAlign.center, style: TextStyle(fontSize: 30, height: 1)),
+          const SizedBox(height: 9),
+          const Text(
+            'SATURDAY · 10:04 PM',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: Color(0xFF5A5A62),
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 10),
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _StatItem(value: '7',  label: 'done',    valueColor: colors.successFg),
+                _VertDivider(color: colors.bdr),
+                _StatItem(value: '3',  label: 'habits',  valueColor: KaalColors.q4),
+                _VertDivider(color: colors.bdr),
+                _StatItem(value: '2h', label: 'focused', valueColor: KaalColors.acc2),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '"Did you do meaningful work today?"',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Fraunces',
+              fontSize: 19,
+              fontWeight: FontWeight.w500,
+              color: colors.ink,
+              height: 1.45,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            'Not urgent tasks — important ones. The Q2 work that moves your life forward.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 11,
+              color: colors.ink3,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+            decoration: BoxDecoration(
+              color: const Color(0x0AFFFFFF),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(width: 0.5, color: colors.bdr2),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'BEST MOMENT TODAY',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
+                    color: colors.ink3,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                TextField(
+                  controller: controller,
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.4),
+                  decoration: InputDecoration(
+                    hintText: 'e.g. "Shipped the new onboarding flow"',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: colors.ink3,
+                      height: 1.4,
+                    ),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 11),
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => context.go(KaalRoutes.focus),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 11),
+                    decoration: BoxDecoration(
+                      color: KaalColors.q2,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Yes ✓',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 7),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 11),
+                    decoration: BoxDecoration(
+                      color: colors.surf3,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Not really',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.ink2,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 11),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Current streak: ',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1),
+              ),
+              Text(
+                '14 days 🔥',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: colors.ink,
+                  height: 1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () => context.go(KaalRoutes.focus),
+            child: Text(
+              'Skip for tonight',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 11,
+                color: colors.ink3,
+                height: 1.3,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Stat item (done / habits / focused) ───────────────────────────────────────
+
+class _StatItem extends StatelessWidget {
+  final String value;
+  final String label;
+  final Color valueColor;
+
+  const _StatItem({
+    required this.value,
+    required this.label,
+    required this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontFamily: 'Fraunces',
+              fontSize: 19,
+              fontWeight: FontWeight.w700,
+              color: valueColor,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 9,
+              color: Color(0xFF5A5A62),
+              height: 1.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VertDivider extends StatelessWidget {
+  final Color color;
+  const _VertDivider({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 0.5,
+      child: ColoredBox(color: color),
+    );
+  }
+}

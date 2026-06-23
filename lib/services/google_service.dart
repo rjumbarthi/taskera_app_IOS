@@ -1,0 +1,176 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:googleapis/calendar/v3.dart' as gcal;
+import 'package:googleapis/gmail/v1.dart' as gml;
+import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class _GoogleAuthClient extends http.BaseClient {
+  _GoogleAuthClient(this._headers);
+  final Map<String, String> _headers;
+  final http.Client _inner = http.Client();
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) =>
+      _inner.send(request..headers.addAll(_headers));
+
+  @override
+  void close() {
+    _inner.close();
+    super.close();
+  }
+}
+
+class GoogleService {
+  GoogleService(this._storage);
+
+  final FlutterSecureStorage _storage;
+  final _supabase = Supabase.instance.client;
+
+  static const _scopeCalendar    = 'https://www.googleapis.com/auth/calendar.readonly';
+  static const _scopeGmail       = 'https://www.googleapis.com/auth/gmail.readonly';
+  static const _keyCalToken      = 'google_cal_token';
+  static const _keyCalRefresh    = 'google_cal_refresh';
+  static const _keyGmailToken    = 'google_gmail_token';
+  static const _keyGmailRefresh  = 'google_gmail_refresh';
+
+  Future<bool> get isAnyConnected async =>
+      await _storage.read(key: _keyCalToken) != null ||
+      await _storage.read(key: _keyGmailToken) != null;
+
+  Future<bool> get isCalConnected async =>
+      await _storage.read(key: _keyCalToken) != null;
+
+  Future<bool> get isGmailConnected async =>
+      await _storage.read(key: _keyGmailToken) != null;
+
+  // ── Connect ────────────────────────────────────────────────────────────────
+
+  Future<bool> connectCalendar() async {
+    final result = await _oauthViaSupabase(scope: _scopeCalendar);
+    if (result == null) return false;
+    await _storage.write(key: _keyCalToken, value: result.token);
+    if (result.refresh != null) await _storage.write(key: _keyCalRefresh, value: result.refresh!);
+    return true;
+  }
+
+  Future<bool> connectGmail() async {
+    final result = await _oauthViaSupabase(scope: _scopeGmail);
+    if (result == null) return false;
+    await _storage.write(key: _keyGmailToken, value: result.token);
+    if (result.refresh != null) await _storage.write(key: _keyGmailRefresh, value: result.refresh!);
+    return true;
+  }
+
+  Future<void> disconnect() async {
+    await _storage.delete(key: _keyCalToken);
+    await _storage.delete(key: _keyCalRefresh);
+    await _storage.delete(key: _keyGmailToken);
+    await _storage.delete(key: _keyGmailRefresh);
+  }
+
+  Future<void> disconnectCalendar() async {
+    await _storage.delete(key: _keyCalToken);
+    await _storage.delete(key: _keyCalRefresh);
+  }
+
+  Future<void> disconnectGmail() async {
+    await _storage.delete(key: _keyGmailToken);
+    await _storage.delete(key: _keyGmailRefresh);
+  }
+
+  // Returns a fresh access token, using the stored refresh token if the Supabase
+  // session has rotated since connect time.
+  Future<String?> _validToken(String tokenKey, String refreshKey) async {
+    final stored = await _storage.read(key: tokenKey);
+    if (stored != null) return stored;
+    // No stored token — try pulling from current Supabase session.
+    final session = _supabase.auth.currentSession;
+    if (session?.providerToken != null) {
+      await _storage.write(key: tokenKey, value: session!.providerToken!);
+      return session.providerToken;
+    }
+    return null;
+  }
+
+  // ── Calendar ───────────────────────────────────────────────────────────────
+
+  Future<List<gcal.Event>> fetchCalendarEvents({int days = 7}) async {
+    final token = await _validToken(_keyCalToken, _keyCalRefresh);
+    if (token == null) return [];
+    final client = _GoogleAuthClient({'Authorization': 'Bearer $token'});
+    try {
+      final api = gcal.CalendarApi(client);
+      final now = DateTime.now().toUtc();
+      final response = await api.events.list(
+        'primary',
+        timeMin: now,
+        timeMax: now.add(Duration(days: days)),
+        singleEvents: true,
+        orderBy: 'startTime',
+        maxResults: 50,
+      );
+      return response.items ?? [];
+    } catch (_) {
+      return [];
+    } finally {
+      client.close();
+    }
+  }
+
+  // ── Gmail ──────────────────────────────────────────────────────────────────
+
+  Future<List<gml.Message>> fetchUnreadMessages({int maxResults = 20}) async {
+    final token = await _validToken(_keyGmailToken, _keyGmailRefresh);
+    if (token == null) return [];
+    final client = _GoogleAuthClient({'Authorization': 'Bearer $token'});
+    try {
+      final api  = gml.GmailApi(client);
+      final list = await api.users.messages.list(
+        'me',
+        maxResults: maxResults,
+        q: 'is:unread',
+      );
+      final messages = <gml.Message>[];
+      for (final ref in list.messages ?? []) {
+        try {
+          messages.add(await api.users.messages.get(
+            'me', ref.id!,
+            format: 'metadata',
+            metadataHeaders: ['Subject', 'From', 'Date'],
+          ));
+        } catch (_) {}
+      }
+      return messages;
+    } catch (_) {
+      return [];
+    } finally {
+      client.close();
+    }
+  }
+
+  // ── Supabase Google OAuth ──────────────────────────────────────────────────
+
+  Future<({String token, String? refresh})?> _oauthViaSupabase({required String scope}) async {
+    await _supabase.auth.signInWithOAuth(
+      OAuthProvider.google,
+      scopes: scope,
+      redirectTo: 'io.supabase.kaalapp://login-callback',
+      authScreenLaunchMode: LaunchMode.externalApplication,
+    );
+
+    // Only signedIn carries a providerToken — tokenRefreshed does not.
+    final event = await _supabase.auth.onAuthStateChange
+        .where((e) => e.event == AuthChangeEvent.signedIn)
+        .first
+        .timeout(const Duration(minutes: 3));
+
+    final providerToken = event.session?.providerToken;
+    if (providerToken == null) return null;
+    return (token: providerToken, refresh: event.session?.providerRefreshToken);
+  }
+}
+
+final googleServiceProvider = Provider<GoogleService>((ref) {
+  return GoogleService(const FlutterSecureStorage());
+});

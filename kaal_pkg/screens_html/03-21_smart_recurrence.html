@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Smart Recurrence · p-recurring</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Smart Recurrence</b>
+  <span class="pill">id: p-recurring</span>
+  <span class="pill">section: Tasks</span>
+  <span class="pill">parent: focus</span>
+  <a class="pill" href="../screens_png/03-21_smart_recurrence.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-recurring</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-recurring" data-parent="focus" >
+  <div class="inherited-bar"></div>
+
+  <div style="flex:1;overflow-y:auto;padding:8px 12px 72px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <button class="add-back" onclick="nav(window._lastTab||'tasks')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div><div class="pg-title">Smart recurrence</div><div class="pg-sub">Adapts to your completion patterns</div></div>
+    </div>
+    <div style="background:rgba(10,132,255,.07);border-radius:10px;padding:9px 12px;border:.5px solid rgba(10,132,255,.2);margin-bottom:12px">
+      <div style="font-size:var(--fs-sm);color:var(--acc2);line-height:1.6">✦ AI watches your completion rates and suggests smarter frequencies — never nags, always adapts.</div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Frequency suggestions</div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+      <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid rgba(255,185,0,.3)">
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);margin-top:4px;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Morning journaling</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Current: Daily · Completion: 60%</div></div>
+          <div style="font-size:var(--fs-sm);background:rgba(255,185,0,.14);color:#FFB900;padding:2px 6px;border-radius:4px">Adapt</div>
+        </div>
+        <div style="background:rgba(255,185,0,.07);border-radius:8px;padding:8px 10px;margin-bottom:7px;border:.5px solid rgba(255,185,0,.2)">
+          <div style="font-size:var(--fs-sm);color:#FFB900;font-weight:600;margin-bottom:2px">Suggestion: Switch to Weekdays</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">You miss weekends consistently. 60% → 85% predicted completion.</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onclick="applyRecurrence(this,'Weekdays')" style="flex:1;padding:6px;border-radius:8px;background:rgba(255,185,0,.12);color:#FFB900;font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">Switch to weekdays</button>
+          <button onclick="this.closest('[style*=border-radius:12px]').style.opacity='.4'" style="flex:1;padding:6px;border-radius:8px;background:var(--surf2);color:var(--ink3);font-size:var(--fs-sm);font-weight:500;border:none;cursor:pointer;font-family:inherit">Keep daily</button>
+        </div>
+      </div>
+      <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid rgba(127,186,0,.25)">
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);margin-top:4px;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Exercise</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Current: Weekdays · Completion: 96%</div></div>
+          <div style="font-size:var(--fs-sm);background:rgba(127,186,0,.14);color:#9fcd44;padding:2px 6px;border-radius:4px">Stretch</div>
+        </div>
+        <div style="background:rgba(127,186,0,.07);border-radius:8px;padding:8px 10px;margin-bottom:7px;border:.5px solid rgba(127,186,0,.2)">
+          <div style="font-size:var(--fs-sm);color:#9fcd44;font-weight:600;margin-bottom:2px">Suggestion: Add Saturday too</div>
+          <div style="font-size:var(--fs-sm);color:var(--ink3)">96% streak for 3 weeks — you're ready to extend.</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onclick="applyRecurrence(this,'Weekdays + Sat')" style="flex:1;padding:6px;border-radius:8px;background:rgba(127,186,0,.12);color:#9fcd44;font-size:var(--fs-sm);font-weight:600;border:none;cursor:pointer;font-family:inherit">Add Saturday</button>
+          <button onclick="this.closest('[style*=border-radius:12px]').style.opacity='.4'" style="flex:1;padding:6px;border-radius:8px;background:var(--surf2);color:var(--ink3);font-size:var(--fs-sm);font-weight:500;border:none;cursor:pointer;font-family:inherit">Keep as is</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">All recurring · 4 tasks</div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="background:var(--surf);border-radius:10px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Morning journaling</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Daily · 60% · 🔥 14d</div></div>
+        <div style="font-size:var(--fs-xs);background:rgba(255,185,0,.12);color:#FFB900;padding:2px 6px;border-radius:4px">Adapt</div>
+      </div>
+      <div style="background:var(--surf);border-radius:10px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Exercise</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Weekdays · 96% · 🔥 7d</div></div>
+        <div style="font-size:var(--fs-xs);background:rgba(127,186,0,.1);color:#9fcd44;padding:2px 6px;border-radius:4px">Stretch</div>
+      </div>
+      <div style="background:var(--surf);border-radius:10px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--acc);flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Weekly review</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Weekly Sun · 100% · 🔥 5w</div></div>
+        <div style="font-size:var(--fs-xs);background:rgba(127,186,0,.1);color:#9fcd44;padding:2px 6px;border-radius:4px">On track</div>
+      </div>
+      <div style="background:var(--surf);border-radius:10px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q3);flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Team standup prep</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Weekdays · 72% · 2w data</div></div>
+        <div style="font-size:var(--fs-xs);background:var(--surf2);color:var(--ink3);padding:2px 6px;border-radius:4px">Watching</div>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Day Schedule · p-schedule</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/shared.css">
+<style>
+  html, body {
+    margin: 0;
+    background: #0a0d12;
+    color: #eee;
+    font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid #222;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .meta b { color: #fff; font-size: 15px; }
+  .meta .pill {
+    background: #1a1f29; border: 1px solid #2a3140;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; color: #aab;
+  }
+  .meta a.pill { color: #7af; text-decoration: none; }
+  .notice {
+    padding: 12px 20px; background: #15191f;
+    border-bottom: 1px solid #222;
+    font-size: 12.5px; color: #aab; line-height: 1.55;
+  }
+  .notice b { color: #ffd166; }
+  .stage {
+    display: flex; justify-content: center; padding: 28px 16px 60px;
+    background: linear-gradient(#0a0d12, #000);
+  }
+  .phone-frame {
+    position: relative; width: 390px; height: 844px;
+    border-radius: 36px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, #1a3a5c, #0a0d12);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 0 2px #222;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 24px; background: #000;
+    border-radius: 0 0 16px 16px; z-index: 50;
+  }
+  .phone-wrap {
+    position: relative; width: 390px; height: 844px; overflow: hidden;
+  }
+  .phone-wrap .screen {
+    position: absolute; inset: 0;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="theme-glass">
+
+<div class="meta">
+  <b>Day Schedule</b>
+  <span class="pill">id: p-schedule</span>
+  <span class="pill">section: Tasks</span>
+  <span class="pill">parent: tasks</span>
+  <a class="pill" href="../screens_png/03-20_day_schedule.png" target="_blank">PNG (ground truth)</a>
+  <a class="pill" href="../specs/SCREEN_MAP.md">All screens</a>
+</div>
+
+<div class="notice">
+  <b>How to read this file.</b>
+  The HTML below is the prototype's <em>raw markup</em> for screen <code>p-schedule</code>.
+  It renders the screen's initial state at the design viewport (390 × 844).
+  <br><br>
+  <b>The PNG is the ground truth for visual state.</b>
+  Many screens depend on JS to populate content, expand groups, apply filters, or scroll —
+  this static HTML cannot reproduce those. 
+  <br><br>
+  When implementing in Compose, use the PNG for what the user sees,
+  this HTML for the markup hierarchy and inline styles,
+  and <code>shared/shared.css</code> for class-level rules.
+</div>
+
+<div class="stage">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-wrap" id="phone-wrap">
+<div class="screen" id="p-schedule" data-parent="tasks" >
+  <div class="inherited-bar"></div>
+
+  <div class="top-bar">
+    <div class="top-bar-left" style="flex-direction:row;align-items:center;gap:7px"><button class="add-back" onclick="nav('tasks')"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><div>
+      <div class="pg-title">Auto-schedule</div>
+      <div class="pg-sub">AI finds the best slots for your tasks</div>
+    </div></div>
+    <div class="top-bar-right">
+      <div class="top-ico" onclick="nav('search')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div class="top-ico" onclick="nav('settings')"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="var(--ink3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="top-ico tb-profile-icon" onclick="nav('profile')"><img class="tb-avatar" src="" alt="P" style="width:24px;height:24px;border-radius:50%;object-fit:cover;display:block"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:0 12px 72px">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <button onclick="runAutoSchedule()" style="background:var(--acc);border:none;border-radius:9px;padding:7px 12px;color:#fff;font-size:var(--fs-md);font-weight:600;cursor:pointer;font-family:inherit">Schedule all</button>
+    </div>
+    <div style="background:rgba(10,132,255,.07);border-radius:10px;padding:9px 12px;border:.5px solid rgba(10,132,255,.2);margin-bottom:12px">
+      <div style="font-size:var(--fs-sm);color:var(--acc2);line-height:1.6">✦ AI scans your calendar, peak hours and task scores to find optimal slots. You confirm each one.</div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Needs scheduling · 3 tasks</div>
+
+    <div id="sched-1" style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr2);margin-bottom:6px">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:9px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q1);margin-top:4px;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Submit assignment before deadline</div><div style="font-size:var(--fs-sm);color:#FF6B6B">Q1 · Overdue · Score 9.2</div></div>
+      </div>
+      <div style="background:rgba(10,132,255,.07);border-radius:8px;padding:8px 10px;margin-bottom:8px;border:.5px solid rgba(10,132,255,.2)">
+        <div style="font-size:var(--fs-xs);color:var(--acc2);margin-bottom:3px;font-weight:600">✦ AI suggestion</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Tomorrow · 9:00–10:30 AM</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Your peak window · Free slot · 90 min</div></div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:#9fcd44;background:rgba(127,186,0,.1);padding:2px 6px;border-radius:4px">Best</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button onclick="confirmSlot('sched-1','Tomorrow 9 AM')" style="flex:1;padding:7px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">✓ Confirm</button>
+        <button onclick="showOtherSlots('sched-1')" style="flex:1;padding:7px;border-radius:8px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:500;border:none;cursor:pointer;font-family:inherit">Other slots</button>
+      </div>
+    </div>
+
+    <div id="sched-2" style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr);margin-bottom:6px">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:9px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);margin-top:4px;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Weekly review</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Q2 · Score 7.1 · Recurring</div></div>
+      </div>
+      <div style="background:rgba(10,132,255,.07);border-radius:8px;padding:8px 10px;margin-bottom:8px;border:.5px solid rgba(10,132,255,.2)">
+        <div style="font-size:var(--fs-xs);color:var(--acc2);margin-bottom:3px;font-weight:600">✦ AI suggestion</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Sunday · 8:00–8:45 PM</div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">Matches recurring pattern · Free slot</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button onclick="confirmSlot('sched-2','Sunday 8 PM')" style="flex:1;padding:7px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">✓ Confirm</button>
+        <button onclick="showOtherSlots('sched-2')" style="flex:1;padding:7px;border-radius:8px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:500;border:none;cursor:pointer;font-family:inherit">Other slots</button>
+      </div>
+    </div>
+
+    <div id="sched-3" style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr);margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:9px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);margin-top:4px;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Q1 performance review prep</div><div style="font-size:var(--fs-sm);color:var(--ink3)">Q2 · Score 8.0 · Due Apr 3</div></div>
+      </div>
+      <div style="background:rgba(10,132,255,.07);border-radius:8px;padding:8px 10px;margin-bottom:8px;border:.5px solid rgba(10,132,255,.2)">
+        <div style="font-size:var(--fs-xs);color:var(--acc2);margin-bottom:3px;font-weight:600">✦ AI suggestion</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Wed Apr 2 · 2:00–3:30 PM</div>
+        <div style="font-size:var(--fs-sm);color:var(--ink3)">2 days before deadline · Afternoon slot</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button onclick="confirmSlot('sched-3','Wed 2 PM')" style="flex:1;padding:7px;border-radius:8px;background:var(--acc);color:#fff;font-size:var(--fs-md);font-weight:600;border:none;cursor:pointer;font-family:inherit">✓ Confirm</button>
+        <button onclick="showOtherSlots('sched-3')" style="flex:1;padding:7px;border-radius:8px;background:var(--surf2);color:var(--ink2);font-size:var(--fs-md);font-weight:500;border:none;cursor:pointer;font-family:inherit">Other slots</button>
+      </div>
+    </div>
+
+    <div style="font-size:var(--fs-xs);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Already scheduled · today</div>
+    <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:9px;margin-bottom:5px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);flex-shrink:0"></div>
+      <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Study for exam — Chapter 4</div><div style="font-size:var(--fs-sm);color:var(--ink3)">2:00–4:00 PM · Confirmed</div></div>
+      <div style="width:7px;height:7px;border-radius:50%;background:#9fcd44"></div>
+    </div>
+    <div style="background:var(--surf);border-radius:12px;padding:10px 12px;border:.5px solid var(--bdr);display:flex;align-items:center;gap:9px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--q2);flex-shrink:0"></div>
+      <div style="flex:1"><div style="font-size:var(--fs-md);font-weight:500;color:var(--ink)">Morning journaling</div><div style="font-size:var(--fs-sm);color:var(--ink3)">6:00–6:30 AM · Recurring</div></div>
+      <div style="width:7px;height:7px;border-radius:50%;background:#9fcd44"></div>
+    </div>
+
+  </div>
+  
+</div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/init.js"></script>
+</body>
+</html>
