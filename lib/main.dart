@@ -20,6 +20,7 @@ import 'data/seed_data.dart';
 import 'data/providers/database_provider.dart';
 import 'routing/app_router.dart';
 import 'routing/routes.dart';
+import 'widgets/focus_pill.dart';
 import 'settings/app_launch_prefs.dart';
 import 'settings/kaal_settings.dart';
 import 'settings/prefs_provider.dart';
@@ -344,7 +345,15 @@ class KaalApp extends ConsumerWidget {
               data: MediaQuery.of(context).copyWith(
                 textScaler: TextScaler.linear(scale),
               ),
-              child: DtnController(router: router, child: child!),
+              child: DtnController(
+                router: router,
+                child: Stack(
+                  children: [
+                    Positioned.fill(child: child!),
+                    const Positioned(top: 0, left: 0, right: 0, child: FocusPillOverlay()),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
