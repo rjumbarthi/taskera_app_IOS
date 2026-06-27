@@ -621,6 +621,9 @@ class _RouterShell extends ConsumerWidget {
       return CurrentTab(
         tab: tab,
         child: Row(
+          // Stretch so the sidebar is full-height and the content gets a bounded
+          // height (otherwise the Today ListView has unbounded height).
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             KaalSidebar(
               currentTab: tab,
