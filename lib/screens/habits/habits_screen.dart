@@ -105,7 +105,8 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
             _StreakBanner(),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 72),
+                // AppShell reserves the bottom-nav footprint; only a small gap here.
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                 children: [
                   ...() {
                     final rows = ref.watch(habitsProvider).value ?? [];
@@ -145,8 +146,6 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
                     ];
                   }(),
                   _AddHabitRow(colors: colors, onTap: () => context.push(KaalRoutes.habitsAddHabit)),
-                  const SizedBox(height: 5),
-                  _SkipDayCard(colors: colors),
                 ],
               ),
             ),
@@ -245,7 +244,7 @@ class _DayCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final circleColor = isFuture
-        ? colors.surf3
+        ? Colors.transparent
         : const Color(0x337FBA00);
     final borderColor = isFuture
         ? colors.bdr
@@ -519,24 +518,34 @@ class _HabitCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
+                // Dead-zone buffer: taps in the padding around the checkmark are
+                // absorbed (never open habit details); only the icon toggles.
                 GestureDetector(
-                  onTap: onCheck,
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: habit.checkedToday ? ac : ac.withAlpha(0x1A),
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 0.5, color: ac.withAlpha(0x99)),
-                    ),
-                    child: Center(
-                      child: SvgPicture.string(
-                        _checkSvg,
-                        width: 18,
-                        height: 18,
-                        colorFilter: ColorFilter.mode(
-                          habit.checkedToday ? Colors.white : ac.withAlpha(0x80),
-                          BlendMode.srcIn,
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: GestureDetector(
+                      onTap: onCheck,
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: habit.checkedToday ? ac : ac.withAlpha(0x1A),
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 0.5, color: ac.withAlpha(0x99)),
+                        ),
+                        child: Center(
+                          child: SvgPicture.string(
+                            _checkSvg,
+                            width: 18,
+                            height: 18,
+                            colorFilter: ColorFilter.mode(
+                              habit.checkedToday ? Colors.white : ac.withAlpha(0x80),
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -553,7 +562,7 @@ class _HabitCard extends StatelessWidget {
                     child: Container(
                       height: 5,
                       decoration: BoxDecoration(
-                        color: i < habit.filled ? ac.withAlpha(0xE5) : colors.surf3,
+                        color: i < habit.filled ? ac.withAlpha(0xE5) : ac.withAlpha(0x1F),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -640,6 +649,7 @@ class _HabitCard extends StatelessWidget {
 
 Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, KaalColors colors) {
   return showModalBottomSheet(
+    isScrollControlled: true,
     context: ctx,
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x8C000000),
@@ -647,7 +657,7 @@ Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, KaalCo
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
         decoration: BoxDecoration(
-          color: colors.surf,
+          color: const Color(0xFF1C1C1E),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(width: 0.5, color: colors.bdr),
         ),
@@ -719,7 +729,7 @@ void _showStreakProtectDialog(BuildContext ctx, KaalColors colors) {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: colors.surf,
+          color: const Color(0xFF1C1C1E),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(width: 0.5, color: const Color(0x4DFFB900)),
         ),
@@ -861,82 +871,4 @@ class _DashedBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedBorderPainter old) => old.color != color || old.radius != radius;
-}
-
-// ── Skip day banner ───────────────────────────────────────────────────────────
-
-class _SkipDayCard extends StatelessWidget {
-  final KaalColors colors;
-  const _SkipDayCard({required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(width: 0.5, color: colors.bdr),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            AppL10n.of(context).somethingCameUp,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, height: 1),
-          ),
-          const SizedBox(height: 1),
-          Text(
-            AppL10n.of(context).rescheduleWorkout,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3.withAlpha(0xB3), height: 1.3),
-          ),
-          const SizedBox(height: 7),
-          Row(
-            children: [
-              _SkipBtn(emoji: '📅', label: AppL10n.of(context).tomorrow,     colors: colors),
-              const SizedBox(width: 5),
-              _SkipBtn(emoji: '🔄', label: AppL10n.of(context).nextSession, colors: colors),
-              const SizedBox(width: 5),
-              _SkipBtn(emoji: '⏭',  label: AppL10n.of(context).skipDay,    colors: colors),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SkipBtn extends StatelessWidget {
-  final String emoji;
-  final String label;
-  final KaalColors colors;
-  const _SkipBtn({required this.emoji, required this.label, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: const Color(0x0DFFFFFF),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(width: 0.5, color: colors.bdr),
-          ),
-          child: Column(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 11, height: 1)),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink2, height: 1),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

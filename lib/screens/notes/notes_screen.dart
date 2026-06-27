@@ -86,7 +86,7 @@ class NotesScreen extends ConsumerWidget {
             await Future.delayed(const Duration(milliseconds: 400));
           },
           child: ListView(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 72),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
           children: [
             _AIBanner(colors: colors),
             const SizedBox(height: 8),
@@ -215,6 +215,7 @@ class _NoteCard extends ConsumerWidget {
     final dao = ref.read(appDatabaseProvider).notesDao;
     final logNotifier = ref.read(activityLogProvider.notifier);
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheetCtx) => _NoteMenuSheet(note: note, dao: dao, colors: colors,
@@ -367,7 +368,7 @@ class _MenuItem extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(4, 11, 4, 11),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.5, color: const Color(0x1AFFFFFF)))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.5, color: colors.bdr0))),
         child: Row(
           children: [
             Icon(icon, size: 18, color: color),

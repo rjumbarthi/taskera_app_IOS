@@ -18,13 +18,12 @@ class LegalScreen extends ConsumerStatefulWidget {
 }
 
 class _LegalScreenState extends ConsumerState<LegalScreen> {
-  late bool _showTerms = widget.showTerms;
-
   @override
   Widget build(BuildContext context) {
     final colors    = KaalTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
     final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final showTerms = widget.showTerms;
 
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
@@ -32,29 +31,13 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           KaalTopBar(
-            title: _showTerms ? 'Terms of Service' : 'Privacy Policy',
+            title: showTerms ? 'Terms of Service' : 'Privacy Policy',
             leading: AddBackButton(onTap: () => Navigator.of(context).pop()),
-          ),
-          // Tab toggle
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Container(
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                color: colors.surf2,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(children: [
-                _Tab(label: 'Terms of Service', active: _showTerms,  colors: colors, onTap: () => setState(() => _showTerms = true)),
-                _Tab(label: 'Privacy Policy',   active: !_showTerms, colors: colors, onTap: () => setState(() => _showTerms = false)),
-              ]),
-            ),
           ),
           Expanded(
             child: SingleChildScrollView(
-              key: ValueKey(_showTerms),
               padding: EdgeInsets.fromLTRB(16, 12, 16, safeBot + 32),
-              child: _showTerms
+              child: showTerms
                   ? _TermsContent(colors: colors)
                   : _PrivacyContent(colors: colors),
             ),
@@ -62,40 +45,6 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
         ]),
       ),
     ]);
-  }
-}
-
-class _Tab extends StatelessWidget {
-  final String label;
-  final bool active;
-  final KaalColors colors;
-  final VoidCallback onTap;
-  const _Tab({required this.label, required this.active, required this.colors, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: active ? null : onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          decoration: BoxDecoration(
-            color: active ? colors.surf : Colors.transparent,
-            borderRadius: BorderRadius.circular(7),
-            border: active ? Border.all(width: 0.5, color: colors.bdr) : null,
-          ),
-          alignment: Alignment.center,
-          child: Text(label,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: active ? colors.ink : colors.ink3,
-                height: 1.2,
-              )),
-        ),
-      ),
-    );
   }
 }
 
@@ -173,7 +122,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '3. Account Registration',
-        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at support@kaal.app.',
+        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at r.official@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -242,7 +191,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '13. Governing Law',
-        body: 'These Terms are governed by the laws of India, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in Bengaluru, India.',
+        body: 'These Terms are governed by the laws of India, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in Hyderabad, India.',
         colors: colors,
       ),
 
@@ -254,7 +203,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '15. Contact',
-        body: 'If you have questions about these Terms, please contact us at:\nsupport@kaal.app',
+        body: 'If you have questions about these Terms, please contact us at:\nr.official@jumbarthi.com',
         colors: colors,
       ),
     ]);
@@ -340,7 +289,7 @@ class _PrivacyContent extends StatelessWidget {
             '• Deletion: Request deletion of your account and associated data. Go to Profile → Edit profile → Delete account. Data is deleted within 30 days.\n'
             '• Portability: Request an export of your data in a machine-readable format.\n'
             '• Opt-out: You can disable optional analytics in Settings → Privacy.\n\n'
-            'To exercise these rights, contact us at privacy@kaal.app.',
+            'To exercise these rights, contact us at r.official@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -356,13 +305,13 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '9. CCPA (California Users)',
-        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact privacy@kaal.app.',
+        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact r.official@jumbarthi.com.',
         colors: colors,
       ),
 
       _Section(
         title: '10. Children\'s Privacy',
-        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at privacy@kaal.app.',
+        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at r.official@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -380,7 +329,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '13. Contact Us',
-        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nprivacy@kaal.app\n\nKaal\nBengaluru, India',
+        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nr.official@jumbarthi.com\n\nKaal\nHyderabad, India',
         colors: colors,
       ),
     ]);

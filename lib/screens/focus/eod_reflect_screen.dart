@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/providers/habits_provider.dart';
+import '../../data/providers/tasks_provider.dart';
+import '../../data/repositories/focus_session_repository.dart';
 import '../../routing/routes.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
 
-class EodReflectScreen extends StatefulWidget {
+class EodReflectScreen extends ConsumerStatefulWidget {
   const EodReflectScreen({super.key});
 
   @override
-  State<EodReflectScreen> createState() => _EodReflectScreenState();
+  ConsumerState<EodReflectScreen> createState() => _EodReflectScreenState();
 }
 
-class _EodReflectScreenState extends State<EodReflectScreen> {
+class _EodReflectScreenState extends ConsumerState<EodReflectScreen> {
   final _bestMomentController = TextEditingController();
 
   @override
@@ -25,6 +29,46 @@ class _EodReflectScreenState extends State<EodReflectScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final tomorrow = todayStart.add(const Duration(days: 1));
+
+    // Done tasks today + a productive-day streak.
+    final doneTasks = ref.watch(doneTasksProvider).value ?? [];
+    final doneDays = doneTasks
+        .where((t) => t.doneAt != null)
+        .map((t) => DateTime(t.doneAt!.year, t.doneAt!.month, t.doneAt!.day))
+        .toSet();
+    final doneToday = doneDays.contains(todayStart)
+        ? doneTasks.where((t) =>
+            t.doneAt != null && !t.doneAt!.isBefore(todayStart) && t.doneAt!.isBefore(tomorrow)).length
+        : 0;
+    var streak = 0;
+    var anchor = doneDays.contains(todayStart) ? todayStart : todayStart.subtract(const Duration(days: 1));
+    while (doneDays.contains(anchor)) {
+      streak++;
+      anchor = anchor.subtract(const Duration(days: 1));
+    }
+
+    // Habits checked off today (distinct non-skipped logs).
+    final todayLogs = ref.watch(habitWeekLogsProvider((todayStart, tomorrow))).value ?? [];
+    final habitsToday = todayLogs.map((l) => l.habitId).toSet().length;
+
+    // Focus time tracked today.
+    final sessions = ref.watch(weeklyFocusSessionsProvider).value ?? [];
+    final focusSecs = sessions
+        .where((s) => !s.startedAt.isBefore(todayStart))
+        .fold<int>(0, (a, s) => a + s.durationSeconds);
+    final fm = focusSecs ~/ 60;
+    final fh = fm ~/ 60;
+    final focusedLabel = fh > 0 ? (fm % 60 > 0 ? '${fh}h ${fm % 60}m' : '${fh}h') : '${fm}m';
+
+    const wd = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+    final h12 = now.hour % 12 == 0 ? 12 : now.hour % 12;
+    final ampm = now.hour < 12 ? 'AM' : 'PM';
+    final dateLabel = '${wd[now.weekday - 1]} · $h12:${now.minute.toString().padLeft(2, '0')} $ampm';
+
     return Column(
       children: [
         Padding(
@@ -56,6 +100,11 @@ class _EodReflectScreenState extends State<EodReflectScreen> {
                 child: _ReflectCard(
                   colors: colors,
                   controller: _bestMomentController,
+                  dateLabel: dateLabel,
+                  doneCount: doneToday,
+                  habitCount: habitsToday,
+                  focusedLabel: focusedLabel,
+                  streak: streak,
                 ),
               ),
             ),
@@ -71,8 +120,21 @@ class _EodReflectScreenState extends State<EodReflectScreen> {
 class _ReflectCard extends StatelessWidget {
   final KaalColors colors;
   final TextEditingController controller;
+  final String dateLabel;
+  final int doneCount;
+  final int habitCount;
+  final String focusedLabel;
+  final int streak;
 
-  const _ReflectCard({required this.colors, required this.controller});
+  const _ReflectCard({
+    required this.colors,
+    required this.controller,
+    required this.dateLabel,
+    required this.doneCount,
+    required this.habitCount,
+    required this.focusedLabel,
+    required this.streak,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +173,10 @@ class _ReflectCard extends StatelessWidget {
           const SizedBox(height: 2),
           const Text('🌙', textAlign: TextAlign.center, style: TextStyle(fontSize: 30, height: 1)),
           const SizedBox(height: 9),
-          const Text(
-            'SATURDAY · 10:04 PM',
+          Text(
+            dateLabel,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 9,
               fontWeight: FontWeight.w600,
@@ -128,11 +190,11 @@ class _ReflectCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _StatItem(value: '7',  label: 'done',    valueColor: colors.successFg),
+                _StatItem(value: '$doneCount',  label: 'done',    valueColor: colors.successFg),
                 _VertDivider(color: colors.bdr),
-                _StatItem(value: '3',  label: 'habits',  valueColor: KaalColors.q4),
+                _StatItem(value: '$habitCount',  label: 'habits',  valueColor: KaalColors.q4),
                 _VertDivider(color: colors.bdr),
-                _StatItem(value: '2h', label: 'focused', valueColor: KaalColors.acc2),
+                _StatItem(value: focusedLabel, label: 'focused', valueColor: KaalColors.acc2),
               ],
             ),
           ),
@@ -262,7 +324,7 @@ class _ReflectCard extends StatelessWidget {
                 style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1),
               ),
               Text(
-                '14 days 🔥',
+                '$streak day${streak == 1 ? '' : 's'} 🔥',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,

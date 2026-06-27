@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/providers/integrations_provider.dart';
+import '../../services/sync_service.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
 
-class InboxIntegrationsScreen extends StatelessWidget {
+class InboxIntegrationsScreen extends ConsumerWidget {
   const InboxIntegrationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors  = KaalTheme.of(context).colors;
     final safeBot = MediaQuery.of(context).padding.bottom;
 
@@ -34,17 +37,25 @@ class InboxIntegrationsScreen extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(12, 0, 12, safeBot + 24),
-            children: [
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await ref.read(integrationsProvider.notifier).checkStatus();
+              await ref.read(syncServiceProvider).syncAll();
+            },
+            color: KaalColors.acc2,
+            backgroundColor: const Color(0xFF1C1C1E),
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(12, 0, 12, safeBot + 80),
+              children: [
               _SectionLabel('Email', colors),
         const SizedBox(height: 6),
         _IntegrationRow(
           emoji: '📧',
           iconBg: const Color(0x1FFFB900),
           title: 'Gmail',
-          sub: 'Auto-parse tasks from emails',
-          connected: true,
+          sub: 'Auto-parse tasks from emails · coming soon',
+          connected: false,
           accentColor: KaalColors.q4,
           colors: colors,
         ),
@@ -104,7 +115,8 @@ class InboxIntegrationsScreen extends StatelessWidget {
         _SectionLabel('How it works', colors),
         const SizedBox(height: 8),
         _HowItWorksCard(colors: colors),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -150,7 +162,7 @@ class _IntegrationRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: colors.surf,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(11),
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
@@ -213,7 +225,7 @@ class _HowItWorksCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
       decoration: BoxDecoration(
-        color: colors.surf,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(13),
         border: Border.all(width: 0.5, color: colors.bdr),
       ),

@@ -1,9 +1,12 @@
 import 'dart:ui' show ImageFilter;
 
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/database.dart';
+import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../settings/app_launch_prefs.dart';
@@ -40,9 +43,29 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
 
   void _next() => setState(() => _step++);
   void _back() => setState(() => _step--);
-  void _finish() {
-    AppLaunchPrefs.completeOnboarding(ref.read(sharedPreferencesProvider));
-    context.go(KaalRoutes.focus);
+
+  Future<void> _finish() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+
+    // Persist the persona answers so they're remembered and can drive
+    // personalization later (currently surfaced via these prefs keys).
+    if (_role     != null) await prefs.setInt('kaal.onboard.role',       _role!);
+    if (_focus    != null) await prefs.setInt('kaal.onboard.focusStyle', _focus!);
+    if (_peak     != null) await prefs.setInt('kaal.onboard.peakHours',  _peak!);
+    if (_quadrant != null) await prefs.setInt('kaal.onboard.quadrant',   _quadrant!);
+
+    // Turn the typed goal into a real task in the chosen quadrant so the user
+    // lands on Focus/Tasks with their first intention already captured.
+    final goalText = _goalCtrl.text.trim();
+    if (goalText.isNotEmpty) {
+      final quad = (_quadrant ?? 1) + 1; // picker 0–3 → Q1–Q4; default Q2 (Schedule)
+      await ref.read(appDatabaseProvider).tasksDao.insertTask(
+            TasksCompanion(title: Value(goalText), quadrant: Value(quad)),
+          );
+    }
+
+    AppLaunchPrefs.completeOnboarding(prefs);
+    if (mounted) context.go(KaalRoutes.focus);
   }
 
   @override
@@ -213,10 +236,10 @@ class _StepLangState extends State<_StepLang> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
         decoration: BoxDecoration(
-          color: sel ? KaalColors.accBg : const Color(0x0DFFFFFF),
+          color: sel ? KaalColors.accBg : widget.colors.surf2,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(width: 0.5,
-              color: sel ? const Color(0x4D0A84FF) : const Color(0x1AFFFFFF)),
+              color: sel ? const Color(0x4D0A84FF) : widget.colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
           fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
@@ -271,10 +294,10 @@ class _StepLangState extends State<_StepLang> {
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
             decoration: BoxDecoration(
-              color: indiaSelected ? KaalColors.accBg : const Color(0x0DFFFFFF),
+              color: indiaSelected ? KaalColors.accBg : widget.colors.surf2,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5,
-                  color: indiaSelected ? const Color(0x4D0A84FF) : const Color(0x1AFFFFFF)),
+                  color: indiaSelected ? const Color(0x4D0A84FF) : widget.colors.bdr0),
             ),
             child: Row(
               children: [
@@ -428,6 +451,7 @@ class _Step0 extends StatelessWidget {
                   style: TextStyle(fontFamily: 'Inter'),
                 ),
                 behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 2),
               ),
             );
           },

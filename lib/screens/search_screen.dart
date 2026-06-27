@@ -195,7 +195,7 @@ class _SearchInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       decoration: BoxDecoration(
-        color: const Color(0x17FFFFFF),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(11),
         border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
       ),
@@ -261,11 +261,11 @@ class _FilterRow extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                   decoration: BoxDecoration(
-                    color: selected == i ? KaalColors.acc : const Color(0x0DFFFFFF),
+                    color: selected == i ? KaalColors.acc : colors.surf2,
                     borderRadius: BorderRadius.circular(6),
                     border: selected == i
                         ? null
-                        : Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                        : Border.all(width: 0.5, color: colors.bdr0),
                   ),
                   child: Text(
                     filters[i],
@@ -308,9 +308,9 @@ class _ResultTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         decoration: BoxDecoration(
-          color: const Color(0x0DFFFFFF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(11),
-          border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+          border: Border.all(width: 0.5, color: colors.bdr0),
         ),
         child: Row(
           children: [

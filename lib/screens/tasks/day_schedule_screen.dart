@@ -71,7 +71,7 @@ class _DayScheduleScreenState extends State<DayScheduleScreen> {
 
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

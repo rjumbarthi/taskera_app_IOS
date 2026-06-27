@@ -8,6 +8,7 @@ import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/reminders_section.dart';
 import '../../services/activity_log_service.dart';
 
 class _Suggestion {
@@ -65,6 +66,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
   int  _colorIdx   = 0;
   int  _freqIdx    = 0;
   bool _reminderOn = true;
+  TimeOfDay _reminderTime = const TimeOfDay(hour: 6, minute: 30);
   bool _isLoading  = false;
 
   // Cached values from DB (needed when updating to keep unchanged fields)
@@ -137,6 +139,12 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
       _existingStreakLabel  = habit.streakLabel;
       _existingStreakColor  = habit.streakColorValue;
       _existingWeeklyFilled = habit.weeklyFilledCount;
+      if (habit.scheduledTime != null) {
+        _reminderOn   = true;
+        _reminderTime = TimeOfDay(hour: habit.scheduledTime! ~/ 60, minute: habit.scheduledTime! % 60);
+      } else {
+        _reminderOn = false;
+      }
       _steps
         ..clear()
         ..addAll(subs.map((s) => _StepDraft(id: s.id, title: s.title, isDone: s.isDone)));
@@ -149,12 +157,14 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
     setState(() => _isLoading = true);
     try {
       final dao = ref.read(appDatabaseProvider).habitsDao;
+      final schedMin = _reminderOn ? _reminderTime.hour * 60 + _reminderTime.minute : null;
       if (_isEdit) {
         final id = int.parse(widget.habitId!);
         await dao.updateHabit(id, HabitsCompanion(
           emoji: Value(_icon),
           name:  Value(name),
           frequencyLabel: Value(_freqChips[_freqIdx]),
+          scheduledTime: Value(schedMin),
           accentColorValue: Value(_habitColors[_colorIdx].toARGB32()),
           streakLabel: Value(_existingStreakLabel),
           streakColorValue: Value(_existingStreakColor),
@@ -167,6 +177,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
           emoji: Value(_icon),
           name:  Value(name),
           frequencyLabel: Value(_freqChips[_freqIdx]),
+          scheduledTime: Value(schedMin),
           streakLabel: const Value('0 days'),
           streakColorValue: Value(const Color(0xFF8E8E93).toARGB32()),
           accentColorValue: Value(_habitColors[_colorIdx].toARGB32()),
@@ -221,7 +232,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Habit name + icon
               _FormRow(
@@ -252,7 +263,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0x0DFFFFFF),
+                      color: colors.surf2,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(width: 0.5, color: colors.bdr),
                     ),
@@ -423,20 +434,57 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                   ],
                 ),
               ),
-              // Reminder
+              // Reminder / scheduled time
               _FormRow(
-                label: 'Reminder',
+                label: 'Reminder · time',
                 colors: colors,
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        _reminderOn ? '06:30' : 'Off',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: _reminderOn
+                            ? () async {
+                                final picked = await showTimePicker(
+                                  context: context,
+                                  initialTime: _reminderTime,
+                                );
+                                if (picked != null && mounted) {
+                                  setState(() => _reminderTime = picked);
+                                }
+                              }
+                            : null,
+                        child: Text(
+                          _reminderOn ? _reminderTime.format(context) : 'Off',
+                          style: TextStyle(
+                            fontFamily: 'Inter', fontSize: 13,
+                            color: _reminderOn ? colors.ink : colors.ink3,
+                          ),
+                        ),
                       ),
                     ),
                     _Toggle(value: _reminderOn, onChanged: (v) => setState(() => _reminderOn = v)),
                   ],
+                ),
+              ),
+              // Remind me — schedules a real reminder/alarm that fires
+              _FormRow(
+                label: 'Remind me',
+                colors: colors,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => showAddReminderSheet(context, ref,
+                      initialLabel: _nameCtrl.text.trim()),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text('+ Set reminder or alarm',
+                            style: TextStyle(
+                                fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                      ),
+                      Icon(Icons.alarm, size: 14, color: colors.ink3),
+                    ],
+                  ),
                 ),
               ),
               // When & Where

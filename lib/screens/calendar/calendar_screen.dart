@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,10 +7,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/database.dart' show CalendarEvent;
 import '../../data/providers/calendar_provider.dart';
+import '../../data/providers/conflicts_provider.dart';
+import '../../data/providers/tasks_provider.dart';
+import '../../widgets/reminders_section.dart';
+import '../../services/sync_service.dart';
 import '../../data/providers/database_provider.dart';
+import '../../services/notification_service.dart';
 import '../../routing/routes.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+import '../../widgets/kaal_sheet.dart';
 import '../../services/activity_log_service.dart';
 import '../../l10n/app_l10n.dart';
 
@@ -56,6 +64,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   bool _monthView = true;
   late int  _selected;
 
+  Timer? _autoSync;
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +73,19 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     _year     = now.year;
     _month    = now.month;
     _selected = now.day;
+    // While the calendar is open, auto-sync every 5 minutes.
+    _autoSync = Timer.periodic(const Duration(minutes: 5), (_) {
+      if (mounted) _refresh();
+    });
   }
+
+  @override
+  void dispose() {
+    _autoSync?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refresh() => ref.read(syncServiceProvider).syncAll();
 
   void _prev() => setState(() {
     if (!_monthView) {
@@ -114,10 +136,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final selectedDate = DateTime(_year, _month, _selected);
     final dayEvents = ref.watch(calendarEventsForDayProvider(selectedDate));
 
-    // Detect conflicts: same timeSlot, same day → 2+ events
-    final slotCounts = <String, int>{};
-    for (final e in dayEvents) { slotCounts[e.timeSlot] = (slotCounts[e.timeSlot] ?? 0) + 1; }
-    final hasConflicts = slotCounts.values.any((c) => c >= 2);
+    // Live scheduling-conflict count (tasks + events), shared with the
+    // conflicts screen so the chip and the screen always agree.
+    final conflictCount = ref.watch(conflictsProvider).length;
 
     return Stack(
       children: [
@@ -151,18 +172,26 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 }),
               ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(0, 6, 0, 72),
-                children: [
-                  _AIBanner(colors: colors),
-                  const SizedBox(height: 7),
-                  _DayCard(
-                    colors: colors,
-                    selectedDate: selectedDate,
-                    events: dayEvents,
-                    hasConflicts: hasConflicts,
-                  ),
-                ],
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                color: KaalColors.acc2,
+                backgroundColor: const Color(0xFF1C1C1E),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(0, 6, 0, 16),
+                  children: [
+                    _AIBanner(colors: colors),
+                    const SizedBox(height: 7),
+                    _DayCard(
+                      colors: colors,
+                      selectedDate: selectedDate,
+                      events: dayEvents,
+                      conflictCount: conflictCount,
+                    ),
+                    const SizedBox(height: 11),
+                    RemindersSection(colors: colors),
+                  ],
+                ),
               ),
             ),
           ],
@@ -542,21 +571,99 @@ class _DayCell extends StatelessWidget {
 
 // ── AI insight banner ─────────────────────────────────────────────────────────
 
-class _AIBanner extends StatefulWidget {
+class _AIBanner extends ConsumerStatefulWidget {
   final KaalColors colors;
   const _AIBanner({required this.colors});
 
   @override
-  State<_AIBanner> createState() => _AIBannerState();
+  ConsumerState<_AIBanner> createState() => _AIBannerState();
 }
 
-class _AIBannerState extends State<_AIBanner> {
+class _AIBannerState extends ConsumerState<_AIBanner> {
   bool _dismissed = false;
+
+  static const _wd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  String _dayLabel(DateTime d) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final diff = DateTime(d.year, d.month, d.day).difference(today).inDays;
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Tomorrow';
+    return _wd[d.weekday - 1];
+  }
 
   @override
   Widget build(BuildContext context) {
     if (_dismissed) return const SizedBox.shrink();
     final colors = widget.colors;
+
+    final conflicts = ref.watch(conflictsProvider);
+    final tasks = ref.watch(allTasksProvider).value ?? [];
+    final events = ref.watch(calendarEventsProvider).value ?? [];
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Derive a real "this week" insight. Conflicts take priority, then the
+    // busiest upcoming day; if the week is quiet, the banner hides itself.
+    List<InlineSpan>? spans;
+    var showMove = false;
+
+    if (conflicts.isNotEmpty) {
+      final c = conflicts.first;
+      showMove = true;
+      spans = [
+        TextSpan(
+            text:
+                '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'} this week — '),
+        TextSpan(text: c.a.title, style: const TextStyle(color: KaalColors.acc2)),
+        const TextSpan(text: ' clashes with '),
+        TextSpan(text: c.b.title, style: const TextStyle(color: KaalColors.acc2)),
+        const TextSpan(text: '. '),
+        TextSpan(
+            text: c.overlap ? 'Move one to resolve.' : 'Add a buffer between them.',
+            style: TextStyle(color: colors.ink3)),
+      ];
+    } else {
+      var bestLoad = 0, bestTasks = 0, bestEvents = 0;
+      DateTime? bestDay;
+      for (var d = 0; d < 7; d++) {
+        final day = today.add(Duration(days: d));
+        final tCount = tasks
+            .where((t) =>
+                !t.isDone &&
+                t.dueDate != null &&
+                t.dueDate!.year == day.year &&
+                t.dueDate!.month == day.month &&
+                t.dueDate!.day == day.day)
+            .length;
+        final eCount = events.where((e) {
+          final ed = e.eventDate ?? today;
+          return ed.year == day.year && ed.month == day.month && ed.day == day.day;
+        }).length;
+        final load = tCount + eCount;
+        if (load > bestLoad) {
+          bestLoad = load;
+          bestDay = day;
+          bestTasks = tCount;
+          bestEvents = eCount;
+        }
+      }
+      if (bestDay != null && bestLoad >= 3) {
+        final parts = <String>[
+          if (bestTasks > 0) '$bestTasks task${bestTasks == 1 ? '' : 's'}',
+          if (bestEvents > 0) '$bestEvents event${bestEvents == 1 ? '' : 's'}',
+        ];
+        spans = [
+          TextSpan(text: '${_dayLabel(bestDay)} looks busy — '),
+          TextSpan(text: parts.join(' + '), style: TextStyle(color: colors.ink2)),
+          const TextSpan(text: '. Consider shifting a Q2 task to a lighter day.'),
+        ];
+      }
+    }
+
+    if (spans == null) return const SizedBox.shrink();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 11),
       child: Container(
@@ -588,26 +695,22 @@ class _AIBannerState extends State<_AIBanner> {
             const SizedBox(height: 4),
             RichText(text: TextSpan(
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
-              children: [
-                const TextSpan(text: 'Tuesday looks overloaded — '),
-                TextSpan(text: '3 Q1 tasks + 2 meetings', style: TextStyle(color: colors.ink2)),
-                const TextSpan(text: '. Consider moving '),
-                const TextSpan(text: 'Assignment submission', style: TextStyle(color: KaalColors.acc2)),
-                const TextSpan(text: ' to Wednesday morning.'),
-              ],
+              children: spans,
             )),
             const SizedBox(height: 7),
             Row(
               children: [
-                GestureDetector(
-                  onTap: () => context.push(KaalRoutes.calConflicts),
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
-                    decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(6)),
-                    child: Text(AppL10n.of(context).moveIt, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
+                if (showMove) ...[
+                  GestureDetector(
+                    onTap: () => context.push(KaalRoutes.calConflicts),
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
+                      decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(6)),
+                      child: Text(AppL10n.of(context).moveIt, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
+                  const SizedBox(width: 5),
+                ],
                 GestureDetector(
                   onTap: () => setState(() => _dismissed = true),
                   child: Container(
@@ -655,13 +758,13 @@ class _DayCard extends ConsumerWidget {
   final KaalColors colors;
   final DateTime selectedDate;
   final List<CalendarEvent> events;
-  final bool hasConflicts;
+  final int conflictCount;
 
   const _DayCard({
     required this.colors,
     required this.selectedDate,
     required this.events,
-    required this.hasConflicts,
+    required this.conflictCount,
   });
 
   static const _weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -703,7 +806,7 @@ class _DayCard extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  if (hasConflicts)
+                  if (conflictCount > 0)
                     GestureDetector(
                       onTap: () => context.push(KaalRoutes.calConflicts),
                       child: Container(
@@ -713,7 +816,8 @@ class _DayCard extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 0.5, color: const Color(0x40FF453A)),
                         ),
-                        child: const Text('⚠ Conflicts', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFF8080), height: 1)),
+                        child: Text('⚠ $conflictCount conflict${conflictCount == 1 ? '' : 's'}',
+                            style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFF8080), height: 1)),
                       ),
                     ),
                 ],
@@ -741,6 +845,8 @@ class _DayCard extends ConsumerWidget {
     );
   }
 }
+
+// ── Reminders & Alarms card (entry to the reminders subscreen) ────────────────
 
 class _SlotRow extends StatelessWidget {
   final _Slot slot;
@@ -787,12 +893,16 @@ class _EventBlock extends ConsumerWidget {
 
   void _showDetail(BuildContext ctx, WidgetRef ref) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: ctx,
       backgroundColor: Colors.transparent,
       barrierColor: const Color(0x8C000000),
       builder: (sheetCtx) => SafeArea(
         child: Container(
           margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+          child: KaalSheetSurface(
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: colors.surf,
@@ -856,6 +966,8 @@ class _EventBlock extends ConsumerWidget {
             ],
           ),
         ),
+          ),
+        ),
       ),
     );
   }
@@ -869,11 +981,8 @@ class _EventBlock extends ConsumerWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                border: Border(left: BorderSide(width: 2.5, color: event.color)),
-                borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
-              ),
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+              // No colored edge line on any event (events or invites).
+              padding: const EdgeInsets.fromLTRB(2, 4, 8, 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -911,9 +1020,17 @@ class _EventBlock extends ConsumerWidget {
                 _InviteBtn(
                   label: 'Accept',
                   bg: const Color(0x267FBA00), border: const Color(0x4D7FBA00), textColor: colors.successFg,
-                  onTap: () {
-                    ref.read(appDatabaseProvider).calendarDao.acceptInvite(event.id);
+                  onTap: () async {
+                    final dao = ref.read(appDatabaseProvider).calendarDao;
+                    await dao.acceptInvite(event.id);
                     ref.logActivity('Calendar invite "${event.title}" accepted', type: 'calendar');
+                    // Schedule pre (15-min) + at-start notifications for the event.
+                    final ev = await dao.getEvent(event.id);
+                    if (ev != null) {
+                      final svc = ref.read(notificationServiceProvider);
+                      await svc.scheduleCalendarReminder(ev);
+                      await svc.scheduleEventStart(ev);
+                    }
                   },
                 ),
                 const SizedBox(height: 4),

@@ -13,7 +13,8 @@ import '../../widgets/add_back_button.dart';
 import '../../widgets/kaal_top_bar.dart';
 import '../../data/providers/auth_provider.dart'
     show profileImagePathProvider, profileAvatarColorProvider, profileAvatarLogoProvider,
-         profileDisplayNameProvider, displayNameProvider;
+         profileDisplayNameProvider, displayNameProvider, currentUserProvider;
+import '../../services/auth_service.dart';
 import '../../widgets/kaal_avatar.dart' show kKaalAvatarColors;
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
@@ -60,8 +61,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   int?       _logoIdx;
   XFile?     _image;
 
-  final _picker = ImagePicker();
-
   @override
   void initState() {
     super.initState();
@@ -85,20 +84,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    try {
-      final file = await _picker.pickImage(source: source, imageQuality: 85);
-      if (file != null) setState(() { _image = file; _tab = _PickerTab.photo; });
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not access ${source == ImageSource.camera ? 'camera' : 'photos'}: $e'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-    }
+  // Photo upload is not shipping yet — surface "coming soon" instead of opening
+  // the gallery picker. (Avatar colour + app-logo options still work.)
+  void _pickImage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Coming soon in the next update.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -118,11 +112,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Widget build(BuildContext context) {
     final colors    = KaalTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final settings  = ref.watch(kaalSettingsProvider);
+    final wallpaper = settings.wallpaper;
 
     return Stack(
       children: [
-        Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
+        Positioned.fill(
+            child: WallpaperBackground(wallpaper: wallpaper, dim: settings.wallpaperDim)),
         Scaffold(
           backgroundColor: Colors.transparent,
           body: Column(
@@ -171,8 +167,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       onTab:    (t) => setState(() => _tab = t),
                       onColor:  (i) => setState(() { _colorIdx = i; _logoIdx = null; _image = null; }),
                       onLogo:   (i) => setState(() { _logoIdx = i; _image = null; }),
-                      onPickGallery: () => _pickImage(ImageSource.gallery),
-                      onPickCamera:  () => _pickImage(ImageSource.camera),
+                      onPickGallery: _pickImage,
                       onClearImage:  () => setState(() => _image = null),
                     ),
                     const SizedBox(height: 24),
@@ -188,11 +183,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     const SizedBox(height: 16),
                     _FieldLabel('EMAIL', colors),
                     const SizedBox(height: 6),
-                    _ReadonlyField(value: 'r@jumbarthi.com', colors: colors),
+                    _ReadonlyField(
+                      value: ref.watch(currentUserProvider)?.email ?? '—',
+                      colors: colors,
+                    ),
                     const SizedBox(height: 32),
                     GestureDetector(
                       onTap: () async {
+                        // Actually end the Supabase session, then clear local
+                        // profile overrides so the next user starts clean.
+                        await ref.read(authServiceProvider).signOut();
                         await ref.read(profileImagePathProvider.notifier).clear();
+                        await ref.read(profileDisplayNameProvider.notifier).setName('');
                         if (context.mounted) context.go(KaalRoutes.signin);
                       },
                       behavior: HitTestBehavior.opaque,
@@ -315,21 +317,20 @@ class _PickerCard extends StatelessWidget {
   final ValueChanged<int> onColor;
   final ValueChanged<int> onLogo;
   final VoidCallback onPickGallery;
-  final VoidCallback onPickCamera;
   final VoidCallback onClearImage;
 
   const _PickerCard({
     required this.tab, required this.colorIdx, required this.logoIdx,
     required this.image, required this.colors,
     required this.onTab, required this.onColor, required this.onLogo,
-    required this.onPickGallery, required this.onPickCamera, required this.onClearImage,
+    required this.onPickGallery, required this.onClearImage,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0x0DFFFFFF),
+        color: colors.surf2,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
@@ -347,7 +348,7 @@ class _PickerCard extends StatelessWidget {
             _PickerTab.color => _ColorBody(selected: colorIdx, colors: colors, onTap: onColor),
             _PickerTab.logo  => _LogoBody(selected: logoIdx, colors: colors, colorIdx: colorIdx, onTap: onLogo),
             _PickerTab.photo => _PhotoBody(image: image, colors: colors,
-                onGallery: onPickGallery, onCamera: onPickCamera, onClear: onClearImage),
+                onGallery: onPickGallery, onClear: onClearImage),
           },
         ),
       ]),
@@ -368,7 +369,7 @@ class _TabRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0x0DFFFFFF),
+        color: colors.surf2,
         borderRadius: BorderRadius.circular(9),
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
@@ -509,10 +510,9 @@ class _PhotoBody extends StatelessWidget {
   final XFile? image;
   final KaalColors colors;
   final VoidCallback onGallery;
-  final VoidCallback onCamera;
   final VoidCallback onClear;
   const _PhotoBody({required this.image, required this.colors,
-      required this.onGallery, required this.onCamera, required this.onClear});
+      required this.onGallery, required this.onClear});
 
   @override
   Widget build(BuildContext context) {
@@ -550,23 +550,13 @@ class _PhotoBody extends StatelessWidget {
       ]);
     }
 
-    return Column(children: [
-      _PhotoBtn(
-        icon: Icons.photo_library_outlined,
-        label: 'Upload from gallery',
-        sub: 'JPG, PNG · max 10 MB',
-        onTap: onGallery,
-        colors: colors,
-      ),
-      const SizedBox(height: 8),
-      _PhotoBtn(
-        icon: Icons.camera_alt_outlined,
-        label: 'Take a photo',
-        sub: 'Use device camera',
-        onTap: onCamera,
-        colors: colors,
-      ),
-    ]);
+    return _PhotoBtn(
+      icon: Icons.photo_library_outlined,
+      label: 'Upload from gallery',
+      sub: 'JPG, PNG · max 10 MB',
+      onTap: onGallery,
+      colors: colors,
+    );
   }
 }
 
@@ -586,7 +576,7 @@ class _PhotoBtn extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         decoration: BoxDecoration(
-          color: const Color(0x0DFFFFFF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(width: 0.5, color: colors.bdr),
         ),
@@ -643,9 +633,9 @@ class _GlassField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0x1AFFFFFF),
+        color: colors.surf2,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 0.5, color: const Color(0x33FFFFFF)),
+        border: Border.all(width: 0.5, color: colors.bdr0),
       ),
       child: TextField(
         controller: controller,
@@ -678,9 +668,9 @@ class _ReadonlyField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
-        color: const Color(0x0DFFFFFF),
+        color: colors.surf2,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+        border: Border.all(width: 0.5, color: colors.bdr0),
       ),
       child: Row(children: [
         Expanded(
@@ -691,9 +681,9 @@ class _ReadonlyField extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
           decoration: BoxDecoration(
-            color: const Color(0x0DFFFFFF),
+            color: colors.surf2,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+            border: Border.all(width: 0.5, color: colors.bdr0),
           ),
           child: Text('locked',
               style: TextStyle(fontFamily: 'Inter', fontSize: 9,

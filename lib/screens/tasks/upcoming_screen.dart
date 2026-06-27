@@ -198,7 +198,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                   itemCount: selectedTasks.length,
                   itemBuilder: (_, i) => _UpTaskRow(
                     task: selectedTasks[i],

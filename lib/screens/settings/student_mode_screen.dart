@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/database.dart';
+import '../../data/providers/lists_provider.dart';
+import '../../data/providers/tasks_provider.dart';
+import '../../data/repositories/focus_session_repository.dart';
 import '../../settings/kaal_settings.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -88,82 +92,9 @@ class _ExamCountdowns extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          _ExamCard(
-            name: 'UPSC Prelims',
-            days: 42,
-            percent: 0.62,
-            label: '62% prep done',
-            accentColor: const Color(0xFFFF6B6B),
-            bg: const Color(0x1FF25022),
-            border: const Color(0x4DF25022),
-          ),
-          const SizedBox(width: 8),
-          _ExamCard(
-            name: 'JEE Advanced',
-            days: 89,
-            percent: 0.38,
-            label: '38% prep done',
-            accentColor: KaalColors.acc2,
-            bg: const Color(0x1A0A84FF),
-            border: const Color(0x400A84FF),
-          ),
-          const SizedBox(width: 8),
           _AddExamCard(colors: colors),
         ],
       ),
-    );
-  }
-}
-
-class _ExamCard extends StatelessWidget {
-  final String name;
-  final int days;
-  final double percent;
-  final String label;
-  final Color accentColor;
-  final Color bg;
-  final Color border;
-  const _ExamCard({required this.name, required this.days, required this.percent,
-      required this.label, required this.accentColor, required this.bg, required this.border});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      padding: const EdgeInsets.fromLTRB(13, 12, 13, 12),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(width: 0.5, color: border),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(name.toUpperCase(),
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
-                fontWeight: FontWeight.w700, color: accentColor,
-                letterSpacing: 0.3, height: 1)),
-        const SizedBox(height: 4),
-        Text('$days',
-            style: TextStyle(fontFamily: 'Fraunces', fontSize: 28,
-                fontVariations: const [FontVariation('wght', 700)],
-                color: Colors.white, height: 1)),
-        Text('days left',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11,
-                color: Colors.white54, height: 1.3)),
-        const SizedBox(height: 7),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(2),
-          child: LinearProgressIndicator(
-            value: percent,
-            minHeight: 4,
-            backgroundColor: const Color(0x33FFFFFF),
-            valueColor: AlwaysStoppedAnimation(accentColor),
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
-                color: Colors.white54, height: 1)),
-      ]),
     );
   }
 }
@@ -243,160 +174,50 @@ class _StudyPlanCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(13, 12, 13, 12),
       decoration: BoxDecoration(
-        color: colors.surf,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(13),
         border: Border.all(width: 0.5, color: colors.bdr2),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Expanded(
-            child: Text("Today's study plan",
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                    fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
-          ),
-          Text('5h 30m target',
-              style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                  fontWeight: FontWeight.w600, color: KaalColors.q2, height: 1)),
-        ]),
+        Text("Today's study plan",
+            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
         const SizedBox(height: 9),
-        _StudyItem(
-          dot: KaalColors.q2,
-          title: 'History — Modern India',
-          sub: 'UPSC · 90 min',
-          bg: const Color(0x117FBA00),
-          border: const Color(0x337FBA00),
-          trailing: _CheckCircle(),
-        ),
-        const SizedBox(height: 6),
-        _StudyItem(
-          dot: KaalColors.acc,
-          title: 'Polity — Constitution',
-          sub: 'UPSC · 60 min',
-          bg: colors.surf2,
-          border: colors.bdr,
-          trailing: _StartBtn(),
-        ),
-        const SizedBox(height: 6),
-        Opacity(
-          opacity: 0.5,
-          child: _StudyItem(
-            dot: colors.ink3,
-            title: 'Maths — Integration',
-            sub: 'JEE · 120 min',
-            bg: colors.surf2,
-            border: colors.bdr,
-            trailing: Text('Later',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: colors.ink3, height: 1)),
-          ),
-        ),
+        Text('No study plan yet — add subjects and schedule tasks to build one.',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                color: colors.ink3, height: 1.4)),
       ]),
-    );
-  }
-}
-
-class _StudyItem extends StatelessWidget {
-  final Color dot;
-  final String title;
-  final String sub;
-  final Color bg;
-  final Color border;
-  final Widget trailing;
-  const _StudyItem({required this.dot, required this.title, required this.sub,
-      required this.bg, required this.border, required this.trailing});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(width: 0.5, color: border),
-      ),
-      child: Row(children: [
-        Container(width: 6, height: 6,
-            decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12,
-                    fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
-            Text(sub,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-                    color: colors.ink3, height: 1.3)),
-          ]),
-        ),
-        trailing,
-      ]),
-    );
-  }
-}
-
-class _CheckCircle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 20, height: 20,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(width: 1.5, color: KaalColors.q2),
-      ),
-      child: const Icon(Icons.check, color: KaalColors.q2, size: 11),
-    );
-  }
-}
-
-class _StartBtn extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
-      decoration: BoxDecoration(
-        color: KaalColors.acc,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Text('Start',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-              fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
     );
   }
 }
 
 // ── Subject groups ────────────────────────────────────────────────────────────
 
-class _SubjectGroups extends StatelessWidget {
+class _SubjectGroups extends ConsumerWidget {
   final KaalColors colors;
   const _SubjectGroups({required this.colors});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lists = ref.watch(listsProvider).value ?? const <CustomList>[];
     return Column(children: [
-      _SubjectRow(
-        emoji: '📚', label: 'UPSC Prep', sub: '14 tasks · 3 due today',
-        quadLabel: 'Q1', quadColor: const Color(0xFFFF6B6B),
-        iconBg: const Color(0x1AF25022),
-        border: const Color(0x33F25022),
-        colors: colors,
-      ),
-      const SizedBox(height: 6),
-      _SubjectRow(
-        emoji: '⚗️', label: 'JEE / Science', sub: '8 tasks · 1 due today',
-        quadLabel: 'Q2', quadColor: KaalColors.acc2,
-        iconBg: const Color(0x1A0A84FF),
-        border: const Color(0x330A84FF),
-        colors: colors,
-      ),
-      const SizedBox(height: 6),
-      _SubjectRow(
-        emoji: '📝', label: 'Assignments', sub: '5 tasks · 0 due today',
-        quadLabel: 'Q3', quadColor: colors.ink3,
-        iconBg: colors.surf2,
-        border: colors.bdr,
-        colors: colors,
-      ),
+      if (lists.isEmpty)
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(11),
+            border: Border.all(width: 0.5, color: colors.bdr),
+          ),
+          child: Text('Create a list to track a subject.',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+        )
+      else
+        for (final l in lists) ...[
+          _SubjectRowLive(list: l, colors: colors),
+          const SizedBox(height: 6),
+        ],
       const SizedBox(height: 6),
       Container(
         width: double.infinity,
@@ -421,6 +242,33 @@ class _SubjectGroups extends StatelessWidget {
   }
 }
 
+/// One subject row backed by a real [CustomList]; counts come from its items.
+class _SubjectRowLive extends ConsumerWidget {
+  final CustomList list;
+  final KaalColors colors;
+  const _SubjectRowLive({required this.list, required this.colors});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final items = ref.watch(listItemsProvider(list.id)).value ?? const <CustomListItem>[];
+    final total = items.length;
+    final left = items.where((i) => !i.isDone).length;
+    final sub = total == 0
+        ? 'No items yet'
+        : '$total item${total == 1 ? '' : 's'}${left > 0 ? ' · $left left' : ' · all done'}';
+    return _SubjectRow(
+      emoji: list.emoji,
+      label: list.title,
+      sub: sub,
+      quadLabel: '',
+      quadColor: colors.ink3,
+      iconBg: colors.surf2,
+      border: colors.bdr,
+      colors: colors,
+    );
+  }
+}
+
 class _SubjectRow extends StatelessWidget {
   final String emoji;
   final String label;
@@ -439,7 +287,7 @@ class _SubjectRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       decoration: BoxDecoration(
-        color: colors.surf,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(11),
         border: Border.all(width: 0.5, color: border),
       ),
@@ -474,16 +322,42 @@ class _SubjectRow extends StatelessWidget {
 
 // ── Week stats card ───────────────────────────────────────────────────────────
 
-class _WeekStatsCard extends StatelessWidget {
+class _WeekStatsCard extends ConsumerWidget {
   final KaalColors colors;
   const _WeekStatsCard({required this.colors});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final monday = today.subtract(Duration(days: today.weekday - 1));
+
+    // Studied this week — total focus time.
+    final sessions = ref.watch(weeklyFocusSessionsProvider).value ?? [];
+    final secs = sessions.fold<int>(0, (a, s) => a + s.durationSeconds);
+    final mins = secs ~/ 60;
+    final hrs = mins ~/ 60;
+    final studied = hrs > 0 ? (mins % 60 > 0 ? '${hrs}h ${mins % 60}m' : '${hrs}h') : '${mins}m';
+
+    // Tasks done this week + productive-day streak.
+    final done = ref.watch(doneTasksProvider).value ?? [];
+    final doneThisWeek =
+        done.where((t) => t.doneAt != null && !t.doneAt!.isBefore(monday)).length;
+    final doneDays = done
+        .where((t) => t.doneAt != null)
+        .map((t) => DateTime(t.doneAt!.year, t.doneAt!.month, t.doneAt!.day))
+        .toSet();
+    var streak = 0;
+    var anchor = doneDays.contains(today) ? today : today.subtract(const Duration(days: 1));
+    while (doneDays.contains(anchor)) {
+      streak++;
+      anchor = anchor.subtract(const Duration(days: 1));
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(13, 10, 13, 12),
       decoration: BoxDecoration(
-        color: colors.surf,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(13),
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
@@ -493,13 +367,13 @@ class _WeekStatsCard extends StatelessWidget {
                 fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
         const SizedBox(height: 8),
         Row(children: [
-          _WeekCell(value: '22h', label: 'Studied',
+          _WeekCell(value: studied, label: 'Studied',
               bg: colors.surf2, valueColor: colors.ink),
           const SizedBox(width: 6),
-          _WeekCell(value: '34', label: 'Topics',
+          _WeekCell(value: '$doneThisWeek', label: 'Done',
               bg: colors.surf2, valueColor: KaalColors.q2),
           const SizedBox(width: 6),
-          _WeekCell(value: '6🔥', label: 'Day streak',
+          _WeekCell(value: '$streak🔥', label: 'Day streak',
               bg: const Color(0x14FFB900), valueColor: KaalColors.q4),
         ]),
       ]),

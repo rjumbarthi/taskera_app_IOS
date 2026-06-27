@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/database.dart' show Goal;
+import '../../data/database.dart' show Goal, Task, Habit;
 import '../../data/providers/goals_provider.dart';
+import '../../data/providers/habits_provider.dart';
+import '../../data/providers/tasks_provider.dart';
+import '../../data/providers/database_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/goal_meta_label.dart';
+import '../../widgets/goal_link_pickers.dart';
+import '../../l10n/app_l10n.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -16,12 +22,14 @@ class _LinkedItem {
   final bool done;
   final String? badge;
   final Color? badgeColor;
-  final Color quadColor;
-  const _LinkedItem({required this.title})
-      : done = false,
-        badge = null,
-        badgeColor = null,
-        quadColor = KaalColors.q2;
+  final Color color; // dot + (when not done) text color
+  const _LinkedItem({
+    required this.title,
+    required this.color,
+    this.done = false,
+    this.badge,
+    this.badgeColor,
+  });
 }
 
 class _Goal {
@@ -30,8 +38,6 @@ class _Goal {
   final String sub;
   final double pct;
   final Color pctColor;
-  final String linkedLabel;
-  final List<_LinkedItem> items;
   final _LinkType linkType;
   const _Goal({
     required this.emoji,
@@ -39,8 +45,6 @@ class _Goal {
     required this.sub,
     required this.pct,
     required this.pctColor,
-    required this.linkedLabel,
-    required this.items,
     required this.linkType,
   });
 }
@@ -53,8 +57,6 @@ _Goal _rowToGoal(Goal r) => _Goal(
       sub: r.subtitle,
       pct: r.progressPct,
       pctColor: Color(r.accentColorValue),
-      linkedLabel: r.linkedLabel,
-      items: const [],
       linkType: r.linkType == 'habit' ? _LinkType.habit : _LinkType.task,
     );
 
@@ -67,12 +69,37 @@ class GoalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = KaalTheme.of(context).colors;
     final goals = ref.watch(goalsProvider).value ?? [];
+
+    // Header subtitle from real goals: count + the most-referenced quadrant
+    // (extracted from each goal's linked label / subtitle text).
+    String goalsSubtitle;
+    if (goals.isEmpty) {
+      goalsSubtitle = 'No goals yet';
+    } else {
+      final qTally = <int, int>{};
+      final re = RegExp(r'Q([1-4])');
+      for (final g in goals) {
+        final m = re.firstMatch(g.linkedLabel) ?? re.firstMatch(g.subtitle);
+        if (m != null) {
+          final q = int.parse(m.group(1)!);
+          qTally[q] = (qTally[q] ?? 0) + 1;
+        }
+      }
+      final base = '${goals.length} active';
+      if (qTally.isNotEmpty) {
+        final domQ = qTally.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
+        goalsSubtitle = '$base · mapped to Q$domQ';
+      } else {
+        goalsSubtitle = '$base goal${goals.length == 1 ? '' : 's'}';
+      }
+    }
+
     return Stack(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _SubHeader(),
+            _SubHeader(subtitle: goalsSubtitle),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 4, 12, 100),
@@ -181,7 +208,8 @@ class GoalsScreen extends ConsumerWidget {
 // ── Sub-header ────────────────────────────────────────────────────────────────
 
 class _SubHeader extends StatelessWidget {
-  const _SubHeader();
+  final String subtitle;
+  const _SubHeader({required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +235,7 @@ class _SubHeader extends StatelessWidget {
                 ),
               ),
               Text(
-                '3 active · mapped to Q2',
+                subtitle,
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
@@ -225,15 +253,44 @@ class _SubHeader extends StatelessWidget {
 
 // ── Goal card ─────────────────────────────────────────────────────────────────
 
-class _GoalCard extends StatelessWidget {
+class _GoalCard extends ConsumerWidget {
   final _Goal goal;
   final int goalId;
   final KaalColors colors;
   const _GoalCard({required this.goal, required this.goalId, required this.colors});
 
+  // Cap rows per type so a card with both tasks and habits shows both.
+  static const _maxPerType = 4;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final accent = goal.pctColor;
+
+    // Live linked items, derived from the real links.
+    final tasks      = ref.watch(goalLinkedTasksProvider(goalId)).value ?? const <Task>[];
+    final habitLinks = ref.watch(goalHabitLinksProvider(goalId)).value ?? const [];
+    final allHabits  = ref.watch(habitsProvider).value ?? const <Habit>[];
+    final linkedHabitIds = habitLinks.map((e) => e.habitId).toSet();
+    final habits = allHabits.where((h) => linkedHabitIds.contains(h.id)).toList();
+
+    final taskItems = [
+      for (final t in tasks)
+        _LinkedItem(title: t.title, done: t.isDone, color: accent),
+    ];
+    final habitItems = [
+      for (final h in habits)
+        _LinkedItem(
+          title: '${h.emoji} ${h.name}',
+          color: accent,
+          badge: h.streakLabel,
+          badgeColor: Color(h.streakColorValue),
+        ),
+    ];
+    // Tasks first, then habits — capped per type.
+    final items = [...taskItems.take(_maxPerType), ...habitItems.take(_maxPerType)];
+    final hidden = (taskItems.length - taskItems.take(_maxPerType).length) +
+        (habitItems.length - habitItems.take(_maxPerType).length);
+
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
@@ -324,87 +381,144 @@ class _GoalCard extends StatelessWidget {
 
           const SizedBox(height: 9),
 
-          // Linked label
-          Text(
-            goal.linkedLabel,
+          // Linked label (live — derived from actual task/habit links)
+          GoalMetaLabel(
+            goalId: goalId,
+            isHabit: goal.linkType == _LinkType.habit,
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
-              fontWeight: goal.items.isNotEmpty ? FontWeight.w700 : FontWeight.w400,
-              letterSpacing: goal.items.isNotEmpty ? 0.4 : 0,
+              fontWeight: FontWeight.w400,
               color: colors.ink3,
             ),
           ),
 
-          // Task/habit rows (only first goal has them in the PNG)
-          if (goal.items.isNotEmpty) ...[
+          // Linked task/habit rows (live)
+          if (items.isNotEmpty) ...[
             const SizedBox(height: 6),
             Column(
-              children: goal.items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: _LinkedRow(item: item, dotColor: goal.pctColor, colors: colors),
-              )).toList(),
+              children: [
+                for (final item in items)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: _LinkedRow(item: item, colors: colors),
+                  ),
+                if (hidden > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      '+$hidden more',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 11,
+                        color: colors.ink3,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ],
 
           const SizedBox(height: 9),
 
-          // Action buttons
+          // Action buttons — link tasks / habits to this goal
           Row(
             children: [
               Expanded(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 7),
-                    decoration: BoxDecoration(
-                      color: goal.linkType == _LinkType.habit
-                          ? const Color(0x1ABF5AF2)
-                          : KaalColors.accBg,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      goal.linkType == _LinkType.habit ? '+ Link habit' : '+ Link task',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: goal.linkType == _LinkType.habit
-                            ? const Color(0xFFBF5AF2)
-                            : KaalColors.acc2,
-                      ),
-                    ),
-                  ),
+                child: _LinkBtn(
+                  label: '+ ${AppL10n.of(context).linkTask}',
+                  bg: KaalColors.accBg,
+                  fg: KaalColors.acc2,
+                  onTap: () => _linkTasks(context, ref),
                 ),
               ),
               const SizedBox(width: 5),
               Expanded(
-                child: GestureDetector(
-                  onTap: () => context.push('/focus/goals/$goalId'),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 7),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 0.5, color: colors.bdr),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'View all →',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: colors.ink2,
-                      ),
-                    ),
-                  ),
+                child: _LinkBtn(
+                  label: '+ ${AppL10n.of(context).linkHabit}',
+                  bg: const Color(0x1ABF5AF2),
+                  fg: const Color(0xFFBF5AF2),
+                  onTap: () => _linkHabits(context, ref),
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  void _linkTasks(BuildContext context, WidgetRef ref) {
+    final allTasks = <Task>[
+      ...ref.read(quadrantTasksProvider(1)).value ?? [],
+      ...ref.read(quadrantTasksProvider(2)).value ?? [],
+      ...ref.read(quadrantTasksProvider(3)).value ?? [],
+      ...ref.read(quadrantTasksProvider(4)).value ?? [],
+    ];
+    final linked = (ref.read(goalLinkedTasksProvider(goalId)).value ?? [])
+        .map((t) => t.id)
+        .toSet();
+    showTaskLinkPicker(
+      context: context,
+      tasks: allTasks,
+      initial: linked,
+      colors: colors,
+      onSave: (selected) async {
+        final db = ref.read(appDatabaseProvider);
+        for (final id in selected.difference(linked)) { await db.goalsDao.linkTask(goalId, id); }
+        for (final id in linked.difference(selected)) { await db.goalsDao.unlinkTask(goalId, id); }
+      },
+    );
+  }
+
+  void _linkHabits(BuildContext context, WidgetRef ref) {
+    final allHabits = ref.read(habitsProvider).value ?? const <Habit>[];
+    final linked = (ref.read(goalHabitLinksProvider(goalId)).value ?? [])
+        .map((l) => l.habitId)
+        .toSet();
+    showHabitLinkPicker(
+      context: context,
+      habits: allHabits,
+      initial: linked,
+      colors: colors,
+      onSave: (selected) async {
+        final db = ref.read(appDatabaseProvider);
+        for (final id in selected.difference(linked)) { await db.goalsDao.linkHabit(goalId, id); }
+        for (final id in linked.difference(selected)) { await db.goalsDao.unlinkHabit(goalId, id); }
+      },
+    );
+  }
+}
+
+// ── Link action button ────────────────────────────────────────────────────────
+
+class _LinkBtn extends StatelessWidget {
+  final String label;
+  final Color bg;
+  final Color fg;
+  final VoidCallback onTap;
+  const _LinkBtn({required this.label, required this.bg, required this.fg, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 7),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: fg,
+          ),
+        ),
       ),
     );
   }
@@ -414,9 +528,8 @@ class _GoalCard extends StatelessWidget {
 
 class _LinkedRow extends StatelessWidget {
   final _LinkedItem item;
-  final Color dotColor;
   final KaalColors colors;
-  const _LinkedRow({required this.item, required this.dotColor, required this.colors});
+  const _LinkedRow({required this.item, required this.colors});
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +541,7 @@ class _LinkedRow extends StatelessWidget {
           item.done
               ? Container(
                   width: 11, height: 11,
-                  decoration: BoxDecoration(color: item.quadColor, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: item.color, shape: BoxShape.circle),
                   alignment: Alignment.center,
                   child: const Icon(Icons.check_rounded, size: 7, color: Colors.white),
                 )
@@ -436,7 +549,7 @@ class _LinkedRow extends StatelessWidget {
                   width: 11, height: 11,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(width: 1.5, color: item.quadColor),
+                    border: Border.all(width: 1.5, color: item.color),
                   ),
                 ),
           const SizedBox(width: 7),
@@ -446,7 +559,7 @@ class _LinkedRow extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
-                color: item.done ? colors.ink3 : item.quadColor,
+                color: item.done ? colors.ink3 : item.color,
                 decoration: item.done ? TextDecoration.lineThrough : null,
                 decorationColor: colors.ink3,
                 height: 1.3,

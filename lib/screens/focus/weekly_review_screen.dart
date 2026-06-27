@@ -1,26 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/providers/tasks_provider.dart';
+import '../../data/providers/habits_provider.dart';
+import '../../data/repositories/focus_session_repository.dart';
+import '../../settings/prefs_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
 
-class WeeklyReviewScreen extends StatefulWidget {
+class WeeklyReviewScreen extends ConsumerStatefulWidget {
   const WeeklyReviewScreen({super.key});
 
   @override
-  State<WeeklyReviewScreen> createState() => _WeeklyReviewScreenState();
+  ConsumerState<WeeklyReviewScreen> createState() => _WeeklyReviewScreenState();
 }
 
-class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
-  final _biggestWinCtrl = TextEditingController(
-    text: 'Completed the design system and shipped the auth flow ahead of schedule.',
-  );
+class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
+  final _biggestWinCtrl = TextEditingController();
   final _drainCtrl = TextEditingController();
-  final _priorityCtrl = TextEditingController(
-    text: 'Finish MVP core features and get to beta-ready state.',
-  );
+  final _priorityCtrl = TextEditingController();
+
+  static const _months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  DateTime get _monday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return today.subtract(Duration(days: today.weekday - 1));
+  }
+
+  int get _weekNum {
+    final d = _monday;
+    final dayOfYear = d.difference(DateTime(d.year, 1, 1)).inDays + 1;
+    return ((dayOfYear - 1) ~/ 7) + 1;
+  }
+
+  String get _weekKey => '${_monday.year}-W$_weekNum';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final p = ref.read(sharedPreferencesProvider);
+      final k = _weekKey;
+      setState(() {
+        _biggestWinCtrl.text = p.getString('kaal.wr.win.$k') ?? '';
+        _drainCtrl.text      = p.getString('kaal.wr.drain.$k') ?? '';
+        _priorityCtrl.text   = p.getString('kaal.wr.priority.$k') ?? '';
+      });
+    });
+  }
+
+  Future<void> _save() async {
+    final p = ref.read(sharedPreferencesProvider);
+    final k = _weekKey;
+    await p.setString('kaal.wr.win.$k',      _biggestWinCtrl.text.trim());
+    await p.setString('kaal.wr.drain.$k',    _drainCtrl.text.trim());
+    await p.setString('kaal.wr.priority.$k', _priorityCtrl.text.trim());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Review saved ✓', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+      backgroundColor: Color(0xFF1C1C1E),
+      behavior: SnackBarBehavior.floating,
+      duration: Duration(seconds: 2),
+    ));
+  }
+
+  String _insight(int done, int missed, String logged, List<({double frac, int count})> quads) {
+    if (done == 0 && missed == 0) {
+      return 'No completed tasks logged this week yet. Schedule a few Q2 tasks to build momentum.';
+    }
+    var best = 0;
+    var bestFrac = -1.0;
+    for (var i = 0; i < quads.length; i++) {
+      if (quads[i].count > 0 && quads[i].frac > bestFrac) { bestFrac = quads[i].frac; best = i; }
+    }
+    final qName = ['Q1', 'Q2', 'Q3', 'Q4'][best];
+    final pct = (bestFrac.clamp(0, 1) * 100).round();
+    final tail = missed > 0
+        ? ' $missed task${missed == 1 ? '' : 's'} slipped overdue — pull those into next week.'
+        : ' Nothing slipped overdue — great consistency.';
+    return 'You completed $done task${done == 1 ? '' : 's'} and logged $logged of focus this week. '
+        'Your strongest quadrant was $qName at $pct% completion.$tail';
+  }
 
   @override
   void dispose() {
@@ -34,6 +99,42 @@ class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
     final l = AppL10n.of(context);
+
+    // ── Live week data ────────────────────────────────────────────────────────
+    final monday     = _monday;
+    final sunday     = monday.add(const Duration(days: 6));
+    final nextMonday = monday.add(const Duration(days: 7));
+    final dateRange  = 'Week $_weekNum · ${_months[monday.month - 1]} ${monday.day}–'
+        '${monday.month == sunday.month ? '${sunday.day}' : '${_months[sunday.month - 1]} ${sunday.day}'}';
+
+    final done    = ref.watch(doneTasksProvider).valueOrNull ?? const [];
+    final q1a     = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? const [];
+    final q2a     = ref.watch(quadrantTasksProvider(2)).valueOrNull ?? const [];
+    final q3a     = ref.watch(quadrantTasksProvider(3)).valueOrNull ?? const [];
+    final q4a     = ref.watch(quadrantTasksProvider(4)).valueOrNull ?? const [];
+    final active  = [...q1a, ...q2a, ...q3a, ...q4a];
+    final habits  = ref.watch(habitsProvider).valueOrNull ?? const [];
+    final sessions = ref.watch(weeklyFocusSessionsProvider).valueOrNull ?? const [];
+
+    final doneThisWeek = done.where((t) =>
+        t.doneAt != null && !t.doneAt!.isBefore(monday) && t.doneAt!.isBefore(nextMonday)).toList();
+    final doneCount   = doneThisWeek.length;
+    final missedCount = active.where((t) => t.isOverdue).length;
+    final habitsTotal = habits.length;
+    final habitsHit   = habits.where((h) => h.streakLabel.contains('🔥')).length;
+    final loggedSec   = sessions.fold<int>(0, (s, e) => s + e.durationSeconds);
+    final loggedStr   = loggedSec >= 3600
+        ? '${(loggedSec / 3600) >= 10 ? (loggedSec / 3600).round() : (loggedSec / 3600).toStringAsFixed(1)}h'
+        : (loggedSec >= 60 ? '${(loggedSec / 60).round()}m' : '0h');
+
+    ({double frac, int count}) quadStat(int q) {
+      final dq  = doneThisWeek.where((t) => t.quadrant == q).length;
+      final aq  = active.where((t) => t.quadrant == q).length;
+      final tot = dq + aq;
+      return (frac: tot == 0 ? 0.0 : dq / tot, count: dq);
+    }
+    final qs = [quadStat(1), quadStat(2), quadStat(3), quadStat(4)];
+    final insight = _insight(doneCount, missedCount, loggedStr, qs);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +161,7 @@ class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
                     ),
                   ),
                   Text(
-                    'Week 17 · Apr 21–27',
+                    dateRange,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
@@ -130,23 +231,23 @@ class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
                       const SizedBox(height: 9),
                       Row(
                         children: [
-                          Expanded(child: _StatBox(value: '18', label: 'Done',   valueColor: KaalColors.q2,           colors: colors)),
+                          Expanded(child: _StatBox(value: '$doneCount',   label: 'Done',   valueColor: KaalColors.q2,           colors: colors)),
                           const SizedBox(width: 5),
-                          Expanded(child: _StatBox(value: '3',  label: 'Missed', valueColor: KaalColors.q1,           colors: colors)),
+                          Expanded(child: _StatBox(value: '$missedCount', label: 'Missed', valueColor: KaalColors.q1,           colors: colors)),
                           const SizedBox(width: 5),
-                          Expanded(child: _StatBox(value: '3/4',label: 'Habits', valueColor: const Color(0xFFBF5AF2), colors: colors)),
+                          Expanded(child: _StatBox(value: '$habitsHit/$habitsTotal', label: 'Habits', valueColor: const Color(0xFFBF5AF2), colors: colors)),
                           const SizedBox(width: 5),
-                          Expanded(child: _StatBox(value: '14h',label: 'Logged', valueColor: KaalColors.acc2,         colors: colors)),
+                          Expanded(child: _StatBox(value: loggedStr, label: 'Logged', valueColor: KaalColors.acc2,         colors: colors)),
                         ],
                       ),
                       const SizedBox(height: 9),
-                      _QuadBar(label: 'Q1', color: KaalColors.q1, fraction: 0.70, count: '7',  colors: colors),
+                      _QuadBar(label: 'Q1', color: KaalColors.q1, fraction: qs[0].frac, count: '${qs[0].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q2', color: KaalColors.q2, fraction: 1.00, count: '10', colors: colors),
+                      _QuadBar(label: 'Q2', color: KaalColors.q2, fraction: qs[1].frac, count: '${qs[1].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q3', color: KaalColors.q3, fraction: 0.50, count: '5',  colors: colors),
+                      _QuadBar(label: 'Q3', color: KaalColors.q3, fraction: qs[2].frac, count: '${qs[2].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q4', color: KaalColors.q4, fraction: 0.20, count: '2',  colors: colors),
+                      _QuadBar(label: 'Q4', color: KaalColors.q4, fraction: qs[3].frac, count: '${qs[3].count}', colors: colors),
                     ],
                   ),
                 ),
@@ -249,27 +350,13 @@ class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      Text.rich(
-                        TextSpan(
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 12,
-                            color: colors.ink3,
-                            height: 1.55,
-                          ),
-                          children: [
-                            const TextSpan(text: 'Your Q2 completion rate was '),
-                            TextSpan(
-                              text: '40% above your average',
-                              style: TextStyle(
-                                color: colors.ink2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const TextSpan(
-                              text: '. You do best when Tuesdays are fully blocked for deep work. Consider protecting that again next week.',
-                            ),
-                          ],
+                      Text(
+                        insight,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          color: colors.ink3,
+                          height: 1.55,
                         ),
                       ),
                     ],
@@ -279,7 +366,7 @@ class _WeeklyReviewScreenState extends State<WeeklyReviewScreen> {
 
                 // Save button
                 GestureDetector(
-                  onTap: () {},
+                  onTap: _save,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(

@@ -43,8 +43,11 @@ class AnalyticsScreen extends ConsumerWidget {
     final maxQuad  = qCounts.reduce((a, b) => a > b ? a : b);
     final quadFrac = qCounts.map((c) => maxQuad > 0 ? c / maxQuad : 0.0).toList();
 
+    // AI insight — derived from real completion data
+    final insight = _buildInsight(done, completedCount, qCounts);
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -190,8 +193,8 @@ class AnalyticsScreen extends ConsumerWidget {
                 const Text('KAAL AI · INSIGHT', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: KaalColors.acc2)),
                 const SizedBox(height: 5),
                 Text(
-                  'You complete 40% more tasks on Fridays. Q2 tasks have the best completion rate. Consider scheduling deep work on Friday mornings.',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.5),
+                  insight,
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.5),
                 ),
               ],
             ),
@@ -210,6 +213,34 @@ String _fmtTime(int seconds) {
   if (h > 0) return '${h}h ${m}m';
   if (m > 0) return '${m}m';
   return '0m';
+}
+
+// Derives the "Kaal AI" insight from real completed-task data: the weekday with
+// the most completions and the most-completed quadrant. Falls back to a neutral
+// prompt until there's enough history.
+String _buildInsight(List<dynamic> done, int completedCount, List<int> qCounts) {
+  if (completedCount < 3) {
+    return 'Complete a few more tasks to unlock personalised insights.';
+  }
+  const weekdayNames = [
+    'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays', 'Sundays',
+  ];
+  final wdCounts = List.filled(7, 0);
+  for (final t in done) {
+    final d = t.doneAt as DateTime?;
+    if (d != null) wdCounts[d.weekday - 1]++;
+  }
+  var bestWd = 0;
+  for (var i = 1; i < 7; i++) {
+    if (wdCounts[i] > wdCounts[bestWd]) bestWd = i;
+  }
+  const qNames = ['Q1', 'Q2', 'Q3', 'Q4'];
+  var bestQ = 0;
+  for (var i = 1; i < 4; i++) {
+    if (qCounts[i] > qCounts[bestQ]) bestQ = i;
+  }
+  return 'You complete the most tasks on ${weekdayNames[bestWd]}. '
+      '${qNames[bestQ]} is your most-completed quadrant — schedule your deep work when you\'re most consistent.';
 }
 
 // ── Reusable widgets ──────────────────────────────────────────────────────────

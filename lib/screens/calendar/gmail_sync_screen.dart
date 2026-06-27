@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../config/feature_flags.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
@@ -30,6 +31,14 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
   }
 
   Future<void> _connect() async {
+    if (!kGmailSyncEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Gmail sync — coming soon in the next update.'),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
     setState(() => _connecting = true);
     try {
       final ok = await ref.read(integrationsProvider.notifier).connectGmail();
@@ -37,14 +46,14 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
       if (mounted && !ok) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Could not connect — no token received.'),
-          duration: Duration(seconds: 4),
+          duration: Duration(seconds: 2),
         ));
       }
     } catch (e) {
       if (mounted) {
         setState(() => _connecting = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gmail connect failed: $e'), backgroundColor: const Color(0xFFFF453A)),
+          SnackBar(content: Text('Gmail connect failed: $e'), backgroundColor: const Color(0xFFFF453A), duration: const Duration(seconds: 2)),
         );
       }
     }
@@ -54,23 +63,6 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
     await ref.read(integrationsProvider.notifier).disconnectGmail();
     if (mounted) setState(() => _connected = false);
   }
-
-  static const _pending = [
-    (
-      from: 'Dr. Sharma Clinic', time: '9:14 AM',
-      title: 'Dr. Sharma appointment — Apr 8, 10 AM',
-      quad: 'Q1 Do Now', quadColor: KaalColors.q1, quadBg: Color(0x1FF25022),
-      pri: 'P1', priColor: Color(0xFFFF9500), priBg: Color(0x1FFF9500),
-      date: 'Apr 8 · 10 AM', label: '#health', labelColor: Color(0xFFBF5AF2), labelBg: Color(0x1ABF5AF2),
-    ),
-    (
-      from: 'AWS', time: '2 days ago',
-      title: r'Pay AWS invoice — Apr 15, $47.20',
-      quad: 'Q2 Schedule', quadColor: KaalColors.q2, quadBg: Color(0x1F7FBA00),
-      pri: 'P3', priColor: KaalColors.acc2, priBg: Color(0x1F0A84FF),
-      date: 'Apr 15', label: '#finance', labelColor: Color(0xFF9FCD44), labelBg: Color(0x1A9FCD44),
-    ),
-  ];
 
   static const _settingLabels = [
     'Scan Inbox only',
@@ -129,7 +121,9 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                             children: [
                               Text(_connected ? 'Gmail' : 'Connect Gmail',
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
-                              Text(_connected ? '● Connected · Syncing every 4h' : '○ Not connected',
+                              Text(_connected
+                                      ? '● Connected · Syncs every 15 min · 5 min in-app'
+                                      : (kGmailSyncEnabled ? '○ Not connected' : '○ Coming soon'),
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                                       color: _connected ? colors.successFg : colors.ink3)),
                             ],
@@ -150,11 +144,11 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          _StatCell(value: '47', label: AppL10n.of(context).emailsScanned, valueColor: colors.ink),
+                          _StatCell(value: '0', label: AppL10n.of(context).emailsScanned, valueColor: colors.ink),
                           Container(width: 0.5, height: 32, color: colors.bdr),
-                          _StatCell(value: '9',  label: AppL10n.of(context).tasksCreated,  valueColor: KaalColors.acc2),
+                          _StatCell(value: '0',  label: AppL10n.of(context).tasksCreated,  valueColor: KaalColors.acc2),
                           Container(width: 0.5, height: 32, color: colors.bdr),
-                          _StatCell(value: '4',  label: AppL10n.of(context).pendingReview, valueColor: colors.successFg),
+                          _StatCell(value: '0',  label: AppL10n.of(context).pendingReview, valueColor: colors.successFg),
                         ],
                       ),
                     ] else ...[
@@ -168,7 +162,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                           child: _connecting
                               ? const SizedBox(width: 14, height: 14,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : Text('${AppL10n.of(context).connect} Gmail',
+                              : Text(kGmailSyncEnabled ? '${AppL10n.of(context).connect} Gmail' : 'Coming soon',
                                   style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
                       ),
@@ -177,15 +171,24 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                 ),
               ),
               const SizedBox(height: 14),
-              // Pending
-              Text('${AppL10n.of(context).pendingApproval.toUpperCase()} · 4',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-              const SizedBox(height: 8),
-              for (final p in _pending) ...[
-                _PendingCard(item: p, colors: colors),
-                const SizedBox(height: 6),
+              // Pending — only when connected; no fake previews.
+              if (_connected) ...[
+                Text(AppL10n.of(context).pendingApproval.toUpperCase(),
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0x0D7FBA00),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: 0.5, color: const Color(0x407FBA00)),
+                  ),
+                  child: Text('Extracted tasks will appear here after your next sync.',
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                ),
+                const SizedBox(height: 14),
               ],
-              const SizedBox(height: 8),
               // Sync settings
               Text(AppL10n.of(context).syncSettings.toUpperCase(),
                 style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
@@ -249,92 +252,6 @@ class _StatCell extends StatelessWidget {
   }
 }
 
-class _PendingCard extends StatelessWidget {
-  final dynamic item;
-  final KaalColors colors;
-  const _PendingCard({required this.item, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-      decoration: BoxDecoration(
-        color: const Color(0x0D7FBA00),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(width: 0.5, color: const Color(0x407FBA00)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Text('From: ', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-              Text(item.from, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2)),
-              Text(' · ${item.time}', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Text(item.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500, color: colors.ink)),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 4, runSpacing: 4,
-            children: [
-              _Tag(label: item.quad, color: item.quadColor, bg: item.quadBg),
-              _Tag(label: item.pri,  color: item.priColor,  bg: item.priBg),
-              _Tag(label: item.date, color: colors.ink3, bg: Colors.transparent),
-              _Tag(label: item.label, color: item.labelColor, bg: item.labelBg),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
-                    alignment: Alignment.center,
-                    child: const Text('✓ Add as task', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(width: 0.5, color: colors.bdr),
-                  ),
-                  child: Text(AppL10n.of(context).dismiss, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink3)),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  final String label;
-  final Color color, bg;
-  const _Tag({required this.label, required this.color, required this.bg});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(4)),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: color)),
-    );
-  }
-}
-
 class _SettingsCard extends StatefulWidget {
   final List<String> labels;
   final KaalColors colors;
@@ -352,9 +269,9 @@ class _SettingsCardState extends State<_SettingsCard> {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
       decoration: BoxDecoration(
-        color: const Color(0x0DFFFFFF),
+        color: widget.colors.surf2,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+        border: Border.all(width: 0.5, color: widget.colors.bdr0),
       ),
       child: Column(
         children: [

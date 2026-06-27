@@ -15,6 +15,7 @@ import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+import '../../widgets/kaal_sheet.dart';
 import '../../services/activity_log_service.dart';
 import '../../l10n/app_l10n.dart';
 import '../../l10n/app_strings.dart';
@@ -36,6 +37,7 @@ class _Task {
     this.hasAi = false,
     this.recLabel,
     this.hasPomo = false,
+    this.pomoMin = 25,
   }) : subs = const [];
   final int id;
   final String title;
@@ -44,6 +46,7 @@ class _Task {
   final bool hasAi;
   final String? recLabel;
   final bool hasPomo;
+  final int pomoMin;
   final List<_Sub> subs;
 }
 
@@ -76,6 +79,7 @@ _Task _rowToTask(Task r) => _Task(
       hasAi: r.hasAi,
       recLabel: r.recurrenceLabel,
       hasPomo: r.hasPomodoro,
+      pomoMin: r.timeAllocatedMin ?? 25,
     );
 
 _DoneTask _rowToDone(Task r, Map<int, String> names, AppStrings l10n) {
@@ -172,10 +176,13 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       List<_Task> q1, List<_Task> q2, List<_Task> q3, List<_Task> q4,
       List<_DoneTask> done, Map<int, String> qn, double Function(int, int) frac,
       bool showLists, List<CustomList> lists) {
+    // paddingOf().bottom already includes the nav-bar height (injected by the
+    // router shell), so this clears the floating nav on every device.
+    final navClear = MediaQuery.paddingOf(context).bottom + 16;
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 72),
+      padding: EdgeInsets.fromLTRB(12, 4, 12, navClear),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -258,18 +265,22 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       List<_Task> q1, List<_Task> q2, List<_Task> q3, List<_Task> q4,
       List<_DoneTask> done, Map<int, String> qn, double Function(int, int) frac,
       bool showLists, List<CustomList> lists) {
+    // paddingOf().bottom already includes the nav-bar height (injected by the
+    // router shell), so this clears the floating nav on every device.
+    final navClear = MediaQuery.paddingOf(context).bottom + 12;
     return LayoutBuilder(
       builder: (context, constraints) {
         // Collapsed completed-panel header ≈ 46px. Give quads the remaining
-        // viewport so both quads + completed header fit without scrolling.
+        // viewport (minus the nav clearance) so both quad rows + the completed
+        // header sit *above* the floating nav without scrolling.
         // Checklists appear below the fold and are reached by scrolling.
         const kCompH = 46.0;
-        final quadsH = (constraints.maxHeight - kCompH - 10).clamp(160.0, double.infinity);
+        final quadsH = (constraints.maxHeight - kCompH - 10 - navClear).clamp(160.0, double.infinity);
 
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 6, 12, 72),
+            padding: EdgeInsets.fromLTRB(12, 6, 12, navClear),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -464,7 +475,7 @@ class _FilterChips extends StatelessWidget {
                   onTap: () => context.push(KaalRoutes.tasksLists),
                 ),
                 const SizedBox(width: 4),
-                _Chip(label: '▶ ${AppL10n.of(context).timer}', textColor: const Color(0xFFFF6B35), bg: const Color(0x14FF6B35), border: const Color(0x33FF6B35), onTap: () => context.go(KaalRoutes.pomodoro)),
+                _Chip(label: '▶ ${AppL10n.of(context).timer}', textColor: const Color(0xFFFF6B35), bg: const Color(0x14FF6B35), border: const Color(0x33FF6B35), onTap: () => context.push(KaalRoutes.tasksPomodoro)),
                 const SizedBox(width: 4),
                 _Chip(
                   icon: SvgPicture.string(_clockSvg, width: 10, height: 10,
@@ -672,12 +683,16 @@ class _HeaderBadge extends StatelessWidget {
 
 Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color quadColor, KaalColors colors) {
   return showModalBottomSheet(
+    isScrollControlled: true,
     context: ctx,
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x8C000000),
     builder: (sheetCtx) => SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+        child: KaalSheetSurface(
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
         decoration: BoxDecoration(
           color: colors.surf,
           borderRadius: BorderRadius.circular(16),
@@ -706,7 +721,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
                 ref.logActivity('Task "${task.title}" marked as completed');
               }, colors: colors),
             _ContextItem(icon: Icons.timer_outlined, label: AppL10n.of(ctx).startPomodoro, color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.go(KaalRoutes.pomodoro); }, colors: colors),
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.tasksPomodoro); }, colors: colors),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
               child: Row(
@@ -743,6 +758,8 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
               }, colors: colors),
             const SizedBox(height: 8),
           ],
+        ),
+          ),
         ),
       ),
     ),
@@ -932,7 +949,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                             ),
                           if (task.hasPomo)
                             GestureDetector(
-                              onTap: () => context.go(KaalRoutes.pomodoro),
+                              onTap: () => context.push(KaalRoutes.tasksPomodoro),
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                                 decoration: BoxDecoration(
@@ -945,7 +962,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                                   children: [
                                     SvgPicture.string(_pomoClock, width: 7, height: 7),
                                     const SizedBox(width: 3),
-                                    const Text('25 min', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: Color(0xFFFF8080), height: 1.2)),
+                                    Text('${task.pomoMin} min', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: Color(0xFFFF8080), height: 1.2)),
                                   ],
                                 ),
                               ),
@@ -960,22 +977,31 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                   ),
                 ),
                 const SizedBox(width: 10),
+                // Dead-zone buffer: taps in the padding around the checkbox are
+                // absorbed (never open task details); only the icon completes.
                 GestureDetector(
-                  onTap: _complete,
                   behavior: HitTestBehavior.opaque,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    curve: Curves.easeOut,
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: _completing ? quadColor : quadColor.withAlpha(0x1A),
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 0.5, color: quadColor.withAlpha(0x99)),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.check_rounded, size: 14,
-                          color: _completing ? Colors.white : quadColor.withAlpha(0x80)),
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: GestureDetector(
+                      onTap: _complete,
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        curve: Curves.easeOut,
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: _completing ? quadColor : quadColor.withAlpha(0x1A),
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 0.5, color: quadColor.withAlpha(0x99)),
+                        ),
+                        child: Center(
+                          child: Icon(Icons.check_rounded, size: 14,
+                              color: _completing ? Colors.white : quadColor.withAlpha(0x80)),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -1034,12 +1060,16 @@ class _SubItemRow extends StatelessWidget {
 
 Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task, KaalColors colors) {
   return showModalBottomSheet(
+    isScrollControlled: true,
     context: ctx,
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x8C000000),
     builder: (sheetCtx) => SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+        child: KaalSheetSurface(
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
         decoration: BoxDecoration(
           color: colors.surf,
           borderRadius: BorderRadius.circular(16),
@@ -1071,6 +1101,8 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
               }, colors: colors),
             const SizedBox(height: 8),
           ],
+        ),
+          ),
         ),
       ),
     ),
@@ -1552,7 +1584,7 @@ class _ListCardInTasks extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: doneCount == items.length
                           ? const Color(0x1F30D158)
-                          : const Color(0x0DFFFFFF),
+                          : colors.surf2,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
                         width: 0.5,
@@ -1591,7 +1623,7 @@ class _ListCardInTasks extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                       decoration: BoxDecoration(
-                        color: const Color(0x0DFFFFFF),
+                        color: colors.surf2,
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(width: 0.5, color: colors.bdr),
                       ),
@@ -1623,7 +1655,7 @@ class _ListItemChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 5, 10, 5),
         decoration: BoxDecoration(
-          color: const Color(0x0DFFFFFF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(7),
           border: Border.all(width: 0.5, color: colors.bdr),
         ),
@@ -1675,6 +1707,7 @@ class _Fab extends StatelessWidget {
 void _showFabChooser(BuildContext ctx) {
   final colors = KaalTheme.of(ctx).colors;
   showModalBottomSheet(
+    isScrollControlled: true,
     context: ctx,
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x8C000000),

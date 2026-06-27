@@ -8,6 +8,7 @@ import '../../data/providers/database_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+import '../../widgets/kaal_sheet.dart';
 
 // Immutable quadrant colors + suggested default focus durations (minutes).
 const _kQuadColor = {1: KaalColors.q1, 2: KaalColors.q2, 3: KaalColors.q3, 4: KaalColors.q4};
@@ -134,6 +135,9 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+      child: KaalSheetSurface(
+        borderRadius: BorderRadius.circular(22),
+        child: Container(
       padding: EdgeInsets.fromLTRB(18, 16, 18, 16 + safeBottom),
       decoration: BoxDecoration(
         color: colors.surf,
@@ -253,6 +257,8 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
               ],
             ),
         ],
+      ),
+        ),
       ),
     );
   }

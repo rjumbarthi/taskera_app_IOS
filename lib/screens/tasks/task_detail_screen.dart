@@ -21,6 +21,20 @@ String _dueLabelFor(DateTime d) {
   return '${d.month}/${d.day}/${d.year}';
 }
 
+String _fmtClock(DateTime d) {
+  final m = d.minute.toString().padLeft(2, '0');
+  final period = d.hour >= 12 ? 'PM' : 'AM';
+  final hr = d.hour % 12 == 0 ? 12 : d.hour % 12;
+  return '$hr:$m $period';
+}
+
+String _fmtAlloc(int min) {
+  if (min < 60) return '${min}m';
+  final h = min ~/ 60;
+  final m = min % 60;
+  return m > 0 ? '${h}h ${m}m' : '${h}h';
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const _kQuadNames  = {1: 'Q1 · Do Now', 2: 'Q2 · Schedule', 3: 'Q3 · Delegate', 4: 'Q4 · Eliminate'};
@@ -274,8 +288,14 @@ class _Body extends StatelessWidget {
     final doneCount = subs.where((s) => s.isDone).length;
     final fraction  = subs.isEmpty ? 0.0 : doneCount / subs.length;
 
+    final d        = task.dueDate;
+    final hasTime  = d != null && (d.hour != 0 || d.minute != 0);
+    final dateStr  = d != null ? _dueLabelFor(d) : 'Set date';
+    final timeStr  = (d != null && (d.hour != 0 || d.minute != 0)) ? _fmtClock(d) : 'Set time';
+    final allotStr = timeAllocMin != null ? _fmtAlloc(timeAllocMin!) : 'Set';
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -346,9 +366,12 @@ class _Body extends StatelessWidget {
                           const SizedBox(height: 4),
                           Wrap(
                             spacing: 5,
+                            runSpacing: 5,
                             children: [
                               _Badge(label: '${prio ?? 'P4'} · ${_prioLabel(prio)}', bg: _prioBg(prio), fg: _prioColor(prio)),
                               _Badge(label: qName, bg: qBg, fg: qCol),
+                              if (attentionScore > 0)
+                                _Badge(label: 'Score ${attentionScore.toStringAsFixed(1)}', bg: KaalColors.accBg, fg: KaalColors.acc2),
                             ],
                           ),
                         ],
@@ -373,37 +396,47 @@ class _Body extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Stats row: Due | Score | Time
+                // Stats row: Date | Time | Allotted
                 Row(
                   children: [
-                    GestureDetector(
-                      onTap: onChangeDue,
-                      child: _StatCell(
-                        label: 'Due  ✎',
-                        value: task.dueLabel?.isNotEmpty == true ? task.dueLabel! : 'Set date',
-                        valueColor: task.isOverdue
-                            ? const Color(0xFFFF6B6B)
-                            : (task.dueDate == null ? KaalColors.acc2 : colors.ink2),
-                        colors: colors,
-                        natural: true,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onChangeDue,
+                        child: _StatCell(
+                          label: 'Date  ✎',
+                          value: dateStr,
+                          valueColor: task.isOverdue
+                              ? const Color(0xFFFF6B6B)
+                              : (d == null ? KaalColors.acc2 : colors.ink2),
+                          colors: colors,
+                          natural: true,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
-                    _StatCell(
-                      label: 'Score',
-                      value: '${attentionScore.toStringAsFixed(1)} / 10',
-                      valueColor: qCol,
-                      colors: colors,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onChangeDue,
+                        child: _StatCell(
+                          label: 'Time  ✎',
+                          value: timeStr,
+                          valueColor: hasTime ? colors.ink2 : KaalColors.acc2,
+                          colors: colors,
+                          natural: true,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: onEditTimeAlloc,
-                      child: _StatCell(
-                        label: 'Time  ✎',
-                        value: timeAllocMin != null ? '${timeAllocMin}m' : 'Set',
-                        valueColor: timeAllocMin != null ? colors.ink2 : KaalColors.acc2,
-                        colors: colors,
-                        natural: true,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onEditTimeAlloc,
+                        child: _StatCell(
+                          label: 'Allotted  ✎',
+                          value: allotStr,
+                          valueColor: timeAllocMin != null ? colors.ink2 : KaalColors.acc2,
+                          colors: colors,
+                          natural: true,
+                        ),
                       ),
                     ),
                   ],
@@ -553,9 +586,9 @@ class _Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(6, 1.5, 6, 1.5),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(3)),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: fg, height: 1)),
+      padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(5)),
+      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: fg, height: 1)),
     );
   }
 }
@@ -573,7 +606,11 @@ class _StatCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final inner = Container(
       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-      decoration: BoxDecoration(color: colors.surf2, borderRadius: BorderRadius.circular(7)),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -600,7 +637,7 @@ class _SubtaskRow extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
         decoration: BoxDecoration(
-          color: colors.surf2,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(7),
           border: Border.all(width: 0.5, color: qCol.withAlpha(0x30)),
         ),

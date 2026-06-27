@@ -41,7 +41,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
       if (!ok) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Could not connect — no token received. Check Google Cloud Console.'),
-          duration: Duration(seconds: 4),
+          duration: Duration(seconds: 2),
         ));
       }
     } catch (e) {
@@ -49,7 +49,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
       setState(() => _connecting = false);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Connection failed. Please try again.'),
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: 2),
       ));
     }
   }
@@ -60,13 +60,6 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
   }
 
   static const _syncDirs = ['Both ways', 'Tasks → Cal only', 'Cal → Tasks only'];
-
-  static const _events = [
-    (title: 'Product Roadmap Review', when: 'Tomorrow 10 AM',
-     suggestion: '✦ Suggested: "Prep for Roadmap Review" → Q2, today by 5 PM'),
-    (title: 'Design sync', when: 'Fri 2 PM',
-     suggestion: '✦ Suggested: "Design sync prep" → Q2, Thu by EOD'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +120,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                             children: [
                               Text('Google Calendar', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                               Text(
-                                _connected ? '● Connected · Last synced: now' : '○ Not connected',
+                                _connected ? '● Connected · Syncs every 15 min · 5 min in-app' : '○ Not connected',
                                 style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                                     color: _connected ? colors.successFg : colors.ink3)),
                             ],
@@ -148,9 +141,9 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          _CountCell(value: '12', label: 'Tasks → Calendar', valueColor: colors.ink),
+                          _CountCell(value: '0', label: 'Tasks → Calendar', valueColor: colors.ink),
                           const SizedBox(width: 8),
-                          _CountCell(value: '3',  label: 'Events → Tasks',   valueColor: KaalColors.acc2),
+                          _CountCell(value: '0',  label: 'Events → Tasks',   valueColor: KaalColors.acc2),
                         ],
                       ),
                     ] else ...[
@@ -173,15 +166,24 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                 ),
               ),
               const SizedBox(height: 14),
-              // Event → task suggestions
-              Text(AppL10n.of(context).eventsToTaskSugg.toUpperCase(),
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-              const SizedBox(height: 8),
-              for (int i = 0; i < _events.length; i++) ...[
-                _EventCard(event: _events[i], colors: colors),
-                const SizedBox(height: 5),
+              // Event → task suggestions — only when connected; no fake previews.
+              if (_connected) ...[
+                Text(AppL10n.of(context).eventsToTaskSugg.toUpperCase(),
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0x0D0A84FF),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
+                  ),
+                  child: Text('Synced events and AI prep suggestions will appear here after your next sync.',
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                ),
+                const SizedBox(height: 14),
               ],
-              const SizedBox(height: 8),
               // Sync settings
               Text(AppL10n.of(context).syncSettings.toUpperCase(),
                 style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
@@ -189,9 +191,9 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
               Container(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                 decoration: BoxDecoration(
-                  color: const Color(0x0DFFFFFF),
+                  color: colors.surf2,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                  border: Border.all(width: 0.5, color: colors.bdr0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -259,7 +261,7 @@ class _CountCell extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+          border: Border.all(width: 0.5, color: colors.bdr0),
         ),
         child: Column(
           children: [
@@ -268,59 +270,6 @@ class _CountCell extends StatelessWidget {
             Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.labelMuted)),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _EventCard extends StatelessWidget {
-  final dynamic event;
-  final KaalColors colors;
-  const _EventCard({required this.event, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-      decoration: BoxDecoration(
-        color: const Color(0x0D0A84FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('Calendar event · ${event.when}', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-          const SizedBox(height: 4),
-          Text(event.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500, color: colors.ink)),
-          const SizedBox(height: 5),
-          Text(event.suggestion, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2)),
-          const SizedBox(height: 7),
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
-                    alignment: Alignment.center,
-                    child: const Text('✓ Create prep task', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
-                  decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: colors.bdr)),
-                  child: Text(AppL10n.of(context).skip, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

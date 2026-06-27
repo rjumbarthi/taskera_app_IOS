@@ -45,7 +45,7 @@ class AchievementsScreen extends StatelessWidget {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 72),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Unlocked section
               Text(

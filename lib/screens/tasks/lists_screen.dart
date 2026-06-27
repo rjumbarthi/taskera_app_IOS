@@ -80,7 +80,7 @@ Future<void> _showListSheet(
                           margin: const EdgeInsets.only(right: 6),
                           padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
                           decoration: BoxDecoration(
-                            color: const Color(0x0DFFFFFF),
+                            color: colors.surf2,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(width: 0.5, color: colors.bdr),
                           ),
@@ -305,7 +305,7 @@ class ListsScreen extends ConsumerWidget {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 80),
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
                       itemCount: lists.length,
                       itemBuilder: (_, i) => _ListCard(
                         key: ValueKey(lists[i].id),
@@ -658,7 +658,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                         decoration: BoxDecoration(
-                          color: const Color(0x0DFFFFFF),
+                          color: colors.surf2,
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(width: 0.5, color: colors.bdr),
                         ),
@@ -724,7 +724,7 @@ class _ItemChip extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.fromLTRB(8, 5, 4, 5),
         decoration: BoxDecoration(
-          color: done ? const Color(0x1430D158) : const Color(0x0DFFFFFF),
+          color: done ? const Color(0x1430D158) : colors.surf2,
           borderRadius: BorderRadius.circular(7),
           border: Border.all(width: 0.5, color: done ? const Color(0x4030D158) : colors.bdr),
         ),

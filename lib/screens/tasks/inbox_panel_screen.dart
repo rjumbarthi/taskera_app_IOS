@@ -141,7 +141,7 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
           child: items.isEmpty
               ? _EmptyInbox(colors: colors)
               : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                   itemCount: items.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 6),
                   itemBuilder: (context, i) => _CaptureRow(

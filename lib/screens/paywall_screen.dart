@@ -51,12 +51,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 const SizedBox(height: 8),
                 _UpiButton(colors: colors),
                 const SizedBox(height: 8),
-                Text('No charge until trial ends. Cancel anytime in App Store settings.',
+                Text('No charge until trial ends. Cancel anytime in App Store or Play Store settings.',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                         color: colors.ink3, height: 1.5)),
                 const SizedBox(height: 4),
-                Text('To cancel: App Store → Subscriptions → Kaal',
+                Text('To cancel: App Store / Play Store → Subscriptions → Kaal',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                         color: colors.ink2, height: 1.4)),
@@ -122,16 +122,6 @@ class _HeroSection extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(fontFamily: 'Inter', fontSize: 13,
               color: colors.ink3, height: 1.5)),
-      const SizedBox(height: 8),
-      RichText(
-        text: TextSpan(children: [
-          TextSpan(text: '⭐ 4.9  ·  ',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
-          const TextSpan(text: '12,400+ users',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12,
-                  fontWeight: FontWeight.w600, color: KaalColors.q2)),
-        ]),
-      ),
     ]);
   }
 }

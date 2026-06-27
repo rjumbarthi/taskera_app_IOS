@@ -47,19 +47,28 @@ class _FocusListScreenState extends ConsumerState<FocusListScreen> {
 
     final overdueTasks = allActive.where((t) => t.isOverdue).toList();
 
-    // Today = tasks with a due date set that falls on today or earlier
+    // Agenda window: today + tomorrow (calendar days).
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final tomorrowStart = DateTime(now.year, now.month, now.day + 1);
+    final tomorrowStart = today.add(const Duration(days: 1));
+    final dayAfter = today.add(const Duration(days: 2));
     final todayTasks = allActive.where((t) {
       final d = t.dueDate;
       return d != null && d.isBefore(tomorrowStart);
     }).toList();
+    final tomorrowTasks = allActive.where((t) {
+      final d = t.dueDate;
+      return d != null && !d.isBefore(tomorrowStart) && d.isBefore(dayAfter);
+    }).toList();
 
-    // Habits and calendar invites shown alongside today's tasks
+    // Habits (today's routine) + calendar invites for today and tomorrow.
     final habits = ref.watch(habitsProvider).valueOrNull ?? <Habit>[];
     final todayInvites = ref
         .watch(calendarEventsForDayProvider(today))
+        .where((e) => e.isInvite)
+        .toList();
+    final tomorrowInvites = ref
+        .watch(calendarEventsForDayProvider(tomorrowStart))
         .where((e) => e.isInvite)
         .toList();
 
@@ -84,7 +93,14 @@ class _FocusListScreenState extends ConsumerState<FocusListScreen> {
         _FilterRow(filter: _filter, counts: counts, onChanged: (f) => setState(() => _filter = f)),
         Expanded(
         child: _filter == FocusFilter.today
-            ? _TodayList(tasks: displayTasks, habits: habits, invites: todayInvites, colors: colors)
+            ? _TodayList(
+                todayTasks: todayTasks,
+                tomorrowTasks: tomorrowTasks,
+                habits: habits,
+                todayInvites: todayInvites,
+                tomorrowInvites: tomorrowInvites,
+                colors: colors,
+              )
             : _TaskList(tasks: displayTasks, filter: _filter, colors: colors),
       ),
       ],
@@ -203,76 +219,121 @@ class _Pill extends StatelessWidget {
   }
 }
 
-// ── Today's combined list (tasks + habits + invites) ─────────────────────────
+// ── Shared agenda helpers ─────────────────────────────────────────────────────
+
+const int _kUntimed = 100000; // sort key for items with no specific time
+
+/// Format minute-of-day (0–1439) as "6:30 AM"; null/untimed → "—".
+String _fmtMinutes(int? min) {
+  if (min == null) return '—';
+  final h = min ~/ 60;
+  final m = min % 60;
+  final period = h >= 12 ? 'PM' : 'AM';
+  final hr = h % 12 == 0 ? 12 : h % 12;
+  return '$hr:${m.toString().padLeft(2, '0')} $period';
+}
+
+/// Parse a calendar timeSlot like "9 AM", "2:30 PM" → minute-of-day, or null.
+int? _parseSlot(String s) {
+  final m = RegExp(r'(\d{1,2})(?::(\d{2}))?\s*(AM|PM)', caseSensitive: false).firstMatch(s);
+  if (m == null) return null;
+  var h = int.parse(m.group(1)!);
+  final min = m.group(2) != null ? int.parse(m.group(2)!) : 0;
+  final pm = m.group(3)!.toUpperCase() == 'PM';
+  if (h == 12) h = 0;
+  if (pm) h += 12;
+  return h * 60 + min;
+}
+
+// ── Today's plan: one time-ordered list, grouped by calendar day ──────────────
 
 class _TodayList extends StatelessWidget {
-  final List<Task> tasks;
+  final List<Task> todayTasks;
+  final List<Task> tomorrowTasks;
   final List<Habit> habits;
-  final List<CalendarEvent> invites;
+  final List<CalendarEvent> todayInvites;
+  final List<CalendarEvent> tomorrowInvites;
   final KaalColors colors;
   const _TodayList({
-    required this.tasks,
+    required this.todayTasks,
+    required this.tomorrowTasks,
     required this.habits,
-    required this.invites,
+    required this.todayInvites,
+    required this.tomorrowInvites,
     required this.colors,
   });
 
+  // Merge tasks + habits + invites into a single time-sorted list of rows.
+  List<Widget> _dayRows(List<Task> tasks, List<Habit> habits, List<CalendarEvent> invites) {
+    final entries = <(int, Widget)>[];
+    for (final t in tasks) {
+      final d = t.dueDate;
+      final timed = d != null && !(d.hour == 0 && d.minute == 0);
+      entries.add((timed ? d.hour * 60 + d.minute : _kUntimed, _TaskRow(task: t, colors: colors)));
+    }
+    for (final h in habits) {
+      entries.add((h.scheduledTime ?? _kUntimed, _HabitRow(h)));
+    }
+    for (final e in invites) {
+      entries.add((_parseSlot(e.timeSlot) ?? _kUntimed, _InviteRow(e)));
+    }
+    entries.sort((a, b) => a.$1.compareTo(b.$1));
+
+    final rows = <Widget>[];
+    for (int i = 0; i < entries.length; i++) {
+      if (i > 0) rows.add(Divider(height: 1, thickness: 0.5, color: colors.bdr));
+      rows.add(entries[i].$2);
+    }
+    return rows;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (tasks.isEmpty && habits.isEmpty && invites.isEmpty) {
+    final todayRows    = _dayRows(todayTasks, habits, todayInvites);
+    final tomorrowRows = _dayRows(tomorrowTasks, const [], tomorrowInvites);
+
+    if (todayRows.isEmpty && tomorrowRows.isEmpty) {
       return Center(
         child: Text(
-          'Nothing for today',
+          'Nothing planned',
           style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
         ),
       );
     }
     return ListView(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
       children: [
-        if (tasks.isNotEmpty) ...[
-          _SectionHdr('Tasks · ${tasks.length}'),
-          for (int i = 0; i < tasks.length; i++) ...[
-            if (i > 0) Divider(height: 1, thickness: 0.5, color: colors.bdr),
-            _TaskRow(task: tasks[i], colors: colors),
-          ],
+        if (todayRows.isNotEmpty) ...[
+          const _DayHeader('Today'),
+          ...todayRows,
         ],
-        if (habits.isNotEmpty) ...[
-          _SectionHdr('Habits · ${habits.length}'),
-          for (int i = 0; i < habits.length; i++) ...[
-            if (i > 0) Divider(height: 1, thickness: 0.5, color: colors.bdr),
-            _HabitRow(habits[i]),
-          ],
-        ],
-        if (invites.isNotEmpty) ...[
-          _SectionHdr('Invites · ${invites.length}'),
-          for (int i = 0; i < invites.length; i++) ...[
-            if (i > 0) Divider(height: 1, thickness: 0.5, color: colors.bdr),
-            _InviteRow(invites[i]),
-          ],
+        if (tomorrowRows.isNotEmpty) ...[
+          const _DayHeader('Tomorrow'),
+          ...tomorrowRows,
         ],
       ],
     );
   }
 }
 
-class _SectionHdr extends StatelessWidget {
+// Calendar-day separator/header ("TODAY", "TOMORROW").
+class _DayHeader extends StatelessWidget {
   final String label;
-  const _SectionHdr(this.label);
+  const _DayHeader(this.label);
 
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
+      padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
       child: Text(
         label.toUpperCase(),
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 10,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.7,
-          color: colors.ink3,
+          color: colors.ink2,
           height: 1,
         ),
       ),
@@ -292,8 +353,19 @@ class _HabitRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(habit.emoji, style: const TextStyle(fontSize: 18)),
+          // Time
+          SizedBox(
+            width: 54,
+            child: Text(
+              _fmtMinutes(habit.scheduledTime),
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Type indicator (emoji)
+          SizedBox(width: 22, child: Center(child: Text(habit.emoji, style: const TextStyle(fontSize: 18)))),
           const SizedBox(width: 10),
+          // Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,6 +394,7 @@ class _HabitRow extends StatelessWidget {
               ],
             ),
           ),
+          // Trailing: streak
           if (habit.streakLabel.isNotEmpty) ...[
             const SizedBox(width: 8),
             Text(
@@ -354,22 +427,28 @@ class _InviteRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: 58,
+            width: 54,
             child: Text(
               event.timeSlot,
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            width: 3,
-            height: 34,
-            decoration: BoxDecoration(
-              color: accent,
-              borderRadius: BorderRadius.circular(2),
+          // Type indicator (colored bar)
+          SizedBox(
+            width: 22,
+            child: Center(
+              child: Container(
+                width: 3,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: accent,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +517,7 @@ class _TaskList extends StatelessWidget {
       );
     }
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
       itemCount: tasks.length,
       separatorBuilder: (context, _) => Divider(
         height: 1,
@@ -481,12 +560,8 @@ class _TaskRow extends ConsumerWidget {
 
   String get _timeDisplay {
     final d = task.dueDate;
-    if (d == null) return '—';
-    final h = d.hour;
-    final m = d.minute.toString().padLeft(2, '0');
-    final period = h >= 12 ? 'PM' : 'AM';
-    final hour = h % 12 == 0 ? 12 : h % 12;
-    return '$hour:$m $period';
+    if (d == null || (d.hour == 0 && d.minute == 0)) return '—';
+    return _fmtMinutes(d.hour * 60 + d.minute);
   }
 
   @override
@@ -502,7 +577,7 @@ class _TaskRow extends ConsumerWidget {
           children: [
             // Time
             SizedBox(
-              width: 58,
+              width: 54,
               child: Text(
                 _timeDisplay,
                 style: TextStyle(
@@ -514,6 +589,17 @@ class _TaskRow extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 8),
+            // Type indicator (quadrant dot)
+            SizedBox(
+              width: 22,
+              child: Center(
+                child: Container(
+                  width: 9, height: 9,
+                  decoration: BoxDecoration(color: qc, shape: BoxShape.circle),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
             // Content
             Expanded(
               child: Column(

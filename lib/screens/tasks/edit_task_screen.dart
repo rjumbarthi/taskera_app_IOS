@@ -9,6 +9,7 @@ import '../../util/kaal_dialogs.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/reminders_section.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -70,7 +71,7 @@ class EditTaskScreen extends ConsumerStatefulWidget {
 class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
   int      _quad     = 1;
   String   _priority = 'P3';
-  final Set<String> _labels = {'work'};
+  final Set<String> _labels = {};
   String   _parseResult = '';
   DateTime?  _selectedDueDate;
   TimeOfDay? _selectedTime;
@@ -110,6 +111,12 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
         _quad           = task.quadrant;
         _priority       = task.priority ?? 'P3';
         _notesCtrl.text = task.notes ?? '';
+        _labels
+          ..clear()
+          ..addAll((task.labels ?? '')
+              .split(',')
+              .map((s) => s.trim())
+              .where((s) => s.isNotEmpty));
         if (task.timeAllocatedMin != null) {
           _timeAllocCtrl.text = task.timeAllocatedMin!.toString();
         }
@@ -487,6 +494,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
         dueLabel:         Value(dueLabel),
         isOverdue:        Value(isOverdue),
         timeAllocatedMin: Value(allocMin != null && allocMin > 0 ? allocMin : null),
+        labels:           Value(_labels.isEmpty ? null : _labels.join(',')),
       );
 
       if (_isNew) {
@@ -557,7 +565,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
         // Form body
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 2, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 2, 12, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -755,6 +763,40 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: Icon(Icons.notifications_none, size: 14, color: colors.ink3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 7),
+
+                // REMIND ME — schedules a real reminder/alarm that fires
+                _FormRow(
+                  label: 'REMIND ME',
+                  colors: colors,
+                  child: GestureDetector(
+                    onTap: () => showAddReminderSheet(context, ref,
+                        initialLabel: _normalizeTitle(_titleCtrl.text)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 0.5, color: colors.bdr2),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                              child: Text('+ Set reminder or alarm',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.alarm, size: 14, color: colors.ink3),
                           ),
                         ],
                       ),

@@ -62,6 +62,18 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
     setState(() => _addingStep = false);
   }
 
+  // "Something came up?" — mark today skipped for THIS habit (streak protected).
+  Future<void> _skipHabitToday(int id, String name) async {
+    await ref.read(appDatabaseProvider).habitsDao.skipToday(id);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Skipped "$name" today — streak protected.'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ));
+    }
+  }
+
   void _prevMonth() => setState(() {
     if (_month == 1) { _month = 12; _year--; } else { _month--; }
   });
@@ -278,7 +290,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 72),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Hero card — accent tint
               Container(
@@ -342,6 +354,9 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 8),
+              // "Something came up?" — skip today for this habit, streak protected
+              _HabitSkipCard(colors: colors, onSkip: () => _skipHabitToday(id, name)),
               const SizedBox(height: 8),
               // Calendar heatmap
               _Card(
@@ -554,9 +569,9 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
     decoration: BoxDecoration(
-      color: const Color(0x0DFFFFFF),
+      color: colors.surf2,
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+      border: Border.all(width: 0.5, color: colors.bdr0),
     ),
     child: child,
   );
@@ -566,9 +581,9 @@ class _HeroStat extends StatelessWidget {
   final String value, label;
   final Color valueColor;
   final Color bgColor;
-  final Color borderColor;
+  final Color? borderColor;
   const _HeroStat({required this.value, required this.label, required this.valueColor,
-    this.bgColor = Colors.transparent, this.borderColor = const Color(0x1AFFFFFF)});
+    this.bgColor = Colors.transparent, this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -579,7 +594,7 @@ class _HeroStat extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 0.5, color: borderColor),
+          border: Border.all(width: 0.5, color: borderColor ?? colors.bdr0),
         ),
         child: Column(
           children: [
@@ -645,7 +660,7 @@ class _StatCell2 extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(9),
-          border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+          border: Border.all(width: 0.5, color: colors.bdr0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -846,6 +861,60 @@ class _AddStepRow extends StatelessWidget {
           GestureDetector(onTap: onCancel, child: Icon(Icons.close_rounded, size: 18, color: colors.ink3)),
         ],
       ),
+    );
+  }
+}
+
+// ── "Something came up?" skip card (per-habit) ────────────────────────────────
+
+class _HabitSkipCard extends StatelessWidget {
+  final KaalColors colors;
+  final VoidCallback onSkip;
+  const _HabitSkipCard({required this.colors, required this.onSkip});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppL10n.of(context);
+    Widget btn(String emoji, String label) => Expanded(
+      child: GestureDetector(
+        onTap: onSkip,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: colors.surf2,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(width: 0.5, color: colors.bdr),
+          ),
+          child: Column(children: [
+            Text(emoji, style: const TextStyle(fontSize: 11, height: 1)),
+            const SizedBox(height: 2),
+            Text(label, textAlign: TextAlign.center,
+                style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink2, height: 1)),
+          ]),
+        ),
+      ),
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(l.somethingCameUp,
+            style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
+        const SizedBox(height: 1),
+        Text(l.rescheduleHabit,
+            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3.withAlpha(0xB3), height: 1.3)),
+        const SizedBox(height: 7),
+        Row(children: [
+          btn('📅', l.tomorrow), const SizedBox(width: 5),
+          btn('🔄', l.nextSession), const SizedBox(width: 5),
+          btn('⏭', l.skipDay),
+        ]),
+      ]),
     );
   }
 }

@@ -185,7 +185,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 72),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Tab switcher
               Container(
@@ -277,9 +277,9 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                   decoration: BoxDecoration(
-                    color: const Color(0x0DFFFFFF),
+                    color: colors.surf2,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                    border: Border.all(width: 0.5, color: colors.bdr0),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -297,9 +297,9 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0x0DFFFFFF),
+                    color: colors.surf2,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                    border: Border.all(width: 0.5, color: colors.bdr0),
                   ),
                   child: Text(AppL10n.of(context).noHabitsFound, textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
@@ -309,9 +309,9 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
               Container(
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                 decoration: BoxDecoration(
-                  color: const Color(0x0DFFFFFF),
+                  color: colors.surf2,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                  border: Border.all(width: 0.5, color: colors.bdr0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -375,7 +375,7 @@ class _RoundBtn extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 22, height: 22,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0x14FFFFFF), border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF))),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0x14FFFFFF), border: Border.all(width: 0.5, color: colors.bdr0)),
         child: Icon(icon, size: 14, color: colors.ink3),
       ),
     );
@@ -394,9 +394,9 @@ class _StatTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(11),
         decoration: BoxDecoration(
-          color: const Color(0x0DFFFFFF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(11),
-          border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+          border: Border.all(width: 0.5, color: colors.bdr0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

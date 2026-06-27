@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/database.dart' show NotesCompanion;
+import '../../data/database.dart' show NotesCompanion, Task;
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../util/kaal_dialogs.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../services/activity_log_service.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/goal_link_pickers.dart';
 
 class NoteEditorScreen extends ConsumerStatefulWidget {
   final String? noteId;
@@ -24,6 +26,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   final _titleCtrl = TextEditingController();
   final _bodyCtrl  = TextEditingController();
 
+  // Ids of tasks linked to this note (source of truth while editing).
+  final Set<int> _linkedTaskIds = {};
+
   bool get _isEdit => widget.noteId != null;
   int? get _parsedId => widget.noteId != null ? int.tryParse(widget.noteId!) : null;
 
@@ -34,12 +39,35 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   Future<void> _loadNote() async {
-    final note = await ref.read(appDatabaseProvider).notesDao.getNote(_parsedId!);
+    final dao  = ref.read(appDatabaseProvider).notesDao;
+    final note = await dao.getNote(_parsedId!);
+    final links = await dao.getTaskLinks(_parsedId!);
     if (note != null && mounted) {
       _titleCtrl.text = note.title;
       _bodyCtrl.text  = note.body;
-      setState(() => _pinned = note.isPinned);
+      setState(() {
+        _pinned = note.isPinned;
+        _linkedTaskIds
+          ..clear()
+          ..addAll(links.map((l) => l.taskId));
+      });
     }
+  }
+
+  void _openTaskPicker(KaalColors colors) {
+    final all = ref.read(allTasksProvider).value ?? const <Task>[];
+    showTaskLinkPicker(
+      context: context,
+      tasks: all,
+      initial: _linkedTaskIds,
+      colors: colors,
+      title: 'Link tasks to this note',
+      onSave: (selected) => setState(() {
+        _linkedTaskIds
+          ..clear()
+          ..addAll(selected);
+      }),
+    );
   }
 
   Future<void> _save() async {
@@ -56,9 +84,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           timeLabel: const Value('Just now'),
         ),
       );
+      await dao.setTaskLinks(_parsedId!, _linkedTaskIds);
       ref.logActivity('Note "$title" updated', type: 'note');
     } else {
-      await dao.insertNote(
+      final newId = await dao.insertNote(
         NotesCompanion(
           title: Value(title),
           body: Value(_bodyCtrl.text),
@@ -66,6 +95,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           timeLabel: const Value('Just now'),
         ),
       );
+      await dao.setTaskLinks(newId, _linkedTaskIds);
       ref.logActivity('Note "$title" created', type: 'note');
     }
     if (mounted) context.pop();
@@ -75,13 +105,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   int        _goalIdx   = 3; // None
   bool       _pinned    = false;
   final Set<int> _selLabels  = {0}; // #idea
-  final Set<int> _selAttach  = {0}; // Today
 
   static const _quads  = ['Q1 · Do Now', 'Q2 · Schedule', 'Q3 · Delegate', 'Q4 · Eliminate', 'None'];
   static const _quadColors = [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4, Color(0xFF8E8E93)];
   static const _goals  = ['🚀 Launch MVP', '💪 Fitness', '📚 Read 12 books', 'None'];
   static const _labels = ['#idea', '#meeting', '#research', '#journal', '#braindump', '+ New'];
-  static const _attach = ['📅 Today', '📝 Task', '🤝 Meeting', '📞 Person'];
   static const _fmtBtns = ['B', 'I', 'U', '• List', '1.'];
 
   @override
@@ -94,6 +122,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final allTasks    = ref.watch(allTasksProvider).value ?? const <Task>[];
+    final linkedTasks = allTasks.where((t) => _linkedTaskIds.contains(t.id)).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -123,7 +153,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Title + camera/mic
               _FormRow(
@@ -291,26 +321,45 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   ],
                 ),
               ),
-              // Attach to
+              // Linked tasks
               _FormRow(
-                label: 'Attach to',
+                label: 'Linked tasks · optional',
                 colors: colors,
-                child: Wrap(
-                  spacing: 5, runSpacing: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (int i = 0; i < _attach.length; i++)
-                      _Chip(
-                        label: _attach[i],
-                        selected: _selAttach.contains(i),
-                        colors: colors,
-                        onTap: () => setState(() {
-                          if (_selAttach.contains(i)) {
-                            _selAttach.remove(i);
-                          } else {
-                            _selAttach.add(i);
-                          }
-                        }),
+                    if (linkedTasks.isNotEmpty) ...[
+                      Wrap(
+                        spacing: 5, runSpacing: 5,
+                        children: [
+                          for (final t in linkedTasks)
+                            _LinkedTaskChip(
+                              label: t.title,
+                              quadrant: t.quadrant,
+                              colors: colors,
+                              onRemove: () => setState(() => _linkedTaskIds.remove(t.id)),
+                            ),
+                        ],
                       ),
+                      const SizedBox(height: 7),
+                    ],
+                    GestureDetector(
+                      onTap: () => _openTaskPicker(colors),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 9),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: colors.surf2,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(width: 0.5, color: colors.bdr),
+                        ),
+                        child: Text(
+                          linkedTasks.isEmpty ? '+ Link tasks' : '+ Edit linked tasks',
+                          style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                              fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -401,6 +450,45 @@ class _Chip extends StatelessWidget {
         ),
         child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? Colors.white : colors.ink2, height: 1)),
+      ),
+    );
+  }
+}
+
+class _LinkedTaskChip extends StatelessWidget {
+  final String label;
+  final int quadrant;
+  final VoidCallback onRemove;
+  final KaalColors colors;
+  const _LinkedTaskChip({required this.label, required this.quadrant, required this.onRemove, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    final qColor = quadrant >= 1 && quadrant <= 4
+        ? [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4][quadrant - 1]
+        : const Color(0xFF8E8E93);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(9, 5, 6, 5),
+      decoration: BoxDecoration(
+        color: qColor.withAlpha(0x1F),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(width: 0.5, color: qColor.withAlpha(0x80)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+                    color: colors.ink, height: 1)),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: onRemove,
+            behavior: HitTestBehavior.opaque,
+            child: Icon(Icons.close_rounded, size: 13, color: colors.ink3),
+          ),
+        ],
       ),
     );
   }

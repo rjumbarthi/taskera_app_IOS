@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:drift/drift.dart' show Value;
-import '../../data/database.dart' show Goal, Task, Habit, GoalsCompanion;
+import '../../data/database.dart' show Goal, Task, GoalsCompanion;
 import '../../data/providers/goals_provider.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../data/providers/tasks_provider.dart';
@@ -11,6 +11,7 @@ import '../../data/providers/database_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/goal_link_pickers.dart';
 import '../../l10n/app_l10n.dart';
 
 class GoalDetailScreen extends ConsumerWidget {
@@ -60,32 +61,28 @@ class _Body extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(8, 8, 12, 6),
           child: Row(
             children: [
-              AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 2),
+              AddBackButton(strokeColor: accentColor, onTap: () => context.pop()),
+              const SizedBox(width: 8),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      goal.title,
-                      style: const TextStyle(
-                        fontFamily: 'Fraunces',
-                        fontVariations: [FontVariation('wght', 600)],
-                        fontSize: 19,
-                        letterSpacing: -0.5,
-                        color: Color(0xFFF2F2F7),
-                        height: 1.1,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontFamily: 'Fraunces',
+                      fontVariations: [FontVariation('wght', 600)],
+                      fontSize: 19,
+                      letterSpacing: -0.5,
+                      height: 1.3,
                     ),
-                    Text(
-                      goal.subtitle,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: const Color(0xFF8E8E93), height: 1.3),
-                    ),
-                  ],
+                    children: [
+                      TextSpan(text: '${AppL10n.of(context).goals} · ', style: TextStyle(color: accentColor)),
+                      TextSpan(text: goal.title, style: TextStyle(color: colors.ink)),
+                    ],
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               GestureDetector(
                 onTap: () => context.push('/focus/editgoal/$goalId'),
                 child: Container(
@@ -111,7 +108,7 @@ class _Body extends StatelessWidget {
 
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -409,18 +406,16 @@ class _LinkedTasksCard extends ConsumerWidget {
     ];
     final linked = (ref.read(goalLinkedTasksProvider(goalId)).value ?? []).map((t) => t.id).toSet();
 
-    showModalBottomSheet(
+    showTaskLinkPicker(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: const Color(0x8C000000),
-      isScrollControlled: true,
-      builder: (_) => _TaskPickerSheet(
-        tasks: allTasks,
-        linked: linked,
-        goalId: goalId,
-        colors: colors,
-        db: ref.read(appDatabaseProvider),
-      ),
+      tasks: allTasks,
+      initial: linked,
+      colors: colors,
+      onSave: (selected) async {
+        final db = ref.read(appDatabaseProvider);
+        for (final id in selected.difference(linked)) { await db.goalsDao.linkTask(goalId, id); }
+        for (final id in linked.difference(selected)) { await db.goalsDao.unlinkTask(goalId, id); }
+      },
     );
   }
 
@@ -500,111 +495,6 @@ class _LinkedTasksCard extends ConsumerWidget {
   }
 }
 
-// ── Task picker sheet ─────────────────────────────────────────────────────────
-
-class _TaskPickerSheet extends StatefulWidget {
-  final List<Task> tasks;
-  final Set<int> linked;
-  final int goalId;
-  final KaalColors colors;
-  final dynamic db;
-  const _TaskPickerSheet({required this.tasks, required this.linked,
-      required this.goalId, required this.colors, required this.db});
-
-  @override
-  State<_TaskPickerSheet> createState() => _TaskPickerSheetState();
-}
-
-class _TaskPickerSheetState extends State<_TaskPickerSheet> {
-  late final Set<int> _pending = Set.from(widget.linked);
-
-  @override
-  Widget build(BuildContext context) {
-    final safeBot = MediaQuery.of(context).padding.bottom;
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + safeBot),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1C1C1E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        border: Border(top: BorderSide(width: 0.5, color: Color(0x33FFFFFF))),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
-          Text(AppL10n.of(context).linkTasksToGoal, style: TextStyle(fontFamily: 'Inter', fontSize: 14,
-              fontWeight: FontWeight.w600, color: widget.colors.ink, height: 1)),
-          const SizedBox(height: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 320),
-            child: widget.tasks.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Text(AppL10n.of(context).noActiveTasksFound,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: widget.colors.ink3)),
-                  )
-                : ListView(
-                    shrinkWrap: true,
-                    children: widget.tasks.map((t) {
-                      final isLinked = _pending.contains(t.id);
-                      return GestureDetector(
-                        onTap: () => setState(() {
-                          if (isLinked) { _pending.remove(t.id); } else { _pending.add(t.id); }
-                        }),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                          decoration: BoxDecoration(
-                              border: Border(bottom: BorderSide(width: 0.5, color: const Color(0x1AFFFFFF)))),
-                          child: Row(children: [
-                            Container(
-                              width: 16, height: 16,
-                              decoration: BoxDecoration(
-                                color: isLinked ? KaalColors.acc : Colors.transparent,
-                                borderRadius: BorderRadius.circular(4),
-                                border: isLinked ? null : Border.all(width: 1.5, color: const Color(0x40FFFFFF)),
-                              ),
-                              alignment: Alignment.center,
-                              child: isLinked
-                                  ? const Icon(Icons.check_rounded, size: 10, color: Colors.white)
-                                  : null,
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(child: Text(t.title,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                                    color: widget.colors.ink, height: 1))),
-                            Text('Q${t.quadrant}',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: widget.colors.ink3)),
-                          ]),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-          ),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () async {
-              final toAdd    = _pending.difference(widget.linked);
-              final toRemove = widget.linked.difference(_pending);
-              for (final id in toAdd)    { await widget.db.goalsDao.linkTask(widget.goalId, id); }
-              for (final id in toRemove) { await widget.db.goalsDao.unlinkTask(widget.goalId, id); }
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(11)),
-              alignment: Alignment.center,
-              child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 14,
-                  fontWeight: FontWeight.w700, color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 // ── Supporting habits card ────────────────────────────────────────────────────
 
 class _SupportingHabitsCard extends ConsumerWidget {
@@ -617,18 +507,16 @@ class _SupportingHabitsCard extends ConsumerWidget {
     final linked = (ref.read(goalHabitLinksProvider(goalId)).value ?? [])
         .map((l) => l.habitId)
         .toSet();
-    showModalBottomSheet(
+    showHabitLinkPicker(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: const Color(0x8C000000),
-      isScrollControlled: true,
-      builder: (_) => _HabitPickerSheet(
-        habits: allHabits,
-        linked: linked,
-        goalId: goalId,
-        colors: colors,
-        db: ref.read(appDatabaseProvider),
-      ),
+      habits: allHabits,
+      initial: linked,
+      colors: colors,
+      onSave: (selected) async {
+        final db = ref.read(appDatabaseProvider);
+        for (final id in selected.difference(linked)) { await db.goalsDao.linkHabit(goalId, id); }
+        for (final id in linked.difference(selected)) { await db.goalsDao.unlinkHabit(goalId, id); }
+      },
     );
   }
 
@@ -687,113 +575,6 @@ class _SupportingHabitsCard extends ConsumerWidget {
                 ),
               ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-// ── Habit picker sheet ────────────────────────────────────────────────────────
-
-class _HabitPickerSheet extends StatefulWidget {
-  final List<Habit> habits;
-  final Set<int> linked;
-  final int goalId;
-  final KaalColors colors;
-  final dynamic db;
-  const _HabitPickerSheet({required this.habits, required this.linked,
-      required this.goalId, required this.colors, required this.db});
-
-  @override
-  State<_HabitPickerSheet> createState() => _HabitPickerSheetState();
-}
-
-class _HabitPickerSheetState extends State<_HabitPickerSheet> {
-  late final Set<int> _pending = Set.from(widget.linked);
-
-  @override
-  Widget build(BuildContext context) {
-    final safeBot = MediaQuery.of(context).padding.bottom;
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + safeBot),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1C1C1E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        border: Border(top: BorderSide(width: 0.5, color: Color(0x33FFFFFF))),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
-          Text(AppL10n.of(context).linkHabitsToGoal, style: TextStyle(fontFamily: 'Inter', fontSize: 14,
-              fontWeight: FontWeight.w600, color: widget.colors.ink, height: 1)),
-          const SizedBox(height: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 320),
-            child: widget.habits.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Text(AppL10n.of(context).noHabitsFound,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: widget.colors.ink3)),
-                  )
-                : ListView(
-                    shrinkWrap: true,
-                    children: widget.habits.map((h) {
-                      final isLinked = _pending.contains(h.id);
-                      return GestureDetector(
-                        onTap: () => setState(() {
-                          if (isLinked) { _pending.remove(h.id); } else { _pending.add(h.id); }
-                        }),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                          decoration: const BoxDecoration(
-                              border: Border(bottom: BorderSide(width: 0.5, color: Color(0x1AFFFFFF)))),
-                          child: Row(children: [
-                            Container(
-                              width: 16, height: 16,
-                              decoration: BoxDecoration(
-                                color: isLinked ? KaalColors.acc : Colors.transparent,
-                                borderRadius: BorderRadius.circular(4),
-                                border: isLinked ? null : Border.all(width: 1.5, color: const Color(0x40FFFFFF)),
-                              ),
-                              alignment: Alignment.center,
-                              child: isLinked
-                                  ? const Icon(Icons.check_rounded, size: 10, color: Colors.white)
-                                  : null,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(h.emoji, style: const TextStyle(fontSize: 14)),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(h.name,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                                    color: widget.colors.ink, height: 1))),
-                            Text(h.frequencyLabel,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: widget.colors.ink3)),
-                          ]),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-          ),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () async {
-              final toAdd    = _pending.difference(widget.linked);
-              final toRemove = widget.linked.difference(_pending);
-              for (final id in toAdd)    { await widget.db.goalsDao.linkHabit(widget.goalId, id); }
-              for (final id in toRemove) { await widget.db.goalsDao.unlinkHabit(widget.goalId, id); }
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(11)),
-              alignment: Alignment.center,
-              child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 14,
-                  fontWeight: FontWeight.w700, color: Colors.white)),
-            ),
-          ),
         ],
       ),
     );

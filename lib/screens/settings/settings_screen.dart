@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../config/feature_flags.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
@@ -27,6 +29,7 @@ const _svgLink    = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none"
 const _svgSync    = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="var(--c)" stroke-width="1.6" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 13"/></svg>';
 const _svgBell    = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="var(--c)" stroke-width="1.6" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
 const _svgTabs    = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="var(--c)" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="3" width="18" height="16" rx="2"/><path d="M2 9h18M7 9v10"/></svg>';
+const _svgInfo    = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="var(--c)" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 10v5M11 7h.01"/></svg>';
 
 // ── Integration service icon SVGs ─────────────────────────────────────────────
 
@@ -106,9 +109,19 @@ const _icoSiri =
     '<circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/>'
     '</svg>';
 
+const _icoICloud =
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="white">'
+    '<path d="M18.5 10.5a5.5 5.5 0 0 0-10.9-1A4 4 0 0 0 4 13.5 4 4 0 0 0 8 17.5h10a3.5 3.5 0 0 0 .5-7z"/>'
+    '</svg>';
+
+const _icoSms =
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="white">'
+    '<path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.5 3.4 6-.2 1.2-.8 2.4-1.6 3.3 1.6-.1 3.2-.6 4.6-1.5 1.1.3 2.3.5 3.6.5 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>'
+    '</svg>';
+
 // ── Integration data model ────────────────────────────────────────────────────
 
-enum _IntStatus { connected, active, connect }
+enum _IntStatus { connected, active, connect, comingSoon }
 
 class _IntService {
   final String name;
@@ -146,10 +159,14 @@ final _intWork = [
 final _intCalEmail = [
   _IntService('Google Calendar', 'Events → tasks · two-way deadline sync',
       const Color(0xFF4285F4), _icoGCal, _IntStatus.connected),
-  _IntService('Outlook & Office 365', 'Calendar & email · corporate SSO supported',
-      const Color(0xFF0078D4), _icoOutlook, _IntStatus.connect),
-  _IntService('Gmail', 'Emails parsed · 4 tasks ready',
+  _IntService('Gmail', 'Emails parsed · Kaal AI suggestions',
       const Color(0xFFEA4335), _icoGmail, _IntStatus.active),
+  _IntService('Outlook / Hotmail', 'Calendar & email · corporate SSO',
+      const Color(0xFF0078D4), _icoOutlook, _IntStatus.comingSoon),
+  _IntService('iCloud Mail', 'Apple Mail · IMAP sign-in',
+      const Color(0xFF3693F3), _icoICloud, _IntStatus.comingSoon),
+  _IntService('SMS / iMessage', 'Capture tasks from texts',
+      const Color(0xFF34C759), _icoSms, _IntStatus.comingSoon),
 ];
 
 final _intAi = [
@@ -221,7 +238,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         content: Text('Exported to ${file.path}',
             style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ));
     } catch (e) {
@@ -229,7 +246,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         content: Text('Export failed: $e',
             style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.white)),
         backgroundColor: const Color(0xFFFF453A),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ));
     }
@@ -277,31 +294,88 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _sgrpIntegrations(colors),
         _sgrpSyncData(colors),
         _sgrpNotifications(colors, settings, notifier),
-        _legalFooter(colors),
-      ],
-    );
-  }
-
-  // Always-visible footer linking to the Terms of Service / Privacy Policy
-  // reader (lib/screens/legal_screen.dart).
-  Widget _legalFooter(KaalColors colors) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 14, 12, 8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        _SetSec('About & Legal', colors),
-        _SetCard(colors: colors, children: [
-          _NavRow(label: 'Terms of Service', right: '›', rightColor: colors.ink3,
-              colors: colors, onTap: () => context.push(KaalRoutes.legal)),
-          Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: 'Privacy Policy', right: '›', rightColor: colors.ink3,
-              colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=privacy')),
-        ]),
+        _sgrpAboutLegal(colors),
         const SizedBox(height: 12),
         Center(
           child: Text('Kaal · v1.0.0',
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
         ),
-      ]),
+      ],
+    );
+  }
+
+  // About & Legal — fully inlined here (no separate subscreen).
+  Future<void> _openUrl(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open the page.')),
+        );
+      }
+    }
+  }
+
+  Widget _sgrpAboutLegal(KaalColors colors) {
+    return _Sgrp(
+      isOpen: _open == 9,
+      onToggle: () => _toggle(9),
+      iconBg: const Color(0x1F8E8E93),
+      iconSvg: _svgInfo,
+      iconColor: const Color(0xFFAEAEB2),
+      title: 'About & Legal',
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          _SetSec('About Kaal', colors),
+          _SetCard(colors: colors, children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                _AboutPara('Execution OS for high performers.', colors, strong: true),
+                _AboutPara('Kaal organises everything you do into Covey’s four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes to what truly matters. Tasks, habits, goals, calendar and notes, in one focused place.', colors),
+                _AboutPara('VERSION  ·  Kaal v1.0.0', colors, strong: true),
+                _AboutPara('CONTACT  ·  r.official@jumbarthi.com', colors),
+              ]),
+            ),
+          ]),
+          _SetSec('Help & Info', colors),
+          _SetCard(colors: colors, children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                _AboutPara('THE FOUR QUADRANTS', colors, strong: true),
+                _AboutPara('• Q1 Do Now — urgent & important\n• Q2 Schedule — important, not urgent (where you win)\n• Q3 Delegate — urgent, not important\n• Q4 Eliminate — neither', colors),
+                _AboutPara('GETTING AROUND', colors, strong: true),
+                _AboutPara('• Long-press (or right-click) any row for quick actions.\n• Pull down on Inbox or Calendar to refresh.\n• Tap a task for its score, time, subtasks and to start a focus session.', colors),
+                _AboutPara('INBOX & KAAL AI', colors, strong: true),
+                _AboutPara('• Open an email — Kaal AI suggests tasks, habits, invites and notes to add in one tap. (Gmail sync is coming in a later release.)', colors),
+                _AboutPara('YOUR PROFILE', colors, strong: true),
+                _AboutPara('• Stats, streaks, achievements and the weekly review update live as you work.', colors),
+              ]),
+            ),
+          ]),
+          _SetSec('Feedback & Legal', colors),
+          _SetCard(colors: colors, children: [
+            _NavRow(label: 'Report a bug · Request a feature', right: '›', rightColor: KaalColors.acc2,
+                colors: colors, onTap: () => context.push(KaalRoutes.report)),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Terms of Service', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push(KaalRoutes.legal)),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Privacy Policy', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=privacy')),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Support', right: '↗', rightColor: colors.ink3,
+                colors: colors, onTap: () => _openUrl('https://jumbarthi.com/kaal/support')),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Account & data deletion', right: '↗', rightColor: colors.ink3,
+                colors: colors, onTap: () => _openUrl('https://jumbarthi.com/kaal/delete')),
+          ]),
+        ]),
+      ),
     );
   }
 
@@ -396,8 +470,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                        color: const Color(0x0DFFFFFF),
-                        border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                        color: colors.surf2,
+                        border: Border.all(width: 0.5, color: colors.bdr0),
                         borderRadius: BorderRadius.circular(11)),
                     alignment: Alignment.center,
                     child: const Text('🎁 Invite → both get 1 month free',
@@ -443,6 +517,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _SetCard(colors: colors, children: [
               _VtRow(label: AppL10n.of(context).themeAndAppearance, options: themes, selected: s.theme, colors: colors,
                   onTap: n.setTheme),
+              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+              _DimSliderRow(value: s.wallpaperDim, colors: colors, onChanged: n.setWallpaperDim),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -495,7 +571,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 decoration: BoxDecoration(
                                   border: sel
                                       ? Border.all(width: 2, color: Colors.white)
-                                      : Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
+                                      : Border.all(width: 0.5, color: colors.bdr0),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: _WpThumb(index: i),
@@ -519,8 +595,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   },
                 ),
               ),
-              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-              _DimSliderRow(value: s.wallpaperDim, colors: colors, onChanged: n.setWallpaperDim),
             ]),
             _SetSec(AppL10n.of(context).typography, colors),
             _SetCard(colors: colors, children: [
@@ -653,7 +727,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 WidgetsBinding.instance.addPostFrameCallback((_) => router.go(KaalRoutes.inbox));
               }),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).gmailSync, right: '', rightColor: KaalColors.acc2,
+          _NavRow(label: AppL10n.of(context).gmailSync, right: kGmailSyncEnabled ? '' : 'Soon', rightColor: KaalColors.acc2,
               colors: colors, onTap: () => context.go(KaalRoutes.calGmail)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'suggestTasks', label: AppL10n.of(context).suggestTasksInbox, colors: colors),
@@ -690,7 +764,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               hintText: 'sk-…',
               hintStyle: const TextStyle(color: Color(0x40FFFFFF)),
               filled: true,
-              fillColor: const Color(0x1AFFFFFF),
+              fillColor: colors.bdr0,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide.none,
@@ -721,7 +795,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       if (mounted && !ok) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Invalid API key — check and try again'),
-          duration: Duration(seconds: 3),
+          duration: Duration(seconds: 2),
         ));
       }
     }
@@ -748,7 +822,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           style: TextStyle(fontFamily: 'Inter', fontSize: 13,
                               color: Colors.white)),
                       backgroundColor: Color(0xFF1C1C1E),
-                      duration: Duration(seconds: 3),
+                      duration: Duration(seconds: 2),
                       behavior: SnackBarBehavior.floating,
                     ));
                   }
@@ -793,19 +867,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           notifier.disconnectGitHub,   notifier.connectGitHub),
     ];
 
-    // Calendar & Email: Google Calendar, Outlook, Gmail
+    // Calendar & Email: Google Calendar, Gmail (live) · Outlook/iCloud/SMS (soon)
     final calEmailStatuses = [
       integrations.googleCalendarConnected ? _IntStatus.connected : _IntStatus.connect,
-      integrations.microsoftConnected      ? _IntStatus.connected : _IntStatus.connect,
       integrations.gmailConnected          ? _IntStatus.active    : _IntStatus.connect,
+      _IntStatus.comingSoon, // Outlook / Hotmail
+      _IntStatus.comingSoon, // iCloud Mail
+      _IntStatus.comingSoon, // SMS / iMessage
     ];
     final calEmailTaps = <VoidCallback?>[
       tap(integrations.googleCalendarConnected,
           notifier.disconnectCalendar, notifier.connectGoogleCalendar),
-      tap(integrations.microsoftConnected,
-          notifier.disconnectMicrosoft, notifier.connectMicrosoft),
       tap(integrations.gmailConnected,
           notifier.disconnectGmail,    notifier.connectGmail),
+      () => _comingSoon(context, 'Outlook / Hotmail'),
+      () => _comingSoon(context, 'iCloud Mail'),
+      () => _comingSoon(context, 'SMS / iMessage'),
     ];
 
     // AI Assistants: ChatGPT/OpenAI, Siri Shortcuts
@@ -1075,6 +1152,24 @@ class _SetCard extends StatelessWidget {
   }
 }
 
+// Paragraph text for the About & Legal group (mirrors the old subscreen style).
+class _AboutPara extends StatelessWidget {
+  final String text;
+  final KaalColors colors;
+  final bool strong;
+  const _AboutPara(this.text, this.colors, {this.strong = false});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+        child: Text(text,
+            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                fontWeight: strong ? FontWeight.w700 : FontWeight.w400,
+                letterSpacing: strong ? 0.3 : 0,
+                color: strong ? colors.ink2 : colors.ink3, height: 1.6)),
+      );
+}
+
 class _SwRow extends ConsumerWidget {
   final String settingKey;
   final String label;
@@ -1201,11 +1296,11 @@ class _VtRow extends StatelessWidget {
                       margin: EdgeInsets.only(right: i < options.length - 1 ? 3 : 0),
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
-                        color: selected == i ? KaalColors.accBg : const Color(0x0DFFFFFF),
+                        color: selected == i ? KaalColors.accBg : colors.surf2,
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
                           width: 0.5,
-                          color: selected == i ? const Color(0x4D0A84FF) : const Color(0x1AFFFFFF),
+                          color: selected == i ? const Color(0x4D0A84FF) : colors.bdr0,
                         ),
                       ),
                       child: Text(options[i],
@@ -1256,10 +1351,10 @@ class _LangRowState extends State<_LangRow> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
         decoration: BoxDecoration(
-          color: sel ? KaalColors.accBg : const Color(0x0DFFFFFF),
+          color: sel ? KaalColors.accBg : widget.colors.surf2,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(width: 0.5,
-              color: sel ? const Color(0x4D0A84FF) : const Color(0x1AFFFFFF)),
+              color: sel ? const Color(0x4D0A84FF) : widget.colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
           fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
@@ -1293,10 +1388,10 @@ class _LangRowState extends State<_LangRow> {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
                 decoration: BoxDecoration(
-                  color: indiaSelected ? KaalColors.accBg : const Color(0x0DFFFFFF),
+                  color: indiaSelected ? KaalColors.accBg : widget.colors.surf2,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(width: 0.5,
-                      color: indiaSelected ? const Color(0x4D0A84FF) : const Color(0x1AFFFFFF)),
+                      color: indiaSelected ? const Color(0x4D0A84FF) : widget.colors.bdr0),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -1475,7 +1570,7 @@ class _IntSection extends StatelessWidget {
       ),
       Container(
         decoration: BoxDecoration(
-          color: const Color(0x0DFFFFFF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(width: 0.5, color: colors.bdr),
         ),
@@ -1544,7 +1639,7 @@ class _IntServiceRow extends StatelessWidget {
                   : null,
               borderRadius: BorderRadius.circular(6),
               border: service.name == 'Google Calendar'
-                  ? Border.all(width: 0.5, color: const Color(0x1AFFFFFF))
+                  ? Border.all(width: 0.5, color: colors.bdr0)
                   : null,
             ),
             child: Center(child: SvgPicture.string(service.iconSvg, width: 14, height: 14)),
@@ -1586,6 +1681,17 @@ class _IntStatusBadge extends StatelessWidget {
         child: Text(status == _IntStatus.connected ? 'Connected' : 'Active',
             style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                 fontWeight: FontWeight.w600, color: colors.successFg, height: 1)),
+      );
+    }
+    if (status == _IntStatus.comingSoon) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
+        decoration: BoxDecoration(
+          color: colors.surf2,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text('Soon', style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+            fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
       );
     }
     return Text('${AppL10n.of(context).connect} ›',

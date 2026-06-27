@@ -3,21 +3,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/database.dart' show Task;
+import 'package:drift/drift.dart' show Value;
+import '../../data/database.dart' show Task, TasksCompanion;
+import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
+import '../../data/providers/time_tracker_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../tasks/time_track_screen.dart' show TimeTrackBody;
+import '../../widgets/kaal_sheet.dart';
+import '../tasks/time_track_screen.dart' show TimeTrackContent;
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 class _QTask {
+  final int id;
   final String title;
   final String meta;
   final int mins;
   final Color color;
   const _QTask({
+    required this.id,
     required this.title,
     required this.meta,
     required this.mins,
@@ -26,6 +32,7 @@ class _QTask {
 }
 
 const _kEmptyTask = _QTask(
+  id: -1,
   title: 'No tasks — add one to get started',
   meta:  '',
   mins:  25,
@@ -45,7 +52,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   int _mins        = 25;
   int _activeIndex = 0;
   bool _running    = false;
-  bool _showTimeLog = false;
+  bool _userPicked = false; // user manually chose a task → stop auto-selecting
+  int _activeTaskId = -1;   // id of the task currently shown (for saving duration)
+  int _loadedTaskId = -2;   // last task whose saved duration we loaded into _mins
   late int _secondsLeft;
   Timer? _timer;
 
@@ -74,9 +83,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     _timer?.cancel();
     _timer = null;
     setState(() {
+      _userPicked  = true;
       _activeIndex = i;
-      _mins        = 25;
-      _secondsLeft = _mins * 60;
+      _loadedTaskId = -2; // force build to load the new task's saved duration
       _running     = false;
     });
   }
@@ -95,9 +104,10 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
         return (b.urgencyScore ?? 0).compareTo(a.urgencyScore ?? 0);
       });
     return sorted.map((t) => _QTask(
+      id: t.id,
       title: t.title,
       meta: 'Q${t.quadrant}${t.priority != null ? " · ${t.priority}" : ""}',
-      mins: 25,
+      mins: t.timeAllocatedMin ?? 25, // saved custom duration per task
       color: qColors[t.quadrant] ?? KaalColors.acc2,
     )).toList();
   }
@@ -110,6 +120,13 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
       _secondsLeft = m * 60;
       _running     = false;
     });
+    // Persist the chosen duration to the active task so it sticks next time.
+    if (_activeTaskId >= 0) {
+      ref.read(appDatabaseProvider).tasksDao.updateTask(
+            _activeTaskId,
+            TasksCompanion(timeAllocatedMin: Value(m)),
+          );
+    }
   }
 
   void _startPause() {
@@ -146,45 +163,67 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     final colors = KaalTheme.of(context).colors;
     final rawTasks = ref.watch(allTasksProvider).valueOrNull ?? [];
     final queue = _buildQueue(rawTasks);
-    final safeIndex = queue.isEmpty ? 0 : _activeIndex.clamp(0, queue.length - 1);
+    // Default the active task to the one currently being tracked (e.g. started
+    // from the Focus DTN card) so the Timer opens on it — until the user picks
+    // another from the queue.
+    var idx = _activeIndex;
+    if (!_userPicked) {
+      final tracked = ref.watch(timeTrackerProvider).taskTitle;
+      if (tracked != null) {
+        final ti = queue.indexWhere((q) => q.title == tracked);
+        if (ti >= 0) idx = ti;
+      }
+    }
+    final safeIndex = queue.isEmpty ? 0 : idx.clamp(0, queue.length - 1);
     final activeTask = queue.isEmpty ? _kEmptyTask : queue[safeIndex];
+
+    // When the active task changes (selection or auto-select), load its saved
+    // duration so the custom timer persists per task. Skip while a timer runs.
+    _activeTaskId = activeTask.id;
+    if (activeTask.id >= 0 && activeTask.id != _loadedTaskId && !_running) {
+      _loadedTaskId = activeTask.id;
+      _mins = activeTask.mins;
+      _secondsLeft = _mins * 60;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _TimerSubHeader(
-          showTimeLog: _showTimeLog,
-          onToggleTimeLog: () => setState(() => _showTimeLog = !_showTimeLog),
-        ),
+        const _TimerSubHeader(),
         Expanded(
-          child: _showTimeLog
-              ? const TimeTrackBody()
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _ActiveCard(
-                        activeTask: activeTask,
-                        mins: _mins,
-                        colors: colors,
-                        timerLabel: _timerLabel,
-                        progress: _progress,
-                        running: _running,
-                        onMinsChanged: _onMinsChanged,
-                        onStartPause: _startPause,
-                        onReset: _reset,
-                      ),
-                      const SizedBox(height: 10),
-                      _QueueSection(
-                        items: queue,
-                        activeIndex: safeIndex,
-                        colors: colors,
-                        onSelect: _selectTask,
-                      ),
-                    ],
-                  ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ActiveCard(
+                  activeTask: activeTask,
+                  mins: _mins,
+                  colors: colors,
+                  timerLabel: _timerLabel,
+                  progress: _progress,
+                  running: _running,
+                  onMinsChanged: _onMinsChanged,
+                  onStartPause: _startPause,
+                  onReset: _reset,
                 ),
+                const SizedBox(height: 10),
+                _QueueSection(
+                  items: queue,
+                  activeIndex: safeIndex,
+                  colors: colors,
+                  onSelect: _selectTask,
+                ),
+                // Time log embedded at the bottom of the timer screen.
+                const SizedBox(height: 22),
+                Text('TIME LOG',
+                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5, color: colors.ink3, height: 1)),
+                const SizedBox(height: 10),
+                const TimeTrackContent(),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -194,13 +233,10 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 // ── Sub-header ────────────────────────────────────────────────────────────────
 
 class _TimerSubHeader extends StatelessWidget {
-  final bool showTimeLog;
-  final VoidCallback onToggleTimeLog;
-  const _TimerSubHeader({required this.showTimeLog, required this.onToggleTimeLog});
+  const _TimerSubHeader();
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 12, 6),
       child: Row(
@@ -216,31 +252,6 @@ class _TimerSubHeader extends StatelessWidget {
               letterSpacing: -0.5,
               color: Color(0xFFF2F2F7),
               height: 1.1,
-            ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: onToggleTimeLog,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-              decoration: BoxDecoration(
-                color: showTimeLog ? KaalColors.accBg : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  width: 0.5,
-                  color: showTimeLog ? const Color(0x330A84FF) : colors.bdr,
-                ),
-              ),
-              child: Text(
-                showTimeLog ? '← Timer' : '⏱ Time Log',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: showTimeLog ? KaalColors.acc2 : colors.ink3,
-                  height: 1,
-                ),
-              ),
             ),
           ),
         ],
@@ -582,6 +593,9 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
     final safeBottom = MediaQuery.of(context).padding.bottom;
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      child: KaalSheetSurface(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 16 + safeBottom),
       decoration: BoxDecoration(
         color: colors.surf,
@@ -684,6 +698,8 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
             ),
           ),
         ],
+      ),
+        ),
       ),
     );
   }

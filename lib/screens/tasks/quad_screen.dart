@@ -77,7 +77,7 @@ class QuadScreen extends ConsumerWidget {
         : tasks.reduce((a, b) => (a.urgencyScore ?? 0) >= (b.urgencyScore ?? 0) ? a : b);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

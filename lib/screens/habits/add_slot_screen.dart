@@ -174,7 +174,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
             children: [
               // Title
               _FormRow(label: 'Title', colors: colors, child: TextField(

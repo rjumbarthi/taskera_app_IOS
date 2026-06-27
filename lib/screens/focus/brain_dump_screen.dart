@@ -141,7 +141,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
         const _SubHeader(),
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -389,7 +389,7 @@ class _SuggestionsPanel extends StatelessWidget {
                   children: checklist.map((item) => Container(
                     padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                     decoration: BoxDecoration(
-                      color: listCreated ? const Color(0x1430D158) : const Color(0x0DFFFFFF),
+                      color: listCreated ? const Color(0x1430D158) : colors.surf2,
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         width: 0.5,
@@ -412,7 +412,7 @@ class _SuggestionsPanel extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     decoration: BoxDecoration(
-                      color: listCreated ? const Color(0x1430D158) : const Color(0x0DFFFFFF),
+                      color: listCreated ? const Color(0x1430D158) : colors.surf2,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         width: 0.5,

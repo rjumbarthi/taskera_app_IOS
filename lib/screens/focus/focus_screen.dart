@@ -17,6 +17,7 @@ import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/goals_provider.dart';
 import '../../data/providers/tasks_provider.dart';
+import '../../data/providers/time_tracker_provider.dart';
 import '../../widgets/quadrant_card.dart';
 import '../../widgets/task_meta_row.dart';
 import '../../l10n/app_l10n.dart';
@@ -231,6 +232,8 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
       _total = mins * 60;
       _remaining = _total;
     });
+    // Mirror into the shared tracker so the Time Log shows this exact task.
+    ref.read(timeTrackerProvider.notifier).startNew(task.title);
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (_paused || !mounted) return;
       if (_remaining > 1) {
@@ -245,6 +248,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
   void _stopTimer() {
     _ticker?.cancel();
     _ticker = null;
+    ref.read(timeTrackerProvider.notifier).stop();
     if (mounted) setState(() { _started = false; _paused = false; _total = 0; _remaining = 0; });
   }
 
@@ -478,6 +482,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                           onTap: tasks.length > 1
                               ? () {
                                   _ticker?.cancel();
+                                  ref.read(timeTrackerProvider.notifier).stop();
                                   setState(() {
                                     _i = (_i + 1) % tasks.length;
                                     _started = false;
@@ -499,7 +504,11 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                   children: [
                                     Expanded(
                                       child: GestureDetector(
-                                        onTap: () => setState(() => _paused = !_paused),
+                                        onTap: () {
+                                          setState(() => _paused = !_paused);
+                                          final tracker = ref.read(timeTrackerProvider.notifier);
+                                          _paused ? tracker.pause() : tracker.resume();
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(vertical: 7),
                                           decoration: BoxDecoration(

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/database.dart' show GoalsCompanion;
+import '../../data/database.dart' show GoalsCompanion, Habit;
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/habits_provider.dart';
 import '../../util/kaal_dialogs.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/goal_link_pickers.dart';
 import '../../l10n/app_l10n.dart';
 
 class EditGoalScreen extends ConsumerStatefulWidget {
@@ -29,6 +31,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   bool   _loading       = false;
   DateTime? _deadline;
   final List<String> _milestones = [];
+  final Set<int> _habitIds = {}; // habits to link to this goal
 
   bool get _isNew => widget.goalId.isEmpty;
   int? get _id    => int.tryParse(widget.goalId);
@@ -48,6 +51,12 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
     ('Q3 · Delegate',  KaalColors.q3),
   ];
 
+  static const _emojiOptions = [
+    '🎯', '🚀', '💪', '📚', '💰', '🌱', '🏆', '🔥', '⭐', '💡',
+    '🧠', '❤️', '🏃', '🧘', '✍️', '🎨', '🎵', '🌍', '📈', '🛠️',
+    '🏠', '✈️', '🍎', '💼', '🎓', '⏰', '📱', '💻', '🤝', '🙏',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +68,9 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   Future<void> _loadGoal() async {
     final id = _id;
     if (id == null) return;
-    final goal = await ref.read(appDatabaseProvider).goalsDao.getGoal(id);
+    final db = ref.read(appDatabaseProvider);
+    final goal = await db.goalsDao.getGoal(id);
+    final habitLinks = await db.goalsDao.getHabitLinks(id);
     if (goal != null && mounted) {
       setState(() {
         _nameCtrl.text = goal.title;
@@ -69,8 +80,72 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
         _milestones
           ..clear()
           ..addAll(goal.milestones.split('\n').where((s) => s.isNotEmpty));
+        _habitIds
+          ..clear()
+          ..addAll(habitLinks.map((l) => l.habitId));
       });
     }
+  }
+
+  void _showEmojiPicker() {
+    final colors = KaalTheme.of(context).colors;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: const Color(0x8C000000),
+      isScrollControlled: true,
+      builder: (sheetCtx) {
+        final safeBot = MediaQuery.of(sheetCtx).padding.bottom;
+        return Container(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + safeBot),
+          decoration: const BoxDecoration(
+            color: Color(0xFF1C1C1E),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            border: Border(top: BorderSide(width: 0.5, color: Color(0x33FFFFFF))),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36, height: 4,
+                margin: const EdgeInsets.only(bottom: 14),
+                decoration: BoxDecoration(
+                    color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2)),
+              ),
+              Text('Choose an icon', style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                  fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _emojiOptions.map((e) {
+                  final selected = _emoji == e;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => _emoji = e);
+                      Navigator.pop(sheetCtx);
+                    },
+                    child: Container(
+                      width: 44, height: 44,
+                      decoration: BoxDecoration(
+                        color: selected ? const Color(0x33BF5AF2) : colors.surf2,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          width: selected ? 1.5 : 0.5,
+                          color: selected ? const Color(0xFFBF5AF2) : colors.bdr0,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(e, style: const TextStyle(fontSize: 22)),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _save() async {
@@ -97,11 +172,18 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
         milestones:       Value(_milestones.join('\n')),
       );
 
+      final db = ref.read(appDatabaseProvider);
+      final int gid;
       if (_isNew) {
-        await ref.read(appDatabaseProvider).goalsDao.insertGoal(companion);
+        gid = await db.goalsDao.insertGoal(companion);
       } else {
-        await ref.read(appDatabaseProvider).goalsDao.updateGoal(_id!, companion);
+        gid = _id!;
+        await db.goalsDao.updateGoal(gid, companion);
       }
+      // Sync linked habits.
+      final current = (await db.goalsDao.getHabitLinks(gid)).map((l) => l.habitId).toSet();
+      for (final id in _habitIds.difference(current)) { await db.goalsDao.linkHabit(gid, id); }
+      for (final id in current.difference(_habitIds)) { await db.goalsDao.unlinkHabit(gid, id); }
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -119,6 +201,8 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final allHabits = ref.watch(habitsProvider).value ?? const <Habit>[];
+    final selectedHabits = allHabits.where((h) => _habitIds.contains(h.id)).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -165,7 +249,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
         // Form body
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 6, 12, 80),
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -185,11 +269,11 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                       ),
                       const SizedBox(width: 8),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: _showEmojiPicker,
                         child: Container(
                           width: 42, height: 42,
                           decoration: BoxDecoration(
-                            color: colors.surf2,
+                            color: const Color(0x1ABF5AF2),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(width: 1.5, color: const Color(0xFFBF5AF2)),
                           ),
@@ -459,6 +543,66 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           fontFamily: 'Inter',
                           fontSize: 12,
                           color: KaalColors.acc2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Supporting habits — link recurring routines to this goal
+                _FormRow(
+                  label: 'SUPPORTING HABITS',
+                  labelSuffix: ' · recurring routines',
+                  colors: colors,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final h in selectedHabits)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Row(
+                            children: [
+                              Text(h.emoji, style: const TextStyle(fontSize: 14)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(h.name,
+                                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.3)),
+                              ),
+                              GestureDetector(
+                                onTap: () => setState(() => _habitIds.remove(h.id)),
+                                child: Icon(Icons.close_rounded, size: 14, color: colors.ink3),
+                              ),
+                            ],
+                          ),
+                        ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {
+                            showHabitLinkPicker(
+                              context: context,
+                              habits: ref.read(habitsProvider).value ?? const <Habit>[],
+                              initial: Set<int>.from(_habitIds),
+                              colors: colors,
+                              onSave: (selected) => setState(() {
+                                _habitIds
+                                  ..clear()
+                                  ..addAll(selected);
+                              }),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0x1ABF5AF2),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(width: 0.5, color: const Color(0x4DBF5AF2)),
+                            ),
+                            child: Text('＋ ${AppL10n.of(context).linkHabit}',
+                                style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                                    fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2))),
+                          ),
                         ),
                       ),
                     ],

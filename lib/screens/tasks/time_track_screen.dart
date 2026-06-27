@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/time_tracker_provider.dart';
+import '../../data/repositories/focus_session_repository.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
@@ -15,57 +17,39 @@ class _LogEntry {
   const _LogEntry(this.title, this.timeRange, this.status, this.duration, this.quadColor);
 }
 
-const _log = [
-  _LogEntry('Morning journaling',   '10:00–10:22 AM', 'Done',    '22m',    KaalColors.q2),
-  _LogEntry('Fix gym app bug #482', '11:15–1:05 PM',  'Done',    '1h 50m', KaalColors.q1),
-  _LogEntry('Study for exam — Chapter 4', '2:14 PM', 'Running', '23m',    KaalColors.q2),
-];
-
 class _EstRow {
   final String title, est, actual;
   const _EstRow(this.title, this.est, this.actual);
 }
 
-const _estRows = [
-  _EstRow('Morning journaling',   'Est 5m',  'Act 22m'),
-  _EstRow('Fix production bug',   'Est 1h',  'Act 60m'),
-];
-
-const _weekBars = [
-  [0.20, 0.30, 0.0],
-  [0.15, 0.25, 0.0],
-  [0.30, 0.20, 0.0],
-  [0.25, 0.35, 0.0],
-  [0.20, 0.15, 0.0],
-  [0.10, 0.10, 0.0],
-  [0.05, 0.20, 0.10],
-];
-
 const _weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+Color _quadColor(int q) => switch (q) {
+      1 => KaalColors.q1,
+      2 => KaalColors.q2,
+      3 => KaalColors.q3,
+      _ => KaalColors.q4,
+    };
 
 // ── Body (reusable — embedded in merged Timer screen) ─────────────────────────
 
-class TimeTrackBody extends ConsumerStatefulWidget {
+class TimeTrackBody extends ConsumerWidget {
   const TimeTrackBody({super.key});
 
   @override
-  ConsumerState<TimeTrackBody> createState() => _TimeTrackBodyState();
+  Widget build(BuildContext context, WidgetRef ref) => const SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(12, 8, 12, 16),
+        child: TimeTrackContent(),
+      );
 }
 
-class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final tracker = ref.read(timeTrackerProvider);
-      if (tracker.taskTitle == null) {
-        ref.read(timeTrackerProvider.notifier).startNew('Study for exam — Chapter 4');
-      }
-    });
-  }
+/// The time-log content WITHOUT its own scroll view, so it can be embedded at
+/// the bottom of the Timer screen as well as used standalone in TimeTrackScreen.
+class TimeTrackContent extends ConsumerWidget {
+  const TimeTrackContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors   = KaalTheme.of(context).colors;
     final tracker  = ref.watch(timeTrackerProvider);
     final notifier = ref.read(timeTrackerProvider.notifier);
@@ -74,12 +58,81 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
         ? _fmtTime(DateTime.fromMillisecondsSinceEpoch(tracker.startedAtMs!))
         : '--:-- --';
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 80),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // ACTIVE NOW card
+    // ── Live data from focus-session history + tasks ──────────────────────────
+    final tasks = ref.watch(allTasksProvider).value ?? [];
+    final taskById = {for (final t in tasks) t.id: t};
+    final sessions = ref.watch(weeklyFocusSessionsProvider).value ?? [];
+
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final monday = todayStart.subtract(Duration(days: todayStart.weekday - 1));
+
+    // TODAY'S LOG — completed/stopped sessions started today, newest first.
+    final todayLog = <_LogEntry>[];
+    final todaySorted = sessions.where((s) => !s.startedAt.isBefore(todayStart)).toList()
+      ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
+    for (final s in todaySorted) {
+      final end = s.startedAt.add(Duration(seconds: s.durationSeconds));
+      todayLog.add(_LogEntry(
+        taskById[s.taskId]?.title ?? 'Task #${s.taskId}',
+        '${_fmtTime(s.startedAt)}–${_fmtTime(end)}',
+        s.completed ? 'Done' : 'Logged',
+        _fmtDuration(s.durationSeconds),
+        _quadColor(s.quadrant),
+      ));
+    }
+
+    // THIS WEEK — seconds per weekday split into [Q1, Q2, other], normalized.
+    final week = List.generate(7, (_) => <double>[0, 0, 0]);
+    for (final s in sessions) {
+      final di = DateTime(s.startedAt.year, s.startedAt.month, s.startedAt.day)
+          .difference(monday)
+          .inDays;
+      if (di < 0 || di > 6) continue;
+      final b = s.quadrant == 1 ? 0 : (s.quadrant == 2 ? 1 : 2);
+      week[di][b] += s.durationSeconds.toDouble();
+    }
+    final maxTotal =
+        week.map((d) => d[0] + d[1] + d[2]).fold<double>(0, (m, v) => v > m ? v : m);
+    final weekBars = [
+      for (final d in week)
+        maxTotal > 0 ? [d[0] / maxTotal, d[1] / maxTotal, d[2] / maxTotal] : <double>[0, 0, 0],
+    ];
+
+    // EST. VS ACTUAL — tasks with both an estimate and tracked time.
+    final estRows = <_EstRow>[];
+    var ratioSum = 0.0;
+    var ratioN = 0;
+    for (final t in tasks) {
+      final est = t.timeAllocatedMin ?? 0;
+      final actMin = (t.totalFocusSeconds / 60).round();
+      if (est > 0 && actMin > 0) {
+        estRows.add(_EstRow(t.title, 'Est ${_fmtMin(est)}', 'Act ${_fmtMin(actMin)}'));
+        ratioSum += actMin / est;
+        ratioN++;
+      }
+    }
+    final estShown = estRows.take(5).toList();
+    String? estInsight;
+    if (ratioN > 0) {
+      final avg = ratioSum / ratioN;
+      if (avg >= 1.15) {
+        estInsight = 'You underestimate tasks by ~${((avg - 1) * 100).round()}% on average';
+      } else if (avg <= 0.85) {
+        estInsight = 'You overestimate tasks by ~${((1 - avg) * 100).round()}% on average';
+      } else {
+        estInsight = 'Your time estimates are close to actual';
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+          // ACTIVE NOW card — reflects the task you started from Focus/DTN, or
+          // an idle state when nothing is being tracked.
+          if (tracker.taskTitle == null)
+            _IdleTimerCard(colors: colors)
+          else
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -93,7 +146,7 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
                 Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: KaalColors.acc2)),
                 const SizedBox(height: 6),
                 Text(tracker.taskTitle ?? '—', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
-                Text('Q2 · Started $startLabel', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                Text('Started $startLabel', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
                 const SizedBox(height: 14),
                 Center(
                   child: Text(
@@ -159,10 +212,13 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
           // TODAY'S LOG
           Text("TODAY'S LOG", style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
           const SizedBox(height: 6),
-          for (final entry in _log) ...[
-            _LogRow(entry: entry, colors: colors),
-            const SizedBox(height: 4),
-          ],
+          if (todayLog.isEmpty)
+            _Placeholder('No sessions logged today yet.', colors)
+          else
+            for (final entry in todayLog) ...[
+              _LogRow(entry: entry, colors: colors),
+              const SizedBox(height: 4),
+            ],
           const SizedBox(height: 16),
 
           // THIS WEEK chart
@@ -180,7 +236,7 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
                 SizedBox(
                   height: 80,
                   child: CustomPaint(
-                    painter: _StackedBarPainter(bars: _weekBars),
+                    painter: _StackedBarPainter(bars: weekBars),
                     size: Size.infinite,
                   ),
                 ),
@@ -198,7 +254,7 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
                     const SizedBox(width: 12),
                     _LegendDot(color: KaalColors.q2, label: 'Q2'),
                     const SizedBox(width: 12),
-                    _LegendDot(color: KaalColors.acc, label: 'Today (live)'),
+                    _LegendDot(color: KaalColors.acc, label: 'Other'),
                   ],
                 ),
               ],
@@ -209,37 +265,41 @@ class _TimeTrackBodyState extends ConsumerState<TimeTrackBody> {
           // EST. VS ACTUAL
           Text('EST. VS ACTUAL', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
           const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(11),
-              border: Border.all(width: 0.5, color: colors.bdr),
-            ),
-            child: Column(
-              children: [
-                for (final row in _estRows) ...[
-                  _EstVsActualRow(row: row, colors: colors),
-                  const SizedBox(height: 6),
-                ],
-                Divider(height: 1, thickness: 0.5, color: colors.bdr),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Text('✦ ', style: TextStyle(color: KaalColors.acc2)),
-                    Expanded(
-                      child: Text(
-                        'You underestimate technical tasks by ~50% on average',
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.4),
-                      ),
+          if (estShown.isEmpty)
+            _Placeholder('Track time on tasks that have a duration estimate to compare here.', colors)
+          else
+            Container(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(11),
+                border: Border.all(width: 0.5, color: colors.bdr),
+              ),
+              child: Column(
+                children: [
+                  for (final row in estShown) ...[
+                    _EstVsActualRow(row: row, colors: colors),
+                    const SizedBox(height: 6),
+                  ],
+                  if (estInsight != null) ...[
+                    Divider(height: 1, thickness: 0.5, color: colors.bdr),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text('✦ ', style: TextStyle(color: KaalColors.acc2)),
+                        Expanded(
+                          child: Text(
+                            estInsight,
+                            style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.4),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -308,6 +368,36 @@ String _fmtDuration(int seconds) {
   final m = (seconds % 3600) ~/ 60;
   if (h > 0) return '${h}h ${m}m';
   return '${m}m';
+}
+
+String _fmtMin(int minutes) {
+  if (minutes >= 60) {
+    final h = minutes ~/ 60;
+    final r = minutes % 60;
+    return r > 0 ? '${h}h ${r}m' : '${h}h';
+  }
+  return '${minutes}m';
+}
+
+class _Placeholder extends StatelessWidget {
+  final String text;
+  final KaalColors colors;
+  const _Placeholder(this.text, this.colors);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
+      child: Text(text,
+          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+    );
+  }
 }
 
 // ── Sub-widgets ───────────────────────────────────────────────────────────────
@@ -422,4 +512,34 @@ class _StackedBarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_StackedBarPainter old) => false;
+}
+
+// ── Idle state — shown in the Time Log when nothing is being tracked ──────────
+
+class _IdleTimerCard extends StatelessWidget {
+  final KaalColors colors;
+  const _IdleTimerCard({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surf2,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('NO ACTIVE TIMER',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4, color: colors.ink3)),
+          const SizedBox(height: 6),
+          Text('Start a task from Focus or its detail screen to track time here.',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.4)),
+        ],
+      ),
+    );
+  }
 }
