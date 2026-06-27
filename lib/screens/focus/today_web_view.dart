@@ -102,19 +102,23 @@ class _TodayWebViewState extends ConsumerState<TodayWebView> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final p = _Palette(dark);
 
+    // Exclude the task that's currently in focus — it lives in the floating pill
+    // (mounted globally in lib/widgets/focus_pill.dart), so showing it in the
+    // list too would duplicate its title on screen.
+    final activeId = ref.watch(timeTrackerProvider.select((s) => s.taskId));
     final all = (ref.watch(allTasksProvider).value ?? const <Task>[])
-        .where((t) => !t.isDone)
+        .where((t) => !t.isDone && t.id != activeId)
         .toList();
 
-    // The focus-session pill is mounted globally (lib/widgets/focus_pill.dart),
-    // so it isn't rendered here.
     return Container(
       color: p.bg,
-      child: Center(
+      // Left-aligned next to the sidebar (not centered far across the window).
+      child: Align(
+        alignment: Alignment.topLeft,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
+          constraints: const BoxConstraints(maxWidth: 720),
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(28, 28, 28, 48),
+            padding: const EdgeInsets.fromLTRB(44, 28, 32, 48),
             children: [
               _header(p, all),
               const SizedBox(height: 22),
