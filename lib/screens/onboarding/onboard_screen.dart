@@ -17,7 +17,7 @@ import '../../theme/kaal_theme.dart';
 import '../../widgets/wallpaper_background.dart';
 
 // Screen: p-onboard — 7-step onboarding flow
-// Step 0=Language, 1=AgeGate, 2=Who, 3=FocusStyle, 4=PeakHours, 5=Goal, 6=Upsell
+// Step 0=Language, 1=AgeGate, 2=Who, 3=FocusStyle, 4=PeakHours, 5=FirstTask, 6=Upsell
 
 class OnboardScreen extends ConsumerStatefulWidget {
   const OnboardScreen({super.key});
@@ -27,17 +27,17 @@ class OnboardScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardScreenState extends ConsumerState<OnboardScreen> {
-  int _step = 0; // 0=Language, 1=AgeGate, 2=Who, 3=FocusStyle, 4=PeakHours, 5=Goal, 6=Upsell
+  int _step = 0; // 0=Language, 1=AgeGate, 2=Who, 3=FocusStyle, 4=PeakHours, 5=FirstTask, 6=Upsell
   int _langIdx = 0;
   int? _role;
   int? _focus;
   int? _peak;
   int? _quadrant;
-  final _goalCtrl = TextEditingController();
+  final _taskCtrl = TextEditingController();
 
   @override
   void dispose() {
-    _goalCtrl.dispose();
+    _taskCtrl.dispose();
     super.dispose();
   }
 
@@ -54,13 +54,13 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     if (_peak     != null) await prefs.setInt('kaal.onboard.peakHours',  _peak!);
     if (_quadrant != null) await prefs.setInt('kaal.onboard.quadrant',   _quadrant!);
 
-    // Turn the typed goal into a real task in the chosen quadrant so the user
-    // lands on Focus/Tasks with their first intention already captured.
-    final goalText = _goalCtrl.text.trim();
-    if (goalText.isNotEmpty) {
+    // Save the typed first task into the chosen quadrant so the user lands on
+    // Focus/Tasks with their first task already captured.
+    final taskText = _taskCtrl.text.trim();
+    if (taskText.isNotEmpty) {
       final quad = (_quadrant ?? 1) + 1; // picker 0–3 → Q1–Q4; default Q2 (Schedule)
       await ref.read(appDatabaseProvider).tasksDao.insertTask(
-            TasksCompanion(title: Value(goalText), quadrant: Value(quad)),
+            TasksCompanion(title: Value(taskText), quadrant: Value(quad)),
           );
     }
 
@@ -154,7 +154,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         );
       case 5:
         return _Step4(
-          goalCtrl: _goalCtrl,
+          taskCtrl: _taskCtrl,
           quadrant: _quadrant,
           onSelectQuad: (i) => setState(() => _quadrant = i),
           onBack: _back,
@@ -869,17 +869,17 @@ class _Step3 extends StatelessWidget {
   }
 }
 
-// ── Step 4 — Set your first goal ──────────────────────────────────────────────
+// ── Step 4 — Add your first task ──────────────────────────────────────────────
 
 class _Step4 extends StatelessWidget {
-  final TextEditingController goalCtrl;
+  final TextEditingController taskCtrl;
   final int? quadrant;
   final ValueChanged<int> onSelectQuad;
   final VoidCallback onBack;
   final VoidCallback onContinue;
   final KaalColors colors;
   const _Step4({
-    required this.goalCtrl,
+    required this.taskCtrl,
     required this.quadrant,
     required this.onSelectQuad,
     required this.onBack,
@@ -924,7 +924,7 @@ class _Step4 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'Set your first goal',
+          'Add your first task',
           style: TextStyle(
             fontFamily: 'Fraunces',
             fontVariations: const [FontVariation('wght', 700)],
@@ -935,16 +935,16 @@ class _Step4 extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'What do you most want to achieve right now?',
+          "What's one thing you want to get done?",
           style: TextStyle(fontSize: 13, color: colors.ink3, height: 1.5),
         ),
         const SizedBox(height: 16),
-        // Goal text input
+        // Task text input
         TextField(
-          controller: goalCtrl,
+          controller: taskCtrl,
           style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
           decoration: InputDecoration(
-            hintText: 'e.g. Launch my MVP by June',
+            hintText: 'e.g. Finish the project proposal',
             hintStyle: TextStyle(fontSize: 13, color: colors.ink3),
             filled: true,
             fillColor: colors.surf2,
@@ -968,7 +968,7 @@ class _Step4 extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          'Which quadrant drives this goal?',
+          'Which quadrant does this task belong to?',
           style: TextStyle(fontSize: 11, color: colors.ink3),
         ),
         const SizedBox(height: 6),
@@ -1014,7 +1014,7 @@ class _Step4 extends StatelessWidget {
               ),
               const SizedBox(height: 3),
               Text(
-                "Most important goals live in Q2. Don't let urgent Q1 tasks crowd them out.",
+                "Most important tasks live in Q2. Don't let urgent Q1 tasks crowd them out.",
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 11,
@@ -1136,7 +1136,7 @@ class _Step5 extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Your goal has been created. Kaal AI just scored and sorted it — this is what Pro does for every task, every day.',
+              'Your first task has been created. Kaal AI just scored and sorted it — this is what Pro does for every task, every day.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Inter',
