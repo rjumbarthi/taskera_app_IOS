@@ -74,6 +74,7 @@ import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 import '../widgets/app_shell.dart';
 import '../widgets/kaal_avatar.dart';
+import '../util/platform_layout.dart';
 import '../widgets/kaal_bottom_nav.dart';
 import '../widgets/wallpaper_background.dart';
 import '../widgets/top_ico_button.dart';
@@ -420,6 +421,20 @@ class _NavShell extends StatelessWidget {
     if (path == KaalRoutes.legal || path == KaalRoutes.report) return child;
 
     final tab = _tabFromPath(path);
+
+    // Wide desktop/web window: left sidebar instead of the floating bottom nav.
+    if (useSidebarNav(context)) {
+      return Row(
+        children: [
+          KaalSidebar(
+            currentTab: tab,
+            onTabChanged: (t) => context.go(_routeForTab(t)),
+          ),
+          Expanded(child: child),
+        ],
+      );
+    }
+
     final mq  = MediaQuery.of(context);
     return MediaQuery(
       data: mq.copyWith(

@@ -2,6 +2,10 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../data/providers/calendar_provider.dart';
+import '../data/providers/habits_provider.dart';
+import '../data/providers/notes_provider.dart';
+import '../data/providers/tasks_provider.dart';
 import '../settings/kaal_settings.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_motion.dart';
@@ -262,6 +266,231 @@ class _NavItemState extends State<_NavItem> {
             padding: const EdgeInsets.symmetric(vertical: 6),
             // Locked tabs render dimmed so they read as "not yet available".
             child: Opacity(opacity: widget.enabled ? 1.0 : 0.35, child: _icon),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Desktop / web left sidebar ────────────────────────────────────────────────
+// Replaces the bottom nav on wide windows. Gives one-click access to every
+// section (incl. Settings/Profile that the bottom nav hides) and surfaces live
+// counts so info is visible without navigating in.
+
+class KaalSidebar extends ConsumerWidget {
+  final KaalTab currentTab;
+  final ValueChanged<KaalTab>? onTabChanged;
+  const KaalSidebar({super.key, required this.currentTab, this.onTabChanged});
+
+  static const _main = [
+    KaalTab.focus, KaalTab.tasks, KaalTab.habits,
+    KaalTab.calendar, KaalTab.notes, KaalTab.aiInbox,
+  ];
+  static const _footer = [KaalTab.search, KaalTab.settings, KaalTab.profile];
+
+  static String _label(KaalTab t) => switch (t) {
+        KaalTab.focus    => 'Focus',
+        KaalTab.tasks    => 'Tasks',
+        KaalTab.habits   => 'Habits',
+        KaalTab.calendar => 'Calendar',
+        KaalTab.notes    => 'Notes',
+        KaalTab.aiInbox  => 'Inbox',
+        KaalTab.search   => 'Search',
+        KaalTab.settings => 'Settings',
+        KaalTab.profile  => 'Profile',
+      };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors   = KaalTheme.of(context).colors;
+    final isLight  = KaalTheme.of(context).mode == KaalThemeMode.light;
+    final settings = ref.watch(kaalSettingsProvider);
+    final topSafe  = MediaQuery.viewPaddingOf(context).top;
+    final botSafe  = MediaQuery.viewPaddingOf(context).bottom;
+
+    // Live counts so the nav itself carries info (reduces clicking in).
+    final tasks  = ref.watch(allTasksProvider).value ?? const [];
+    final habits = ref.watch(habitsProvider).value ?? const [];
+    final notes  = ref.watch(notesProvider).value ?? const [];
+    final events = ref.watch(calendarEventsProvider).value ?? const [];
+    final now = DateTime.now();
+    bool isToday(DateTime? d) =>
+        d == null || (d.year == now.year && d.month == now.month && d.day == now.day);
+
+    int? badge(KaalTab t) => switch (t) {
+          KaalTab.tasks    => tasks.where((x) => !x.isDone).length,
+          KaalTab.habits   => habits.length,
+          KaalTab.notes    => notes.length,
+          KaalTab.calendar => events.where((e) => isToday(e.eventDate)).length,
+          _ => null,
+        };
+
+    final panel = isLight ? const Color(0xF5F4F4F8) : const Color(0xF00B0B12);
+
+    Widget item(KaalTab t) {
+      final n = badge(t);
+      return _SidebarItem(
+        tab: t,
+        label: _label(t),
+        badge: (n != null && n > 0) ? '$n' : null,
+        isActive: t == currentTab,
+        enabled: KaalBottomNav._enabled(settings, t),
+        colors: colors,
+        onTap: () {
+          if (KaalBottomNav._enabled(settings, t)) {
+            onTabChanged?.call(t);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('${KaalBottomNav._tabName(t)} is locked. Enable it in '
+                  'Settings -> Tabs, or it unlocks automatically in a few days.'),
+              behavior: SnackBarBehavior.floating,
+            ));
+          }
+        },
+      );
+    }
+
+    return Container(
+      width: 232,
+      decoration: BoxDecoration(
+        color: panel,
+        border: Border(right: BorderSide(width: 0.5, color: colors.bdr)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: topSafe + 18),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(21, 0, 16, 0),
+            child: Row(children: [
+              const Text('✦', style: TextStyle(fontSize: 18, color: KaalColors.acc, height: 1)),
+              const SizedBox(width: 9),
+              Text('Kaal',
+                  style: TextStyle(
+                      fontFamily: 'Fraunces',
+                      fontVariations: const [FontVariation('wght', 600)],
+                      fontSize: 20,
+                      color: colors.ink,
+                      height: 1)),
+            ]),
+          ),
+          const SizedBox(height: 18),
+          for (final t in _main) item(t),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Divider(height: 1, thickness: 0.5, color: colors.bdr),
+          ),
+          const SizedBox(height: 6),
+          for (final t in _footer) item(t),
+          SizedBox(height: 16 + botSafe),
+        ],
+      ),
+    );
+  }
+}
+
+class _SidebarItem extends StatefulWidget {
+  final KaalTab tab;
+  final String label;
+  final String? badge;
+  final bool isActive;
+  final bool enabled;
+  final KaalColors colors;
+  final VoidCallback onTap;
+  const _SidebarItem({
+    required this.tab,
+    required this.label,
+    required this.badge,
+    required this.isActive,
+    required this.enabled,
+    required this.colors,
+    required this.onTap,
+  });
+
+  @override
+  State<_SidebarItem> createState() => _SidebarItemState();
+}
+
+class _SidebarItemState extends State<_SidebarItem> {
+  bool _hover = false;
+
+  Widget _icon(Color color) {
+    const size = 19.0;
+    final filter = ColorFilter.mode(color, BlendMode.srcIn);
+    if (widget.tab == KaalTab.focus) {
+      return SvgPicture.asset('assets/icons/focus_nav.svg',
+          width: size, height: size, colorFilter: filter);
+    }
+    final svg = switch (widget.tab) {
+      KaalTab.tasks    => _svgTasks,
+      KaalTab.habits   => _svgHabits,
+      KaalTab.calendar => _svgCalendar,
+      KaalTab.notes    => _svgNotes,
+      KaalTab.aiInbox  => _svgAiInbox,
+      KaalTab.search   => _svgSearch,
+      KaalTab.settings => _svgSettings,
+      KaalTab.profile  => _svgProfile,
+      KaalTab.focus    => '',
+    };
+    return SvgPicture.string(svg, width: size, height: size, colorFilter: filter);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = widget.colors;
+    final fg = widget.isActive ? KaalColors.acc : colors.ink2;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Opacity(
+          opacity: widget.enabled ? 1 : 0.4,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(10, 1, 10, 1),
+            padding: const EdgeInsets.fromLTRB(11, 9, 10, 9),
+            decoration: BoxDecoration(
+              color: widget.isActive
+                  ? KaalColors.accBg
+                  : (_hover ? colors.surf2 : Colors.transparent),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            child: Row(children: [
+              SizedBox(width: 22, child: _icon(fg)),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Text(widget.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13.5,
+                        fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                        color: widget.isActive ? colors.ink : colors.ink2,
+                        height: 1)),
+              ),
+              if (widget.badge != null) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: widget.isActive ? KaalColors.acc : colors.surf3,
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: Text(widget.badge!,
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: widget.isActive ? Colors.white : colors.ink3,
+                          height: 1)),
+                ),
+              ],
+            ]),
           ),
         ),
       ),

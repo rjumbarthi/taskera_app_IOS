@@ -37,7 +37,10 @@ class AppShell extends ConsumerWidget {
     // removeBottom stops inner screens from *also* adding the system inset as
     // scroll padding — that would double the gap. The wallpaper still renders
     // full-bleed behind the nav (it's a separate Positioned.fill layer).
-    final navReserve = MediaQuery.viewPaddingOf(context).bottom + _kNavContentHeight;
+    // With the sidebar there's no floating bottom nav, so don't reserve for it.
+    final sidebar = useSidebarNav(context);
+    final navReserve =
+        MediaQuery.viewPaddingOf(context).bottom + (sidebar ? 0 : _kNavContentHeight);
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -60,7 +63,8 @@ class AppShell extends ConsumerWidget {
     if (isCenteredLayout) {
       return Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
+          // Wider content beside the sidebar; phone-width otherwise.
+          constraints: BoxConstraints(maxWidth: sidebar ? 640 : 480),
           child: column,
         ),
       );
