@@ -47,24 +47,73 @@ class FocusDashboardScreen extends ConsumerWidget {
       showPeak:  s.sw('focusPeak'),
       showBrain: s.sw('focusBrain'),
     );
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const _GoalsStrip(),
-          const SizedBox(height: 5),
-          const TaskMetaRow(),
-          const SizedBox(height: 5),
-          const _DoThisNowCard(),
-          const SizedBox(height: 5),
-          const _QuadGrid(),
-          const SizedBox(height: 5),
-          utilGrid,
-          const SizedBox(height: 5),
-          const _ProgressCard(),
-        ],
-      ),
+
+    return LayoutBuilder(
+      builder: (context, c) {
+        // Wide (desktop/web sidebar) → two-column dashboard; else single column.
+        final wide = c.maxWidth >= 600;
+        final Widget content = wide
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TaskMetaRow(),
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Main column — hero action + the Eisenhower matrix.
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: const [
+                            _DoThisNowCard(),
+                            SizedBox(height: 8),
+                            _QuadGrid(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Side column — goals, utilities, progress.
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const _GoalsStrip(),
+                            const SizedBox(height: 8),
+                            utilGrid,
+                            const SizedBox(height: 8),
+                            const _ProgressCard(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _GoalsStrip(),
+                  const SizedBox(height: 5),
+                  const TaskMetaRow(),
+                  const SizedBox(height: 5),
+                  const _DoThisNowCard(),
+                  const SizedBox(height: 5),
+                  const _QuadGrid(),
+                  const SizedBox(height: 5),
+                  utilGrid,
+                  const SizedBox(height: 5),
+                  const _ProgressCard(),
+                ],
+              );
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
+          child: content,
+        );
+      },
     );
   }
 }
