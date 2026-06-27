@@ -263,7 +263,8 @@ class KaalApp extends ConsumerWidget {
     ref.listen<AsyncValue<AuthState>>(authStateProvider, (_, next) {
       next.whenData((state) {
         if (state.event == AuthChangeEvent.signedIn) {
-          ref.read(syncServiceProvider).syncAll();
+          final sync = ref.read(syncServiceProvider);
+          sync.syncAll().then((_) => sync.startRealtime());
           // Safety net: when sign-in completes (e.g. the Google OAuth deep link
           // returns), make sure the user actually lands on Focus. Only redirect
           // from the auth screens — never yank the user out of onboarding or an
@@ -276,6 +277,7 @@ class KaalApp extends ConsumerWidget {
           }
         }
         if (state.event == AuthChangeEvent.signedOut) {
+          ref.read(syncServiceProvider).stopRealtime();
           // Drop the previous user's Google API tokens so the next account can't
           // reach their Gmail/Calendar.
           ref.read(googleServiceProvider).disconnect();

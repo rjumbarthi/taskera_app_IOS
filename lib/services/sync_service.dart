@@ -7,24 +7,26 @@ import '../data/providers/database_provider.dart';
 
 /// Bidirectional sync between the local Drift DB and Supabase.
 ///
-/// Strategy: local-first.  Every write goes to Drift immediately, then
-/// pushes to Supabase in the background.  On app start (when signed in) we
-/// pull from Supabase and upsert into Drift, so any changes made on another
-/// device are picked up.
+/// Strategy: local-first. Every write goes to Drift immediately, then pushes
+/// to Supabase in the background. On sign-in we pull from Supabase and upsert
+/// into Drift; a realtime subscription then keeps the local DB in step with
+/// changes made on other devices.
 ///
-/// ID scheme: Drift's auto-increment IDs are used as the canonical IDs.
-/// Supabase tables have `id bigint PRIMARY KEY` (not auto-generated) so the
-/// same ID is used in both stores.  Multi-device conflict resolution is
-/// last-write-wins on the `updated_at` column — a future iteration can
-/// add proper CRDT merging.
+/// ID scheme: Drift's auto-increment IDs are the canonical IDs and are reused
+/// as the Supabase `id bigint PRIMARY KEY`, so the same row has the same id
+/// everywhere. Pull/realtime use `insertOnConflictUpdate` keyed on that id, so
+/// repeated syncs are idempotent (no duplicate rows). Conflict resolution is
+/// last-write-wins via upsert.
 class SyncService {
   SyncService(this._db, this._client);
 
-  final AppDatabase  _db;
+  final AppDatabase _db;
   final SupabaseClient _client;
 
   String? get _uid => _client.auth.currentUser?.id;
-  bool   get _can  => _uid != null;
+  bool get _can => _uid != null;
+
+  static const _tables = ['tasks', 'habits', 'goals', 'notes', 'calendar_events'];
 
   // ── Public surface ─────────────────────────────────────────────────────────
 
@@ -47,6 +49,72 @@ class SyncService {
   Future<void> syncAll() async {
     await pullAll();
     await pushAll();
+  }
+
+  // ── Realtime ────────────────────────────────────────────────────────────────
+
+  RealtimeChannel? _channel;
+
+  /// Subscribe to Postgres changes for the signed-in user so edits made on
+  /// another device land here within ~a second. Safe to call when realtime is
+  /// not enabled server-side — it simply never fires.
+  void startRealtime() {
+    if (!_can || _channel != null) return;
+    final uid = _uid!;
+    final ch = _client.channel('kaal_sync_$uid');
+    for (final table in _tables) {
+      ch.onPostgresChanges(
+        event: PostgresChangeEvent.all,
+        schema: 'public',
+        table: table,
+        filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq, column: 'user_id', value: uid),
+        callback: (payload) => _onChange(table, payload),
+      );
+    }
+    ch.subscribe();
+    _channel = ch;
+  }
+
+  Future<void> stopRealtime() async {
+    final ch = _channel;
+    _channel = null;
+    if (ch != null) await _client.removeChannel(ch);
+  }
+
+  Future<void> _onChange(String table, PostgresChangePayload payload) async {
+    try {
+      if (payload.eventType == PostgresChangeEvent.delete) {
+        final id = payload.oldRecord['id'];
+        if (id is! int) return;
+        switch (table) {
+          case 'tasks':
+            await (_db.delete(_db.tasks)..where((t) => t.id.equals(id))).go();
+          case 'habits':
+            await (_db.delete(_db.habits)..where((h) => h.id.equals(id))).go();
+          case 'goals':
+            await (_db.delete(_db.goals)..where((g) => g.id.equals(id))).go();
+          case 'notes':
+            await (_db.delete(_db.notes)..where((n) => n.id.equals(id))).go();
+          case 'calendar_events':
+            await (_db.delete(_db.calendarEvents)..where((e) => e.id.equals(id))).go();
+        }
+        return;
+      }
+      final r = payload.newRecord;
+      switch (table) {
+        case 'tasks':
+          await _db.into(_db.tasks).insertOnConflictUpdate(_taskRow(r));
+        case 'habits':
+          await _db.into(_db.habits).insertOnConflictUpdate(_habitRow(r));
+        case 'goals':
+          await _db.into(_db.goals).insertOnConflictUpdate(_goalRow(r));
+        case 'notes':
+          await _db.into(_db.notes).insertOnConflictUpdate(_noteRow(r));
+        case 'calendar_events':
+          await _db.into(_db.calendarEvents).insertOnConflictUpdate(_calendarRow(r));
+      }
+    } catch (_) {/* tolerate malformed payloads */}
   }
 
   // ── Tasks ──────────────────────────────────────────────────────────────────
@@ -75,33 +143,34 @@ class SyncService {
         'is_done'         : t.isDone,
         'done_at'         : t.doneAt?.toIso8601String(),
         'sort_order'      : t.sortOrder,
+        'labels'          : t.labels,
       }).toList(),
       onConflict: 'id',
     );
   }
 
-  Future<void> _pullTasks() async {
-    final rows = await _client
-        .from('tasks')
-        .select()
-        .eq('user_id', _uid!)
-        .order('sort_order') as List<dynamic>;
-
-    for (final r in rows) {
-      await _db.tasksDao.insertTask(TasksCompanion.insert(
-        title:           r['title']         as String,
-        quadrant:        r['quadrant']       as int,
-        dueDate:         Value(r['due_date'] != null ? DateTime.parse(r['due_date'] as String) : null),
-        dueLabel:        Value(r['due_label']        as String?),
-        isOverdue:       Value((r['is_overdue']  as bool?) ?? false),
-        hasAi:           Value((r['has_ai']       as bool?) ?? false),
-        urgencyScore:    Value((r['urgency_score'] as num?)?.toDouble()),
+  TasksCompanion _taskRow(Map<String, dynamic> r) => TasksCompanion(
+        id: Value(r['id'] as int),
+        title: Value(r['title'] as String),
+        quadrant: Value(r['quadrant'] as int),
+        dueDate: Value(r['due_date'] != null ? DateTime.parse(r['due_date'] as String) : null),
+        dueLabel: Value(r['due_label'] as String?),
+        isOverdue: Value((r['is_overdue'] as bool?) ?? false),
+        hasAi: Value((r['has_ai'] as bool?) ?? false),
+        urgencyScore: Value((r['urgency_score'] as num?)?.toDouble()),
         recurrenceLabel: Value(r['recurrence_label'] as String?),
-        hasPomodoro:     Value((r['has_pomodoro'] as bool?) ?? false),
-        isDone:          Value((r['is_done']      as bool?) ?? false),
-        doneAt:          Value(r['done_at'] != null ? DateTime.parse(r['done_at'] as String) : null),
-        sortOrder:       Value((r['sort_order'] as int?) ?? 0),
-      ));
+        hasPomodoro: Value((r['has_pomodoro'] as bool?) ?? false),
+        isDone: Value((r['is_done'] as bool?) ?? false),
+        doneAt: Value(r['done_at'] != null ? DateTime.parse(r['done_at'] as String) : null),
+        sortOrder: Value((r['sort_order'] as int?) ?? 0),
+        labels: Value(r['labels'] as String?),
+      );
+
+  Future<void> _pullTasks() async {
+    final rows = await _client.from('tasks').select().eq('user_id', _uid!).order('sort_order')
+        as List<dynamic>;
+    for (final r in rows) {
+      await _db.into(_db.tasks).insertOnConflictUpdate(_taskRow(r as Map<String, dynamic>));
     }
   }
 
@@ -130,25 +199,24 @@ class SyncService {
     );
   }
 
-  Future<void> _pullHabits() async {
-    final rows = await _client
-        .from('habits')
-        .select()
-        .eq('user_id', _uid!) as List<dynamic>;
-
-    for (final r in rows) {
-      await _db.habitsDao.insertHabit(HabitsCompanion.insert(
-        emoji:             r['emoji']           as String,
-        name:              r['name']            as String,
-        frequencyLabel:    r['frequency_label'] as String,
-        durationMinutes:   Value(r['duration_minutes'] as int?),
-        quadrant:          Value((r['quadrant']  as int?) ?? 2),   // withDefault(2)
-        streakLabel:       r['streak_label']    as String,
-        streakColorValue:  r['streak_color_value'] as int,
-        accentColorValue:  r['accent_color_value']  as int,
+  HabitsCompanion _habitRow(Map<String, dynamic> r) => HabitsCompanion(
+        id: Value(r['id'] as int),
+        emoji: Value(r['emoji'] as String),
+        name: Value(r['name'] as String),
+        frequencyLabel: Value(r['frequency_label'] as String),
+        durationMinutes: Value(r['duration_minutes'] as int?),
+        quadrant: Value((r['quadrant'] as int?) ?? 2),
+        streakLabel: Value(r['streak_label'] as String),
+        streakColorValue: Value(r['streak_color_value'] as int),
+        accentColorValue: Value(r['accent_color_value'] as int),
         weeklyFilledCount: Value((r['weekly_filled_count'] as int?) ?? 0),
-        subLabel:          Value(r['sub_label'] as String?),
-      ));
+        subLabel: Value(r['sub_label'] as String?),
+      );
+
+  Future<void> _pullHabits() async {
+    final rows = await _client.from('habits').select().eq('user_id', _uid!) as List<dynamic>;
+    for (final r in rows) {
+      await _db.into(_db.habits).insertOnConflictUpdate(_habitRow(r as Map<String, dynamic>));
     }
   }
 
@@ -178,26 +246,25 @@ class SyncService {
     );
   }
 
-  Future<void> _pullGoals() async {
-    final rows = await _client
-        .from('goals')
-        .select()
-        .eq('user_id', _uid!) as List<dynamic>;
+  GoalsCompanion _goalRow(Map<String, dynamic> r) => GoalsCompanion(
+        id: Value(r['id'] as int),
+        emoji: Value(r['emoji'] as String),
+        emojiBg: Value(r['emoji_bg'] as String),
+        title: Value(r['title'] as String),
+        subtitle: Value(r['subtitle'] as String),
+        progressPct: Value((r['progress_pct'] as num?)?.toDouble() ?? 0.0),
+        accentColorValue: Value(r['accent_color_value'] as int),
+        barColorValue: Value(r['bar_color_value'] as int),
+        borderColorValue: Value(r['border_color_value'] as int),
+        linkedLabel: Value(r['linked_label'] as String),
+        linkType: Value((r['link_type'] as String?) ?? 'task'),
+        dotColorValue: Value(r['dot_color_value'] as int),
+      );
 
+  Future<void> _pullGoals() async {
+    final rows = await _client.from('goals').select().eq('user_id', _uid!) as List<dynamic>;
     for (final r in rows) {
-      await _db.goalsDao.insertGoal(GoalsCompanion.insert(
-        emoji:            r['emoji']     as String,
-        emojiBg:          r['emoji_bg']  as String,
-        title:            r['title']     as String,
-        subtitle:         r['subtitle']  as String,
-        progressPct:      Value((r['progress_pct'] as num?)?.toDouble() ?? 0.0), // withDefault
-        accentColorValue: r['accent_color_value'] as int,
-        barColorValue:    r['bar_color_value']    as int,
-        borderColorValue: r['border_color_value'] as int,
-        linkedLabel:      r['linked_label'] as String,
-        linkType:         Value((r['link_type'] as String?) ?? 'task'),           // withDefault
-        dotColorValue:    r['dot_color_value'] as int,
-      ));
+      await _db.into(_db.goals).insertOnConflictUpdate(_goalRow(r as Map<String, dynamic>));
     }
   }
 
@@ -221,21 +288,23 @@ class SyncService {
     );
   }
 
+  NotesCompanion _noteRow(Map<String, dynamic> r) => NotesCompanion(
+        id: Value(r['id'] as int),
+        title: Value(r['title'] as String),
+        body: Value((r['body'] as String?) ?? ''),
+        isPinned: Value((r['is_pinned'] as bool?) ?? false),
+        aiLabel: Value(r['ai_label'] as String?),
+        timeLabel: Value(r['time_label'] as String),
+      );
+
   Future<void> _pullNotes() async {
     final rows = await _client
         .from('notes')
         .select()
         .eq('user_id', _uid!)
         .order('created_at', ascending: false) as List<dynamic>;
-
     for (final r in rows) {
-      await _db.notesDao.insertNote(NotesCompanion.insert(
-        title:     r['title']     as String,
-        body:      Value((r['body'] as String?) ?? ''),           // withDefault('')
-        isPinned:  Value((r['is_pinned'] as bool?) ?? false),
-        aiLabel:   Value(r['ai_label']  as String?),
-        timeLabel: r['time_label'] as String,
-      ));
+      await _db.into(_db.notes).insertOnConflictUpdate(_noteRow(r as Map<String, dynamic>));
     }
   }
 
@@ -262,25 +331,25 @@ class SyncService {
     );
   }
 
+  CalendarEventsCompanion _calendarRow(Map<String, dynamic> r) => CalendarEventsCompanion(
+        id: Value(r['id'] as int),
+        title: Value(r['title'] as String),
+        subtitle: Value((r['subtitle'] as String?) ?? ''),
+        timeSlot: Value(r['time_slot'] as String),
+        colorValue: Value(r['color_value'] as int),
+        isOverdue: Value((r['is_overdue'] as bool?) ?? false),
+        isInvite: Value((r['is_invite'] as bool?) ?? false),
+        eventDate: Value(r['event_date'] != null ? DateTime.parse(r['event_date'] as String) : null),
+      );
+
   Future<void> _pullCalendarEvents() async {
     final rows = await _client
         .from('calendar_events')
         .select()
         .eq('user_id', _uid!)
         .order('created_at') as List<dynamic>;
-
     for (final r in rows) {
-      await _db.calendarDao.insertEvent(CalendarEventsCompanion.insert(
-        title:      r['title']     as String,
-        subtitle:   Value((r['subtitle'] as String?) ?? ''),      // withDefault('')
-        timeSlot:   r['time_slot'] as String,
-        colorValue: r['color_value'] as int,
-        isOverdue:  Value((r['is_overdue'] as bool?) ?? false),
-        isInvite:   Value((r['is_invite']  as bool?) ?? false),
-        eventDate:  Value(r['event_date'] != null
-            ? DateTime.parse(r['event_date'] as String)
-            : null),
-      ));
+      await _db.into(_db.calendarEvents).insertOnConflictUpdate(_calendarRow(r as Map<String, dynamic>));
     }
   }
 

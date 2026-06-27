@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,6 +8,13 @@ class AuthService {
   AuthService(this._client);
 
   final SupabaseClient _client;
+
+  /// OAuth/redirect target: on web, Supabase must redirect back to the page
+  /// origin (the web client then consumes the auth tokens on load); on native
+  /// it returns via the app's deep-link scheme. [path] is the native callback
+  /// host (e.g. `login-callback`).
+  String _redirect(String path) =>
+      kIsWeb ? Uri.base.origin : '${AppConfig.deepLinkScheme}://$path/';
 
   User?   get currentUser => _client.auth.currentUser;
   bool    get isSignedIn  => _client.auth.currentUser != null;
@@ -47,7 +55,7 @@ class AuthService {
   Future<void> signInWithGoogle() async {
     await _client.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: '${AppConfig.deepLinkScheme}://login-callback/',
+      redirectTo: _redirect('login-callback'),
     );
   }
 
@@ -56,7 +64,7 @@ class AuthService {
   Future<void> signInWithMicrosoft() async {
     await _client.auth.signInWithOAuth(
       OAuthProvider.azure,
-      redirectTo: '${AppConfig.deepLinkScheme}://login-callback/',
+      redirectTo: _redirect('login-callback'),
     );
   }
 
@@ -71,7 +79,7 @@ class AuthService {
   Future<void> resetPassword(String email) =>
       _client.auth.resetPasswordForEmail(
         email.trim(),
-        redirectTo: '${AppConfig.deepLinkScheme}://reset-callback/',
+        redirectTo: _redirect('reset-callback'),
       );
 }
 
