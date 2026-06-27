@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart' show Value;
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -72,7 +73,12 @@ class SyncService {
         callback: (payload) => _onChange(table, payload),
       );
     }
-    ch.subscribe();
+    ch.subscribe((status, [error]) {
+      if (kDebugMode) {
+        debugPrint('[Kaal sync] realtime $status'
+            '${error != null ? ' · error=$error' : ''}');
+      }
+    });
     _channel = ch;
   }
 
@@ -84,6 +90,10 @@ class SyncService {
 
   Future<void> _onChange(String table, PostgresChangePayload payload) async {
     try {
+      if (kDebugMode) {
+        final id = payload.newRecord['id'] ?? payload.oldRecord['id'];
+        debugPrint('[Kaal sync] $table ${payload.eventType.name} id=$id');
+      }
       if (payload.eventType == PostgresChangeEvent.delete) {
         final id = payload.oldRecord['id'];
         if (id is! int) return;
