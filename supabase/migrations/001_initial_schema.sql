@@ -1,11 +1,12 @@
--- Kaal — initial Supabase schema
+-- Kaal — initial Supabase schema (idempotent: safe to re-run)
 -- Run via: supabase db push   (or paste into the SQL editor in the dashboard)
+-- NOTE: apply this BEFORE 002_sync_labels_realtime.sql.
 
 -- ── Extensions ────────────────────────────────────────────────────────────────
 create extension if not exists "uuid-ossp";
 
 -- ── Profiles ──────────────────────────────────────────────────────────────────
-create table public.profiles (
+create table if not exists public.profiles (
   id           uuid references auth.users(id) on delete cascade primary key,
   display_name text,
   avatar_url   text,
@@ -13,7 +14,7 @@ create table public.profiles (
 );
 
 -- ── Tasks ─────────────────────────────────────────────────────────────────────
-create table public.tasks (
+create table if not exists public.tasks (
   id               bigint primary key,          -- same as Drift local ID
   user_id          uuid references auth.users(id) on delete cascade not null,
   title            text    not null,
@@ -32,7 +33,7 @@ create table public.tasks (
   updated_at       timestamptz default now()
 );
 
-create table public.subtasks (
+create table if not exists public.subtasks (
   id        bigint primary key,
   user_id   uuid references auth.users(id) on delete cascade not null,
   task_id   bigint references public.tasks(id) on delete cascade not null,
@@ -42,7 +43,7 @@ create table public.subtasks (
 );
 
 -- ── Habits ────────────────────────────────────────────────────────────────────
-create table public.habits (
+create table if not exists public.habits (
   id                  bigint primary key,
   user_id             uuid references auth.users(id) on delete cascade not null,
   emoji               text    not null default '⭐',
@@ -59,7 +60,7 @@ create table public.habits (
   updated_at          timestamptz default now()
 );
 
-create table public.sub_habits (
+create table if not exists public.sub_habits (
   id         bigint primary key,
   user_id    uuid references auth.users(id) on delete cascade not null,
   habit_id   bigint references public.habits(id) on delete cascade not null,
@@ -69,7 +70,7 @@ create table public.sub_habits (
 );
 
 -- ── Goals ─────────────────────────────────────────────────────────────────────
-create table public.goals (
+create table if not exists public.goals (
   id                  bigint primary key,
   user_id             uuid references auth.users(id) on delete cascade not null,
   emoji               text   not null default '🎯',
@@ -87,20 +88,20 @@ create table public.goals (
   updated_at          timestamptz default now()
 );
 
-create table public.goal_task_links (
+create table if not exists public.goal_task_links (
   goal_id bigint references public.goals(id) on delete cascade not null,
   task_id bigint references public.tasks(id) on delete cascade not null,
   primary key (goal_id, task_id)
 );
 
-create table public.goal_habit_links (
+create table if not exists public.goal_habit_links (
   goal_id  bigint references public.goals(id)  on delete cascade not null,
   habit_id bigint references public.habits(id) on delete cascade not null,
   primary key (goal_id, habit_id)
 );
 
 -- ── Notes ─────────────────────────────────────────────────────────────────────
-create table public.notes (
+create table if not exists public.notes (
   id         bigint primary key,
   user_id    uuid references auth.users(id) on delete cascade not null,
   title      text    not null,
@@ -113,7 +114,7 @@ create table public.notes (
   updated_at timestamptz default now()
 );
 
-create table public.note_tags (
+create table if not exists public.note_tags (
   id             bigint primary key,
   user_id        uuid references auth.users(id) on delete cascade not null,
   note_id        bigint references public.notes(id) on delete cascade not null,
@@ -124,7 +125,7 @@ create table public.note_tags (
 );
 
 -- ── Calendar events ───────────────────────────────────────────────────────────
-create table public.calendar_events (
+create table if not exists public.calendar_events (
   id          bigint primary key,
   user_id     uuid references auth.users(id) on delete cascade not null,
   title       text   not null,
@@ -153,22 +154,32 @@ alter table public.notes           enable row level security;
 alter table public.note_tags       enable row level security;
 alter table public.calendar_events enable row level security;
 
--- Profiles
+-- Owner-only CRUD policies (drop-then-create so re-running is safe).
+drop policy if exists "own profile" on public.profiles;
 create policy "own profile" on public.profiles for all
   using (auth.uid() = id) with check (auth.uid() = id);
 
--- All other tables: full CRUD for the owner
-create policy "own tasks"           on public.tasks           for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "own subtasks"        on public.subtasks        for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "own habits"          on public.habits          for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "own sub_habits"      on public.sub_habits      for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "own goals"           on public.goals           for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own tasks" on public.tasks;
+create policy "own tasks" on public.tasks for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own subtasks" on public.subtasks;
+create policy "own subtasks" on public.subtasks for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own habits" on public.habits;
+create policy "own habits" on public.habits for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own sub_habits" on public.sub_habits;
+create policy "own sub_habits" on public.sub_habits for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own goals" on public.goals;
+create policy "own goals" on public.goals for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own goal_task_links" on public.goal_task_links;
 create policy "own goal_task_links" on public.goal_task_links for all
-  using  (exists (select 1 from public.goals where id = goal_id and user_id = auth.uid()));
+  using (exists (select 1 from public.goals where id = goal_id and user_id = auth.uid()));
+drop policy if exists "own goal_habit_links" on public.goal_habit_links;
 create policy "own goal_habit_links" on public.goal_habit_links for all
-  using  (exists (select 1 from public.goals where id = goal_id and user_id = auth.uid()));
-create policy "own notes"           on public.notes           for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "own note_tags"       on public.note_tags       for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+  using (exists (select 1 from public.goals where id = goal_id and user_id = auth.uid()));
+drop policy if exists "own notes" on public.notes;
+create policy "own notes" on public.notes for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own note_tags" on public.note_tags;
+create policy "own note_tags" on public.note_tags for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own calendar_events" on public.calendar_events;
 create policy "own calendar_events" on public.calendar_events for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- ── Auto-create profile on signup ─────────────────────────────────────────────
@@ -188,11 +199,13 @@ begin
       new.raw_user_meta_data ->> 'avatar_url',
       new.raw_user_meta_data ->> 'picture'
     )
-  );
+  )
+  on conflict (id) do nothing;
   return new;
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
@@ -203,8 +216,13 @@ returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end;
 $$;
 
+drop trigger if exists tasks_updated_at on public.tasks;
 create trigger tasks_updated_at           before update on public.tasks           for each row execute procedure public.set_updated_at();
+drop trigger if exists habits_updated_at on public.habits;
 create trigger habits_updated_at          before update on public.habits          for each row execute procedure public.set_updated_at();
+drop trigger if exists goals_updated_at on public.goals;
 create trigger goals_updated_at           before update on public.goals           for each row execute procedure public.set_updated_at();
+drop trigger if exists notes_updated_at on public.notes;
 create trigger notes_updated_at           before update on public.notes           for each row execute procedure public.set_updated_at();
+drop trigger if exists calendar_events_updated_at on public.calendar_events;
 create trigger calendar_events_updated_at before update on public.calendar_events for each row execute procedure public.set_updated_at();

@@ -15,6 +15,11 @@ Project ref: `dutlcoxtxmnqekttffg` (public identifier, decoded from the anon key
 
 ## Applying migrations
 
+Apply migrations **in order**: `001` (creates the tables, RLS, policies,
+triggers) **then** `002` (labels + realtime). Both are idempotent — safe to
+re-run. If `001` was never applied, sync silently does nothing (every push/pull
+hits a missing table), so a brand-new project must run `001` first.
+
 A migration must be applied **before** the matching app build relies on it.
 For `002`, the app guards against the missing `labels` column, but realtime and
 label sync stay off until it runs.
