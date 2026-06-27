@@ -12,3 +12,10 @@ KaalPlatform currentPlatform() {
 
 bool get isDesktop => currentPlatform() == KaalPlatform.desktop;
 bool get isMobile  => currentPlatform() == KaalPlatform.mobile;
+bool get isWeb     => kIsWeb;
+
+/// True when the app should render as a centered phone-width column over the
+/// wallpaper (desktop windows and web browsers) rather than edge-to-edge as on
+/// a real phone. On a narrow browser the width cap is a no-op, so it stays
+/// full-width on mobile-sized viewports.
+bool get isCenteredLayout => isDesktop || isWeb;

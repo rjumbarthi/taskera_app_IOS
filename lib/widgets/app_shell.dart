@@ -57,7 +57,7 @@ class AppShell extends ConsumerWidget {
         ),
       ],
     );
-    if (isDesktop) {
+    if (isCenteredLayout) {
       return Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
