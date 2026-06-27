@@ -28,12 +28,33 @@ class AppShell extends ConsumerWidget {
     this.actions = const [],
   });
 
-  Widget _contentColumn(KaalColors colors) {
+  // Floating bottom-nav content height (must match _NavShell._kNavContentHeight).
+  static const _kNavContentHeight = 50.0;
+
+  Widget _contentColumn(BuildContext context, KaalColors colors) {
+    // Reserve the nav's full footprint (system gesture inset + nav height) below
+    // the body so no screen's content or buttons sit under the floating nav.
+    // removeBottom stops inner screens from *also* adding the system inset as
+    // scroll padding — that would double the gap. The wallpaper still renders
+    // full-bleed behind the nav (it's a separate Positioned.fill layer).
+    final navReserve = MediaQuery.viewPaddingOf(context).bottom + _kNavContentHeight;
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         KaalTopBar(title: title, subtitle: subtitle, actions: actions),
-        Expanded(child: ColoredBox(color: colors.bg, child: body)),
+        Expanded(
+          child: ColoredBox(
+            color: colors.bg,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: navReserve),
+              child: MediaQuery.removePadding(
+                context: context,
+                removeBottom: true,
+                child: body,
+              ),
+            ),
+          ),
+        ),
       ],
     );
     if (isDesktop) {
@@ -70,7 +91,7 @@ class AppShell extends ConsumerWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxHeight < 80) return const SizedBox.expand();
-                return _contentColumn(colors);
+                return _contentColumn(context, colors);
               },
             ),
           ),

@@ -72,19 +72,50 @@ class KaalBottomNav extends ConsumerWidget {
     this.onTabChanged,
   });
 
+  // Whether a tab is currently unlocked. The four optional tabs unlock either
+  // automatically by install age (see _applyTabUnlocks in main.dart) or manually
+  // in Settings → Tabs. Locked tabs still show their icon (dimmed) so users know
+  // what's coming; tapping one explains how to unlock it.
+  static bool _enabled(KaalSettingsState s, KaalTab tab) => switch (tab) {
+        KaalTab.habits   => s.sw('habits'),
+        KaalTab.calendar => s.sw('calendar'),
+        KaalTab.notes    => s.sw('notes'),
+        KaalTab.aiInbox  => s.sw('inbox'),
+        _                => true,
+      };
+
+  static String _tabName(KaalTab tab) => switch (tab) {
+        KaalTab.habits   => 'Habits',
+        KaalTab.calendar => 'Calendar',
+        KaalTab.notes    => 'Notes',
+        KaalTab.aiInbox  => 'Inbox',
+        _                => '',
+      };
+
+  void _showLockedMessage(BuildContext context, KaalTab tab) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+          '${_tabName(tab)} is locked. Enable it in Settings → Tabs, or it unlocks automatically in a few days.'),
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 3),
+    ));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors         = KaalTheme.of(context).colors;
     final bottomSafeArea = MediaQuery.viewPaddingOf(context).bottom;
     final settings       = ref.watch(kaalSettingsProvider);
 
+    // All four optional tabs are always shown (locked ones dimmed). Search,
+    // Settings and Profile are reached elsewhere, never from the bottom nav.
     final visibleTabs = KaalTab.values.where((tab) => switch (tab) {
       KaalTab.focus    => true,
       KaalTab.tasks    => true,
-      KaalTab.habits   => settings.sw('habits'),
-      KaalTab.calendar => settings.sw('calendar'),
-      KaalTab.notes    => settings.sw('notes'),
-      KaalTab.aiInbox  => settings.sw('inbox'),
+      KaalTab.habits   => true,
+      KaalTab.calendar => true,
+      KaalTab.notes    => true,
+      KaalTab.aiInbox  => true,
       KaalTab.search   => false,
       KaalTab.settings => false,
       KaalTab.profile  => false,
@@ -98,8 +129,15 @@ class KaalBottomNav extends ConsumerWidget {
             _NavItem(
               tab: tab,
               isActive: tab == currentTab,
+              enabled: _enabled(settings, tab),
               colors: colors,
-              onTap: () => onTabChanged?.call(tab),
+              onTap: () {
+                if (_enabled(settings, tab)) {
+                  onTabChanged?.call(tab);
+                } else {
+                  _showLockedMessage(context, tab);
+                }
+              },
             ),
         ],
       ),
@@ -151,12 +189,14 @@ class _GlassPill extends StatelessWidget {
 class _NavItem extends StatefulWidget {
   final KaalTab tab;
   final bool isActive;
+  final bool enabled;
   final KaalColors colors;
   final VoidCallback onTap;
 
   const _NavItem({
     required this.tab,
     required this.isActive,
+    required this.enabled,
     required this.colors,
     required this.onTap,
   });
@@ -220,7 +260,8 @@ class _NavItemState extends State<_NavItem> {
           duration: KaalMotion.fastPress,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
-            child: _icon,
+            // Locked tabs render dimmed so they read as "not yet available".
+            child: Opacity(opacity: widget.enabled ? 1.0 : 0.35, child: _icon),
           ),
         ),
       ),

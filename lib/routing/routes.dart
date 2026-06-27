@@ -24,6 +24,7 @@ abstract final class KaalRoutes {
   static const tasksInbox     = '/tasks/inbox';
   static const tasksSchedule  = '/tasks/schedule';
   static const tasksTimetrack = '/tasks/timetrack';
+  static const tasksPomodoro  = '/tasks/pomodoro';
   static const tasksAnalytics = '/tasks/analytics';
   static const tasksPanelComp = '/tasks/panel-comp';
   static const tasksRecurring = '/tasks/recurring';
@@ -71,4 +72,5 @@ abstract final class KaalRoutes {
   // Root-level modals (accessible from any tab via root navigator)
   static const paywall = '/paywall';
   static const legal   = '/legal';
+  static const report  = '/report';
 }

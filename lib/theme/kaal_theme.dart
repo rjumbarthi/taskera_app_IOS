@@ -46,7 +46,7 @@ class KaalThemeData {
     };
     final colors = KaalColors(
       bg: base.bg, appBg: base.appBg,
-      surf: base.surf, surf2: base.surf2, surf3: base.surf3,
+      surf: base.surf, surf3: base.surf3,
       ink: base.ink, ink2: base.ink2, ink3: base.ink3, ink4: base.ink4,
       bdr: base.bdr, bdr2: base.bdr2,
       successFg: base.successFg, labelMuted: base.labelMuted,

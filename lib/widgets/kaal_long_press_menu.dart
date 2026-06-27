@@ -91,6 +91,10 @@ class _KaalLongPressMenuState extends State<KaalLongPressMenu> {
     await showModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
+      // Size to the menu's content. Without this the sheet is capped at ~half the
+      // screen, so taller menus overflow — overlapping text and spilling the
+      // content past the sheet over the screen below.
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: const Color(0x8C000000),
       builder: (_) => _MenuSheet(

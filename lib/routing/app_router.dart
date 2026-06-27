@@ -60,6 +60,7 @@ import '../screens/onboarding/signup_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/inbox/inbox_integrations_screen.dart';
 import '../screens/legal_screen.dart';
+import '../screens/settings/report_feedback_screen.dart';
 import '../screens/paywall_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
 import '../screens/profile/referral_screen.dart';
@@ -177,6 +178,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
     // Root-level modals — accessible from any tab via root navigator
     GoRoute(path: KaalRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: const PaywallScreen(), state: s)),
     GoRoute(path: KaalRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(showTerms: s.uri.queryParameters['tab'] != 'privacy'), state: s)),
+    GoRoute(path: KaalRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
       ], // _NavShell.routes
     ),   // ShellRoute(_NavShell)
 
@@ -243,6 +245,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                 GoRoute(path: 'recurring',       pageBuilder: (context, s) => slideRightPage(child: const SmartRecurrenceScreen(),                                        state: s)),
                 GoRoute(path: 'analytics',       pageBuilder: (context, s) => slideRightPage(child: const AnalyticsScreen(),                                              state: s)),
                 GoRoute(path: 'timetrack',       pageBuilder: (context, s) => slideRightPage(child: const TimeTrackScreen(),                                              state: s)),
+                GoRoute(path: 'pomodoro',        pageBuilder: (context, s) => slideRightPage(child: const PomodoroScreen(),                                               state: s)),
                 GoRoute(path: 'quad/:q',         pageBuilder: (context, s) => slideRightPage(child: QuadScreen(quad: s.pathParameters['q'] ?? 'q1'),                     state: s)),
                 GoRoute(path: 'panel-comp',      pageBuilder: (context, s) => slideRightPage(child: const CompletedPanelScreen(),                                         state: s)),
                 GoRoute(path: 'lists',           pageBuilder: (context, s) => slideRightPage(child: const ListsScreen(),                                                   state: s)),
@@ -413,9 +416,8 @@ class _NavShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Terms & Privacy is a full-screen legal reader with no tab context — show
-    // it without the bottom nav (and without reserving space for it).
-    if (path == KaalRoutes.legal) return child;
+    // Full-screen readers with no tab context — show without the bottom nav.
+    if (path == KaalRoutes.legal || path == KaalRoutes.report) return child;
 
     final tab = _tabFromPath(path);
     final mq  = MediaQuery.of(context);

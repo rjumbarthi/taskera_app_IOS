@@ -17,7 +17,37 @@ class AiService {
       body: {'action': action, 'content': content},
     );
     final data = res.data is String ? jsonDecode(res.data) : res.data;
-    return (data as Map<String, dynamic>?)?['result'] as String?;
+    final map = data as Map<String, dynamic>?;
+    // Surface server-side failures (missing API key, upstream error, etc.)
+    // instead of silently returning null → "AI returned no results".
+    final err = map?['error'];
+    if (err != null) throw Exception(err.toString());
+    return map?['result'] as String?;
+  }
+
+  /// Models often wrap JSON in ```json … ``` fences or add prose despite being
+  /// told "JSON only". Strip fences and fall back to the outermost `{…}` block
+  /// so a valid response is never dropped on a parse error.
+  static Map<String, dynamic>? _decodeObject(String? raw) {
+    if (raw == null) return null;
+    var t = raw.trim();
+    if (t.startsWith('```')) {
+      t = t.replaceFirst(RegExp(r'^```[a-zA-Z]*\s*'), '');
+      if (t.endsWith('```')) t = t.substring(0, t.length - 3);
+      t = t.trim();
+    }
+    try {
+      return jsonDecode(t) as Map<String, dynamic>;
+    } catch (_) {
+      final start = t.indexOf('{');
+      final end = t.lastIndexOf('}');
+      if (start >= 0 && end > start) {
+        try {
+          return jsonDecode(t.substring(start, end + 1)) as Map<String, dynamic>;
+        } catch (_) {}
+      }
+      return null;
+    }
   }
 
   // ── Public helpers ─────────────────────────────────────────────────────────
@@ -29,42 +59,27 @@ class AiService {
   /// Returns `{'urgency': N, 'importance': N, 'quadrant': N, 'reason': '...'}`.
   Future<Map<String, dynamic>?> scoreTask(String taskTitle) async {
     final raw = await _invoke('score_task', taskTitle);
-    if (raw == null) return null;
-    try {
-      return jsonDecode(raw) as Map<String, dynamic>;
-    } catch (_) {
-      return null;
-    }
+    return _decodeObject(raw);
   }
 
   /// Returns `{'q1': [...], 'q2': [...], 'q3': [...], 'q4': [...], 'summary': '...'}`.
   Future<Map<String, dynamic>?> processBrainDump(String text) async {
     final raw = await _invoke('brain_dump', text);
-    if (raw == null) return null;
-    try {
-      return jsonDecode(raw) as Map<String, dynamic>;
-    } catch (_) {
-      return null;
-    }
+    return _decodeObject(raw);
   }
 
   /// Returns `{'context':'...','tasks':[{'title':'...','quadrant':N}],'checklist':[...],'goals':[...]}`.
   Future<Map<String, dynamic>?> suggestContext(String text) async {
     final raw = await _invoke('suggest_context', text);
-    if (raw == null) return null;
-    try {
-      return jsonDecode(raw) as Map<String, dynamic>;
-    } catch (_) {
-      return null;
-    }
+    return _decodeObject(raw);
   }
 
   /// Returns a list of `{'title': '...', 'detail': '...'}` insight objects.
   Future<List<Map<String, String>>> getInsights(String context) async {
     final raw = await _invoke('insights', context);
-    if (raw == null) return [];
+    final data = _decodeObject(raw);
+    if (data == null) return [];
     try {
-      final data = jsonDecode(raw) as Map<String, dynamic>;
       final list = (data['insights'] as List<dynamic>? ?? []);
       return list.cast<Map<String, dynamic>>().map((e) => {
         'title' : (e['title']  as String?) ?? '',

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:googleapis/calendar/v3.dart' as gcal;
@@ -37,6 +39,20 @@ class GoogleService {
   Future<bool> get isAnyConnected async =>
       await _storage.read(key: _keyCalToken) != null ||
       await _storage.read(key: _keyGmailToken) != null;
+
+  /// True when the current app session was created with Google sign-in, so a
+  /// Gmail/Calendar token can be obtained without switching accounts.
+  bool get isGoogleAccount {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return false;
+    if (user.appMetadata['provider'] == 'google') return true;
+    final providers = (user.appMetadata['providers'] as List?)?.cast<String>() ?? const [];
+    if (providers.contains('google')) return true;
+    return user.identities?.any((i) => i.provider == 'google') ?? false;
+  }
+
+  /// True when there is any signed-in (non-local) account at all.
+  bool get isSignedIn => _supabase.auth.currentUser != null;
 
   Future<bool> get isCalConnected async =>
       await _storage.read(key: _keyCalToken) != null;
@@ -142,11 +158,64 @@ class GoogleService {
         } catch (_) {}
       }
       return messages;
-    } catch (_) {
-      return [];
     } finally {
       client.close();
     }
+  }
+
+  /// Fetches the full message (with body parts) for [id].
+  Future<gml.Message?> fetchMessageFull(String id) async {
+    final token = await _validToken(_keyGmailToken, _keyGmailRefresh);
+    if (token == null) return null;
+    final client = _GoogleAuthClient({'Authorization': 'Bearer $token'});
+    try {
+      return await gml.GmailApi(client).users.messages.get('me', id, format: 'full');
+    } finally {
+      client.close();
+    }
+  }
+
+  /// Decodes the readable plain-text body of a Gmail message (falls back to the
+  /// snippet). Handles multipart bodies and strips HTML when only HTML exists.
+  static String plainTextBody(gml.Message msg) {
+    String decode(String? data) {
+      if (data == null) return '';
+      try {
+        return utf8.decode(base64.decode(base64.normalize(
+            data.replaceAll('-', '+').replaceAll('_', '/'))));
+      } catch (_) {
+        return '';
+      }
+    }
+
+    String? walk(gml.MessagePart? part) {
+      if (part == null) return null;
+      if (part.mimeType == 'text/plain') {
+        final t = decode(part.body?.data).trim();
+        if (t.isNotEmpty) return t;
+      }
+      for (final p in part.parts ?? const <gml.MessagePart>[]) {
+        final t = walk(p);
+        if (t != null && t.isNotEmpty) return t;
+      }
+      if (part.mimeType == 'text/html') {
+        final html = decode(part.body?.data);
+        if (html.isNotEmpty) {
+          return html
+              .replaceAll(RegExp(r'<(script|style)[^>]*>[\s\S]*?</\1>', caseSensitive: false), ' ')
+              .replaceAll(RegExp(r'<[^>]+>'), ' ')
+              .replaceAll('&nbsp;', ' ')
+              .replaceAll(RegExp(r'[ \t]+'), ' ')
+              .replaceAll(RegExp(r'\n\s*\n\s*\n+'), '\n\n')
+              .trim();
+        }
+      }
+      return null;
+    }
+
+    final body = walk(msg.payload);
+    if (body != null && body.isNotEmpty) return body;
+    return (msg.snippet ?? '').trim();
   }
 
   // ── Supabase Google OAuth ──────────────────────────────────────────────────

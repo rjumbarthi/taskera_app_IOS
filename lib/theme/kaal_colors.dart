@@ -4,7 +4,8 @@ class KaalColors {
   final Color bg;
   final Color appBg;
   final Color surf;
-  final Color surf2;
+  final Color surf2; // neutral translucent fill (theme-aware: white tint on dark, black tint on light)
+  final Color bdr0;  // neutral translucent border (theme-aware)
   final Color surf3;
   final Color ink;
   final Color ink2;
@@ -38,7 +39,8 @@ class KaalColors {
     required this.bg,
     required this.appBg,
     required this.surf,
-    required this.surf2,
+    this.surf2 = const Color(0x0DFFFFFF), // neutral fill, white @ 5% (dark/glass default)
+    this.bdr0  = const Color(0x1AFFFFFF), // neutral border, white @ 10% (dark/glass default)
     required this.surf3,
     required this.ink,
     required this.ink2,
@@ -58,7 +60,6 @@ class KaalColors {
     bg:    Colors.transparent,
     appBg: Color(0xFF0D0D14),
     surf:  Color(0x17FFFFFF), // rgba(255,255,255,.09)
-    surf2: Color(0x1FFFFFFF), // rgba(255,255,255,.12)
     surf3: Color(0x2EFFFFFF), // rgba(255,255,255,.18)
     ink:   Color(0xFFF2F2F7),
     ink2:  Color(0xFFC8C8D0),
@@ -75,7 +76,6 @@ class KaalColors {
     bg:    Colors.transparent, // wallpaper + dark scrim shows through
     appBg: Color(0xFF0A0A0C),  // fallback when wallpaper is off
     surf:  Color(0x17FFFFFF), // rgba(255,255,255,.09)
-    surf2: Color(0x1FFFFFFF), // rgba(255,255,255,.12)
     surf3: Color(0x2EFFFFFF), // rgba(255,255,255,.18)
     ink:   Color(0xFFF2F2F7),
     ink2:  Color(0xFFC8C8D0),
@@ -92,7 +92,8 @@ class KaalColors {
     bg:    Colors.transparent, // wallpaper + white wash shows through
     appBg: Color(0xFFF2F2F7),  // fallback when wallpaper is off
     surf:  Color(0xE6FFFFFF), // rgba(255,255,255,.90)
-    surf2: Color(0xCCFFFFFF), // rgba(255,255,255,.80)
+    surf2: Color(0x12000000), // neutral fill: black @ 7% — visible on bright surfaces
+    bdr0:  Color(0x14000000), // neutral border: black @ 8%
     surf3: Color(0xB8FFFFFF), // rgba(255,255,255,.72)
     ink:   Color(0xFF111113),
     ink2:  Color(0xFF2C2C2E),

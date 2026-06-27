@@ -5,8 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../data/database.dart' show Task;
 import '../data/providers/database_provider.dart';
 import '../data/providers/dtn_provider.dart';
-import '../routing/routes.dart';
+import '../settings/app_launch_prefs.dart';
 import '../settings/kaal_settings.dart';
+import '../settings/prefs_provider.dart';
 import 'dtn_widget_bridge.dart';
 import 'notification_service.dart';
 
@@ -28,6 +29,12 @@ class _DtnControllerState extends ConsumerState<DtnController>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Apply a notification tap the moment its callback fires (app alive), not
+    // only on the next resume lifecycle — the two race and the resume often
+    // wins before the payload is set, dropping the deep link.
+    NotificationService.onTapHandled = () {
+      if (mounted) _consumePending();
+    };
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _consumePending();
       _sync();
@@ -36,6 +43,9 @@ class _DtnControllerState extends ConsumerState<DtnController>
 
   @override
   void dispose() {
+    if (NotificationService.onTapHandled != null) {
+      NotificationService.onTapHandled = null;
+    }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -45,11 +55,16 @@ class _DtnControllerState extends ConsumerState<DtnController>
     if (state == AppLifecycleState.resumed) {
       _consumePending();
       _sync();
+    } else if (state == AppLifecycleState.paused) {
+      // Remember we were just foregrounded, so a quick reopen after Android
+      // kills us in the background skips the quote splash (feels like a resume).
+      AppLaunchPrefs.recordActive(ref.read(sharedPreferencesProvider));
     }
   }
 
   // Apply a pending notification-button action and any deep-link route.
   Future<void> _consumePending() async {
+    // Foreground action (app was open when the button was tapped).
     final action = NotificationService.consumePendingDtnAction();
     if (action != null) {
       final db = ref.read(appDatabaseProvider);
@@ -62,10 +77,30 @@ class _DtnControllerState extends ConsumerState<DtnController>
               .update((s) => {...s, action.taskId});
           break;
         case kDtnFocus:
-          widget.router.go(KaalRoutes.focus);
+          // Open the task itself (where Start-focus lives), not just the dashboard.
+          widget.router.go('/tasks/taskdetail/${action.taskId}');
           break;
       }
     }
+
+    // Background-queued Done/Skip taps — applied without the app having opened.
+    final queued = await NotificationService.consumeDtnQueue(
+        ref.read(sharedPreferencesProvider));
+    if (queued.isNotEmpty) {
+      final db = ref.read(appDatabaseProvider);
+      for (final e in queued) {
+        final sep = e.indexOf(':');
+        if (sep < 0) continue;
+        final id = int.tryParse(e.substring(sep + 1));
+        if (id == null) continue;
+        if (e.startsWith('done:')) {
+          await db.tasksDao.toggleDone(id, true);
+        } else if (e.startsWith('skip:')) {
+          ref.read(dtnSkipProvider.notifier).update((s) => {...s, id});
+        }
+      }
+    }
+
     final route = NotificationService.consumePendingRoute();
     if (route != null) widget.router.go(route);
   }

@@ -135,6 +135,37 @@ class AppStrings {
   String get supportingHabits  => _t(['Supporting habits','サポート習慣','Unterstützende Gewohnheiten','지원 습관','Habitudes liées','关联习惯','Hábitos vinculados','Hábitos vinculados','Abitudini collegate','Ondersteunende gewoonten','العادات الداعمة','जुड़ी आदतें','మద్దతు అలవాట్లు','ஆதரவு பழக்கங்கள்','ಬೆಂಬಲ ಅಭ್ಯಾಸಗಳು','Supporting habits','सहाय्यक सवयी','Supporting habits','সহায়ক অভ্যাস']);
   String get linkHabit         => _t(['Link habit','習慣をリンク','Gewohnheit verknüpfen','습관 연결','Lier habitude','链接习惯','Vincular hábito','Vincular hábito','Collega abitudine','Gewoonte koppelen','ربط عادة','आदत लिंक करें','అలవాటు లింక్ చేయి','பழக்கம் இணை','ಅಭ್ಯಾಸ ಲಿಂಕ್ ಮಾಡಿ','Link habit','सवय जोडा','Link habit','অভ্যাস লিঙ্ক করুন']);
 
+  /// Dynamic goal metadata: "Linked tasks · N" (N = number of linked tasks).
+  String linkedTasksCount(int n) => '$linkedTasks · $n';
+
+  /// Dynamic goal metadata: "Linked habits · n/total streaks this week"
+  /// (n = linked habits with an active streak, total = linked habits).
+  String linkedHabitsStreaks(int n, int total) {
+    const t = [
+      'Linked habits · {n}/{t} streaks this week',            // en
+      'リンク習慣 · 今週 {n}/{t} 連続',                          // ja
+      'Verknüpfte Gewohnheiten · {n}/{t} Serien',             // de
+      '연결된 습관 · 이번 주 {n}/{t} 연속',                      // ko
+      'Habitudes liées · {n}/{t} séries cette semaine',       // fr
+      '关联习惯 · 本周 {n}/{t} 连续',                            // zh
+      'Hábitos vinculados · {n}/{t} rachas esta semana',      // es
+      'Hábitos vinculados · {n}/{t} sequências',              // pt
+      'Abitudini collegate · {n}/{t} serie questa settimana', // it
+      'Gekoppelde gewoonten · {n}/{t} reeksen deze week',     // nl
+      'العادات المرتبطة · {n}/{t} تسلسلات هذا الأسبوع',          // ar
+      'लिंक्ड हैबिट्स · इस सप्ताह {n}/{t} स्ट्रीक',                 // hi
+      'అనుసంధానిత అలవాట్లు · ఈ వారం {n}/{t} స్ట్రీక్స్',           // te
+      'இணைந்த பழக்கங்கள் · இந்த வாரம் {n}/{t}',                  // ta
+      'ಸಂಪರ್ಕಿತ ಅಭ್ಯಾಸಗಳು · ಈ ವಾರ {n}/{t}',                     // kn
+      'ബന്ധിപ്പിച്ച ശീലങ്ങൾ · ഈ ആഴ്ച {n}/{t}',                  // ml
+      'लिंक केलेल्या सवयी · या आठवड्यात {n}/{t}',                 // mr
+      'jodeyli tevo · aa athi maaNe {n}/{t}',                 // gu
+      'সংযুক্ত অভ্যাস · এই সপ্তাহে {n}/{t} স্ট্রিক',              // bn
+    ];
+    final s = t[_i < t.length ? _i : 0];
+    return s.replaceAll('{n}', '$n').replaceAll('{t}', '$total');
+  }
+
   // ── Calendar strings ────────────────────────────────────────────────────────
   String get connections       => _t(['Connections','つながり','Verbindungen','연결','Connexions','连接','Conexiones','Conexões','Connessioni','Verbindingen','اتصالات','कनेक्शन','కనెక్షన్లు','இணைப்புகள்','ಸಂಪರ್ಕಗಳು','Connections','कनेक्शन','Connections','সংযোগ']);
   String get editEvent         => _t(['Edit event','イベント編集','Ereignis bearbeiten','이벤트 편집','Modifier l\'événement','编辑事件','Editar evento','Editar evento','Modifica evento','Evenement bewerken','تعديل الحدث','इवेंट संपादित करें','ఈవెంట్ సవరించు','நிகழ்வு திருத்து','ಈವೆಂಟ್ ಸಂಪಾದಿಸಿ','Edit event','इव्हेंट संपादित करा','Edit event','ইভেন্ট সম্পাদনা']);
@@ -297,7 +328,7 @@ class AppStrings {
   String get nextSession       => _t(['Next session','次のセッション','Nächste Sitzung','다음 세션','Prochaine session','下次会议','Próxima sesión','Próxima sessão','Prossima sessione','Volgende sessie','الجلسة التالية','अगला सत्र','తదుపరి సెషన్','அடுத்த அமர்வு','ಮುಂದಿನ ಅವಧಿ','Next session','पुढील सत्र','Next session','পরবর্তী সেশন']);
   String get skipDay           => _t(['Skip day','その日スキップ','Tag überspringen','하루 건너뛰기','Passer la journée','跳过这天','Saltar día','Pular dia','Salta giorno','Dag overslaan','تخطي اليوم','दिन छोड़ें','రోజు దాటవేయి','நாளை தவிர்','ದಿನ ಬಿಟ್ಟು ಬಿಡಿ','Skip day','दिवस वगळा','Skip day','দিনটি এড়িয়ে যান']);
   String get somethingCameUp   => _t(['Something came up today?','今日何かありましたか？','Heute etwas passiert?','오늘 일이 생겼나요?','Quelque chose s\'est passé aujourd\'hui ?','今天有突发情况？','¿Algo surgió hoy?','Algo surgiu hoje?','Qualcosa è successo oggi?','Iets tussengekomen vandaag?','هل حدث شيء اليوم؟','आज कुछ हो गया?','ఈరోజు ఏదైనా వచ్చిందా?','இன்று ஏதாவது வந்ததா?','ಇಂದು ಏನಾದರೂ ಬಂತೇ?','Something came up today?','आज काही आले का?','Something came up today?','আজ কিছু এসেছিল?']);
-  String get rescheduleWorkout => _t(['Reschedule your workout — streaks stay protected','トレーニングを再スケジュール — ストリーク保護','Training umplanen — Serien bleiben geschützt','운동 재조정 — 연속 기록 보호','Reprogrammez — série protégée','重新安排训练 — 连续记录保持保护','Reprograma tu entrenamiento — rachas protegidas','Reagende seu treino — sequências protegidas','Ripianifica allenamento — serie protette','Plan workout opnieuw — reeksen beschermd','أعد جدولة تمرينك — التتاليات محمية','वर्कआउट पुनर्निर्धारित करें — स्ट्रीक सुरक्षित','వర్కౌట్ రీషెడ్యూల్ — స్ట్రీక్స్ సురక్షితం','பயிற்சி மீண்டும் திட்டமிடுங்கள் — தொடர்ச்சிகள் பாதுகாப்பு','ವ್ಯಾಯಾಮ ಮರು-ನಿಗದಿ — ಸ್ಟ್ರೀಕ್ ರಕ್ಷಿತ','Reschedule your workout — streaks stay protected','वर्कआउट पुनर्नियोजित करा — स्ट्रीक सुरक्षित','Reschedule your workout — streaks stay protected','ওয়ার্কআউট পুনরায় সময়সূচি — স্ট্রিক সুরক্ষিত']);
+  String get rescheduleHabit => _t(['Reschedule — streaks stay protected','再スケジュール — ストリーク保護','Umplanen — Serien bleiben geschützt','재조정 — 연속 기록 보호','Reprogrammez — série protégée','重新安排 — 连续记录保持保护','Reprograma — rachas protegidas','Reagende — sequências protegidas','Ripianifica — serie protette','Opnieuw plannen — reeksen beschermd','أعد الجدولة — التتاليات محمية','पुनर्निर्धारित करें — स्ट्रीक सुरक्षित','రీషెడ్యూల్ — స్ట్రీక్స్ సురక్షితం','மீண்டும் திட்டமிடுங்கள் — தொடர்ச்சிகள் பாதுகாப்பு','ಮರು-ನಿಗದಿ — ಸ್ಟ್ರೀಕ್ ರಕ್ಷಿತ','Reschedule — streaks stay protected','पुनर्नियोजित करा — स्ट्रीक सुरक्षित','Reschedule — streaks stay protected','পুনরায় সময়সূচি — স্ট্রিক সুরক্ষিত']);
 
   // ── Inbox & notes ─────────────────────────────────────────────────────────────
   String get gmail             => _t(['Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail','Gmail']);

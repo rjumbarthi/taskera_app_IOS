@@ -1,12 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../data/database.dart';
+import '../data/reminder.dart';
 import '../routing/routes.dart';
 import '../util/platform_layout.dart';
 
@@ -18,6 +21,8 @@ const _chCalendar = 'kaal_calendar';
 const _chInbox    = 'kaal_inbox';
 const _chFocus    = 'kaal_focus';
 const _chDtn      = 'kaal_dtn';
+const _chReminders = 'kaal_reminders';
+const _chAlarms    = 'kaal_alarms';
 
 // ── DTN notification action ids ───────────────────────────────────────────────
 const kDtnDone  = 'dtn_done';
@@ -25,12 +30,106 @@ const kDtnSkip  = 'dtn_skip';
 const kDtnFocus = 'dtn_focus';
 const kDtnNotifId = 7000;
 
+// ── Reminder/Alarm notification action ids ────────────────────────────────────
+const kReminderSnooze   = 'rem_snooze';
+const kReminderDismiss  = 'rem_dismiss';
+const kReminderSnoozeMin = 10;
+
+// Title/details shared by the instance scheduler and the background snooze
+// handler (which runs in a separate isolate and can't call instance methods).
+String _reminderTitle(String label, bool isAlarm) =>
+    isAlarm ? '⏰ ${label.isEmpty ? "Alarm" : label}' : '🔔 ${label.isEmpty ? "Reminder" : label}';
+
+AndroidNotificationDetails _reminderAndroidDetails(bool isAlarm) =>
+    AndroidNotificationDetails(
+      isAlarm ? _chAlarms : _chReminders,
+      isAlarm ? 'Alarms' : 'Reminders',
+      icon: 'ic_stat_focus',
+      importance: isAlarm ? Importance.max : Importance.high,
+      priority:   isAlarm ? Priority.max   : Priority.high,
+      fullScreenIntent: isAlarm,
+      category: isAlarm
+          ? AndroidNotificationCategory.alarm
+          : AndroidNotificationCategory.reminder,
+      audioAttributesUsage:
+          isAlarm ? AudioAttributesUsage.alarm : AudioAttributesUsage.notification,
+      actions: const [
+        AndroidNotificationAction(kReminderSnooze, 'Snooze 10m', showsUserInterface: false),
+        AndroidNotificationAction(kReminderDismiss, 'Dismiss',
+            showsUserInterface: false, cancelNotification: true),
+      ],
+    );
+
+// Notification id blocks for reminders (9000–9499) and their snoozes (9500–9999)
+// — separate so snoozing a *repeating* reminder doesn't overwrite its schedule.
+int _reminderNotifIdOf(int id) => 9000 + (id % 500);
+int _snoozeNotifIdOf(int id)   => 9500 + (id % 500);
+
 /// A pending action from a DTN notification button, consumed by the app once
 /// providers are ready. action is one of kDtnDone/kDtnSkip/kDtnFocus.
 class DtnPendingAction {
   final String action;
   final int taskId;
   const DtnPendingAction(this.action, this.taskId);
+}
+
+/// SharedPreferences key holding DTN actions tapped while the app was in the
+/// background — entries are `done:<id>` / `skip:<id>`. Drained on next resume.
+const _kDtnQueueKey = 'kaal.dtn.pending';
+
+/// Background-isolate entry point for action buttons tapped while the app is
+/// backgrounded or terminated (all `showsUserInterface: false`). It runs in a
+/// separate isolate with no access to the app's providers/DB.
+///  • DTN Done/Skip → queued to SharedPreferences; applied on next resume.
+///  • Reminder/Alarm Snooze → re-armed +10 min directly from this isolate, so it
+///    works even when the app is fully killed (never needs to open the app).
+@pragma('vm:entry-point')
+Future<void> notificationBackgroundResponse(NotificationResponse r) async {
+  final payload = r.payload;
+  final action  = r.actionId;
+  if (payload == null) return;
+
+  if (payload.startsWith('dtn:')) {
+    if (action != kDtnDone && action != kDtnSkip) return;
+    final id = int.tryParse(payload.substring(4));
+    if (id == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    final queue = prefs.getStringList(_kDtnQueueKey) ?? <String>[];
+    queue.add('${action == kDtnDone ? 'done' : 'skip'}:$id');
+    await prefs.setStringList(_kDtnQueueKey, queue);
+    return;
+  }
+
+  if (payload.startsWith('rem:') && action == kReminderSnooze) {
+    try {
+      final data = jsonDecode(payload.substring(4)) as Map<String, dynamic>;
+      final id      = data['id'] as int;
+      final label   = (data['label'] as String?) ?? '';
+      final isAlarm = (data['isAlarm'] as bool?) ?? false;
+      tz_data.initializeTimeZones();
+      final plugin = FlutterLocalNotificationsPlugin();
+      await plugin.initialize(const InitializationSettings(
+        android: AndroidInitializationSettings('ic_stat_focus'),
+        iOS: DarwinInitializationSettings(
+            requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
+      ));
+      final when = tz.TZDateTime.now(tz.local).add(const Duration(minutes: kReminderSnoozeMin));
+      await plugin.zonedSchedule(
+        _snoozeNotifIdOf(id),
+        _reminderTitle(label, isAlarm),
+        isAlarm ? 'Alarm (snoozed)' : 'Reminder (snoozed)',
+        when,
+        NotificationDetails(
+          android: _reminderAndroidDetails(isAlarm),
+          iOS: const DarwinNotificationDetails(
+              presentAlert: true, presentBadge: true, presentSound: true),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload,
+      );
+    } catch (_) {/* best-effort */}
+  }
 }
 
 // ── Notification ID allocation ────────────────────────────────────────────────
@@ -74,6 +173,20 @@ class NotificationService {
     return a;
   }
 
+  /// Drain DTN Done/Skip actions that were tapped while the app was backgrounded
+  /// (queued by [notificationBackgroundResponse]). Returns `done:<id>`/`skip:<id>`.
+  static Future<List<String>> consumeDtnQueue(SharedPreferences prefs) async {
+    final q = prefs.getStringList(_kDtnQueueKey) ?? const <String>[];
+    if (q.isNotEmpty) await prefs.remove(_kDtnQueueKey);
+    return q;
+  }
+
+  /// Set by the live app (DtnController) so a notification tap navigates/applies
+  /// immediately while the app is alive (foreground OR resumed from background),
+  /// instead of waiting on the resume lifecycle — which races with this callback
+  /// and would otherwise drop the deep link, opening a "fresh" session.
+  static VoidCallback? onTapHandled;
+
   static void _routeResponse(NotificationResponse r) {
     final payload = r.payload;
     final action  = r.actionId;
@@ -84,13 +197,26 @@ class NotificationService {
         if (action == kDtnDone || action == kDtnSkip || action == kDtnFocus) {
           _pendingDtnAction = DtnPendingAction(action!, id);
         } else {
-          // Body tap → open the focus dashboard.
-          _pendingRoute = KaalRoutes.focus;
+          // Body tap → open the task this card is about, not the dashboard.
+          _pendingRoute = '/tasks/taskdetail/$id';
         }
+      }
+      onTapHandled?.call();
+      return;
+    }
+    if (payload != null && payload.startsWith('rem:')) {
+      final data = jsonDecode(payload.substring(4)) as Map<String, dynamic>;
+      if (action == kReminderSnooze) {
+        instance._snoozeReminder(data['id'] as int,
+            (data['label'] as String?) ?? '', (data['isAlarm'] as bool?) ?? false);
+      } else if (action != kReminderDismiss) {
+        _pendingRoute = KaalRoutes.cal; // body tap → open the calendar (reminders live there)
+        onTapHandled?.call();
       }
       return;
     }
     _pendingRoute = payload;
+    onTapHandled?.call();
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
@@ -102,7 +228,10 @@ class NotificationService {
 
     tz_data.initializeTimeZones();
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    // White Focus-compass silhouette (notification small icons are monochrome).
+    // NB: pass the bare resource name — the plugin does NOT resolve a
+    // "@drawable/" prefix and would silently fall back to the launcher icon.
+    const androidSettings = AndroidInitializationSettings('ic_stat_focus');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -115,6 +244,9 @@ class NotificationService {
         iOS: iosSettings,
       ),
       onDidReceiveNotificationResponse: _routeResponse,
+      // DTN Done/Skip tapped while backgrounded/terminated land here (separate
+      // isolate) and are queued to prefs, so they apply without opening the app.
+      onDidReceiveBackgroundNotificationResponse: notificationBackgroundResponse,
     );
 
     if (!kIsWeb && Platform.isAndroid) {
@@ -153,7 +285,81 @@ class NotificationService {
     AndroidNotificationChannel(_chDtn,      'Do The Next',
         description: 'Ongoing card for your current top task',
         importance: Importance.low, playSound: false, enableVibration: false),
+    AndroidNotificationChannel(_chReminders, 'Reminders',
+        description: 'One-time reminders you set', importance: Importance.high),
+    AndroidNotificationChannel(_chAlarms,    'Alarms',
+        description: 'Full-screen alarms with an alarm sound',
+        importance: Importance.max, playSound: true,
+        audioAttributesUsage: AudioAttributesUsage.alarm),
   ];
+
+  // ── Reminders & Alarms (standalone, user-set) ──────────────────────────────
+
+  // Payload carries enough to reschedule a snooze from the background isolate.
+  static String _reminderPayload(Reminder r) =>
+      'rem:${jsonEncode({'id': r.id, 'label': r.label, 'isAlarm': r.isAlarm})}';
+
+  Future<void> scheduleReminder(Reminder r) async {
+    if (!_ready || r.isPast) return;
+    final repeat = switch (r.repeat) {
+      ReminderRepeat.none   => null,
+      ReminderRepeat.daily  => DateTimeComponents.time,
+      ReminderRepeat.weekly => DateTimeComponents.dayOfWeekAndTime,
+    };
+    await _plugin.zonedSchedule(
+      _reminderNotifIdOf(r.id),
+      _reminderTitle(r.label, r.isAlarm),
+      r.isAlarm ? 'Alarm' : 'Reminder',
+      tz.TZDateTime.from(r.when, tz.local),
+      NotificationDetails(
+        android: _reminderAndroidDetails(r.isAlarm),
+        iOS: const DarwinNotificationDetails(
+            presentAlert: true, presentBadge: true, presentSound: true),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: repeat,
+      payload: _reminderPayload(r),
+    );
+  }
+
+  // Re-fire this reminder 10 minutes from now under a separate id (so a repeating
+  // reminder's schedule is left intact). Used by the foreground Snooze action.
+  Future<void> _snoozeReminder(int id, String label, bool isAlarm) async {
+    if (!_ready) return;
+    final when = tz.TZDateTime.now(tz.local).add(const Duration(minutes: kReminderSnoozeMin));
+    await _plugin.zonedSchedule(
+      _snoozeNotifIdOf(id),
+      _reminderTitle(label, isAlarm),
+      isAlarm ? 'Alarm (snoozed)' : 'Reminder (snoozed)',
+      when,
+      NotificationDetails(
+        android: _reminderAndroidDetails(isAlarm),
+        iOS: const DarwinNotificationDetails(
+            presentAlert: true, presentBadge: true, presentSound: true),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: 'rem:${jsonEncode({'id': id, 'label': label, 'isAlarm': isAlarm})}',
+    );
+  }
+
+  Future<void> cancelReminder(int id) async {
+    if (!_ready) return;
+    await _plugin.cancel(_reminderNotifIdOf(id));
+    await _plugin.cancel(_snoozeNotifIdOf(id));
+  }
+
+  /// Re-arm all future reminders/alarms from the saved list (called on launch).
+  Future<void> rescheduleReminders(List<Reminder> reminders) async {
+    if (!_ready) return;
+    for (final r in reminders) {
+      await _plugin.cancel(_reminderNotifIdOf(r.id));
+      if (!r.isPast) await scheduleReminder(r);
+    }
+  }
 
   // ── DTN "Do The Next" — ongoing, music-player-style card ───────────────────
 
@@ -173,6 +379,7 @@ class NotificationService {
       NotificationDetails(
         android: AndroidNotificationDetails(
           _chDtn, 'Do The Next',
+          icon: 'ic_stat_focus',
           importance: Importance.low,
           priority: Priority.low,
           ongoing: true,
@@ -184,8 +391,11 @@ class NotificationService {
               ? NotificationVisibility.public
               : NotificationVisibility.secret,
           actions: const [
-            AndroidNotificationAction(kDtnDone,  '✓ Done',  showsUserInterface: true),
-            AndroidNotificationAction(kDtnSkip,  '⏭ Skip',  showsUserInterface: true),
+            // Done/Skip apply in the background without opening the app; the card
+            // is dismissed and the next task is shown when the app next runs.
+            AndroidNotificationAction(kDtnDone, '✓ Done', showsUserInterface: false),
+            AndroidNotificationAction(kDtnSkip, '⏭ Skip', showsUserInterface: false),
+            // Focus needs the UI — it opens the task to start a focus session.
             AndroidNotificationAction(kDtnFocus, '▶ Focus', showsUserInterface: true),
           ],
         ),
@@ -225,6 +435,7 @@ class NotificationService {
           channelId, channelId,
           importance: high ? Importance.high : Importance.defaultImportance,
           priority:   high ? Priority.high   : Priority.defaultPriority,
+          icon: 'ic_stat_focus',
         ),
         iOS: const DarwinNotificationDetails(
             presentAlert: true, presentBadge: true, presentSound: true),
@@ -275,7 +486,7 @@ class NotificationService {
       task.title, 'Due in 1 hour',
       tz.TZDateTime.from(remind, tz.local),
       _chTasks, high: true,
-      payload: KaalRoutes.tasks,
+      payload: '/tasks/taskdetail/${task.id}',
     );
   }
 
@@ -349,7 +560,7 @@ class NotificationService {
       '${goal.emoji} Goal deadline in 7 days', goal.title,
       tz.TZDateTime.from(t, tz.local),
       _chGoals,
-      payload: KaalRoutes.goals,
+      payload: '${KaalRoutes.goals}/${goal.id}',
     );
   }
 
@@ -363,13 +574,13 @@ class NotificationService {
       '${goal.emoji} Goal deadline tomorrow!', goal.title,
       tz.TZDateTime.from(t, tz.local),
       _chGoals, high: true,
-      payload: KaalRoutes.goals,
+      payload: '${KaalRoutes.goals}/${goal.id}',
     );
   }
 
   // ── CALENDAR ──────────────────────────────────────────────────────────────
 
-  /// 15 minutes before each calendar event
+  /// 15 minutes before each calendar event (the "pre" reminder)
   Future<void> scheduleCalendarReminder(CalendarEvent event) async {
     if (!_ready || event.eventDate == null) return;
     final t = event.eventDate!.subtract(const Duration(minutes: 15));
@@ -377,6 +588,21 @@ class NotificationService {
     await _zonedOnce(
       4000 + (event.id % 100),
       '📅 ${event.title}', 'Starting in 15 minutes',
+      tz.TZDateTime.from(t, tz.local),
+      _chCalendar, high: true,
+      payload: KaalRoutes.cal,
+    );
+  }
+
+  /// At the event's start time (the "actual" notification) — scheduled when an
+  /// invite is accepted, alongside the 15-min pre-reminder.
+  Future<void> scheduleEventStart(CalendarEvent event) async {
+    if (!_ready || event.eventDate == null) return;
+    final t = event.eventDate!;
+    if (!t.isAfter(DateTime.now())) return;
+    await _zonedOnce(
+      4100 + (event.id % 100),
+      '📅 ${event.title}', 'Starting now',
       tz.TZDateTime.from(t, tz.local),
       _chCalendar, high: true,
       payload: KaalRoutes.cal,
@@ -436,7 +662,10 @@ class NotificationService {
     await _plugin.cancel(3100 + (goalId % 100));
     await _plugin.cancel(3200 + (goalId % 100));
   }
-  Future<void> cancelEventReminder(int eventId) => _plugin.cancel(4000 + (eventId % 100));
+  Future<void> cancelEventReminder(int eventId) async {
+    await _plugin.cancel(4000 + (eventId % 100)); // 15-min pre
+    await _plugin.cancel(4100 + (eventId % 100)); // at-start
+  }
   Future<void> cancelAll() => _plugin.cancelAll();
 
   // ── Bulk reschedule — call on app start and after settings changes ─────────

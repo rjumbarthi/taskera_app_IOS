@@ -6,7 +6,12 @@ import 'prefs_provider.dart';
 
 class KaalSettingsState {
   final int wallpaperIndex;
-  final double wallpaperDim;
+  // Per-theme wallpaper brightness (dim). Each theme remembers its own value so
+  // switching theme immediately restores that theme's brightness. Read the
+  // active theme's value via the `wallpaperDim` getter.
+  final double dimDark;
+  final double dimLight;
+  final double dimGlass;
   final Map<String, bool> toggles;
   final int theme;
   final int accent;
@@ -17,9 +22,17 @@ class KaalSettingsState {
   final int qnames;
   final int lang;
 
+  // Sensible per-theme brightness defaults: dark stays heavily dimmed, glass
+  // medium, light barely washed so the wallpaper reads bright and airy.
+  static const defaultDimDark  = 0.85;
+  static const defaultDimGlass = 0.70;
+  static const defaultDimLight = 0.30;
+
   const KaalSettingsState({
     this.wallpaperIndex = 0,
-    this.wallpaperDim = 0.85,
+    this.dimDark  = defaultDimDark,
+    this.dimLight = defaultDimLight,
+    this.dimGlass = defaultDimGlass,
     this.toggles = const {
       'scoreRec':    true, 'quoteSplash': true, 'eodReflect':   true,
       // habits/calendar/notes/inbox default OFF — auto-unlock by install age (see main.dart)
@@ -57,9 +70,17 @@ class KaalSettingsState {
   KaalWallpaper get wallpaper =>
       _wallpapers[wallpaperIndex.clamp(0, _wallpapers.length - 1)];
 
+  // Brightness for the currently-active theme (theme: 0=dark, 1=light,
+  // 2=glass, 3=system→glass).
+  double get wallpaperDim => switch (theme) {
+        0 => dimDark,
+        1 => dimLight,
+        _ => dimGlass,
+      };
+
   KaalSettingsState withToggle(String key, bool value) => KaalSettingsState(
     wallpaperIndex: wallpaperIndex,
-    wallpaperDim: wallpaperDim,
+    dimDark: dimDark, dimLight: dimLight, dimGlass: dimGlass,
     toggles: {...toggles, key: value},
     theme: theme, accent: accent, font: font,
     fontSize: fontSize, lineSpacing: lineSpacing,
@@ -67,11 +88,14 @@ class KaalSettingsState {
   );
 
   KaalSettingsState copyWith({
-    int? wallpaperIndex, double? wallpaperDim, int? theme, int? accent, int? font,
+    int? wallpaperIndex, double? dimDark, double? dimLight, double? dimGlass,
+    int? theme, int? accent, int? font,
     int? fontSize, int? lineSpacing, int? layout, int? qnames, int? lang,
   }) => KaalSettingsState(
     wallpaperIndex: wallpaperIndex ?? this.wallpaperIndex,
-    wallpaperDim: wallpaperDim ?? this.wallpaperDim,
+    dimDark:  dimDark  ?? this.dimDark,
+    dimLight: dimLight ?? this.dimLight,
+    dimGlass: dimGlass ?? this.dimGlass,
     toggles: toggles,
     theme: theme ?? this.theme,
     accent: accent ?? this.accent,
@@ -88,7 +112,10 @@ class KaalSettingsState {
 
 class _K {
   static const wallpaper    = 'kaal.wallpaper';
-  static const wallpaperDim = 'kaal.wallpaperDim';
+  static const wallpaperDim = 'kaal.wallpaperDim'; // legacy single value (migrated)
+  static const dimDark      = 'kaal.wallpaperDim.dark';
+  static const dimLight     = 'kaal.wallpaperDim.light';
+  static const dimGlass     = 'kaal.wallpaperDim.glass';
   static const theme        = 'kaal.theme';
   static const accent      = 'kaal.accent';
   static const font        = 'kaal.font';
@@ -115,9 +142,16 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
         e.key: p.getBool(_K.toggle(e.key)) ?? e.value,
     };
 
+    // Migrate the old single brightness value: if a user had set it before the
+    // per-theme split, seed every theme bucket from it as a baseline.
+    final legacyDim = p.getDouble(_K.wallpaperDim);
     return KaalSettingsState(
       wallpaperIndex: p.getInt(_K.wallpaper)       ?? d.wallpaperIndex,
-      wallpaperDim:   p.getDouble(_K.wallpaperDim) ?? d.wallpaperDim,
+      dimDark:  p.getDouble(_K.dimDark)  ?? legacyDim ?? d.dimDark,
+      // Light always starts at its airy default — the old shared value produced
+      // the over-washed light theme this feature fixes.
+      dimLight: p.getDouble(_K.dimLight) ?? d.dimLight,
+      dimGlass: p.getDouble(_K.dimGlass) ?? legacyDim ?? d.dimGlass,
       toggles:        loadedToggles,
       theme:          p.getInt(_K.theme)        ?? d.theme,
       accent:         p.getInt(_K.accent)       ?? d.accent,
@@ -133,7 +167,9 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
   void _persist(KaalSettingsState s) {
     _p
       ..setInt(_K.wallpaper,       s.wallpaperIndex)
-      ..setDouble(_K.wallpaperDim, s.wallpaperDim)
+      ..setDouble(_K.dimDark,      s.dimDark)
+      ..setDouble(_K.dimLight,     s.dimLight)
+      ..setDouble(_K.dimGlass,     s.dimGlass)
       ..setInt(_K.theme,           s.theme)
       ..setInt(_K.accent,      s.accent)
       ..setInt(_K.font,        s.font)
@@ -197,8 +233,14 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
     _persist(state);
   }
 
+  // Writes brightness to the active theme's bucket so each theme keeps its own.
   void setWallpaperDim(double v) {
-    state = state.copyWith(wallpaperDim: v.clamp(0.0, 1.0));
+    final c = v.clamp(0.0, 1.0);
+    state = switch (state.theme) {
+      0 => state.copyWith(dimDark: c),
+      1 => state.copyWith(dimLight: c),
+      _ => state.copyWith(dimGlass: c),
+    };
     _persist(state);
   }
 }

@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/app_config.dart';
 import 'data/database.dart';
+import 'data/reminder.dart';
 import 'data/db_connection.dart' show deleteDatabaseFile;
 import 'data/seed_data.dart';
 import 'data/providers/database_provider.dart';
@@ -26,6 +27,7 @@ import 'theme/kaal_theme.dart';
 import 'util/platform_layout.dart';
 import 'data/providers/auth_provider.dart';
 import 'services/sync_service.dart';
+import 'services/google_service.dart';
 import 'services/notification_service.dart';
 import 'services/dtn_controller.dart';
 
@@ -99,22 +101,22 @@ void main() async {
     await prefs.setBool('kaal.listsSeeded', true);
   }
 
-  // Seed demo tasks, habits, goals, notes, calendar on first launch.
-  // Re-seed automatically when the user switches language OR when kSeedVersion
-  // is bumped (e.g. new translations added to seed_data.dart).
-  final currentLang    = prefs.getInt('kaal.lang') ?? 0;
-  final storedVersion  = prefs.getInt('kaal.seedVersion') ?? 0;
-  final alreadySeeded  = prefs.getBool('kaal.dataSeeded') ?? false;
-  final seededLang     = prefs.getInt('kaal.seededLang') ?? 0;
+  // Inject starter tasks, habits, goals, notes, calendar ONCE as permanent real
+  // data. It is never auto-reseeded afterwards — switching language only changes
+  // the UI, not your data.
+  final currentLang   = prefs.getInt('kaal.lang') ?? 0;
+  final alreadySeeded = prefs.getBool('kaal.dataSeeded') ?? false;
+  final realDataReady = prefs.getBool('kaal.realData') ?? false;
   if (!alreadySeeded) {
     await seedDatabase(db, langIdx: currentLang);
     await prefs.setBool('kaal.dataSeeded', true);
-    await prefs.setInt('kaal.seededLang', currentLang);
-    await prefs.setInt('kaal.seedVersion', kSeedVersion);
-  } else if (seededLang != currentLang || storedVersion != kSeedVersion) {
+    await prefs.setBool('kaal.realData', true);
+  } else if (!realDataReady) {
+    // One-time migration off the old auto-reseeding "demo data" model: refresh
+    // once in the current language to clear stale/wrong-language rows, then keep
+    // everything as permanent real data from here on.
     await reseedDatabase(db, langIdx: currentLang);
-    await prefs.setInt('kaal.seededLang', currentLang);
-    await prefs.setInt('kaal.seedVersion', kSeedVersion);
+    await prefs.setBool('kaal.realData', true);
   }
 
   // ── Notifications ────────────────────────────────────────────────────────
@@ -123,6 +125,8 @@ void main() async {
   // Reschedule all notifications from current DB state on each launch.
   // This keeps alarms alive after device reboots.
   unawaited(_rescheduleNotifications(db, prefs));
+  // Re-arm user-set reminders & alarms (stored in prefs) after reboot/relaunch.
+  unawaited(_rescheduleReminders(prefs));
 
   final initialLocation = _computeInitialLocation(prefs);
   final router = buildAppRouter(initialLocation, prefs);
@@ -167,6 +171,19 @@ void _applyTabUnlocks(SharedPreferences prefs) {
   }
 }
 
+Future<void> _rescheduleReminders(SharedPreferences prefs) async {
+  try {
+    final raw = prefs.getStringList('kaal.reminders') ?? const [];
+    final reminders = <Reminder>[];
+    for (final s in raw) {
+      try {
+        reminders.add(Reminder.decode(s));
+      } catch (_) {/* skip malformed */}
+    }
+    await NotificationService.instance.rescheduleReminders(reminders);
+  } catch (_) {/* non-fatal */}
+}
+
 Future<void> _rescheduleNotifications(AppDatabase db, SharedPreferences prefs) async {
   try {
     final tasks  = await db.tasksDao.watchAll().first;
@@ -191,16 +208,25 @@ Future<void> _rescheduleNotifications(AppDatabase db, SharedPreferences prefs) a
 }
 
 String _computeInitialLocation(SharedPreferences prefs) {
+  final onboarded = AppLaunchPrefs.onboardingDone(prefs);
+  final authed    = AppLaunchPrefs.skipAuth(prefs) ||
+      Supabase.instance.client.auth.currentUser != null;
+
   // If the app was cold-started by tapping a notification, land directly on its
   // target screen (skip the splash) — but only once the user is past onboarding
   // and auth, so we never bypass those gates.
   final route = NotificationService.consumePendingRoute();
-  if (route != null &&
-      AppLaunchPrefs.onboardingDone(prefs) &&
-      (AppLaunchPrefs.skipAuth(prefs) ||
-          Supabase.instance.client.auth.currentUser != null)) {
-    return route;
+  if (route != null && onboarded && authed) return route;
+
+  // Quote splash policy: show it on a genuine fresh start — first run / sign-in,
+  // a new calendar day, or an idle gap of 8h+. Skip it (go straight to Focus,
+  // feels like a resume) only when a returning signed-in user reopens the same
+  // calendar day within 8 hours — i.e. Android killed us while backgrounded.
+  if (onboarded && authed &&
+      AppLaunchPrefs.wasActiveSameDayWithin(prefs, const Duration(hours: 8))) {
+    return KaalRoutes.focus;
   }
+
   // Otherwise start at the quote splash — it routes forward based on auth state.
   return KaalRoutes.quote;
 }
@@ -238,27 +264,28 @@ class KaalApp extends ConsumerWidget {
       next.whenData((state) {
         if (state.event == AuthChangeEvent.signedIn) {
           ref.read(syncServiceProvider).syncAll();
+          // Safety net: when sign-in completes (e.g. the Google OAuth deep link
+          // returns), make sure the user actually lands on Focus. Only redirect
+          // from the auth screens — never yank the user out of onboarding or an
+          // in-app flow (e.g. linking a calendar from Settings).
+          final path = router.routerDelegate.currentConfiguration.uri.path;
+          if (path == KaalRoutes.quote ||
+              path == KaalRoutes.signin ||
+              path == KaalRoutes.signup) {
+            router.go(KaalRoutes.focus);
+          }
         }
         if (state.event == AuthChangeEvent.signedOut) {
+          // Drop the previous user's Google API tokens so the next account can't
+          // reach their Gmail/Calendar.
+          ref.read(googleServiceProvider).disconnect();
           router.go(KaalRoutes.signin);
         }
       });
     });
 
-    // Re-seed all content in the new language whenever the user switches language.
-    // Stream-based providers (tasks, habits, etc.) update automatically after reseed.
-    ref.listen<int>(
-      kaalSettingsProvider.select((s) => s.lang),
-      (prev, next) {
-        if (prev != null && prev != next) {
-          final db    = ref.read(appDatabaseProvider);
-          final prefs = ref.read(sharedPreferencesProvider);
-          reseedDatabase(db, langIdx: next).then(
-            (_) => prefs.setInt('kaal.seededLang', next),
-          );
-        }
-      },
-    );
+    // Note: seeded content is permanent real data — switching language only
+    // re-localizes the UI, it does not wipe or re-seed your data.
 
     final s = ref.watch(kaalSettingsProvider);
 
@@ -298,6 +325,14 @@ class KaalApp extends ConsumerWidget {
           scaffoldBackgroundColor: Colors.transparent,
           splashFactory: NoSplash.splashFactory,
           highlightColor: Colors.transparent,
+          // The floating bottom-nav pill (≈50px content height, rendered in a
+          // separate Stack layer above the Scaffold) isn't known to the Scaffold,
+          // so floating snackbars sit under it. Lift every snackbar above the nav
+          // by adding the nav height to the default bottom inset (10 → 64).
+          snackBarTheme: const SnackBarThemeData(
+            behavior: SnackBarBehavior.floating,
+            insetPadding: EdgeInsets.fromLTRB(15, 5, 15, 64),
+          ),
         ),
         builder: (context, child) => AppL10n(
           strings: AppStrings(s.lang),
