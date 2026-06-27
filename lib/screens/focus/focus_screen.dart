@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
 import '../../theme/kaal_colors.dart';
+import '../../util/platform_layout.dart';
+import 'today_web_view.dart';
 import '../../theme/kaal_motion.dart';
 import '../../theme/kaal_shape.dart';
 import '../../theme/kaal_theme.dart';
@@ -42,78 +44,32 @@ class FocusDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Wide web/desktop → the Apple-restrained Today List/Grid surface.
+    if (useSidebarNav(context)) return const TodayWebView();
+
     final s = ref.watch(kaalSettingsProvider);
     final utilGrid = _UtilGrid(
       showPeak:  s.sw('focusPeak'),
       showBrain: s.sw('focusBrain'),
     );
-
-    return LayoutBuilder(
-      builder: (context, c) {
-        // Wide (desktop/web sidebar) → two-column dashboard; else single column.
-        final wide = c.maxWidth >= 600;
-        final Widget content = wide
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const TaskMetaRow(),
-                  const SizedBox(height: 8),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Main column — hero action + the Eisenhower matrix.
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: const [
-                            _DoThisNowCard(),
-                            SizedBox(height: 8),
-                            _QuadGrid(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Side column — goals, utilities, progress.
-                      Expanded(
-                        flex: 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            const _GoalsStrip(),
-                            const SizedBox(height: 8),
-                            utilGrid,
-                            const SizedBox(height: 8),
-                            const _ProgressCard(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const _GoalsStrip(),
-                  const SizedBox(height: 5),
-                  const TaskMetaRow(),
-                  const SizedBox(height: 5),
-                  const _DoThisNowCard(),
-                  const SizedBox(height: 5),
-                  const _QuadGrid(),
-                  const SizedBox(height: 5),
-                  utilGrid,
-                  const SizedBox(height: 5),
-                  const _ProgressCard(),
-                ],
-              );
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
-          child: content,
-        );
-      },
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _GoalsStrip(),
+          const SizedBox(height: 5),
+          const TaskMetaRow(),
+          const SizedBox(height: 5),
+          const _DoThisNowCard(),
+          const SizedBox(height: 5),
+          const _QuadGrid(),
+          const SizedBox(height: 5),
+          utilGrid,
+          const SizedBox(height: 5),
+          const _ProgressCard(),
+        ],
+      ),
     );
   }
 }

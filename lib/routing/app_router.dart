@@ -421,20 +421,6 @@ class _NavShell extends StatelessWidget {
     if (path == KaalRoutes.legal || path == KaalRoutes.report) return child;
 
     final tab = _tabFromPath(path);
-
-    // Wide desktop/web window: left sidebar instead of the floating bottom nav.
-    if (useSidebarNav(context)) {
-      return Row(
-        children: [
-          KaalSidebar(
-            currentTab: tab,
-            onTabChanged: (t) => context.go(_routeForTab(t)),
-          ),
-          Expanded(child: child),
-        ],
-      );
-    }
-
     final mq  = MediaQuery.of(context);
     return MediaQuery(
       data: mq.copyWith(
@@ -612,6 +598,40 @@ class _RouterShell extends ConsumerWidget {
     final inviteCount  = todayEvents.where((e) => e.isInvite).length;
     final notes        = ref.watch(notesProvider).valueOrNull ?? const [];
     final tab = _tab;
+
+    AppShell appShell() => AppShell(
+          title: _title(context),
+          subtitle: _subtitle(
+            streakDays:    streak,
+            activeCount:   activeCount,
+            overdueCount:  overdueCount,
+            habitCount:    habits.length,
+            eventCount:    todayEvents.length,
+            inviteCount:   inviteCount,
+            noteCount:     notes.length,
+          ),
+          actions: _actions(context),
+          body: shell,
+        );
+
+    // Wide web/desktop: left sidebar + content, no floating bottom nav. The
+    // Focus tab renders its bare Today surface (its own header); the other tabs
+    // keep the standard app chrome (top bar + wallpaper).
+    if (useSidebarNav(context)) {
+      return CurrentTab(
+        tab: tab,
+        child: Row(
+          children: [
+            KaalSidebar(
+              currentTab: tab,
+              onTabChanged: (t) => context.go(_NavShell._routeForTab(t)),
+            ),
+            Expanded(child: tab == KaalTab.focus ? shell : appShell()),
+          ],
+        ),
+      );
+    }
+
     final mq  = MediaQuery.of(context);
     return MediaQuery(
       data: mq.copyWith(
@@ -623,22 +643,7 @@ class _RouterShell extends ConsumerWidget {
         tab: tab,
         child: Stack(
           children: [
-            Positioned.fill(
-              child: AppShell(
-                title: _title(context),
-                subtitle: _subtitle(
-                  streakDays:    streak,
-                  activeCount:   activeCount,
-                  overdueCount:  overdueCount,
-                  habitCount:    habits.length,
-                  eventCount:    todayEvents.length,
-                  inviteCount:   inviteCount,
-                  noteCount:     notes.length,
-                ),
-                actions: _actions(context),
-                body: shell,
-              ),
-            ),
+            Positioned.fill(child: appShell()),
             Align(
               alignment: Alignment.bottomCenter,
               child: KaalBottomNav(
