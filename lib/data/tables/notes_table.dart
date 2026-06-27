@@ -20,3 +20,13 @@ class NoteTags extends Table {
   IntColumn get fgColorValue => integer()();
   IntColumn get sortOrder => integer().withDefault(const Constant(0))();
 }
+
+/// Join table linking a note to the tasks it references.
+class NoteTaskLinks extends Table {
+  IntColumn get noteId =>
+      integer().references(Notes, #id, onDelete: KeyAction.cascade)();
+  IntColumn get taskId => integer()();
+
+  @override
+  Set<Column> get primaryKey => {noteId, taskId};
+}

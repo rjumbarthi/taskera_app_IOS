@@ -2,8 +2,6 @@
 import 'package:drift/drift.dart';
 import 'database.dart';
 
-// Bump this whenever seed content changes so existing installs reseed.
-const kSeedVersion = 2;
 
 // Maps AppStrings 19-lang index → 19-lang seed index
 // Seed order: 0=en,1=ja,2=de,3=ko,4=fr,5=zh,6=es,7=pt,8=hi,9=ar,10=te,
@@ -79,6 +77,8 @@ Future<void> _seedTasks(AppDatabase db, int lang) async {
     'Tomorrow · Score 7.2', 'Today · Score 7.0',
   ];
   final q1Due    = [today, today, today, today, today, tomorrow, today, today, tomorrow, today];
+  // Minute-of-day for each task so the Today's Plan agenda has real times.
+  final q1Mins   = [480, 570, 660, 780, 870, 600, 930, 960, 840, 1020];
   final q1Over   = [true, false, true, true, false, false, true, false, false, false];
   final q1Score  = [9.2, 7.8, 9.0, 8.7, 8.5, 8.3, 8.0, 7.5, 7.2, 7.0];
 
@@ -86,7 +86,7 @@ Future<void> _seedTasks(AppDatabase db, int lang) async {
     final id = await db.tasksDao.insertTask(TasksCompanion(
       title:            Value(q1Titles[i]),
       quadrant:         const Value(1),
-      dueDate:          Value(q1Due[i]),
+      dueDate:          Value(q1Due[i].add(Duration(minutes: q1Mins[i]))),
       dueLabel:         Value(q1Labels[i]),
       isOverdue:        Value(q1Over[i]),
       hasAi:            const Value(false),
@@ -124,8 +124,8 @@ Future<void> _seedTasks(AppDatabase db, int lang) async {
     _s(['1:1 with mentor','メンターと1対1','1:1 mit dem Mentor','멘토와 1:1','1:1 avec le mentor','与导师一对一','1:1 con el mentor','1:1 com o mentor','मेंटर के साथ 1:1','جلسة فردية مع المرشد','మెంటార్‌తో 1:1','1:1 con il mentore','1:1 met de mentor','வழிகாட்டியுடன் 1:1','ಮಾರ್ಗದರ್ಶಕರೊಂದಿಗೆ 1:1','മെ‌ൻ‌ററിനൊ‌പ്പം 1:1','मार्गदर्शकासोबत 1:1','margadarshak sathe 1:1','পরামর্শদাতার সাথে 1:1'], lang),
   ];
   final q2Rows = [
-    (q2Titles[0], 'Today · Score 8.4',    today, false, true,  8.4,  null,      true,  0),
-    (q2Titles[1], 'Today',                today, false, false, null, '↻ Daily', false, 1),
+    (q2Titles[0], 'Today · Score 8.4',    today.add(const Duration(hours: 12, minutes: 30)), false, true,  8.4,  null,      true,  0),
+    (q2Titles[1], 'Today',                today.add(const Duration(hours: 7, minutes: 30)),  false, false, null, '↻ Daily', false, 1),
     (q2Titles[2], 'Apr 14 ⏰',            null,  true,  false, null,  null,     false, 2),
     (q2Titles[3], 'This week · Score 8.1', null, false, false, 8.1,  null,      false, 3),
     (q2Titles[4], 'Fri · Score 7.6',      null,  false, false, 7.6,  null,      false, 4),
@@ -208,6 +208,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
       name: _s(['Gym workout 💪','ジムワークアウト 💪','Fitnesstraining 💪','헬스 운동 💪','Entraînement salle 💪','健身锻炼 💪','Entrenamiento gym 💪','Treino academia 💪','जिम वर्कआउट 💪','تمرين الصالة 💪','జిమ్ వర్కౌట్ 💪','Allenamento in palestra 💪','Sportschooltraining 💪','உடற்பயிற்சி 💪','ಜಿಮ್ ವ್ಯಾಯಾಮ 💪','ജിം വ്യ‌ായ‌ാ‌മം 💪','जिम व्यायाम 💪','gym kasarat 💪','জিম ব্যায়াম 💪'], lang),
       freq: 'Mon · Wed · Fri · 60 min · Q2',
       duration: 60,
+      time: 390, // 6:30 AM
       streak: '🔥 14d',
       streakColor: 0xFF9FCD44,
       accent: 0xFF7FBA00,
@@ -224,6 +225,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
       name: _s(['Morning journaling','朝のジャーナリング','Morgentagebuch','아침 저널링','Journal du matin','晨间日记','Diario matutino','Diário matinal','सुबह जर्नलिंग','التأمل الصباحي','ఉదయం జర్నలింగ్','Diario mattutino','Ochtenddagboek','காலை குறிப்பேடு','ಬೆಳಿಗ್ಗೆ ಜರ್ನಲಿಂಗ್','ര‌ാ‌വി‌ലെ ജേ‌ർ‌ണ‌ലിം‌ഗ്','सकाळचे लेखन','savare ni diary','সকালের জার্নালিং'], lang),
       freq: 'Daily · 15 min · Q2',
       duration: 15,
+      time: 420, // 7:00 AM
       streak: '🔥 7d',
       streakColor: 0xFF409CFF,
       accent: 0xFF0A84FF,
@@ -240,6 +242,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
       name: _s(['Strength training','筋力トレーニング','Krafttraining','근력 훈련','Musculation','力量训练','Entrenamiento de fuerza','Treinamento de força','स्ट्रेंथ ट्रेनिंग','تدريب القوة','బలపు శిక్షణ','Allenamento di forza','Krachttraining','வலிமை பயிற்சி','ಬಲ ತರಬೇತಿ','ശ‌ക്തി പ‌രി‌ശീ‌ല‌നം','शक्ती प्रशिक्षण','shakti talim','শক্তি প্রশিক্ষণ'], lang),
       freq: 'Mon · Wed · Fri · Q2',
       duration: null,
+      time: 1080, // 6:00 PM
       streak: '🔥 3w',
       streakColor: 0xFFBF5AF2,
       accent: 0xFFBF5AF2,
@@ -256,6 +259,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
       name: _s(['Read 30 min','30分読書','30 Min. lesen','30분 독서','Lire 30 min','阅读30分钟','Leer 30 min','Ler 30 min','30 मिनट पढ़ें','قراءة 30 دقيقة','30 నిమిషాలు చదవండి','Leggere 30 min','30 min lezen','30 நிமிடம் படிக்கவும்','30 ನಿಮಿಷ ಓದಿ','30 മി‌നി‌ട്ട് വ‌ായി‌ക്കുക','30 मिनिट वाचा','30 min vaaancho','৩০ মিনিট পড়ুন'], lang),
       freq: 'Daily · Q2 · 60% this week',
       duration: 30,
+      time: 1260, // 9:00 PM
       streak: '↻ Adapt',
       streakColor: 0xFFFFB900,
       accent: 0xFFFFB900,
@@ -274,6 +278,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
       name:              Value(h.name),
       frequencyLabel:    Value(h.freq),
       durationMinutes:   Value(h.duration),
+      scheduledTime:     Value(h.time),
       streakLabel:       Value(h.streak),
       streakColorValue:  Value(h.streakColor),
       accentColorValue:  Value(h.accent),
@@ -294,7 +299,7 @@ Future<void> _seedHabits(AppDatabase db, int lang) async {
 // ── Goals ─────────────────────────────────────────────────────────────────────
 
 Future<void> _seedGoals(AppDatabase db, int lang) async {
-  await db.goalsDao.insertGoal(GoalsCompanion(
+  final mvpGoalId = await db.goalsDao.insertGoal(GoalsCompanion(
     emoji:            const Value('🚀'),
     emojiBg:          const Value('0x1A0A84FF'),
     title:            Value(_s(['Launch MVP by June','6月までにMVPリリース','MVP bis Juni launchen','6월까지 MVP 출시','Lancer le MVP avant juin','六月前发布MVP','Lanzar MVP antes de junio','Lançar MVP até junho','जून तक MVP लॉन्च करें','إطلاق MVP بحلول يونيو','జూన్ నాటికి MVP విడుదల చేయండి','Lanciare MVP entro giugno','MVP lanceren voor juni','ஜூன் வரை MVP வெளியிடவும்','ಜೂನ್‌ವರೆಗೆ MVP ಬಿಡುಗಡೆ','ജൂ‌ണ്‌ ‌വ‌രെ MVP ‌ലോ‌ഞ്ച്','जूनपर्यंत MVP लाँच','June sudhi MVP launch karo','জুনের মধ্যে MVP লঞ্চ'], lang)),
@@ -303,12 +308,12 @@ Future<void> _seedGoals(AppDatabase db, int lang) async {
     accentColorValue: const Value(0xFF0A84FF),
     barColorValue:    const Value(0xFF0A84FF),
     borderColorValue: const Value(0x330A84FF),
-    linkedLabel:      Value(_s(['LINKED Q2 TASKS · 6/10','リンクQ2タスク·6/10','VERBUNDENE Q2-AUFGABEN·6/10','연결된 Q2 작업·6/10','TÂCHES Q2 LIÉES·6/10','关联Q2任务·6/10','TAREAS Q2 VINCULADAS·6/10','TAREFAS Q2 VINCULADAS·6/10','लिंक्ड Q2 टास्क·6/10','مهام Q2 المرتبطة·6/10','అనుసంధానిత Q2 టాస్క్‌లు · 6/10','ATTIVITÀ Q2 COLLEGATE · 6/10','GEKOPPELDE Q2-TAKEN · 6/10','இணைந்த Q2 பணிகள் · 6/10','ಸಂಪರ್ಕಿತ Q2 ಕಾರ್ಯಗಳು · 6/10','ബ‌ന്ധി‌പ്പി‌ച്ച Q2 ‌ടാ‌സ്‌കു‌കൾ · 6/10','लिंक केलेले Q2 कार्य · 6/10','jodayelaa Q2 tasks · 6/10','সংযুক্ত Q2 কাজ · 6/10'], lang)),
+    linkedLabel:      Value(_s(['Linked Q2 tasks · 6/10','リンクQ2タスク·6/10','Verbundene Q2-Aufgaben·6/10','연결된 Q2 작업·6/10','Tâches Q2 liées·6/10','关联Q2任务·6/10','Tareas Q2 vinculadas·6/10','Tarefas Q2 vinculadas·6/10','लिंक्ड Q2 टास्क·6/10','مهام Q2 المرتبطة·6/10','అనుసంధానిత Q2 టాస్క్‌లు · 6/10','Attività Q2 collegate · 6/10','Gekoppelde Q2-taken · 6/10','இணைந்த Q2 பணிகள் · 6/10','ಸಂಪರ್ಕಿತ Q2 ಕಾರ್ಯಗಳು · 6/10','ബ‌ന്ധി‌പ്പി‌ച്ച Q2 ‌ടാ‌സ്‌കു‌കൾ · 6/10','लिंक केलेले Q2 कार्य · 6/10','jodayelaa Q2 tasks · 6/10','সংযুক্ত Q2 কাজ · 6/10'], lang)),
     linkType:         const Value('task'),
     dotColorValue:    const Value(0xFF0A84FF),
   ));
 
-  await db.goalsDao.insertGoal(GoalsCompanion(
+  final exerciseGoalId = await db.goalsDao.insertGoal(GoalsCompanion(
     emoji:            const Value('💪'),
     emojiBg:          const Value('0x1ABF5AF2'),
     title:            Value(_s(['Build consistent exercise habit','一貫した運動習慣を築く','Konsistente Übungsgewohnheit aufbauen','일관된 운동 습관 만들기','Construire un régime d\'exercice régulier','建立一致的锻炼习惯','Construir hábito de ejercicio consistente','Construir hábito de exercício consistente','लगातार व्यायाम की आदत बनाएं','بناء عادة التمرين المستمرة','స్థిరమైన వ్యాయామ అలవాటు పెంచుకోండి','Costruire un\'abitudine di esercizio costante','Consistente trainingsgewoonte opbouwen','தொடர்ச்சியான உடற்பயிற்சி பழக்கம் உருவாக்கவும்','ನಿರಂತರ ವ್ಯಾಯಾಮ ಅಭ್ಯಾಸ ಬೆಳೆಸಿ','സ്ഥി‌ര‌ത‌യു‌ള്ള വ്യ‌ായ‌ാ‌മ ‌ശീ‌ലം','सातत्यपूर्ण व्यायामाची सवय निर्माण करा','satatni kasarat ni tev banavo','ধারাবাহিক ব্যায়ামের অভ্যাস গড়ুন'], lang)),
@@ -321,6 +326,29 @@ Future<void> _seedGoals(AppDatabase db, int lang) async {
     linkType:         const Value('habit'),
     dotColorValue:    const Value(0xFFBF5AF2),
   ));
+
+  // ── Real links (so the goal metadata + linked rows are live, not static) ────
+  // MVP goal → all Q2 ("Schedule") tasks.
+  final q2Tasks = await (db.select(db.tasks)..where((t) => t.quadrant.equals(2))).get();
+  for (final t in q2Tasks) {
+    await db.goalsDao.insertTaskLink(
+      GoalTaskLinksCompanion(goalId: Value(mvpGoalId), taskId: Value(t.id)),
+    );
+  }
+  final allHabits = await db.select(db.habits).get();
+  // MVP goal → a couple of supporting habits (journaling ✍️, reading 📚),
+  // so its card shows linked habits alongside linked tasks.
+  for (final h in allHabits.where((h) => h.emoji == '✍️' || h.emoji == '📚')) {
+    await db.goalsDao.insertHabitLink(
+      GoalHabitLinksCompanion(goalId: Value(mvpGoalId), habitId: Value(h.id)),
+    );
+  }
+  // Exercise goal → every habit (streak count is computed live in the UI).
+  for (final h in allHabits) {
+    await db.goalsDao.insertHabitLink(
+      GoalHabitLinksCompanion(goalId: Value(exerciseGoalId), habitId: Value(h.id)),
+    );
+  }
 }
 
 // ── Notes ─────────────────────────────────────────────────────────────────────

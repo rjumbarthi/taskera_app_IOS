@@ -72,6 +72,7 @@ class GoalsDaoManager {
 mixin _$NotesDaoMixin on DatabaseAccessor<AppDatabase> {
   $NotesTable get notes => attachedDatabase.notes;
   $NoteTagsTable get noteTags => attachedDatabase.noteTags;
+  $NoteTaskLinksTable get noteTaskLinks => attachedDatabase.noteTaskLinks;
   NotesDaoManager get managers => NotesDaoManager(this);
 }
 
@@ -82,6 +83,8 @@ class NotesDaoManager {
       $$NotesTableTableManager(_db.attachedDatabase, _db.notes);
   $$NoteTagsTableTableManager get noteTags =>
       $$NoteTagsTableTableManager(_db.attachedDatabase, _db.noteTags);
+  $$NoteTaskLinksTableTableManager get noteTaskLinks =>
+      $$NoteTaskLinksTableTableManager(_db.attachedDatabase, _db.noteTaskLinks);
 }
 
 mixin _$CalendarDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -373,6 +376,15 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _labelsMeta = const VerificationMeta('labels');
+  @override
+  late final GeneratedColumn<String> labels = GeneratedColumn<String>(
+    'labels',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -397,6 +409,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     sortOrder,
     createdAt,
     totalFocusSeconds,
+    labels,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -558,6 +571,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         ),
       );
     }
+    if (data.containsKey('labels')) {
+      context.handle(
+        _labelsMeta,
+        labels.isAcceptableOrUnknown(data['labels']!, _labelsMeta),
+      );
+    }
     return context;
   }
 
@@ -655,6 +674,10 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.int,
         data['${effectivePrefix}total_focus_seconds'],
       )!,
+      labels: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}labels'],
+      ),
     );
   }
 
@@ -687,6 +710,7 @@ class Task extends DataClass implements Insertable<Task> {
   final int sortOrder;
   final DateTime createdAt;
   final int totalFocusSeconds;
+  final String? labels;
   const Task({
     required this.id,
     required this.title,
@@ -710,6 +734,7 @@ class Task extends DataClass implements Insertable<Task> {
     required this.sortOrder,
     required this.createdAt,
     required this.totalFocusSeconds,
+    this.labels,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -760,6 +785,9 @@ class Task extends DataClass implements Insertable<Task> {
     map['sort_order'] = Variable<int>(sortOrder);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['total_focus_seconds'] = Variable<int>(totalFocusSeconds);
+    if (!nullToAbsent || labels != null) {
+      map['labels'] = Variable<String>(labels);
+    }
     return map;
   }
 
@@ -811,6 +839,9 @@ class Task extends DataClass implements Insertable<Task> {
       sortOrder: Value(sortOrder),
       createdAt: Value(createdAt),
       totalFocusSeconds: Value(totalFocusSeconds),
+      labels: labels == null && nullToAbsent
+          ? const Value.absent()
+          : Value(labels),
     );
   }
 
@@ -842,6 +873,7 @@ class Task extends DataClass implements Insertable<Task> {
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       totalFocusSeconds: serializer.fromJson<int>(json['totalFocusSeconds']),
+      labels: serializer.fromJson<String?>(json['labels']),
     );
   }
   @override
@@ -870,6 +902,7 @@ class Task extends DataClass implements Insertable<Task> {
       'sortOrder': serializer.toJson<int>(sortOrder),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'totalFocusSeconds': serializer.toJson<int>(totalFocusSeconds),
+      'labels': serializer.toJson<String?>(labels),
     };
   }
 
@@ -896,6 +929,7 @@ class Task extends DataClass implements Insertable<Task> {
     int? sortOrder,
     DateTime? createdAt,
     int? totalFocusSeconds,
+    Value<String?> labels = const Value.absent(),
   }) => Task(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -923,6 +957,7 @@ class Task extends DataClass implements Insertable<Task> {
     sortOrder: sortOrder ?? this.sortOrder,
     createdAt: createdAt ?? this.createdAt,
     totalFocusSeconds: totalFocusSeconds ?? this.totalFocusSeconds,
+    labels: labels.present ? labels.value : this.labels,
   );
   Task copyWithCompanion(TasksCompanion data) {
     return Task(
@@ -960,6 +995,7 @@ class Task extends DataClass implements Insertable<Task> {
       totalFocusSeconds: data.totalFocusSeconds.present
           ? data.totalFocusSeconds.value
           : this.totalFocusSeconds,
+      labels: data.labels.present ? data.labels.value : this.labels,
     );
   }
 
@@ -987,7 +1023,8 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('doneAt: $doneAt, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('createdAt: $createdAt, ')
-          ..write('totalFocusSeconds: $totalFocusSeconds')
+          ..write('totalFocusSeconds: $totalFocusSeconds, ')
+          ..write('labels: $labels')
           ..write(')'))
         .toString();
   }
@@ -1016,6 +1053,7 @@ class Task extends DataClass implements Insertable<Task> {
     sortOrder,
     createdAt,
     totalFocusSeconds,
+    labels,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1042,7 +1080,8 @@ class Task extends DataClass implements Insertable<Task> {
           other.doneAt == this.doneAt &&
           other.sortOrder == this.sortOrder &&
           other.createdAt == this.createdAt &&
-          other.totalFocusSeconds == this.totalFocusSeconds);
+          other.totalFocusSeconds == this.totalFocusSeconds &&
+          other.labels == this.labels);
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
@@ -1068,6 +1107,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<int> sortOrder;
   final Value<DateTime> createdAt;
   final Value<int> totalFocusSeconds;
+  final Value<String?> labels;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -1091,6 +1131,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.sortOrder = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.totalFocusSeconds = const Value.absent(),
+    this.labels = const Value.absent(),
   });
   TasksCompanion.insert({
     this.id = const Value.absent(),
@@ -1115,6 +1156,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.sortOrder = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.totalFocusSeconds = const Value.absent(),
+    this.labels = const Value.absent(),
   }) : title = Value(title),
        quadrant = Value(quadrant);
   static Insertable<Task> custom({
@@ -1140,6 +1182,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<int>? sortOrder,
     Expression<DateTime>? createdAt,
     Expression<int>? totalFocusSeconds,
+    Expression<String>? labels,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1164,6 +1207,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (sortOrder != null) 'sort_order': sortOrder,
       if (createdAt != null) 'created_at': createdAt,
       if (totalFocusSeconds != null) 'total_focus_seconds': totalFocusSeconds,
+      if (labels != null) 'labels': labels,
     });
   }
 
@@ -1190,6 +1234,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<int>? sortOrder,
     Value<DateTime>? createdAt,
     Value<int>? totalFocusSeconds,
+    Value<String?>? labels,
   }) {
     return TasksCompanion(
       id: id ?? this.id,
@@ -1214,6 +1259,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       sortOrder: sortOrder ?? this.sortOrder,
       createdAt: createdAt ?? this.createdAt,
       totalFocusSeconds: totalFocusSeconds ?? this.totalFocusSeconds,
+      labels: labels ?? this.labels,
     );
   }
 
@@ -1286,6 +1332,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (totalFocusSeconds.present) {
       map['total_focus_seconds'] = Variable<int>(totalFocusSeconds.value);
     }
+    if (labels.present) {
+      map['labels'] = Variable<String>(labels.value);
+    }
     return map;
   }
 
@@ -1313,7 +1362,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('doneAt: $doneAt, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('createdAt: $createdAt, ')
-          ..write('totalFocusSeconds: $totalFocusSeconds')
+          ..write('totalFocusSeconds: $totalFocusSeconds, ')
+          ..write('labels: $labels')
           ..write(')'))
         .toString();
   }
@@ -1718,6 +1768,17 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _scheduledTimeMeta = const VerificationMeta(
+    'scheduledTime',
+  );
+  @override
+  late final GeneratedColumn<int> scheduledTime = GeneratedColumn<int>(
+    'scheduled_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _quadrantMeta = const VerificationMeta(
     'quadrant',
   );
@@ -1817,6 +1878,7 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     name,
     frequencyLabel,
     durationMinutes,
+    scheduledTime,
     quadrant,
     streakLabel,
     streakColorValue,
@@ -1874,6 +1936,15 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
         durationMinutes.isAcceptableOrUnknown(
           data['duration_minutes']!,
           _durationMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('scheduled_time')) {
+      context.handle(
+        _scheduledTimeMeta,
+        scheduledTime.isAcceptableOrUnknown(
+          data['scheduled_time']!,
+          _scheduledTimeMeta,
         ),
       );
     }
@@ -1975,6 +2046,10 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
         DriftSqlType.int,
         data['${effectivePrefix}duration_minutes'],
       ),
+      scheduledTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}scheduled_time'],
+      ),
       quadrant: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}quadrant'],
@@ -2022,6 +2097,7 @@ class Habit extends DataClass implements Insertable<Habit> {
   final String name;
   final String frequencyLabel;
   final int? durationMinutes;
+  final int? scheduledTime;
   final int quadrant;
   final String streakLabel;
   final int streakColorValue;
@@ -2036,6 +2112,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     required this.name,
     required this.frequencyLabel,
     this.durationMinutes,
+    this.scheduledTime,
     required this.quadrant,
     required this.streakLabel,
     required this.streakColorValue,
@@ -2054,6 +2131,9 @@ class Habit extends DataClass implements Insertable<Habit> {
     map['frequency_label'] = Variable<String>(frequencyLabel);
     if (!nullToAbsent || durationMinutes != null) {
       map['duration_minutes'] = Variable<int>(durationMinutes);
+    }
+    if (!nullToAbsent || scheduledTime != null) {
+      map['scheduled_time'] = Variable<int>(scheduledTime);
     }
     map['quadrant'] = Variable<int>(quadrant);
     map['streak_label'] = Variable<String>(streakLabel);
@@ -2079,6 +2159,9 @@ class Habit extends DataClass implements Insertable<Habit> {
       durationMinutes: durationMinutes == null && nullToAbsent
           ? const Value.absent()
           : Value(durationMinutes),
+      scheduledTime: scheduledTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(scheduledTime),
       quadrant: Value(quadrant),
       streakLabel: Value(streakLabel),
       streakColorValue: Value(streakColorValue),
@@ -2105,6 +2188,7 @@ class Habit extends DataClass implements Insertable<Habit> {
       name: serializer.fromJson<String>(json['name']),
       frequencyLabel: serializer.fromJson<String>(json['frequencyLabel']),
       durationMinutes: serializer.fromJson<int?>(json['durationMinutes']),
+      scheduledTime: serializer.fromJson<int?>(json['scheduledTime']),
       quadrant: serializer.fromJson<int>(json['quadrant']),
       streakLabel: serializer.fromJson<String>(json['streakLabel']),
       streakColorValue: serializer.fromJson<int>(json['streakColorValue']),
@@ -2124,6 +2208,7 @@ class Habit extends DataClass implements Insertable<Habit> {
       'name': serializer.toJson<String>(name),
       'frequencyLabel': serializer.toJson<String>(frequencyLabel),
       'durationMinutes': serializer.toJson<int?>(durationMinutes),
+      'scheduledTime': serializer.toJson<int?>(scheduledTime),
       'quadrant': serializer.toJson<int>(quadrant),
       'streakLabel': serializer.toJson<String>(streakLabel),
       'streakColorValue': serializer.toJson<int>(streakColorValue),
@@ -2141,6 +2226,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     String? name,
     String? frequencyLabel,
     Value<int?> durationMinutes = const Value.absent(),
+    Value<int?> scheduledTime = const Value.absent(),
     int? quadrant,
     String? streakLabel,
     int? streakColorValue,
@@ -2157,6 +2243,9 @@ class Habit extends DataClass implements Insertable<Habit> {
     durationMinutes: durationMinutes.present
         ? durationMinutes.value
         : this.durationMinutes,
+    scheduledTime: scheduledTime.present
+        ? scheduledTime.value
+        : this.scheduledTime,
     quadrant: quadrant ?? this.quadrant,
     streakLabel: streakLabel ?? this.streakLabel,
     streakColorValue: streakColorValue ?? this.streakColorValue,
@@ -2179,6 +2268,9 @@ class Habit extends DataClass implements Insertable<Habit> {
       durationMinutes: data.durationMinutes.present
           ? data.durationMinutes.value
           : this.durationMinutes,
+      scheduledTime: data.scheduledTime.present
+          ? data.scheduledTime.value
+          : this.scheduledTime,
       quadrant: data.quadrant.present ? data.quadrant.value : this.quadrant,
       streakLabel: data.streakLabel.present
           ? data.streakLabel.value
@@ -2208,6 +2300,7 @@ class Habit extends DataClass implements Insertable<Habit> {
           ..write('name: $name, ')
           ..write('frequencyLabel: $frequencyLabel, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('scheduledTime: $scheduledTime, ')
           ..write('quadrant: $quadrant, ')
           ..write('streakLabel: $streakLabel, ')
           ..write('streakColorValue: $streakColorValue, ')
@@ -2227,6 +2320,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     name,
     frequencyLabel,
     durationMinutes,
+    scheduledTime,
     quadrant,
     streakLabel,
     streakColorValue,
@@ -2245,6 +2339,7 @@ class Habit extends DataClass implements Insertable<Habit> {
           other.name == this.name &&
           other.frequencyLabel == this.frequencyLabel &&
           other.durationMinutes == this.durationMinutes &&
+          other.scheduledTime == this.scheduledTime &&
           other.quadrant == this.quadrant &&
           other.streakLabel == this.streakLabel &&
           other.streakColorValue == this.streakColorValue &&
@@ -2261,6 +2356,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
   final Value<String> name;
   final Value<String> frequencyLabel;
   final Value<int?> durationMinutes;
+  final Value<int?> scheduledTime;
   final Value<int> quadrant;
   final Value<String> streakLabel;
   final Value<int> streakColorValue;
@@ -2275,6 +2371,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     this.name = const Value.absent(),
     this.frequencyLabel = const Value.absent(),
     this.durationMinutes = const Value.absent(),
+    this.scheduledTime = const Value.absent(),
     this.quadrant = const Value.absent(),
     this.streakLabel = const Value.absent(),
     this.streakColorValue = const Value.absent(),
@@ -2290,6 +2387,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     required String name,
     required String frequencyLabel,
     this.durationMinutes = const Value.absent(),
+    this.scheduledTime = const Value.absent(),
     this.quadrant = const Value.absent(),
     required String streakLabel,
     required int streakColorValue,
@@ -2310,6 +2408,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Expression<String>? name,
     Expression<String>? frequencyLabel,
     Expression<int>? durationMinutes,
+    Expression<int>? scheduledTime,
     Expression<int>? quadrant,
     Expression<String>? streakLabel,
     Expression<int>? streakColorValue,
@@ -2325,6 +2424,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       if (name != null) 'name': name,
       if (frequencyLabel != null) 'frequency_label': frequencyLabel,
       if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (scheduledTime != null) 'scheduled_time': scheduledTime,
       if (quadrant != null) 'quadrant': quadrant,
       if (streakLabel != null) 'streak_label': streakLabel,
       if (streakColorValue != null) 'streak_color_value': streakColorValue,
@@ -2342,6 +2442,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Value<String>? name,
     Value<String>? frequencyLabel,
     Value<int?>? durationMinutes,
+    Value<int?>? scheduledTime,
     Value<int>? quadrant,
     Value<String>? streakLabel,
     Value<int>? streakColorValue,
@@ -2357,6 +2458,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       name: name ?? this.name,
       frequencyLabel: frequencyLabel ?? this.frequencyLabel,
       durationMinutes: durationMinutes ?? this.durationMinutes,
+      scheduledTime: scheduledTime ?? this.scheduledTime,
       quadrant: quadrant ?? this.quadrant,
       streakLabel: streakLabel ?? this.streakLabel,
       streakColorValue: streakColorValue ?? this.streakColorValue,
@@ -2385,6 +2487,9 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     }
     if (durationMinutes.present) {
       map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (scheduledTime.present) {
+      map['scheduled_time'] = Variable<int>(scheduledTime.value);
     }
     if (quadrant.present) {
       map['quadrant'] = Variable<int>(quadrant.value);
@@ -2421,6 +2526,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
           ..write('name: $name, ')
           ..write('frequencyLabel: $frequencyLabel, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('scheduledTime: $scheduledTime, ')
           ..write('quadrant: $quadrant, ')
           ..write('streakLabel: $streakLabel, ')
           ..write('streakColorValue: $streakColorValue, ')
@@ -5274,6 +5380,219 @@ class NoteTagsCompanion extends UpdateCompanion<NoteTag> {
   }
 }
 
+class $NoteTaskLinksTable extends NoteTaskLinks
+    with TableInfo<$NoteTaskLinksTable, NoteTaskLink> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NoteTaskLinksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES notes (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
+  @override
+  late final GeneratedColumn<int> taskId = GeneratedColumn<int>(
+    'task_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [noteId, taskId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'note_task_links';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NoteTaskLink> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('task_id')) {
+      context.handle(
+        _taskIdMeta,
+        taskId.isAcceptableOrUnknown(data['task_id']!, _taskIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_taskIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {noteId, taskId};
+  @override
+  NoteTaskLink map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NoteTaskLink(
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      taskId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}task_id'],
+      )!,
+    );
+  }
+
+  @override
+  $NoteTaskLinksTable createAlias(String alias) {
+    return $NoteTaskLinksTable(attachedDatabase, alias);
+  }
+}
+
+class NoteTaskLink extends DataClass implements Insertable<NoteTaskLink> {
+  final int noteId;
+  final int taskId;
+  const NoteTaskLink({required this.noteId, required this.taskId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['note_id'] = Variable<int>(noteId);
+    map['task_id'] = Variable<int>(taskId);
+    return map;
+  }
+
+  NoteTaskLinksCompanion toCompanion(bool nullToAbsent) {
+    return NoteTaskLinksCompanion(noteId: Value(noteId), taskId: Value(taskId));
+  }
+
+  factory NoteTaskLink.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NoteTaskLink(
+      noteId: serializer.fromJson<int>(json['noteId']),
+      taskId: serializer.fromJson<int>(json['taskId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'noteId': serializer.toJson<int>(noteId),
+      'taskId': serializer.toJson<int>(taskId),
+    };
+  }
+
+  NoteTaskLink copyWith({int? noteId, int? taskId}) => NoteTaskLink(
+    noteId: noteId ?? this.noteId,
+    taskId: taskId ?? this.taskId,
+  );
+  NoteTaskLink copyWithCompanion(NoteTaskLinksCompanion data) {
+    return NoteTaskLink(
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      taskId: data.taskId.present ? data.taskId.value : this.taskId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NoteTaskLink(')
+          ..write('noteId: $noteId, ')
+          ..write('taskId: $taskId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(noteId, taskId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NoteTaskLink &&
+          other.noteId == this.noteId &&
+          other.taskId == this.taskId);
+}
+
+class NoteTaskLinksCompanion extends UpdateCompanion<NoteTaskLink> {
+  final Value<int> noteId;
+  final Value<int> taskId;
+  final Value<int> rowid;
+  const NoteTaskLinksCompanion({
+    this.noteId = const Value.absent(),
+    this.taskId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NoteTaskLinksCompanion.insert({
+    required int noteId,
+    required int taskId,
+    this.rowid = const Value.absent(),
+  }) : noteId = Value(noteId),
+       taskId = Value(taskId);
+  static Insertable<NoteTaskLink> custom({
+    Expression<int>? noteId,
+    Expression<int>? taskId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (noteId != null) 'note_id': noteId,
+      if (taskId != null) 'task_id': taskId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NoteTaskLinksCompanion copyWith({
+    Value<int>? noteId,
+    Value<int>? taskId,
+    Value<int>? rowid,
+  }) {
+    return NoteTaskLinksCompanion(
+      noteId: noteId ?? this.noteId,
+      taskId: taskId ?? this.taskId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (taskId.present) {
+      map['task_id'] = Variable<int>(taskId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NoteTaskLinksCompanion(')
+          ..write('noteId: $noteId, ')
+          ..write('taskId: $taskId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CalendarEventsTable extends CalendarEvents
     with TableInfo<$CalendarEventsTable, CalendarEvent> {
   @override
@@ -7049,6 +7368,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $GoalHabitLinksTable goalHabitLinks = $GoalHabitLinksTable(this);
   late final $NotesTable notes = $NotesTable(this);
   late final $NoteTagsTable noteTags = $NoteTagsTable(this);
+  late final $NoteTaskLinksTable noteTaskLinks = $NoteTaskLinksTable(this);
   late final $CalendarEventsTable calendarEvents = $CalendarEventsTable(this);
   late final $CustomListsTable customLists = $CustomListsTable(this);
   late final $CustomListItemsTable customListItems = $CustomListItemsTable(
@@ -7077,6 +7397,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     goalHabitLinks,
     notes,
     noteTags,
+    noteTaskLinks,
     calendarEvents,
     customLists,
     customListItems,
@@ -7128,6 +7449,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
+        'notes',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('note_task_links', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
         'custom_lists',
         limitUpdateKind: UpdateKind.delete,
       ),
@@ -7167,6 +7495,7 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<int> sortOrder,
       Value<DateTime> createdAt,
       Value<int> totalFocusSeconds,
+      Value<String?> labels,
     });
 typedef $$TasksTableUpdateCompanionBuilder =
     TasksCompanion Function({
@@ -7192,6 +7521,7 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<int> sortOrder,
       Value<DateTime> createdAt,
       Value<int> totalFocusSeconds,
+      Value<String?> labels,
     });
 
 final class $$TasksTableReferences
@@ -7333,6 +7663,11 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<int> get totalFocusSeconds => $composableBuilder(
     column: $table.totalFocusSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get labels => $composableBuilder(
+    column: $table.labels,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7480,6 +7815,11 @@ class $$TasksTableOrderingComposer
     column: $table.totalFocusSeconds,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get labels => $composableBuilder(
+    column: $table.labels,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TasksTableAnnotationComposer
@@ -7569,6 +7909,9 @@ class $$TasksTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get labels =>
+      $composableBuilder(column: $table.labels, builder: (column) => column);
+
   Expression<T> subtasksRefs<T extends Object>(
     Expression<T> Function($$SubtasksTableAnnotationComposer a) f,
   ) {
@@ -7645,6 +7988,7 @@ class $$TasksTableTableManager
                 Value<int> sortOrder = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> totalFocusSeconds = const Value.absent(),
+                Value<String?> labels = const Value.absent(),
               }) => TasksCompanion(
                 id: id,
                 title: title,
@@ -7668,6 +8012,7 @@ class $$TasksTableTableManager
                 sortOrder: sortOrder,
                 createdAt: createdAt,
                 totalFocusSeconds: totalFocusSeconds,
+                labels: labels,
               ),
           createCompanionCallback:
               ({
@@ -7693,6 +8038,7 @@ class $$TasksTableTableManager
                 Value<int> sortOrder = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> totalFocusSeconds = const Value.absent(),
+                Value<String?> labels = const Value.absent(),
               }) => TasksCompanion.insert(
                 id: id,
                 title: title,
@@ -7716,6 +8062,7 @@ class $$TasksTableTableManager
                 sortOrder: sortOrder,
                 createdAt: createdAt,
                 totalFocusSeconds: totalFocusSeconds,
+                labels: labels,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -8082,6 +8429,7 @@ typedef $$HabitsTableCreateCompanionBuilder =
       required String name,
       required String frequencyLabel,
       Value<int?> durationMinutes,
+      Value<int?> scheduledTime,
       Value<int> quadrant,
       required String streakLabel,
       required int streakColorValue,
@@ -8098,6 +8446,7 @@ typedef $$HabitsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> frequencyLabel,
       Value<int?> durationMinutes,
+      Value<int?> scheduledTime,
       Value<int> quadrant,
       Value<String> streakLabel,
       Value<int> streakColorValue,
@@ -8180,6 +8529,11 @@ class $$HabitsTableFilterComposer
 
   ColumnFilters<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get scheduledTime => $composableBuilder(
+    column: $table.scheduledTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8308,6 +8662,11 @@ class $$HabitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get scheduledTime => $composableBuilder(
+    column: $table.scheduledTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get quadrant => $composableBuilder(
     column: $table.quadrant,
     builder: (column) => ColumnOrderings(column),
@@ -8374,6 +8733,11 @@ class $$HabitsTableAnnotationComposer
 
   GeneratedColumn<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get scheduledTime => $composableBuilder(
+    column: $table.scheduledTime,
     builder: (column) => column,
   );
 
@@ -8495,6 +8859,7 @@ class $$HabitsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> frequencyLabel = const Value.absent(),
                 Value<int?> durationMinutes = const Value.absent(),
+                Value<int?> scheduledTime = const Value.absent(),
                 Value<int> quadrant = const Value.absent(),
                 Value<String> streakLabel = const Value.absent(),
                 Value<int> streakColorValue = const Value.absent(),
@@ -8509,6 +8874,7 @@ class $$HabitsTableTableManager
                 name: name,
                 frequencyLabel: frequencyLabel,
                 durationMinutes: durationMinutes,
+                scheduledTime: scheduledTime,
                 quadrant: quadrant,
                 streakLabel: streakLabel,
                 streakColorValue: streakColorValue,
@@ -8525,6 +8891,7 @@ class $$HabitsTableTableManager
                 required String name,
                 required String frequencyLabel,
                 Value<int?> durationMinutes = const Value.absent(),
+                Value<int?> scheduledTime = const Value.absent(),
                 Value<int> quadrant = const Value.absent(),
                 required String streakLabel,
                 required int streakColorValue,
@@ -8539,6 +8906,7 @@ class $$HabitsTableTableManager
                 name: name,
                 frequencyLabel: frequencyLabel,
                 durationMinutes: durationMinutes,
+                scheduledTime: scheduledTime,
                 quadrant: quadrant,
                 streakLabel: streakLabel,
                 streakColorValue: streakColorValue,
@@ -10406,6 +10774,24 @@ final class $$NotesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$NoteTaskLinksTable, List<NoteTaskLink>>
+  _noteTaskLinksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.noteTaskLinks,
+    aliasName: $_aliasNameGenerator(db.notes.id, db.noteTaskLinks.noteId),
+  );
+
+  $$NoteTaskLinksTableProcessedTableManager get noteTaskLinksRefs {
+    final manager = $$NoteTaskLinksTableTableManager(
+      $_db,
+      $_db.noteTaskLinks,
+    ).filter((f) => f.noteId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_noteTaskLinksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
@@ -10472,6 +10858,31 @@ class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
           }) => $$NoteTagsTableFilterComposer(
             $db: $db,
             $table: $db.noteTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> noteTaskLinksRefs(
+    Expression<bool> Function($$NoteTaskLinksTableFilterComposer f) f,
+  ) {
+    final $$NoteTaskLinksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.noteTaskLinks,
+      getReferencedColumn: (t) => t.noteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NoteTaskLinksTableFilterComposer(
+            $db: $db,
+            $table: $db.noteTaskLinks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10589,6 +11000,31 @@ class $$NotesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> noteTaskLinksRefs<T extends Object>(
+    Expression<T> Function($$NoteTaskLinksTableAnnotationComposer a) f,
+  ) {
+    final $$NoteTaskLinksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.noteTaskLinks,
+      getReferencedColumn: (t) => t.noteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NoteTaskLinksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.noteTaskLinks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$NotesTableTableManager
@@ -10604,7 +11040,7 @@ class $$NotesTableTableManager
           $$NotesTableUpdateCompanionBuilder,
           (Note, $$NotesTableReferences),
           Note,
-          PrefetchHooks Function({bool noteTagsRefs})
+          PrefetchHooks Function({bool noteTagsRefs, bool noteTaskLinksRefs})
         > {
   $$NotesTableTableManager(_$AppDatabase db, $NotesTable table)
     : super(
@@ -10663,28 +11099,59 @@ class $$NotesTableTableManager
                     (e.readTable(table), $$NotesTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({noteTagsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (noteTagsRefs) db.noteTags],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (noteTagsRefs)
-                    await $_getPrefetchedData<Note, $NotesTable, NoteTag>(
-                      currentTable: table,
-                      referencedTable: $$NotesTableReferences
-                          ._noteTagsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$NotesTableReferences(db, table, p0).noteTagsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.noteId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({noteTagsRefs = false, noteTaskLinksRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (noteTagsRefs) db.noteTags,
+                    if (noteTaskLinksRefs) db.noteTaskLinks,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (noteTagsRefs)
+                        await $_getPrefetchedData<Note, $NotesTable, NoteTag>(
+                          currentTable: table,
+                          referencedTable: $$NotesTableReferences
+                              ._noteTagsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$NotesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).noteTagsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.noteId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (noteTaskLinksRefs)
+                        await $_getPrefetchedData<
+                          Note,
+                          $NotesTable,
+                          NoteTaskLink
+                        >(
+                          currentTable: table,
+                          referencedTable: $$NotesTableReferences
+                              ._noteTaskLinksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$NotesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).noteTaskLinksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.noteId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -10701,7 +11168,7 @@ typedef $$NotesTableProcessedTableManager =
       $$NotesTableUpdateCompanionBuilder,
       (Note, $$NotesTableReferences),
       Note,
-      PrefetchHooks Function({bool noteTagsRefs})
+      PrefetchHooks Function({bool noteTagsRefs, bool noteTaskLinksRefs})
     >;
 typedef $$NoteTagsTableCreateCompanionBuilder =
     NoteTagsCompanion Function({
@@ -11036,6 +11503,271 @@ typedef $$NoteTagsTableProcessedTableManager =
       $$NoteTagsTableUpdateCompanionBuilder,
       (NoteTag, $$NoteTagsTableReferences),
       NoteTag,
+      PrefetchHooks Function({bool noteId})
+    >;
+typedef $$NoteTaskLinksTableCreateCompanionBuilder =
+    NoteTaskLinksCompanion Function({
+      required int noteId,
+      required int taskId,
+      Value<int> rowid,
+    });
+typedef $$NoteTaskLinksTableUpdateCompanionBuilder =
+    NoteTaskLinksCompanion Function({
+      Value<int> noteId,
+      Value<int> taskId,
+      Value<int> rowid,
+    });
+
+final class $$NoteTaskLinksTableReferences
+    extends BaseReferences<_$AppDatabase, $NoteTaskLinksTable, NoteTaskLink> {
+  $$NoteTaskLinksTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $NotesTable _noteIdTable(_$AppDatabase db) => db.notes.createAlias(
+    $_aliasNameGenerator(db.noteTaskLinks.noteId, db.notes.id),
+  );
+
+  $$NotesTableProcessedTableManager get noteId {
+    final $_column = $_itemColumn<int>('note_id')!;
+
+    final manager = $$NotesTableTableManager(
+      $_db,
+      $_db.notes,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_noteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$NoteTaskLinksTableFilterComposer
+    extends Composer<_$AppDatabase, $NoteTaskLinksTable> {
+  $$NoteTaskLinksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get taskId => $composableBuilder(
+    column: $table.taskId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$NotesTableFilterComposer get noteId {
+    final $$NotesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.noteId,
+      referencedTable: $db.notes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NotesTableFilterComposer(
+            $db: $db,
+            $table: $db.notes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NoteTaskLinksTableOrderingComposer
+    extends Composer<_$AppDatabase, $NoteTaskLinksTable> {
+  $$NoteTaskLinksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get taskId => $composableBuilder(
+    column: $table.taskId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$NotesTableOrderingComposer get noteId {
+    final $$NotesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.noteId,
+      referencedTable: $db.notes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NotesTableOrderingComposer(
+            $db: $db,
+            $table: $db.notes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NoteTaskLinksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NoteTaskLinksTable> {
+  $$NoteTaskLinksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get taskId =>
+      $composableBuilder(column: $table.taskId, builder: (column) => column);
+
+  $$NotesTableAnnotationComposer get noteId {
+    final $$NotesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.noteId,
+      referencedTable: $db.notes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NotesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.notes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NoteTaskLinksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $NoteTaskLinksTable,
+          NoteTaskLink,
+          $$NoteTaskLinksTableFilterComposer,
+          $$NoteTaskLinksTableOrderingComposer,
+          $$NoteTaskLinksTableAnnotationComposer,
+          $$NoteTaskLinksTableCreateCompanionBuilder,
+          $$NoteTaskLinksTableUpdateCompanionBuilder,
+          (NoteTaskLink, $$NoteTaskLinksTableReferences),
+          NoteTaskLink,
+          PrefetchHooks Function({bool noteId})
+        > {
+  $$NoteTaskLinksTableTableManager(_$AppDatabase db, $NoteTaskLinksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NoteTaskLinksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NoteTaskLinksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NoteTaskLinksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> noteId = const Value.absent(),
+                Value<int> taskId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NoteTaskLinksCompanion(
+                noteId: noteId,
+                taskId: taskId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int noteId,
+                required int taskId,
+                Value<int> rowid = const Value.absent(),
+              }) => NoteTaskLinksCompanion.insert(
+                noteId: noteId,
+                taskId: taskId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$NoteTaskLinksTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({noteId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (noteId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.noteId,
+                                referencedTable: $$NoteTaskLinksTableReferences
+                                    ._noteIdTable(db),
+                                referencedColumn: $$NoteTaskLinksTableReferences
+                                    ._noteIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$NoteTaskLinksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $NoteTaskLinksTable,
+      NoteTaskLink,
+      $$NoteTaskLinksTableFilterComposer,
+      $$NoteTaskLinksTableOrderingComposer,
+      $$NoteTaskLinksTableAnnotationComposer,
+      $$NoteTaskLinksTableCreateCompanionBuilder,
+      $$NoteTaskLinksTableUpdateCompanionBuilder,
+      (NoteTaskLink, $$NoteTaskLinksTableReferences),
+      NoteTaskLink,
       PrefetchHooks Function({bool noteId})
     >;
 typedef $$CalendarEventsTableCreateCompanionBuilder =
@@ -12326,6 +13058,8 @@ class $AppDatabaseManager {
       $$NotesTableTableManager(_db, _db.notes);
   $$NoteTagsTableTableManager get noteTags =>
       $$NoteTagsTableTableManager(_db, _db.noteTags);
+  $$NoteTaskLinksTableTableManager get noteTaskLinks =>
+      $$NoteTaskLinksTableTableManager(_db, _db.noteTaskLinks);
   $$CalendarEventsTableTableManager get calendarEvents =>
       $$CalendarEventsTableTableManager(_db, _db.calendarEvents);
   $$CustomListsTableTableManager get customLists =>

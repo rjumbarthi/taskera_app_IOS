@@ -24,6 +24,8 @@ class Tasks extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   // Accumulated focus time logged against this task (seconds).
   IntColumn get totalFocusSeconds => integer().withDefault(const Constant(0))();
+  // Comma-separated user labels/tags, e.g. "work,health". Null = none.
+  TextColumn get labels => text().nullable()();
 }
 
 class Subtasks extends Table {

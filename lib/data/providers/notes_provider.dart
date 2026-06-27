@@ -12,3 +12,9 @@ final noteTagsProvider =
     StreamProvider.family<List<NoteTag>, int>((ref, noteId) {
   return ref.watch(appDatabaseProvider).notesDao.watchTags(noteId);
 });
+
+/// Stream of Task rows linked to a given note id.
+final noteLinkedTasksProvider =
+    StreamProvider.family<List<Task>, int>((ref, noteId) {
+  return ref.watch(appDatabaseProvider).watchNoteLinkedTasks(noteId);
+});

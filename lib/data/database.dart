@@ -154,20 +154,36 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
   Future<int> _computeStreak(int habitId) async {
     final now   = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    // All logs (done AND skipped). Skipped days protect the streak: they bridge
+    // a gap without breaking it and without counting toward the number.
     final logs  = await (select(habitLogs)
-          ..where((l) => l.habitId.equals(habitId) & l.isSkipped.equals(false))
-          ..orderBy([(l) => OrderingTerm(expression: l.logDate, mode: OrderingMode.desc)]))
+          ..where((l) => l.habitId.equals(habitId)))
         .get();
-    int streak   = 0;
-    var expected = today;
-    for (final log in logs) {
-      final d = DateTime(log.logDate.year, log.logDate.month, log.logDate.day);
-      if (d == expected) {
-        streak++;
-        expected = expected.subtract(const Duration(days: 1));
-      } else if (d.isBefore(expected)) {
-        break;
-      }
+    if (logs.isEmpty) return 0;
+
+    // Map each logged day → isDone (true) / isSkipped (false). Prefer 'done' if a
+    // day somehow has both.
+    final byDay = <DateTime, bool>{};
+    for (final l in logs) {
+      final d = DateTime(l.logDate.year, l.logDate.month, l.logDate.day);
+      byDay[d] = (byDay[d] ?? false) || !l.isSkipped;
+    }
+
+    // A streak stays alive until the current day ends, so start at today if it's
+    // logged, otherwise at yesterday (grace). If neither is logged → broken.
+    // Walking back: a done day increments, a skipped day bridges, a day with no
+    // log (a real miss) ends the streak. This is why un-checking today restores
+    // the prior-day streak instead of wiping it, and why a skip never breaks it.
+    var cursor = today;
+    if (!byDay.containsKey(cursor)) {
+      cursor = today.subtract(const Duration(days: 1));
+      if (!byDay.containsKey(cursor)) return 0;
+    }
+
+    int streak = 0;
+    while (byDay.containsKey(cursor)) {
+      if (byDay[cursor]!) streak++; // done → count; skip → bridge (no increment)
+      cursor = cursor.subtract(const Duration(days: 1));
     }
     return streak;
   }
@@ -188,8 +204,14 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
         lastCheckedDate: Value(check ? now : null),
       ));
       if (check) {
-        await into(habitLogs).insertOnConflictUpdate(
+        // Upsert on (habit_id, log_date); if a skip log exists for today, flip
+        // it back to a completion (is_skipped = false).
+        await into(habitLogs).insert(
           HabitLogsCompanion(habitId: Value(id), logDate: Value(dateOnly)),
+          onConflict: DoUpdate(
+            (_) => const HabitLogsCompanion(isSkipped: Value(false)),
+            target: [habitLogs.habitId, habitLogs.logDate],
+          ),
         );
       } else {
         await (delete(habitLogs)
@@ -225,11 +247,18 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
   Future<void> skipToday(int habitId) async {
     final now = DateTime.now();
     final dateOnly = DateTime(now.year, now.month, now.day);
-    await into(habitLogs).insertOnConflictUpdate(
+    // Upsert on the (habit_id, log_date) unique key — NOT the primary key — so an
+    // existing log for today (e.g. a check) is flipped to skipped instead of
+    // hitting a UNIQUE constraint failure.
+    await into(habitLogs).insert(
       HabitLogsCompanion(
         habitId: Value(habitId),
         logDate: Value(dateOnly),
         isSkipped: const Value(true),
+      ),
+      onConflict: DoUpdate(
+        (_) => const HabitLogsCompanion(isSkipped: Value(true)),
+        target: [habitLogs.habitId, habitLogs.logDate],
       ),
     );
     await _saveStreak(habitId);
@@ -318,7 +347,7 @@ class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
       (delete(goals)..where((g) => g.id.equals(id))).go();
 }
 
-@DriftAccessor(tables: [Notes, NoteTags])
+@DriftAccessor(tables: [Notes, NoteTags, NoteTaskLinks])
 class NotesDao extends DatabaseAccessor<AppDatabase> with _$NotesDaoMixin {
   NotesDao(super.db);
 
@@ -353,6 +382,31 @@ class NotesDao extends DatabaseAccessor<AppDatabase> with _$NotesDaoMixin {
 
   Future<void> deleteNote(int id) =>
       (delete(notes)..where((n) => n.id.equals(id))).go();
+
+  // ── Linked tasks ──────────────────────────────────────────────────────────
+
+  Stream<List<NoteTaskLink>> watchTaskLinks(int noteId) =>
+      (select(noteTaskLinks)..where((l) => l.noteId.equals(noteId))).watch();
+
+  Future<List<NoteTaskLink>> getTaskLinks(int noteId) =>
+      (select(noteTaskLinks)..where((l) => l.noteId.equals(noteId))).get();
+
+  Future<void> linkTask(int noteId, int taskId) =>
+      into(noteTaskLinks).insertOnConflictUpdate(
+        NoteTaskLinksCompanion(noteId: Value(noteId), taskId: Value(taskId)),
+      );
+
+  Future<void> unlinkTask(int noteId, int taskId) =>
+      (delete(noteTaskLinks)
+            ..where((l) => l.noteId.equals(noteId) & l.taskId.equals(taskId)))
+          .go();
+
+  /// Replaces a note's linked-task set in one pass (used on save).
+  Future<void> setTaskLinks(int noteId, Set<int> taskIds) async {
+    final current = (await getTaskLinks(noteId)).map((l) => l.taskId).toSet();
+    for (final id in taskIds.difference(current)) { await linkTask(noteId, id); }
+    for (final id in current.difference(taskIds)) { await unlinkTask(noteId, id); }
+  }
 }
 
 @DriftAccessor(tables: [CalendarEvents])
@@ -466,6 +520,7 @@ class ListsDao extends DatabaseAccessor<AppDatabase> with _$ListsDaoMixin {
     GoalHabitLinks,
     Notes,
     NoteTags,
+    NoteTaskLinks,
     CalendarEvents,
     CustomLists,
     CustomListItems,
@@ -484,6 +539,14 @@ class AppDatabase extends _$AppDatabase {
     return q.watch().map((rows) => rows.map((r) => r.readTable(tasks)).toList());
   }
 
+  // Returns a live stream of Task rows linked to a note.
+  Stream<List<Task>> watchNoteLinkedTasks(int noteId) {
+    final q = select(tasks).join([
+      innerJoin(noteTaskLinks, noteTaskLinks.taskId.equalsExp(tasks.id)),
+    ])..where(noteTaskLinks.noteId.equals(noteId));
+    return q.watch().map((rows) => rows.map((r) => r.readTable(tasks)).toList());
+  }
+
   // Recomputes progressPct and linkedLabel for a goal from its linked task completion.
   Future<void> recomputeGoalProgress(int goalId) async {
     final links = await (select(goalTaskLinks)..where((l) => l.goalId.equals(goalId))).get();
@@ -494,7 +557,7 @@ class AppDatabase extends _$AppDatabase {
     final total    = links.length;
     await (update(goals)..where((g) => g.id.equals(goalId))).write(GoalsCompanion(
       progressPct:  Value(total > 0 ? done / total : 0.0),
-      linkedLabel:  Value('LINKED TASKS · $done/$total'),
+      linkedLabel:  Value('Linked tasks · $done/$total'),
     ));
   }
 
@@ -507,7 +570,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -560,6 +623,15 @@ class AppDatabase extends _$AppDatabase {
       if (from < 11) {
         await m.createTable(focusSessions);
         await m.addColumn(tasks, tasks.totalFocusSeconds);
+      }
+      if (from < 12) {
+        await m.addColumn(habits, habits.scheduledTime);
+      }
+      if (from < 13) {
+        await m.createTable(noteTaskLinks);
+      }
+      if (from < 14) {
+        await m.addColumn(tasks, tasks.labels);
       }
     },
   );

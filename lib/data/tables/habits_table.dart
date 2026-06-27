@@ -6,6 +6,7 @@ class Habits extends Table {
   TextColumn get name => text()();
   TextColumn get frequencyLabel => text()(); // "Mon · Wed · Fri · 60 min · Q2"
   IntColumn get durationMinutes => integer().nullable()();
+  IntColumn get scheduledTime => integer().nullable()(); // minutes from midnight (0–1439)
   IntColumn get quadrant => integer().withDefault(const Constant(2))();
   TextColumn get streakLabel => text()(); // "🔥 14d"
   IntColumn get streakColorValue => integer()(); // ARGB int
