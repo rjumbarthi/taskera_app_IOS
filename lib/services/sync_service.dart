@@ -119,6 +119,12 @@ class SyncService {
 
   // ── Tasks ──────────────────────────────────────────────────────────────────
 
+  // Optimistic: include `labels` until the server tells us the column is
+  // missing, then drop it so task sync keeps working before the migration is
+  // applied. Reset to true each app session, so it self-heals after the
+  // `labels` column is added and the app restarts.
+  bool _tasksHaveLabels = true;
+
   Future<void> _pushTasks() async {
     final all = <Task>[];
     for (int q = 1; q <= 4; q++) {
@@ -127,26 +133,46 @@ class SyncService {
     all.addAll(await _db.tasksDao.watchDone().first);
     if (all.isEmpty) return;
 
-    await _client.from('tasks').upsert(
-      all.map((t) => {
-        'id'              : t.id,
-        'user_id'         : _uid,
-        'title'           : t.title,
-        'quadrant'        : t.quadrant,
-        'due_date'        : t.dueDate?.toIso8601String(),
-        'due_label'       : t.dueLabel,
-        'is_overdue'      : t.isOverdue,
-        'has_ai'          : t.hasAi,
-        'urgency_score'   : t.urgencyScore,
-        'recurrence_label': t.recurrenceLabel,
-        'has_pomodoro'    : t.hasPomodoro,
-        'is_done'         : t.isDone,
-        'done_at'         : t.doneAt?.toIso8601String(),
-        'sort_order'      : t.sortOrder,
-        'labels'          : t.labels,
-      }).toList(),
-      onConflict: 'id',
-    );
+    Map<String, dynamic> row(Task t, {required bool withLabels}) => {
+          'id'              : t.id,
+          'user_id'         : _uid,
+          'title'           : t.title,
+          'quadrant'        : t.quadrant,
+          'due_date'        : t.dueDate?.toIso8601String(),
+          'due_label'       : t.dueLabel,
+          'is_overdue'      : t.isOverdue,
+          'has_ai'          : t.hasAi,
+          'urgency_score'   : t.urgencyScore,
+          'recurrence_label': t.recurrenceLabel,
+          'has_pomodoro'    : t.hasPomodoro,
+          'is_done'         : t.isDone,
+          'done_at'         : t.doneAt?.toIso8601String(),
+          'sort_order'      : t.sortOrder,
+          if (withLabels) 'labels': t.labels,
+        };
+
+    Future<void> push(bool withLabels) => _client.from('tasks').upsert(
+          all.map((t) => row(t, withLabels: withLabels)).toList(),
+          onConflict: 'id',
+        );
+
+    try {
+      await push(_tasksHaveLabels);
+    } on PostgrestException catch (e) {
+      // The `labels` column isn't there yet (migration not applied) — drop it
+      // and retry so the rest of the task data still syncs.
+      if (_tasksHaveLabels && _isMissingLabelsColumn(e)) {
+        _tasksHaveLabels = false;
+        await push(false);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  static bool _isMissingLabelsColumn(PostgrestException e) {
+    final msg = e.message.toLowerCase();
+    return e.code == 'PGRST204' || e.code == '42703' || msg.contains('labels');
   }
 
   TasksCompanion _taskRow(Map<String, dynamic> r) => TasksCompanion(
