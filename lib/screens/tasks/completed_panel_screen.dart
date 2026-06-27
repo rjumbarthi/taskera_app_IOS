@@ -80,7 +80,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
-    final done = [...(ref.watch(doneTasksProvider).value ?? [])]
+    final List<Task> done = [...(ref.watch(doneTasksProvider).value ?? const [])]
       ..sort((a, b) => (b.doneAt ?? DateTime(0)).compareTo(a.doneAt ?? DateTime(0)));
 
     // Group by quadrant, preserving _quadOrder.
