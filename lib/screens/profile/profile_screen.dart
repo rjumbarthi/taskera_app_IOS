@@ -55,9 +55,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         _HeroCard(colors: colors, onTap: () => context.push(KaalRoutes.profileEdit)),
         _PersonaCard(colors: colors), // self-spaces / hides when no onboarding data
         const SizedBox(height: 8),
+        _StreakBanner(colors: colors),
+        const SizedBox(height: 16),
         _ReviewAchievementsStats(colors: colors),
         const SizedBox(height: 16),
-        _TaskHistoryCard(colors: colors),
+        _LifetimeStatsCard(colors: colors),
+        const SizedBox(height: 16),
+        _QuadrantBalanceCard(colors: colors),
         const SizedBox(height: 16),
         _FocusCard(colors: colors),
         const SizedBox(height: 16),
@@ -68,6 +72,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         _CalendarThisWeek(colors: colors),
         const SizedBox(height: 16),
         _NotesSection(colors: colors),
+        const SizedBox(height: 16),
+        _AccountCard(colors: colors),
         const SizedBox(height: 24),
         _InviteButton(colors: colors, onTap: () => context.push(KaalRoutes.referral)),
         const SizedBox(height: 10),
@@ -1012,49 +1018,144 @@ class _PersonaCard extends ConsumerWidget {
   }
 }
 
-// ── Task history — 7-day completion bar chart + recent completed list ─────────
+// ── Productivity streak banner ────────────────────────────────────────────────
 
-class _TaskHistoryCard extends ConsumerWidget {
+class _StreakBanner extends ConsumerWidget {
   final KaalColors colors;
-  const _TaskHistoryCard({required this.colors});
+  const _StreakBanner({required this.colors});
 
-  static const _wd = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final done = ref.watch(doneTasksProvider).value ?? [];
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final days = done
+        .where((t) => t.doneAt != null)
+        .map((t) => DateTime(t.doneAt!.year, t.doneAt!.month, t.doneAt!.day))
+        .toSet();
 
-  static Color _quadColor(int q) => switch (q) {
+    // Current streak: consecutive days back from today (or yesterday).
+    var current = 0;
+    var a = days.contains(today) ? today : today.subtract(const Duration(days: 1));
+    while (days.contains(a)) {
+      current++;
+      a = a.subtract(const Duration(days: 1));
+    }
+    // Best streak ever.
+    var best = 0;
+    if (days.isNotEmpty) {
+      final sorted = days.toList()..sort();
+      var run = 1;
+      best = 1;
+      for (var i = 1; i < sorted.length; i++) {
+        if (sorted[i].difference(sorted[i - 1]).inDays == 1) {
+          run++;
+          if (run > best) best = run;
+        } else {
+          run = 1;
+        }
+      }
+    }
+    final activeMonth =
+        days.where((d) => d.year == today.year && d.month == today.month).length;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        color: const Color(0x12FF6B35),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: const Color(0x33FF6B35)),
+      ),
+      child: Row(children: [
+        const Text('🔥', style: TextStyle(fontSize: 26, height: 1)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('$current day${current == 1 ? '' : 's'} streak',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 16,
+                    fontWeight: FontWeight.w700, color: colors.ink, height: 1.1)),
+            const SizedBox(height: 2),
+            Text(
+                current > 0
+                    ? 'Best $best d · $activeMonth active this month'
+                    : 'Complete a task today to start a streak',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+// ── At-a-glance lifetime totals ───────────────────────────────────────────────
+
+class _LifetimeStatsCard extends ConsumerWidget {
+  final KaalColors colors;
+  const _LifetimeStatsCard({required this.colors});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final done = ref.watch(doneTasksProvider).value ?? [];
+    final allTasks = ref.watch(allTasksProvider).value ?? [];
+    final goals = ref.watch(goalsProvider).value ?? [];
+
+    final totalDone = done.length;
+    final focusSecs = allTasks.fold<int>(0, (s, t) => s + t.totalFocusSeconds);
+    final fh = focusSecs ~/ 3600;
+    final fm = (focusSecs % 3600) ~/ 60;
+    final focusLabel = fh > 0 ? '${fh}h' : '${fm}m';
+    final goalsHit = goals.where((g) => g.progressPct >= 1.0).length;
+    final activeDays = done
+        .where((t) => t.doneAt != null)
+        .map((t) => DateTime(t.doneAt!.year, t.doneAt!.month, t.doneAt!.day))
+        .toSet()
+        .length;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text('AT A GLANCE',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                letterSpacing: 0.5, color: colors.ink3, height: 1)),
+        const SizedBox(height: 12),
+        Row(children: [
+          _StatCell('$totalDone', 'Tasks done', colors.successFg, colors),
+          _StatCell(focusLabel, 'Focus time', KaalColors.acc2, colors),
+          _StatCell('$goalsHit', 'Goals hit', KaalColors.q2, colors),
+          _StatCell('$activeDays', 'Active days', colors.ink, colors),
+        ]),
+      ]),
+    );
+  }
+}
+
+// ── Quadrant balance (lifetime completion distribution) ───────────────────────
+
+class _QuadrantBalanceCard extends ConsumerWidget {
+  final KaalColors colors;
+  const _QuadrantBalanceCard({required this.colors});
+
+  static Color _qc(int q) => switch (q) {
         1 => KaalColors.q1,
         2 => KaalColors.q2,
         3 => KaalColors.q3,
         _ => KaalColors.q4,
       };
 
-  static String _ago(DateTime? d) {
-    if (d == null) return '';
-    final diff = DateTime.now().difference(d);
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m';
-    if (diff.inHours < 24) return '${diff.inHours}h';
-    return '${diff.inDays}d';
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final done  = ref.watch(doneTasksProvider).value ?? [];
-    final now   = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    // Completions per day for the last 7 days (index 6 = today).
-    final counts = List<int>.filled(7, 0);
+    final done = ref.watch(doneTasksProvider).value ?? [];
+    final counts = {1: 0, 2: 0, 3: 0, 4: 0};
     for (final t in done) {
-      final d = t.doneAt;
-      if (d == null) continue;
-      final diff = today.difference(DateTime(d.year, d.month, d.day)).inDays;
-      if (diff >= 0 && diff < 7) counts[6 - diff]++;
+      final q = (t.quadrant >= 1 && t.quadrant <= 4) ? t.quadrant : 4;
+      counts[q] = counts[q]! + 1;
     }
-    final maxC = counts.fold<int>(1, (m, c) => c > m ? c : m);
-    final week = counts.fold<int>(0, (s, c) => s + c);
-
-    final recent = [...done]
-      ..sort((a, b) => (b.doneAt ?? DateTime(2000)).compareTo(a.doneAt ?? DateTime(2000)));
-    final top = recent.take(4).toList();
+    final total = done.length;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
@@ -1066,60 +1167,132 @@ class _TaskHistoryCard extends ConsumerWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
-            child: Text('TASK HISTORY',
+            child: Text('QUADRANT BALANCE',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
                     letterSpacing: 0.5, color: colors.ink3, height: 1)),
           ),
-          Text('$week done · last 7 days',
+          Text('lifetime',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
         ]),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 58,
-          child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            for (int i = 0; i < 7; i++)
+        if (total == 0)
+          Text('No completed tasks yet',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3))
+        else ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: SizedBox(
+              height: 8,
+              child: Row(children: [
+                for (final q in [1, 2, 3, 4])
+                  if (counts[q]! > 0)
+                    Expanded(flex: counts[q]!, child: Container(color: _qc(q))),
+              ]),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(children: [
+            for (final q in [1, 2, 3, 4]) ...[
+              if (q > 1) const SizedBox(width: 8),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    Text(counts[i] > 0 ? '${counts[i]}' : '',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 8, color: colors.ink3, height: 1)),
-                    const SizedBox(height: 3),
-                    Container(
-                      height: (counts[i] / maxC * 34).clamp(2, 34),
-                      decoration: BoxDecoration(
-                        color: i == 6 ? KaalColors.acc : KaalColors.acc.withAlpha(0x55),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(_wd[today.subtract(Duration(days: 6 - i)).weekday - 1],
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 8, color: colors.ink4, height: 1)),
-                  ]),
-                ),
+                child: Row(children: [
+                  Container(width: 7, height: 7,
+                      decoration: BoxDecoration(color: _qc(q), shape: BoxShape.circle)),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text('Q$q ${(counts[q]! / total * 100).round()}%',
+                        maxLines: 1, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink2, height: 1)),
+                  ),
+                ]),
               ),
+            ],
           ]),
-        ),
-        if (top.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          const SizedBox(height: 9),
-          for (int i = 0; i < top.length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
-            Row(children: [
-              Container(width: 6, height: 6,
-                  decoration: BoxDecoration(color: _quadColor(top[i].quadrant), shape: BoxShape.circle)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(top[i].title, maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink, height: 1.15)),
-              ),
-              const SizedBox(width: 8),
-              Text(_ago(top[i].doneAt),
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
-            ]),
-          ],
         ],
+      ]),
+    );
+  }
+}
+
+// ── Account details ───────────────────────────────────────────────────────────
+
+class _AccountCard extends ConsumerWidget {
+  final KaalColors colors;
+  const _AccountCard({required this.colors});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider);
+    final l = AppL10n.of(context);
+
+    final email = user?.email ?? 'Local storage (this device)';
+    final signIn = () {
+      if (user == null) return 'Local — no account';
+      final p = user.appMetadata['provider'] as String?;
+      switch (p) {
+        case 'google':
+          return 'Google';
+        case 'apple':
+          return 'Apple';
+        case 'azure':
+        case 'microsoft':
+          return 'Microsoft';
+        case 'email':
+          return 'Email';
+        default:
+          return (p != null && p.isNotEmpty) ? '${p[0].toUpperCase()}${p.substring(1)}' : 'Email';
+      }
+    }();
+    final memberSince = () {
+      final c = user?.createdAt;
+      final dt = c == null ? null : DateTime.tryParse(c);
+      if (dt == null) return '—';
+      final months = l.monthsAbbr.split(',');
+      return '${months[dt.month - 1]} ${dt.year}';
+    }();
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 0.5, color: colors.bdr),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text('ACCOUNT',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                letterSpacing: 0.5, color: colors.ink3, height: 1)),
+        const SizedBox(height: 8),
+        _AccountRow(label: 'Email', value: email, colors: colors),
+        _AccountRow(label: 'Sign-in', value: signIn, colors: colors),
+        _AccountRow(label: 'Member since', value: memberSince, colors: colors),
+        _AccountRow(label: 'Plan', value: 'Free', colors: colors),
+      ]),
+    );
+  }
+}
+
+class _AccountRow extends StatelessWidget {
+  final String label, value;
+  final KaalColors colors;
+  const _AccountRow({required this.label, required this.value, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(children: [
+        SizedBox(
+          width: 96,
+          child: Text(label,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.2)),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.right,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+                  color: colors.ink, height: 1.2)),
+        ),
       ]),
     );
   }
