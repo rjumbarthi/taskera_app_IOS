@@ -356,7 +356,10 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                           _selLabels.add(i);
                         } }),
                       ),
-                    _Chip(label: '+ New', selected: false, colors: colors, onTap: () {}),
+                    _Chip(label: '+ New', selected: false, colors: colors, onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Custom labels coming soon')));
+                    }),
                   ],
                 ),
               ),

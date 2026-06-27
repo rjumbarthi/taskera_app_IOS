@@ -151,6 +151,20 @@ class _ShareButtons extends StatelessWidget {
   final KaalColors colors;
   const _ShareButtons({required this.colors});
 
+  void _shareInvite(BuildContext context) {
+    Clipboard.setData(const ClipboardData(
+        text: 'Join me on Kaal — https://kaal.app/join/RJUMB14'));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Invite link copied — paste it anywhere to share',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+        backgroundColor: Color(0xFF1C1C1E),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -158,14 +172,14 @@ class _ShareButtons extends StatelessWidget {
         label: '📱 Share via WhatsApp',
         bg: const Color(0xFF25D366),
         textColor: Colors.white,
-        onTap: () {},
+        onTap: () => _shareInvite(context),
       ),
       const SizedBox(height: 7),
       _ShareBtn(
         label: '💬 Share via Messages',
         bg: colors.surf2,
         textColor: colors.ink,
-        onTap: () {},
+        onTap: () => _shareInvite(context),
       ),
     ]);
   }

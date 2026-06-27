@@ -1371,7 +1371,8 @@ class _PruneItemRow extends StatelessWidget {
           Text(item.age, style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
           const SizedBox(width: 6),
           GestureDetector(
-            onTap: () {},
+            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${item.moveLabel} — coming soon'))),
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(6)),

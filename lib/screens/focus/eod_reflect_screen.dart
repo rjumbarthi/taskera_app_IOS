@@ -292,7 +292,7 @@ class _ReflectCard extends StatelessWidget {
               const SizedBox(width: 7),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () => context.go(KaalRoutes.focus),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(

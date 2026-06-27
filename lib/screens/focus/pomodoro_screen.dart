@@ -158,6 +158,18 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     });
   }
 
+  // Finish the session: mark the active task done and reset the timer.
+  void _complete() {
+    final hadTask = _activeTaskId >= 0;
+    if (hadTask) {
+      ref.read(appDatabaseProvider).tasksDao.toggleDone(_activeTaskId, true);
+    }
+    _reset();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(hadTask ? 'Session complete — task marked done' : 'Session complete'),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
@@ -206,6 +218,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   onMinsChanged: _onMinsChanged,
                   onStartPause: _startPause,
                   onReset: _reset,
+                  onComplete: _complete,
                 ),
                 const SizedBox(height: 10),
                 _QueueSection(
@@ -272,6 +285,7 @@ class _ActiveCard extends StatelessWidget {
   final ValueChanged<int> onMinsChanged;
   final VoidCallback onStartPause;
   final VoidCallback onReset;
+  final VoidCallback onComplete;
 
   const _ActiveCard({
     required this.activeTask,
@@ -283,6 +297,7 @@ class _ActiveCard extends StatelessWidget {
     required this.onMinsChanged,
     required this.onStartPause,
     required this.onReset,
+    required this.onComplete,
   });
 
   @override
@@ -427,7 +442,7 @@ class _ActiveCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              _IconCircleBtn(icon: Icons.check_rounded, color: colors.successFg, onTap: () {}),
+              _IconCircleBtn(icon: Icons.check_rounded, color: colors.successFg, onTap: onComplete),
               const SizedBox(width: 6),
               _IconCircleBtn(icon: Icons.close_rounded, color: KaalColors.warn, onTap: onReset),
             ],

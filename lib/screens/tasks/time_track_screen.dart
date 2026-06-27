@@ -334,7 +334,8 @@ class TimeTrackScreen extends ConsumerWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Grouping by task coming soon'))),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
                   decoration: BoxDecoration(

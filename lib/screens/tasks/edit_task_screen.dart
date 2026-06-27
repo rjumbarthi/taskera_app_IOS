@@ -678,7 +678,8 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                         );
                       }),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Custom labels coming soon'))),
                         child: _HfChip(label: '+ New', on: false, overrideColor: KaalColors.acc2),
                       ),
                     ],

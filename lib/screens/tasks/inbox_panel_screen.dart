@@ -128,7 +128,8 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('AI auto-sort coming soon'))),
                 child: Text(AppL10n.of(context).sortAll, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
               ),
             ],

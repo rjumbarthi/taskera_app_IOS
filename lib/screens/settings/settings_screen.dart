@@ -451,7 +451,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () => context.push(KaalRoutes.paywall),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
@@ -946,12 +946,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: _SetCard(colors: colors, children: [
           _NavRow(label: AppL10n.of(context).realTimeSync, right: '● Live', rightColor: colors.successFg,
-              colors: colors, onTap: () {}),
+              colors: colors, onTap: () => _comingSoon(context, 'Real-time sync details')),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'cloudSync', label: AppL10n.of(context).cloudSync, colors: colors),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).connectedDevices, right: '2 active', rightColor: KaalColors.acc2,
-              colors: colors, onTap: () {}),
+              colors: colors, onTap: () => _comingSoon(context, 'Connected devices')),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).backUpNow, right: 'Last: today 9:41',
               rightColor: colors.ink3, colors: colors, onTap: () => _comingSoon(context, 'Backup')),

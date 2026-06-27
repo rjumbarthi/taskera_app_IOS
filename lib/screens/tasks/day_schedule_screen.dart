@@ -58,7 +58,8 @@ class _DayScheduleScreenState extends State<DayScheduleScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Auto-scheduling coming soon'))),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
                   decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
@@ -225,7 +226,8 @@ class _SuggestionCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Alternative slots coming soon'))),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(

@@ -314,11 +314,23 @@ class _PlanTab extends StatelessWidget {
 
 // ── Trial button ──────────────────────────────────────────────────────────────
 
+void _paywallSoon(BuildContext context, String what) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('$what — coming soon',
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+      backgroundColor: const Color(0xFF1C1C1E),
+      duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
+}
+
 class _TrialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => _paywallSoon(context, 'Subscriptions'),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -351,7 +363,7 @@ class _UpiButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => _paywallSoon(context, 'UPI payment'),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 11),

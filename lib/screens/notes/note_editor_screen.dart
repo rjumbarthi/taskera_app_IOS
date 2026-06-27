@@ -11,6 +11,7 @@ import '../../util/kaal_dialogs.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../services/activity_log_service.dart';
+import '../../services/ai_service.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/goal_link_pickers.dart';
 
@@ -51,6 +52,33 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           ..clear()
           ..addAll(links.map((l) => l.taskId));
       });
+    }
+  }
+
+  Future<void> _aiScan() async {
+    final body = _bodyCtrl.text.trim();
+    final messenger = ScaffoldMessenger.of(context);
+    if (body.isEmpty) {
+      messenger.showSnackBar(
+          const SnackBar(content: Text('Write a note first to scan it')));
+      return;
+    }
+    messenger.showSnackBar(const SnackBar(content: Text('✦ Scanning note…')));
+    try {
+      final summary = await ref.read(aiServiceProvider).summarizeNote(body);
+      if (!mounted) return;
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(
+        content: Text((summary == null || summary.isEmpty)
+            ? 'AI returned no summary. Try again.'
+            : summary),
+        duration: const Duration(seconds: 6),
+      ));
+    } catch (e) {
+      if (!mounted) return;
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))));
     }
   }
 
@@ -180,7 +208,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     const SizedBox(width: 8),
                     // Camera btn
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Photo capture coming soon'))),
                       child: Container(
                         width: 30, height: 30,
                         decoration: BoxDecoration(
@@ -194,7 +223,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     const SizedBox(width: 6),
                     // Mic btn
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Voice notes coming soon'))),
                       child: Container(
                         width: 30, height: 30,
                         decoration: const BoxDecoration(
@@ -285,7 +315,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           const SizedBox(width: 8),
                           // AI scan btn
                           GestureDetector(
-                            onTap: () {},
+                            onTap: _aiScan,
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
                               decoration: BoxDecoration(
@@ -528,7 +558,8 @@ class _FmtBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Rich text formatting coming soon'))),
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
         decoration: BoxDecoration(
