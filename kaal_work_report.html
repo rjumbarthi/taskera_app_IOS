@@ -1,0 +1,96 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Kaal — Work Distribution Report</title>
+<style>
+@page { size: A4; margin: 16mm; }
+* { box-sizing: border-box; }
+body { margin:0; background:#0B0B12; color:#F2F2F7;
+  font-family:-apple-system,Segoe UI,Inter,Roboto,sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.wrap { max-width:900px; margin:0 auto; padding:40px 36px; }
+h1 { font-size:30px; margin:0 0 4px; letter-spacing:-.5px; }
+.sub { color:#8A8A94; font-size:13px; margin-bottom:28px; }
+.grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:30px; }
+.stat { background:#15151F; border:1px solid #2A2A38; border-radius:14px; padding:16px; }
+.stat .n { font-size:24px; font-weight:700; }
+.stat .l { font-size:11px; color:#8A8A94; margin-top:3px; }
+.card { background:#15151F; border:1px solid #2A2A38; border-radius:16px; padding:22px 24px; margin-bottom:22px; }
+.card h2 { font-size:16px; margin:0 0 4px; }
+.card .cap { font-size:12px; color:#8A8A94; margin:0 0 18px; }
+.split { display:flex; gap:26px; align-items:center; }
+.split .leg { flex:1; }
+.lg { display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px; }
+.dot { width:11px; height:11px; border-radius:3px; flex:none; }
+.lglabel { flex:1; color:#C8C8D0; }
+.lgval { font-weight:700; }
+.lgval i { font-style:normal; color:#8A8A94; font-weight:400; margin-left:8px; font-size:11px; }
+.bar { margin:11px 0; }
+.barhead { display:flex; justify-content:space-between; font-size:12.5px; color:#C8C8D0; margin-bottom:5px; }
+.barval { font-weight:700; color:#F2F2F7; }
+.barval i { font-style:normal; color:#8A8A94; font-weight:400; font-size:11px; margin-left:6px; }
+.track { height:9px; background:#23232E; border-radius:6px; overflow:hidden; }
+.fill { height:100%; border-radius:6px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+td { padding:7px 0; border-bottom:1px solid #2A2A38; color:#C8C8D0; }
+td.n { text-align:right; font-weight:700; color:#F2F2F7; }
+.note { font-size:12px; color:#8A8A94; line-height:1.6; }
+.rk { display:flex; gap:12px; padding:9px 0; border-bottom:1px solid #2A2A38; }
+.rk b { color:#0A84FF; min-width:120px; font-size:13px; }
+.rk span { color:#C8C8D0; font-size:12.5px; line-height:1.5; }
+.foot { color:#8A8A94; font-size:11px; margin-top:8px; }
+</style></head><body><div class="wrap">
+
+<h1>Kaal — Where the work went</h1>
+<div class="sub">Effort distribution across the codebase · generated June 26, 2026 · proxy = lines of hand-written code</div>
+
+<div class="grid">
+  <div class="stat"><div class="n">45,966</div><div class="l">hand-written Dart LOC</div></div>
+  <div class="stat"><div class="n">165</div><div class="l">Dart source files</div></div>
+  <div class="stat"><div class="n">10</div><div class="l">feature areas</div></div>
+  <div class="stat"><div class="n">13,005</div><div class="l">generated (ORM) LOC*</div></div>
+</div>
+
+<div class="card">
+  <h2>Code by architectural area</h2>
+  <p class="cap">How the 45,966 hand-written lines split across the app's layers.</p>
+  <div class="split">
+    <div><svg viewBox="0 0 260 260" width="260" height="260"><path d="M 130.00 26.00 A 104 104 0 1 1 26.43 120.54 L 72.24 124.72 A 58 58 0 1 0 130.00 72.00 Z" fill="#0A84FF"/><path d="M 26.43 120.54 A 104 104 0 0 1 45.73 69.06 L 83.00 96.01 A 58 58 0 0 0 72.24 124.72 Z" fill="#5E5CE6"/><path d="M 45.73 69.06 A 104 104 0 0 1 68.33 46.26 L 95.61 83.30 A 58 58 0 0 0 83.00 96.01 Z" fill="#30D158"/><path d="M 68.33 46.26 A 104 104 0 0 1 95.25 31.98 L 110.62 75.33 A 58 58 0 0 0 95.61 83.30 Z" fill="#FF9F0A"/><path d="M 95.25 31.98 A 104 104 0 0 1 107.67 28.43 L 117.55 73.35 A 58 58 0 0 0 110.62 75.33 Z" fill="#BF5AF2"/><path d="M 107.67 28.43 A 104 104 0 0 1 113.55 27.31 L 120.83 72.73 A 58 58 0 0 0 117.55 73.35 Z" fill="#FF375F"/><path d="M 113.55 27.31 A 104 104 0 0 1 118.83 26.60 L 123.77 72.34 A 58 58 0 0 0 120.83 72.73 Z" fill="#64D2FF"/><path d="M 118.83 26.60 A 104 104 0 0 1 123.27 26.22 L 126.24 72.12 A 58 58 0 0 0 123.77 72.34 Z" fill="#FFD60A"/><path d="M 123.27 26.22 A 104 104 0 0 1 130.00 26.00 L 130.00 72.00 A 58 58 0 0 0 126.24 72.12 Z" fill="#8E8E93"/><text x="130" y="124" text-anchor="middle" fill="#F2F2F7" font-size="26" font-weight="700">45,966</text><text x="130" y="144" text-anchor="middle" fill="#8A8A94" font-size="11" letter-spacing="1">LINES OF CODE</text></svg></div>
+    <div class="leg"><div class="lg"><span class="dot" style="background:#0A84FF"></span><span class="lglabel">Feature screens</span><span class="lgval">76.4%<i>35,141</i></span></div><div class="lg"><span class="dot" style="background:#5E5CE6"></span><span class="lglabel">Shared UI widgets</span><span class="lgval">8.5%<i>3,914</i></span></div><div class="lg"><span class="dot" style="background:#30D158"></span><span class="lglabel">Integrations &amp; services</span><span class="lgval">4.9%<i>2,267</i></span></div><div class="lg"><span class="dot" style="background:#FF9F0A"></span><span class="lglabel">Data &amp; persistence</span><span class="lgval">4.7%<i>2,152</i></span></div><div class="lg"><span class="dot" style="background:#BF5AF2"></span><span class="lglabel">Routing &amp; navigation</span><span class="lgval">2.0%<i>909</i></span></div><div class="lg"><span class="dot" style="background:#FF375F"></span><span class="lglabel">Localization (19 langs)</span><span class="lgval">0.9%<i>421</i></span></div><div class="lg"><span class="dot" style="background:#64D2FF"></span><span class="lglabel">Design system / theme</span><span class="lgval">0.8%<i>375</i></span></div><div class="lg"><span class="dot" style="background:#FFD60A"></span><span class="lglabel">App state &amp; settings</span><span class="lgval">0.7%<i>313</i></span></div><div class="lg"><span class="dot" style="background:#8E8E93"></span><span class="lglabel">Config / util / entry</span><span class="lgval">1.0%<i>474</i></span></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Where did the work go? — by character of work</h2>
+  <p class="cap">Higher-level grouping. UI/feature building dominates; the rest is backend, design-system and infra.</p>
+  <div class="bar"><div class="barhead"><span>Building features (screens + widgets)</span><span class="barval">39,055<i>LOC · #0A84FF files</i></span></div><div class="track"><div class="fill" style="width:100.0%;background:#0A84FF"></div></div></div><div class="bar"><div class="barhead"><span>Backend: data, services, routing</span><span class="barval">5,328<i>LOC · #30D158 files</i></span></div><div class="track"><div class="fill" style="width:13.6%;background:#0A84FF"></div></div></div><div class="bar"><div class="barhead"><span>Design system &amp; localization</span><span class="barval">796<i>LOC · #BF5AF2 files</i></span></div><div class="track"><div class="fill" style="width:2.0%;background:#0A84FF"></div></div></div><div class="bar"><div class="barhead"><span>App infrastructure &amp; state</span><span class="barval">787<i>LOC · #FFD60A files</i></span></div><div class="track"><div class="fill" style="width:2.0%;background:#0A84FF"></div></div></div>
+</div>
+
+<div class="card">
+  <h2>Feature surfaces — screens by area</h2>
+  <p class="cap">Within the 35,141 lines of feature screens, the biggest investments were Tasks and Focus.</p>
+  <div class="bar"><div class="barhead"><span>Tasks</span><span class="barval">8,079<i>LOC · 16 files</i></span></div><div class="track"><div class="fill" style="width:100.0%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Focus</span><span class="barval">7,492<i>LOC · 12 files</i></span></div><div class="track"><div class="fill" style="width:92.7%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Settings</span><span class="barval">4,922<i>LOC · 6 files</i></span></div><div class="track"><div class="fill" style="width:60.9%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Habits</span><span class="barval">3,555<i>LOC · 6 files</i></span></div><div class="track"><div class="fill" style="width:44.0%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Onboarding</span><span class="barval">3,041<i>LOC · 4 files</i></span></div><div class="track"><div class="fill" style="width:37.6%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Calendar</span><span class="barval">2,042<i>LOC · 4 files</i></span></div><div class="track"><div class="fill" style="width:25.3%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Profile</span><span class="barval">1,896<i>LOC · 3 files</i></span></div><div class="track"><div class="fill" style="width:23.5%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Inbox / AI</span><span class="barval">1,592<i>LOC · 2 files</i></span></div><div class="track"><div class="fill" style="width:19.7%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Misc (search, paywall, legal, gallery)</span><span class="barval">1,556<i>LOC · 4 files</i></span></div><div class="track"><div class="fill" style="width:19.3%;background:#5E5CE6"></div></div></div><div class="bar"><div class="barhead"><span>Notes</span><span class="barval">966<i>LOC · 2 files</i></span></div><div class="track"><div class="fill" style="width:12.0%;background:#5E5CE6"></div></div></div>
+</div>
+
+<div class="card">
+  <h2>Largest single files</h2>
+  <table><tr><td>settings/settings_screen.dart</td><td class="n">1,761</td></tr><tr><td>tasks/tasks_screen.dart</td><td class="n">1,755</td></tr><tr><td>settings/widget_preview_screen.dart</td><td class="n">1,738</td></tr><tr><td>inbox/inbox_screen.dart</td><td class="n">1,305</td></tr><tr><td>onboarding/onboard_screen.dart</td><td class="n">1,290</td></tr><tr><td>focus/focus_screen.dart</td><td class="n">1,191</td></tr><tr><td>tasks/edit_task_screen.dart</td><td class="n">1,019</td></tr><tr><td>calendar/calendar_screen.dart</td><td class="n">983</td></tr><tr><td>habits/habits_screen.dart</td><td class="n">977</td></tr><tr><td>profile/profile_screen.dart</td><td class="n">939</td></tr></table>
+</div>
+
+<div class="card">
+  <h2>Recent session — polishing &amp; bug-fixing</h2>
+  <p class="cap">Qualitative summary of the most recent engagement (not time-tracked).</p>
+  <div class="rk"><b>Theming</b><span>Fixed light/dark surface tokens (surf2/bdr0 across ~100 sites); per-theme wallpaper brightness; edit-profile black-tint fix.</span></div><div class="rk"><b>Layout / nav</b><span>Central bottom-nav clearance so content/buttons stop hiding under the floating nav; Tasks list &amp; 2×2 spacing.</span></div><div class="rk"><b>Gestures / bugs</b><span>Checkmark tap no longer opens details (habits + tasks); dead-zone buffer around the checkmark; streak no longer wiped on un-check; skip now protects the streak.</span></div><div class="rk"><b>Features wired</b><span>Onboarding answers persisted + goal → real task; &#x27;Something came up?&#x27; skip card wired per-habit &amp; globally; Tasks timer kept in Tasks tab.</span></div><div class="rk"><b>Copy / polish</b><span>Removed fake ratings; Invite added before Sign-out; App Store → App Store/Play Store; Privacy/Terms split; contact details updated; photo &amp; Gmail set to &#x27;coming soon&#x27;.</span></div>
+</div>
+
+<div class="card">
+  <h2>Method &amp; caveats</h2>
+  <p class="note">
+  Effort here is approximated by <b>lines of hand-written Dart</b> per area — a rough proxy, not real time tracking
+  (the project's git history is a single squashed commit, so per-commit effort over time can't be reconstructed).
+  LOC under-counts dense work like the <b>localization</b> file (19 languages packed into long single lines) and
+  visual/polish work (which often changes few lines for big effect). <br><br>
+  * The 13,005 generated lines (Drift database.g.dart) are machine-produced from table definitions and are
+  excluded from the effort totals — they represent &lt;1 hour of schema authoring, not 13,005 lines of labour.
+  </p>
+  <div class="foot">Kaal · Flutter cross-platform productivity app · report auto-generated from the working tree.</div>
+</div>
+
+</div></body></html>
