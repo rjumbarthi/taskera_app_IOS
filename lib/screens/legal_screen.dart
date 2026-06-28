@@ -110,7 +110,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '1. Acceptance of Terms',
-        body: 'By downloading, installing, or using the Kaal application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App. These Terms constitute a legally binding agreement between you and Kaal ("Company", "we", "us", or "our").',
+        body: 'By downloading, installing, or using the Kaal application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App. These Terms constitute a legally binding agreement between you and Port443 LLC, the operator of the Kaal application ("Company", "we", "us", or "our").',
         colors: colors,
       ),
 
@@ -227,7 +227,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '1. Introduction',
-        body: 'Kaal ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use the Kaal application. Please read this policy carefully. If you disagree with its terms, please discontinue use of the App.',
+        body: 'Kaal, operated by Port443 LLC ("we", "us", or "our"), is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use the Kaal application. Please read this policy carefully. If you disagree with its terms, please discontinue use of the App.',
         colors: colors,
       ),
 
@@ -329,7 +329,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '13. Contact Us',
-        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nr.official@jumbarthi.com\n\nKaal\nHyderabad, India',
+        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nr.official@jumbarthi.com\n\nKaal — a product of Port443 LLC\nHyderabad, India',
         colors: colors,
       ),
     ]);

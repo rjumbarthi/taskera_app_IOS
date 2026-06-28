@@ -338,6 +338,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _AboutPara('Kaal organises everything you do into Covey’s four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes to what truly matters. Tasks, habits, goals, calendar and notes, in one focused place.', colors),
                 _AboutPara('VERSION  ·  Kaal v1.0.0', colors, strong: true),
                 _AboutPara('CONTACT  ·  r.official@jumbarthi.com', colors),
+                _AboutPara('Kaal is a product of Port443 LLC.', colors),
+                _AboutPara('© 2026 Port443 LLC. All rights reserved.', colors),
               ]),
             ),
           ]),
