@@ -2,14 +2,15 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../data/providers/calendar_provider.dart';
-import '../data/providers/habits_provider.dart';
-import '../data/providers/notes_provider.dart';
+import 'package:go_router/go_router.dart';
+import '../data/providers/auth_provider.dart';
 import '../data/providers/tasks_provider.dart';
+import '../routing/routes.dart';
 import '../settings/kaal_settings.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_motion.dart';
 import '../theme/kaal_theme.dart';
+import 'kaal_avatar.dart';
 
 enum KaalTab { focus, tasks, habits, calendar, aiInbox, notes, search, settings, profile }
 
@@ -273,117 +274,142 @@ class _NavItemState extends State<_NavItem> {
   }
 }
 
-// ── Desktop / web left sidebar ────────────────────────────────────────────────
-// Replaces the bottom nav on wide windows. Gives one-click access to every
-// section (incl. Settings/Profile that the bottom nav hides) and surfaces live
-// counts so info is visible without navigating in.
+
+// ── Desktop / web left sidebar (reference design) ─────────────────────────────
+// Visual match to the Apple-restrained reference: brand, Today/Inbox/Upcoming,
+// a TOOLS group, and an account footer. Wired to the existing routes (no
+// routing changes) — `currentTab` drives the selected highlight.
 
 class KaalSidebar extends ConsumerWidget {
   final KaalTab currentTab;
-  final ValueChanged<KaalTab>? onTabChanged;
-  const KaalSidebar({super.key, required this.currentTab, this.onTabChanged});
-
-  static const _main = [
-    KaalTab.focus, KaalTab.tasks, KaalTab.habits,
-    KaalTab.calendar, KaalTab.notes, KaalTab.aiInbox,
-  ];
-  static const _footer = [KaalTab.search, KaalTab.settings, KaalTab.profile];
-
-  static String _label(KaalTab t) => switch (t) {
-        KaalTab.focus    => 'Focus',
-        KaalTab.tasks    => 'Tasks',
-        KaalTab.habits   => 'Habits',
-        KaalTab.calendar => 'Calendar',
-        KaalTab.notes    => 'Notes',
-        KaalTab.aiInbox  => 'Inbox',
-        KaalTab.search   => 'Search',
-        KaalTab.settings => 'Settings',
-        KaalTab.profile  => 'Profile',
-      };
+  const KaalSidebar({super.key, required this.currentTab});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors   = KaalTheme.of(context).colors;
-    final isLight  = KaalTheme.of(context).mode == KaalThemeMode.light;
-    final settings = ref.watch(kaalSettingsProvider);
-    final topSafe  = MediaQuery.viewPaddingOf(context).top;
-    final botSafe  = MediaQuery.viewPaddingOf(context).bottom;
+    final dark = Theme.of(context).brightness != Brightness.light;
+    final panel     = dark ? const Color(0xFF0A0A0C) : const Color(0xFFF6F6F9);
+    final labelCol  = dark ? Colors.white : const Color(0xFF1A1A1A);
+    final secondary = dark ? const Color(0xFF8E8E93) : const Color(0xFF6B6B70);
+    final toolsCol  = dark ? const Color(0xFF6A6A70) : const Color(0xFF9A9AA0);
+    final borderCol = dark ? const Color(0xFF1C1C1E) : const Color(0xFFE2E2E7);
+    final hover     = dark ? const Color(0x14FFFFFF) : const Color(0x0A000000);
 
-    // Live counts so the nav itself carries info (reduces clicking in).
-    final tasks  = ref.watch(allTasksProvider).value ?? const [];
-    final habits = ref.watch(habitsProvider).value ?? const [];
-    final notes  = ref.watch(notesProvider).value ?? const [];
-    final events = ref.watch(calendarEventsProvider).value ?? const [];
-    final now = DateTime.now();
-    bool isToday(DateTime? d) =>
-        d == null || (d.year == now.year && d.month == now.month && d.day == now.day);
+    final topSafe = MediaQuery.viewPaddingOf(context).top;
+    final botSafe = MediaQuery.viewPaddingOf(context).bottom;
 
-    int? badge(KaalTab t) => switch (t) {
-          KaalTab.tasks    => tasks.where((x) => !x.isDone).length,
-          KaalTab.habits   => habits.length,
-          KaalTab.notes    => notes.length,
-          KaalTab.calendar => events.where((e) => isToday(e.eventDate)).length,
-          _ => null,
-        };
+    final tasks = ref.watch(allTasksProvider).value ?? const <dynamic>[];
+    final todayCount = tasks.where((t) => !t.isDone).length;
+    final inboxCount =
+        tasks.where((t) => !t.isDone && (t.quadrant < 1 || t.quadrant > 4)).length;
 
-    final panel = isLight ? const Color(0xF5F4F4F8) : const Color(0xF00B0B12);
+    final name = ref.watch(displayNameProvider) ?? 'You';
+    final synced = ref.watch(currentUserProvider) != null;
 
-    Widget item(KaalTab t) {
-      final n = badge(t);
-      return _SidebarItem(
-        tab: t,
-        label: _label(t),
-        badge: (n != null && n > 0) ? '$n' : null,
-        isActive: t == currentTab,
-        enabled: KaalBottomNav._enabled(settings, t),
-        colors: colors,
-        onTap: () {
-          if (KaalBottomNav._enabled(settings, t)) {
-            onTabChanged?.call(t);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('${KaalBottomNav._tabName(t)} is locked. Enable it in '
-                  'Settings -> Tabs, or it unlocks automatically in a few days.'),
-              behavior: SnackBarBehavior.floating,
-            ));
-          }
-        },
-      );
-    }
+    Widget item({
+      required String label,
+      required IconData icon,
+      required String route,
+      bool active = false,
+      int? count,
+    }) =>
+        _SideNavItem(
+          label: label,
+          icon: icon,
+          active: active,
+          count: count,
+          labelCol: labelCol,
+          secondary: secondary,
+          hover: hover,
+          onTap: () => context.go(route),
+        );
 
     return Container(
-      width: 232,
+      width: 240,
       decoration: BoxDecoration(
         color: panel,
-        border: Border(right: BorderSide(width: 0.5, color: colors.bdr)),
+        border: Border(right: BorderSide(width: 0.5, color: borderCol)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: topSafe + 18),
+          SizedBox(height: topSafe + 20),
+          // Brand
           Padding(
-            padding: const EdgeInsets.fromLTRB(21, 0, 16, 0),
+            padding: const EdgeInsets.fromLTRB(18, 0, 16, 0),
             child: Row(children: [
-              const Text('✦', style: TextStyle(fontSize: 18, color: KaalColors.acc, height: 1)),
-              const SizedBox(width: 9),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF0A84FF), Color(0xFF409CFF)],
+                  ),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                alignment: Alignment.center,
+                child: SvgPicture.asset('assets/icons/focus_nav.svg',
+                    width: 20, height: 20,
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+              ),
+              const SizedBox(width: 12),
               Text('Kaal',
                   style: TextStyle(
-                      fontFamily: 'Fraunces',
-                      fontVariations: const [FontVariation('wght', 600)],
-                      fontSize: 20,
-                      color: colors.ink,
-                      height: 1)),
+                      fontSize: 21, fontWeight: FontWeight.w700, letterSpacing: -0.3, color: labelCol, height: 1)),
             ]),
           ),
-          const SizedBox(height: 18),
-          for (final t in _main) item(t),
-          const Spacer(),
+          const SizedBox(height: 24),
+          item(label: 'Today', icon: Icons.access_time_rounded, route: KaalRoutes.focus,
+              active: currentTab == KaalTab.focus, count: todayCount > 0 ? todayCount : null),
+          item(label: 'Inbox', icon: Icons.inbox_outlined, route: KaalRoutes.inbox,
+              active: currentTab == KaalTab.aiInbox, count: inboxCount > 0 ? inboxCount : null),
+          item(label: 'Upcoming', icon: Icons.event_outlined, route: KaalRoutes.tasks,
+              active: currentTab == KaalTab.tasks),
+          const SizedBox(height: 22),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Divider(height: 1, thickness: 0.5, color: colors.bdr),
+            padding: const EdgeInsets.fromLTRB(22, 0, 16, 8),
+            child: Text('TOOLS',
+                style: TextStyle(
+                    fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.2, color: toolsCol, height: 1)),
           ),
-          const SizedBox(height: 6),
-          for (final t in _footer) item(t),
+          item(label: 'Focus', icon: Icons.timer_outlined, route: KaalRoutes.tasksPomodoro),
+          item(label: 'Habits', icon: Icons.check_box_outlined, route: KaalRoutes.habits,
+              active: currentTab == KaalTab.habits),
+          item(label: 'Notes', icon: Icons.sticky_note_2_outlined, route: KaalRoutes.notes,
+              active: currentTab == KaalTab.notes),
+          const Spacer(),
+          // Account footer
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => context.go(KaalRoutes.profile),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 16, 0),
+                child: Row(children: [
+                  const KaalAvatar(size: 34),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelCol, height: 1.2)),
+                        Text(synced ? 'Cloud synced' : 'Local storage',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 11.5, color: secondary, height: 1.2)),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
           SizedBox(height: 16 + botSafe),
         ],
       ),
@@ -391,56 +417,36 @@ class KaalSidebar extends ConsumerWidget {
   }
 }
 
-class _SidebarItem extends StatefulWidget {
-  final KaalTab tab;
+class _SideNavItem extends StatefulWidget {
   final String label;
-  final String? badge;
-  final bool isActive;
-  final bool enabled;
-  final KaalColors colors;
+  final IconData icon;
+  final bool active;
+  final int? count;
+  final Color labelCol, secondary, hover;
   final VoidCallback onTap;
-  const _SidebarItem({
-    required this.tab,
+  const _SideNavItem({
     required this.label,
-    required this.badge,
-    required this.isActive,
-    required this.enabled,
-    required this.colors,
+    required this.icon,
+    required this.active,
+    required this.count,
+    required this.labelCol,
+    required this.secondary,
+    required this.hover,
     required this.onTap,
   });
 
   @override
-  State<_SidebarItem> createState() => _SidebarItemState();
+  State<_SideNavItem> createState() => _SideNavItemState();
 }
 
-class _SidebarItemState extends State<_SidebarItem> {
+class _SideNavItemState extends State<_SideNavItem> {
   bool _hover = false;
-
-  Widget _icon(Color color) {
-    const size = 19.0;
-    final filter = ColorFilter.mode(color, BlendMode.srcIn);
-    if (widget.tab == KaalTab.focus) {
-      return SvgPicture.asset('assets/icons/focus_nav.svg',
-          width: size, height: size, colorFilter: filter);
-    }
-    final svg = switch (widget.tab) {
-      KaalTab.tasks    => _svgTasks,
-      KaalTab.habits   => _svgHabits,
-      KaalTab.calendar => _svgCalendar,
-      KaalTab.notes    => _svgNotes,
-      KaalTab.aiInbox  => _svgAiInbox,
-      KaalTab.search   => _svgSearch,
-      KaalTab.settings => _svgSettings,
-      KaalTab.profile  => _svgProfile,
-      KaalTab.focus    => '',
-    };
-    return SvgPicture.string(svg, width: size, height: size, colorFilter: filter);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final colors = widget.colors;
-    final fg = widget.isActive ? KaalColors.acc : colors.ink2;
+    final active = widget.active;
+    final fg = active ? Colors.white : widget.labelCol;
+    final iconCol = active ? Colors.white : widget.secondary;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hover = true),
@@ -448,50 +454,37 @@ class _SidebarItemState extends State<_SidebarItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
-        child: Opacity(
-          opacity: widget.enabled ? 1 : 0.4,
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(10, 1, 10, 1),
-            padding: const EdgeInsets.fromLTRB(11, 9, 10, 9),
-            decoration: BoxDecoration(
-              color: widget.isActive
-                  ? KaalColors.accBg
-                  : (_hover ? colors.surf2 : Colors.transparent),
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Row(children: [
-              SizedBox(width: 22, child: _icon(fg)),
-              const SizedBox(width: 11),
-              Expanded(
-                child: Text(widget.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 13.5,
-                        fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
-                        color: widget.isActive ? colors.ink : colors.ink2,
-                        height: 1)),
-              ),
-              if (widget.badge != null) ...[
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: widget.isActive ? KaalColors.acc : colors.surf3,
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  child: Text(widget.badge!,
-                      style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: widget.isActive ? Colors.white : colors.ink3,
-                          height: 1)),
-                ),
-              ],
-            ]),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(12, 2, 12, 2),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            color: active
+                ? const Color(0xFF0A84FF)
+                : (_hover ? widget.hover : Colors.transparent),
+            borderRadius: BorderRadius.circular(10),
           ),
+          child: Row(children: [
+            Icon(widget.icon, size: 19, color: iconCol),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(widget.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                      color: fg,
+                      height: 1)),
+            ),
+            if (widget.count != null)
+              Text('${widget.count}',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: (active ? Colors.white : widget.secondary)
+                          .withValues(alpha: active ? 0.95 : 0.8),
+                      height: 1)),
+          ]),
         ),
       ),
     );

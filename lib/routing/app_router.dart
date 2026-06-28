@@ -625,10 +625,7 @@ class _RouterShell extends ConsumerWidget {
           // height (otherwise the Today ListView has unbounded height).
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            KaalSidebar(
-              currentTab: tab,
-              onTabChanged: (t) => context.go(_NavShell._routeForTab(t)),
-            ),
+            KaalSidebar(currentTab: tab),
             Expanded(child: tab == KaalTab.focus ? shell : appShell()),
           ],
         ),
