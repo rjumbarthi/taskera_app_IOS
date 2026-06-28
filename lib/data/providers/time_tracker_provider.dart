@@ -1,23 +1,17 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../repositories/focus_session_repository.dart';
-
 class TimeTrackerState {
   final bool running;
   final int elapsedSeconds;
   final String? taskTitle;
   final int? startedAtMs;
-  final int? taskId;   // when set, stop() writes the time back to this task
-  final int quadrant;  // for the logged focus-session record
 
   const TimeTrackerState({
     this.running = false,
     this.elapsedSeconds = 0,
     this.taskTitle,
     this.startedAtMs,
-    this.taskId,
-    this.quadrant = 0,
   });
 
   TimeTrackerState copyWith({
@@ -25,15 +19,11 @@ class TimeTrackerState {
     int? elapsedSeconds,
     String? taskTitle,
     int? startedAtMs,
-    int? taskId,
-    int? quadrant,
   }) => TimeTrackerState(
     running: running ?? this.running,
     elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
     taskTitle: taskTitle ?? this.taskTitle,
     startedAtMs: startedAtMs ?? this.startedAtMs,
-    taskId: taskId ?? this.taskId,
-    quadrant: quadrant ?? this.quadrant,
   );
 
   String get displayTime {
@@ -53,17 +43,13 @@ class TimeTrackerNotifier extends Notifier<TimeTrackerState> {
   @override
   TimeTrackerState build() => const TimeTrackerState();
 
-  /// Start a fresh session. Pass [taskId] (and [quadrant]) so the elapsed time
-  /// is written back to that task when the session stops.
-  void startNew(String taskTitle, {int? taskId, int quadrant = 0}) {
+  void startNew(String taskTitle) {
     _timer?.cancel();
     state = TimeTrackerState(
       running: true,
       elapsedSeconds: 0,
       taskTitle: taskTitle,
       startedAtMs: DateTime.now().millisecondsSinceEpoch,
-      taskId: taskId,
-      quadrant: quadrant,
     );
     _startTicking();
   }
@@ -84,17 +70,6 @@ class TimeTrackerNotifier extends Notifier<TimeTrackerState> {
   void stop() {
     _timer?.cancel();
     _timer = null;
-    final s = state;
-    // Persist the time against the task (and as a focus-session record).
-    if (s.taskId != null && s.startedAtMs != null && s.elapsedSeconds > 0) {
-      ref.read(focusSessionRepositoryProvider).logSession(FocusSessionRecord(
-            taskId: s.taskId!,
-            quadrant: s.quadrant == 0 ? 1 : s.quadrant,
-            startedAt: DateTime.fromMillisecondsSinceEpoch(s.startedAtMs!),
-            durationSeconds: s.elapsedSeconds,
-            completed: false,
-          ));
-    }
     state = const TimeTrackerState();
   }
 

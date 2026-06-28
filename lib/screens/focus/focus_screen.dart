@@ -9,8 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
 import '../../theme/kaal_colors.dart';
-import '../../util/platform_layout.dart';
-import 'today_web_view.dart';
 import '../../theme/kaal_motion.dart';
 import '../../theme/kaal_shape.dart';
 import '../../theme/kaal_theme.dart';
@@ -44,9 +42,6 @@ class FocusDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Wide web/desktop → the Apple-restrained Today List/Grid surface.
-    if (useSidebarNav(context)) return const TodayWebView();
-
     final s = ref.watch(kaalSettingsProvider);
     final utilGrid = _UtilGrid(
       showPeak:  s.sw('focusPeak'),

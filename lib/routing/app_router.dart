@@ -74,7 +74,6 @@ import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 import '../widgets/app_shell.dart';
 import '../widgets/kaal_avatar.dart';
-import '../util/platform_layout.dart';
 import '../widgets/kaal_bottom_nav.dart';
 import '../widgets/wallpaper_background.dart';
 import '../widgets/top_ico_button.dart';
@@ -613,24 +612,6 @@ class _RouterShell extends ConsumerWidget {
           actions: _actions(context),
           body: shell,
         );
-
-    // Wide web/desktop: left sidebar + content, no floating bottom nav. The
-    // Focus tab renders its bare Today surface (its own header); the other tabs
-    // keep the standard app chrome (top bar + wallpaper).
-    if (useSidebarNav(context)) {
-      return CurrentTab(
-        tab: tab,
-        child: Row(
-          // Stretch so the sidebar is full-height and the content gets a bounded
-          // height (otherwise the Today ListView has unbounded height).
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            KaalSidebar(currentTab: tab),
-            Expanded(child: tab == KaalTab.focus ? shell : appShell()),
-          ],
-        ),
-      );
-    }
 
     final mq  = MediaQuery.of(context);
     return MediaQuery(
