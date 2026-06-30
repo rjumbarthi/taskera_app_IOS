@@ -134,6 +134,8 @@ class SyncService {
   // applied. Reset to true each app session, so it self-heals after the
   // `labels` column is added and the app restarts.
   bool _tasksHaveLabels = true;
+  bool _habitsHaveNotes = true;
+  bool _goalsHaveNotes  = true;
 
   Future<void> _pushTasks() async {
     final all = <Task>[];
@@ -180,9 +182,14 @@ class SyncService {
     }
   }
 
-  static bool _isMissingLabelsColumn(PostgrestException e) {
+  static bool _isMissingLabelsColumn(PostgrestException e) =>
+      _isMissingColumn(e, 'labels');
+
+  // True when the error means [col] doesn't exist on the remote table yet
+  // (migration not applied) — lets a push drop that field and retry.
+  static bool _isMissingColumn(PostgrestException e, String col) {
     final msg = e.message.toLowerCase();
-    return e.code == 'PGRST204' || e.code == '42703' || msg.contains('labels');
+    return e.code == 'PGRST204' || e.code == '42703' || msg.contains(col);
   }
 
   TasksCompanion _taskRow(Map<String, dynamic> r) => TasksCompanion(
@@ -216,23 +223,37 @@ class SyncService {
     final all = await _db.habitsDao.watchAll().first;
     if (all.isEmpty) return;
 
-    await _client.from('habits').upsert(
-      all.map((h) => {
-        'id'                 : h.id,
-        'user_id'            : _uid,
-        'emoji'              : h.emoji,
-        'name'               : h.name,
-        'frequency_label'    : h.frequencyLabel,
-        'duration_minutes'   : h.durationMinutes,
-        'quadrant'           : h.quadrant,
-        'streak_label'       : h.streakLabel,
-        'streak_color_value' : h.streakColorValue,
-        'accent_color_value' : h.accentColorValue,
-        'weekly_filled_count': h.weeklyFilledCount,
-        'sub_label'          : h.subLabel,
-      }).toList(),
-      onConflict: 'id',
-    );
+    Map<String, dynamic> row(Habit h, {required bool withNotes}) => {
+          'id'                 : h.id,
+          'user_id'            : _uid,
+          'emoji'              : h.emoji,
+          'name'               : h.name,
+          'frequency_label'    : h.frequencyLabel,
+          'duration_minutes'   : h.durationMinutes,
+          'quadrant'           : h.quadrant,
+          'streak_label'       : h.streakLabel,
+          'streak_color_value' : h.streakColorValue,
+          'accent_color_value' : h.accentColorValue,
+          'weekly_filled_count': h.weeklyFilledCount,
+          'sub_label'          : h.subLabel,
+          if (withNotes) 'notes': h.notes,
+        };
+
+    Future<void> push(bool withNotes) => _client.from('habits').upsert(
+          all.map((h) => row(h, withNotes: withNotes)).toList(),
+          onConflict: 'id',
+        );
+
+    try {
+      await push(_habitsHaveNotes);
+    } on PostgrestException catch (e) {
+      if (_habitsHaveNotes && _isMissingColumn(e, 'notes')) {
+        _habitsHaveNotes = false;
+        await push(false);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   HabitsCompanion _habitRow(Map<String, dynamic> r) => HabitsCompanion(
@@ -247,6 +268,7 @@ class SyncService {
         accentColorValue: Value(r['accent_color_value'] as int),
         weeklyFilledCount: Value((r['weekly_filled_count'] as int?) ?? 0),
         subLabel: Value(r['sub_label'] as String?),
+        notes: Value(r['notes'] as String?),
       );
 
   Future<void> _pullHabits() async {
@@ -262,24 +284,38 @@ class SyncService {
     final all = await _db.goalsDao.watchAll().first;
     if (all.isEmpty) return;
 
-    await _client.from('goals').upsert(
-      all.map((g) => {
-        'id'                : g.id,
-        'user_id'           : _uid,
-        'emoji'             : g.emoji,
-        'emoji_bg'          : g.emojiBg,
-        'title'             : g.title,
-        'subtitle'          : g.subtitle,
-        'progress_pct'      : g.progressPct,
-        'accent_color_value': g.accentColorValue,
-        'bar_color_value'   : g.barColorValue,
-        'border_color_value': g.borderColorValue,
-        'linked_label'      : g.linkedLabel,
-        'link_type'         : g.linkType,
-        'dot_color_value'   : g.dotColorValue,
-      }).toList(),
-      onConflict: 'id',
-    );
+    Map<String, dynamic> row(Goal g, {required bool withNotes}) => {
+          'id'                : g.id,
+          'user_id'           : _uid,
+          'emoji'             : g.emoji,
+          'emoji_bg'          : g.emojiBg,
+          'title'             : g.title,
+          'subtitle'          : g.subtitle,
+          'progress_pct'      : g.progressPct,
+          'accent_color_value': g.accentColorValue,
+          'bar_color_value'   : g.barColorValue,
+          'border_color_value': g.borderColorValue,
+          'linked_label'      : g.linkedLabel,
+          'link_type'         : g.linkType,
+          'dot_color_value'   : g.dotColorValue,
+          if (withNotes) 'notes': g.notes,
+        };
+
+    Future<void> push(bool withNotes) => _client.from('goals').upsert(
+          all.map((g) => row(g, withNotes: withNotes)).toList(),
+          onConflict: 'id',
+        );
+
+    try {
+      await push(_goalsHaveNotes);
+    } on PostgrestException catch (e) {
+      if (_goalsHaveNotes && _isMissingColumn(e, 'notes')) {
+        _goalsHaveNotes = false;
+        await push(false);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   GoalsCompanion _goalRow(Map<String, dynamic> r) => GoalsCompanion(
@@ -295,6 +331,7 @@ class SyncService {
         linkedLabel: Value(r['linked_label'] as String),
         linkType: Value((r['link_type'] as String?) ?? 'task'),
         dotColorValue: Value(r['dot_color_value'] as int),
+        notes: Value(r['notes'] as String?),
       );
 
   Future<void> _pullGoals() async {

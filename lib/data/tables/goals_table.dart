@@ -16,6 +16,7 @@ class Goals extends Table {
   DateTimeColumn get createdAt  => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get deadline   => dateTime().nullable()();
   TextColumn     get milestones => text().withDefault(const Constant(''))();
+  TextColumn     get notes      => text().nullable()(); // freeform user notes — surfaced in Notes
 }
 
 class GoalTaskLinks extends Table {

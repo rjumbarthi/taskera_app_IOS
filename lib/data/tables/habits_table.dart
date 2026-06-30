@@ -13,6 +13,7 @@ class Habits extends Table {
   IntColumn get accentColorValue => integer()(); // ARGB int
   IntColumn get weeklyFilledCount => integer().withDefault(const Constant(0))(); // 0–7
   TextColumn get subLabel => text().nullable()(); // e.g. "Today's routine"
+  TextColumn get notes => text().nullable()(); // freeform user notes — surfaced in Notes
   DateTimeColumn get lastCheckedDate => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

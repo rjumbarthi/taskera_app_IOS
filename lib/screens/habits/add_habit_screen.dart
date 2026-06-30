@@ -133,6 +133,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
     if (!mounted) return;
     setState(() {
       _nameCtrl.text = habit.name;
+      _notesCtrl.text = habit.notes ?? '';
       _icon  = habit.emoji;
       if (ci >= 0) _colorIdx = ci;
       if (fi >= 0) _freqIdx  = fi;
@@ -169,6 +170,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
           streakLabel: Value(_existingStreakLabel),
           streakColorValue: Value(_existingStreakColor),
           weeklyFilledCount: Value(_existingWeeklyFilled),
+          notes: Value(_notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim()),
         ));
         await _syncSteps(dao, id);
         ref.logActivity('Habit "$name" updated', type: 'habit');
@@ -182,6 +184,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
           streakColorValue: Value(const Color(0xFF8E8E93).toARGB32()),
           accentColorValue: Value(_habitColors[_colorIdx].toARGB32()),
           weeklyFilledCount: const Value(0),
+          notes: Value(_notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim()),
         ));
         await _syncSteps(dao, id);
         ref.logActivity('Habit "$name" created', type: 'habit');

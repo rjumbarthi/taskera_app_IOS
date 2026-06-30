@@ -1847,6 +1847,15 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _lastCheckedDateMeta = const VerificationMeta(
     'lastCheckedDate',
   );
@@ -1885,6 +1894,7 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     accentColorValue,
     weeklyFilledCount,
     subLabel,
+    notes,
     lastCheckedDate,
     createdAt,
   ];
@@ -2002,6 +2012,12 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
         subLabel.isAcceptableOrUnknown(data['sub_label']!, _subLabelMeta),
       );
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     if (data.containsKey('last_checked_date')) {
       context.handle(
         _lastCheckedDateMeta,
@@ -2074,6 +2090,10 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
         DriftSqlType.string,
         data['${effectivePrefix}sub_label'],
       ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
       lastCheckedDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}last_checked_date'],
@@ -2104,6 +2124,7 @@ class Habit extends DataClass implements Insertable<Habit> {
   final int accentColorValue;
   final int weeklyFilledCount;
   final String? subLabel;
+  final String? notes;
   final DateTime? lastCheckedDate;
   final DateTime createdAt;
   const Habit({
@@ -2119,6 +2140,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     required this.accentColorValue,
     required this.weeklyFilledCount,
     this.subLabel,
+    this.notes,
     this.lastCheckedDate,
     required this.createdAt,
   });
@@ -2142,6 +2164,9 @@ class Habit extends DataClass implements Insertable<Habit> {
     map['weekly_filled_count'] = Variable<int>(weeklyFilledCount);
     if (!nullToAbsent || subLabel != null) {
       map['sub_label'] = Variable<String>(subLabel);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
     }
     if (!nullToAbsent || lastCheckedDate != null) {
       map['last_checked_date'] = Variable<DateTime>(lastCheckedDate);
@@ -2170,6 +2195,9 @@ class Habit extends DataClass implements Insertable<Habit> {
       subLabel: subLabel == null && nullToAbsent
           ? const Value.absent()
           : Value(subLabel),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
       lastCheckedDate: lastCheckedDate == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCheckedDate),
@@ -2195,6 +2223,7 @@ class Habit extends DataClass implements Insertable<Habit> {
       accentColorValue: serializer.fromJson<int>(json['accentColorValue']),
       weeklyFilledCount: serializer.fromJson<int>(json['weeklyFilledCount']),
       subLabel: serializer.fromJson<String?>(json['subLabel']),
+      notes: serializer.fromJson<String?>(json['notes']),
       lastCheckedDate: serializer.fromJson<DateTime?>(json['lastCheckedDate']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -2215,6 +2244,7 @@ class Habit extends DataClass implements Insertable<Habit> {
       'accentColorValue': serializer.toJson<int>(accentColorValue),
       'weeklyFilledCount': serializer.toJson<int>(weeklyFilledCount),
       'subLabel': serializer.toJson<String?>(subLabel),
+      'notes': serializer.toJson<String?>(notes),
       'lastCheckedDate': serializer.toJson<DateTime?>(lastCheckedDate),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -2233,6 +2263,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     int? accentColorValue,
     int? weeklyFilledCount,
     Value<String?> subLabel = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
     Value<DateTime?> lastCheckedDate = const Value.absent(),
     DateTime? createdAt,
   }) => Habit(
@@ -2252,6 +2283,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     accentColorValue: accentColorValue ?? this.accentColorValue,
     weeklyFilledCount: weeklyFilledCount ?? this.weeklyFilledCount,
     subLabel: subLabel.present ? subLabel.value : this.subLabel,
+    notes: notes.present ? notes.value : this.notes,
     lastCheckedDate: lastCheckedDate.present
         ? lastCheckedDate.value
         : this.lastCheckedDate,
@@ -2285,6 +2317,7 @@ class Habit extends DataClass implements Insertable<Habit> {
           ? data.weeklyFilledCount.value
           : this.weeklyFilledCount,
       subLabel: data.subLabel.present ? data.subLabel.value : this.subLabel,
+      notes: data.notes.present ? data.notes.value : this.notes,
       lastCheckedDate: data.lastCheckedDate.present
           ? data.lastCheckedDate.value
           : this.lastCheckedDate,
@@ -2307,6 +2340,7 @@ class Habit extends DataClass implements Insertable<Habit> {
           ..write('accentColorValue: $accentColorValue, ')
           ..write('weeklyFilledCount: $weeklyFilledCount, ')
           ..write('subLabel: $subLabel, ')
+          ..write('notes: $notes, ')
           ..write('lastCheckedDate: $lastCheckedDate, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -2327,6 +2361,7 @@ class Habit extends DataClass implements Insertable<Habit> {
     accentColorValue,
     weeklyFilledCount,
     subLabel,
+    notes,
     lastCheckedDate,
     createdAt,
   );
@@ -2346,6 +2381,7 @@ class Habit extends DataClass implements Insertable<Habit> {
           other.accentColorValue == this.accentColorValue &&
           other.weeklyFilledCount == this.weeklyFilledCount &&
           other.subLabel == this.subLabel &&
+          other.notes == this.notes &&
           other.lastCheckedDate == this.lastCheckedDate &&
           other.createdAt == this.createdAt);
 }
@@ -2363,6 +2399,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
   final Value<int> accentColorValue;
   final Value<int> weeklyFilledCount;
   final Value<String?> subLabel;
+  final Value<String?> notes;
   final Value<DateTime?> lastCheckedDate;
   final Value<DateTime> createdAt;
   const HabitsCompanion({
@@ -2378,6 +2415,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     this.accentColorValue = const Value.absent(),
     this.weeklyFilledCount = const Value.absent(),
     this.subLabel = const Value.absent(),
+    this.notes = const Value.absent(),
     this.lastCheckedDate = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -2394,6 +2432,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     required int accentColorValue,
     this.weeklyFilledCount = const Value.absent(),
     this.subLabel = const Value.absent(),
+    this.notes = const Value.absent(),
     this.lastCheckedDate = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : emoji = Value(emoji),
@@ -2415,6 +2454,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Expression<int>? accentColorValue,
     Expression<int>? weeklyFilledCount,
     Expression<String>? subLabel,
+    Expression<String>? notes,
     Expression<DateTime>? lastCheckedDate,
     Expression<DateTime>? createdAt,
   }) {
@@ -2431,6 +2471,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       if (accentColorValue != null) 'accent_color_value': accentColorValue,
       if (weeklyFilledCount != null) 'weekly_filled_count': weeklyFilledCount,
       if (subLabel != null) 'sub_label': subLabel,
+      if (notes != null) 'notes': notes,
       if (lastCheckedDate != null) 'last_checked_date': lastCheckedDate,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -2449,6 +2490,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Value<int>? accentColorValue,
     Value<int>? weeklyFilledCount,
     Value<String?>? subLabel,
+    Value<String?>? notes,
     Value<DateTime?>? lastCheckedDate,
     Value<DateTime>? createdAt,
   }) {
@@ -2465,6 +2507,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       accentColorValue: accentColorValue ?? this.accentColorValue,
       weeklyFilledCount: weeklyFilledCount ?? this.weeklyFilledCount,
       subLabel: subLabel ?? this.subLabel,
+      notes: notes ?? this.notes,
       lastCheckedDate: lastCheckedDate ?? this.lastCheckedDate,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -2509,6 +2552,9 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     if (subLabel.present) {
       map['sub_label'] = Variable<String>(subLabel.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     if (lastCheckedDate.present) {
       map['last_checked_date'] = Variable<DateTime>(lastCheckedDate.value);
     }
@@ -2533,6 +2579,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
           ..write('accentColorValue: $accentColorValue, ')
           ..write('weeklyFilledCount: $weeklyFilledCount, ')
           ..write('subLabel: $subLabel, ')
+          ..write('notes: $notes, ')
           ..write('lastCheckedDate: $lastCheckedDate, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -3364,6 +3411,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3381,6 +3437,7 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     createdAt,
     deadline,
     milestones,
+    notes,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3517,6 +3574,12 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         milestones.isAcceptableOrUnknown(data['milestones']!, _milestonesMeta),
       );
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     return context;
   }
 
@@ -3586,6 +3649,10 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         DriftSqlType.string,
         data['${effectivePrefix}milestones'],
       )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
     );
   }
 
@@ -3611,6 +3678,7 @@ class Goal extends DataClass implements Insertable<Goal> {
   final DateTime createdAt;
   final DateTime? deadline;
   final String milestones;
+  final String? notes;
   const Goal({
     required this.id,
     required this.emoji,
@@ -3627,6 +3695,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     required this.createdAt,
     this.deadline,
     required this.milestones,
+    this.notes,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3648,6 +3717,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       map['deadline'] = Variable<DateTime>(deadline);
     }
     map['milestones'] = Variable<String>(milestones);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     return map;
   }
 
@@ -3670,6 +3742,9 @@ class Goal extends DataClass implements Insertable<Goal> {
           ? const Value.absent()
           : Value(deadline),
       milestones: Value(milestones),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
     );
   }
 
@@ -3694,6 +3769,7 @@ class Goal extends DataClass implements Insertable<Goal> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       deadline: serializer.fromJson<DateTime?>(json['deadline']),
       milestones: serializer.fromJson<String>(json['milestones']),
+      notes: serializer.fromJson<String?>(json['notes']),
     );
   }
   @override
@@ -3715,6 +3791,7 @@ class Goal extends DataClass implements Insertable<Goal> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'deadline': serializer.toJson<DateTime?>(deadline),
       'milestones': serializer.toJson<String>(milestones),
+      'notes': serializer.toJson<String?>(notes),
     };
   }
 
@@ -3734,6 +3811,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     DateTime? createdAt,
     Value<DateTime?> deadline = const Value.absent(),
     String? milestones,
+    Value<String?> notes = const Value.absent(),
   }) => Goal(
     id: id ?? this.id,
     emoji: emoji ?? this.emoji,
@@ -3750,6 +3828,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     createdAt: createdAt ?? this.createdAt,
     deadline: deadline.present ? deadline.value : this.deadline,
     milestones: milestones ?? this.milestones,
+    notes: notes.present ? notes.value : this.notes,
   );
   Goal copyWithCompanion(GoalsCompanion data) {
     return Goal(
@@ -3782,6 +3861,7 @@ class Goal extends DataClass implements Insertable<Goal> {
       milestones: data.milestones.present
           ? data.milestones.value
           : this.milestones,
+      notes: data.notes.present ? data.notes.value : this.notes,
     );
   }
 
@@ -3802,7 +3882,8 @@ class Goal extends DataClass implements Insertable<Goal> {
           ..write('dotColorValue: $dotColorValue, ')
           ..write('createdAt: $createdAt, ')
           ..write('deadline: $deadline, ')
-          ..write('milestones: $milestones')
+          ..write('milestones: $milestones, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -3824,6 +3905,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     createdAt,
     deadline,
     milestones,
+    notes,
   );
   @override
   bool operator ==(Object other) =>
@@ -3843,7 +3925,8 @@ class Goal extends DataClass implements Insertable<Goal> {
           other.dotColorValue == this.dotColorValue &&
           other.createdAt == this.createdAt &&
           other.deadline == this.deadline &&
-          other.milestones == this.milestones);
+          other.milestones == this.milestones &&
+          other.notes == this.notes);
 }
 
 class GoalsCompanion extends UpdateCompanion<Goal> {
@@ -3862,6 +3945,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> deadline;
   final Value<String> milestones;
+  final Value<String?> notes;
   const GoalsCompanion({
     this.id = const Value.absent(),
     this.emoji = const Value.absent(),
@@ -3878,6 +3962,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.createdAt = const Value.absent(),
     this.deadline = const Value.absent(),
     this.milestones = const Value.absent(),
+    this.notes = const Value.absent(),
   });
   GoalsCompanion.insert({
     this.id = const Value.absent(),
@@ -3895,6 +3980,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.createdAt = const Value.absent(),
     this.deadline = const Value.absent(),
     this.milestones = const Value.absent(),
+    this.notes = const Value.absent(),
   }) : emoji = Value(emoji),
        emojiBg = Value(emojiBg),
        title = Value(title),
@@ -3920,6 +4006,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? deadline,
     Expression<String>? milestones,
+    Expression<String>? notes,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3937,6 +4024,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       if (createdAt != null) 'created_at': createdAt,
       if (deadline != null) 'deadline': deadline,
       if (milestones != null) 'milestones': milestones,
+      if (notes != null) 'notes': notes,
     });
   }
 
@@ -3956,6 +4044,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? deadline,
     Value<String>? milestones,
+    Value<String?>? notes,
   }) {
     return GoalsCompanion(
       id: id ?? this.id,
@@ -3973,6 +4062,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       createdAt: createdAt ?? this.createdAt,
       deadline: deadline ?? this.deadline,
       milestones: milestones ?? this.milestones,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -4024,6 +4114,9 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     if (milestones.present) {
       map['milestones'] = Variable<String>(milestones.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     return map;
   }
 
@@ -4044,7 +4137,8 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
           ..write('dotColorValue: $dotColorValue, ')
           ..write('createdAt: $createdAt, ')
           ..write('deadline: $deadline, ')
-          ..write('milestones: $milestones')
+          ..write('milestones: $milestones, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -8436,6 +8530,7 @@ typedef $$HabitsTableCreateCompanionBuilder =
       required int accentColorValue,
       Value<int> weeklyFilledCount,
       Value<String?> subLabel,
+      Value<String?> notes,
       Value<DateTime?> lastCheckedDate,
       Value<DateTime> createdAt,
     });
@@ -8453,6 +8548,7 @@ typedef $$HabitsTableUpdateCompanionBuilder =
       Value<int> accentColorValue,
       Value<int> weeklyFilledCount,
       Value<String?> subLabel,
+      Value<String?> notes,
       Value<DateTime?> lastCheckedDate,
       Value<DateTime> createdAt,
     });
@@ -8564,6 +8660,11 @@ class $$HabitsTableFilterComposer
 
   ColumnFilters<String> get subLabel => $composableBuilder(
     column: $table.subLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8697,6 +8798,11 @@ class $$HabitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get lastCheckedDate => $composableBuilder(
     column: $table.lastCheckedDate,
     builder: (column) => ColumnOrderings(column),
@@ -8766,6 +8872,9 @@ class $$HabitsTableAnnotationComposer
 
   GeneratedColumn<String> get subLabel =>
       $composableBuilder(column: $table.subLabel, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 
   GeneratedColumn<DateTime> get lastCheckedDate => $composableBuilder(
     column: $table.lastCheckedDate,
@@ -8866,6 +8975,7 @@ class $$HabitsTableTableManager
                 Value<int> accentColorValue = const Value.absent(),
                 Value<int> weeklyFilledCount = const Value.absent(),
                 Value<String?> subLabel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<DateTime?> lastCheckedDate = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => HabitsCompanion(
@@ -8881,6 +8991,7 @@ class $$HabitsTableTableManager
                 accentColorValue: accentColorValue,
                 weeklyFilledCount: weeklyFilledCount,
                 subLabel: subLabel,
+                notes: notes,
                 lastCheckedDate: lastCheckedDate,
                 createdAt: createdAt,
               ),
@@ -8898,6 +9009,7 @@ class $$HabitsTableTableManager
                 required int accentColorValue,
                 Value<int> weeklyFilledCount = const Value.absent(),
                 Value<String?> subLabel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<DateTime?> lastCheckedDate = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => HabitsCompanion.insert(
@@ -8913,6 +9025,7 @@ class $$HabitsTableTableManager
                 accentColorValue: accentColorValue,
                 weeklyFilledCount: weeklyFilledCount,
                 subLabel: subLabel,
+                notes: notes,
                 lastCheckedDate: lastCheckedDate,
                 createdAt: createdAt,
               ),
@@ -9619,6 +9732,7 @@ typedef $$GoalsTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> deadline,
       Value<String> milestones,
+      Value<String?> notes,
     });
 typedef $$GoalsTableUpdateCompanionBuilder =
     GoalsCompanion Function({
@@ -9637,6 +9751,7 @@ typedef $$GoalsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> deadline,
       Value<String> milestones,
+      Value<String?> notes,
     });
 
 final class $$GoalsTableReferences
@@ -9760,6 +9875,11 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<String> get milestones => $composableBuilder(
     column: $table.milestones,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9897,6 +10017,11 @@ class $$GoalsTableOrderingComposer
     column: $table.milestones,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GoalsTableAnnotationComposer
@@ -9966,6 +10091,9 @@ class $$GoalsTableAnnotationComposer
     column: $table.milestones,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 
   Expression<T> goalTaskLinksRefs<T extends Object>(
     Expression<T> Function($$GoalTaskLinksTableAnnotationComposer a) f,
@@ -10064,6 +10192,7 @@ class $$GoalsTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> deadline = const Value.absent(),
                 Value<String> milestones = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
               }) => GoalsCompanion(
                 id: id,
                 emoji: emoji,
@@ -10080,6 +10209,7 @@ class $$GoalsTableTableManager
                 createdAt: createdAt,
                 deadline: deadline,
                 milestones: milestones,
+                notes: notes,
               ),
           createCompanionCallback:
               ({
@@ -10098,6 +10228,7 @@ class $$GoalsTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> deadline = const Value.absent(),
                 Value<String> milestones = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
               }) => GoalsCompanion.insert(
                 id: id,
                 emoji: emoji,
@@ -10114,6 +10245,7 @@ class $$GoalsTableTableManager
                 createdAt: createdAt,
                 deadline: deadline,
                 milestones: milestones,
+                notes: notes,
               ),
           withReferenceMapper: (p0) => p0
               .map(

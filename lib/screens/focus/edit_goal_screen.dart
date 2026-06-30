@@ -25,6 +25,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   final _nameCtrl       = TextEditingController();
   final _whyCtrl        = TextEditingController();
   final _milestoneCtrl  = TextEditingController();
+  final _notesCtrl      = TextEditingController();
   String _emoji         = '🎯';
   int?   _catIdx;
   int?   _quadIdx;
@@ -75,6 +76,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
       setState(() {
         _nameCtrl.text = goal.title;
         _whyCtrl.text  = goal.subtitle;
+        _notesCtrl.text = goal.notes ?? '';
         _emoji         = goal.emoji;
         _deadline      = goal.deadline;
         _milestones
@@ -170,6 +172,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
         dotColorValue:    Value(colorInt),
         deadline:         Value(_deadline),
         milestones:       Value(_milestones.join('\n')),
+        notes:            Value(_notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim()),
       );
 
       final db = ref.read(appDatabaseProvider);
@@ -195,6 +198,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
     _nameCtrl.dispose();
     _whyCtrl.dispose();
     _milestoneCtrl.dispose();
+    _notesCtrl.dispose();
     super.dispose();
   }
 
@@ -315,6 +319,19 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     controller: _whyCtrl,
                     hint: 'e.g. "Financial freedom by 35 → time with family"',
                     maxLines: 3,
+                    colors: colors,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Notes — freeform, surfaced in the Notes tab
+                _FormRow(
+                  label: 'NOTES',
+                  colors: colors,
+                  child: _Input(
+                    controller: _notesCtrl,
+                    hint: 'Add notes…',
+                    maxLines: 4,
                     colors: colors,
                   ),
                 ),

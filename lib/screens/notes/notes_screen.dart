@@ -3,13 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:drift/drift.dart' show Value;
-import '../../data/database.dart' show Note, NoteTag, NotesCompanion;
+import '../../data/database.dart' show Note, NoteTag, NotesCompanion, Task, Habit, Goal;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/notes_provider.dart';
+import '../../data/providers/tasks_provider.dart';
+import '../../data/providers/habits_provider.dart';
+import '../../data/providers/goals_provider.dart';
 import '../../services/activity_log_service.dart';
 import '../../routing/routes.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+
+// Source chips for notes that live on a task / habit / goal rather than the
+// notes table. Tapping such a card opens the source item, not the note editor.
+const _kTaskTag  = _Tag('📋 Task',  bg: Color(0x1A0A84FF), fg: KaalColors.acc2);
+const _kHabitTag = _Tag('🔁 Habit', bg: Color(0x1A7FBA00), fg: Color(0xFF9FCD44));
+const _kGoalTag  = _Tag('🎯 Goal',  bg: Color(0x1ABF5AF2), fg: Color(0xFFCF7BFF));
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -29,6 +38,7 @@ class _Note {
     this.aiLabel,
     this.tags = const [],
     this.isPinned = false,
+    this.route,
   });
   final int          id;
   final String       title;
@@ -37,7 +47,13 @@ class _Note {
   final String?      aiLabel;  // e.g. '✦ AI summary'
   final List<_Tag>   tags;
   final bool         isPinned;
+  // When set, this note lives on a task/habit/goal — tapping opens [route]
+  // instead of the note editor, and the pin/delete menu is suppressed.
+  final String?      route;
 }
+
+String _previewOf(String body) =>
+    body.length > 120 ? '${body.substring(0, 120)}…' : body;
 
 // ── DB → display model mapping ─────────────────────────────────────────────
 
@@ -76,6 +92,35 @@ class NotesScreen extends ConsumerWidget {
       }
     }
 
+    // Notes that live on a task / habit / goal — surfaced read-only here so the
+    // Notes tab is the single place to see everything you've jotted down.
+    String? clean(String? s) {
+      final t = s?.trim() ?? '';
+      return t.isEmpty ? null : t;
+    }
+    final linked = <_Note>[];
+    for (final t in (ref.watch(allTasksProvider).value ?? const <Task>[])) {
+      final body = clean(t.notes);
+      if (body != null) {
+        linked.add(_Note(id: t.id, title: t.title, preview: _previewOf(body),
+            time: '', tags: const [_kTaskTag], route: '/tasks/taskdetail/${t.id}'));
+      }
+    }
+    for (final h in (ref.watch(habitsProvider).value ?? const <Habit>[])) {
+      final body = clean(h.notes);
+      if (body != null) {
+        linked.add(_Note(id: h.id, title: h.name, preview: _previewOf(body),
+            time: '', tags: const [_kHabitTag], route: '/habits/habitdetail/${h.id}'));
+      }
+    }
+    for (final g in (ref.watch(goalsProvider).value ?? const <Goal>[])) {
+      final body = clean(g.notes);
+      if (body != null) {
+        linked.add(_Note(id: g.id, title: g.title, preview: _previewOf(body),
+            time: '', tags: const [_kGoalTag], route: '/focus/goals/${g.id}'));
+      }
+    }
+
     return Stack(
       children: [
         RefreshIndicator(
@@ -103,6 +148,15 @@ class NotesScreen extends ConsumerWidget {
               _SectionLabel(label: 'Recent', colors: colors),
               const SizedBox(height: 4),
               for (final n in recent) ...[
+                _NoteCard(note: n, colors: colors),
+                const SizedBox(height: 4),
+              ],
+            ],
+            if (linked.isNotEmpty) ...[
+              const SizedBox(height: 3),
+              _SectionLabel(label: 'From your tasks, habits & goals', colors: colors),
+              const SizedBox(height: 4),
+              for (final n in linked) ...[
                 _NoteCard(note: n, colors: colors),
                 const SizedBox(height: 4),
               ],
@@ -227,10 +281,11 @@ class _NoteCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLinked = note.route != null;
     return GestureDetector(
-      onTap: () => context.push('${KaalRoutes.notesEditor}/${note.id}'),
-      onLongPress: () => _showMenu(context, ref),
-      onSecondaryTap: () => _showMenu(context, ref),
+      onTap: () => context.push(note.route ?? '${KaalRoutes.notesEditor}/${note.id}'),
+      onLongPress: isLinked ? null : () => _showMenu(context, ref),
+      onSecondaryTap: isLinked ? null : () => _showMenu(context, ref),
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         decoration: BoxDecoration(
