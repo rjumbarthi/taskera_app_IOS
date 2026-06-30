@@ -27,7 +27,7 @@ class AppConfig {
   // Razorpay payment LINK (razorpay.me/... or a generated Payment Link). Opened
   // in an external browser for a UPI checkout on your website — kept OUTSIDE the
   // in-app purchase flow to stay within Play/Apple policy. Empty = not set up.
-  static const razorpayUpiLink = '';
+  static const razorpayUpiLink = 'https://razorpay.me/@Kaal_App';
 
   // ── Google OAuth ──────────────────────────────────────────────────────────
   // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs

@@ -74,6 +74,24 @@ class AuthService {
     await _client.auth.signOut();
   }
 
+  // ── Delete account ──────────────────────────────────────────────────────────
+
+  /// Permanently deletes the signed-in user's account and all synced data.
+  /// Calls the `delete-account` edge function (which deletes the auth user;
+  /// every table cascades from auth.users), then clears the local session.
+  /// Throws on failure so the UI can surface an error and keep the user signed in.
+  Future<void> deleteAccount() async {
+    final res = await _client.functions.invoke('delete-account');
+    if (res.status != 200) {
+      final msg = (res.data is Map && (res.data as Map)['error'] != null)
+          ? (res.data as Map)['error'].toString()
+          : 'status ${res.status}';
+      throw Exception('Account deletion failed: $msg');
+    }
+    // The auth user is gone; clear the now-invalid local session.
+    await _client.auth.signOut();
+  }
+
   // ── Password reset ────────────────────────────────────────────────────────
 
   Future<void> resetPassword(String email) =>

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../config/feature_flags.dart';
@@ -326,18 +325,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   // About & Legal — fully inlined here (no separate subscreen).
-  Future<void> _openUrl(String url) async {
-    final uri = Uri.parse(url);
-    try {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open the page.')),
-        );
-      }
-    }
-  }
 
   Widget _sgrpAboutLegal(KaalColors colors) {
     return _Sgrp(
@@ -391,13 +378,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _NavRow(label: 'Privacy Policy', right: '›', rightColor: colors.ink3,
                 colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=privacy')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Copyright & Licenses', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=copyright')),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _NavRow(label: 'Data, Permissions & Ads', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=datainfo')),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _SwRow(settingKey: 'analytics', label: 'Share anonymous usage analytics', colors: colors),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-            _NavRow(label: 'Support', right: '↗', rightColor: colors.ink3,
-                colors: colors, onTap: () => _openUrl('https://jumbarthi.com/kaal/support')),
+            _NavRow(label: 'Support & Help', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=support')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-            _NavRow(label: 'Account & data deletion', right: '↗', rightColor: colors.ink3,
-                colors: colors, onTap: () => _openUrl('https://jumbarthi.com/kaal/delete')),
+            _NavRow(label: 'Account & data deletion', right: '›', rightColor: colors.ink3,
+                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=deletion')),
           ]),
         ]),
       ),

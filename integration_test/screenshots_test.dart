@@ -114,7 +114,6 @@ void main() {
       ('01_signin', KaalRoutes.signin),
       ('02_signup', KaalRoutes.signup),
       ('03_onboard', KaalRoutes.onboard),
-      ('04_agegate', KaalRoutes.agegate),
       // tab roots
       ('10_focus', KaalRoutes.focus),
       ('20_tasks', KaalRoutes.tasks),
@@ -134,7 +133,7 @@ void main() {
       ('16_focus_braindump', KaalRoutes.brainDump),
       ('17_focus_predictive', KaalRoutes.predictive),
       ('18_focus_reflect', KaalRoutes.eodReflect),
-      ('19_focus_weeklyfocus', KaalRoutes.weeklyFocus),
+      ('19_focus_weeklyfocus', KaalRoutes.weeklyReview),
       ('1a_focus_taskdetail', '/focus/taskdetail/$taskId'),
       ('1b_focus_list_today', KaalRoutes.focusList),
       ('1c_focus_list_active', '${KaalRoutes.focusList}?f=active'),

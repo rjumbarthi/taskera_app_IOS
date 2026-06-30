@@ -27,6 +27,7 @@ import 'theme/kaal_theme.dart';
 import 'util/platform_layout.dart';
 import 'data/providers/auth_provider.dart';
 import 'data/providers/ai_access_provider.dart';
+import 'services/ad_service.dart';
 import 'services/analytics_service.dart';
 import 'services/sync_service.dart';
 import 'services/google_service.dart';
@@ -132,6 +133,10 @@ void main() async {
   // ── Notifications ────────────────────────────────────────────────────────
   await NotificationService.instance.init();
   await NotificationService.instance.requestPermission();
+  // ── Ads (AdMob) ──────────────────────────────────────────────────────────
+  // Free-plan only; no-ops on desktop/web. Non-blocking so startup isn't slowed.
+  unawaited(AdService.instance.init());
+
   // Reschedule all notifications from current DB state on each launch.
   // This keeps alarms alive after device reboots.
   unawaited(_rescheduleNotifications(db, prefs));

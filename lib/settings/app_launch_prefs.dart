@@ -5,6 +5,7 @@ abstract final class AppLaunchPrefs {
   static const _skipAuth       = 'kaal.skipAuth';
   static const _installDate    = 'kaal.installDate';
   static const _lastActive     = 'kaal.lastActiveAt';
+  static const _eodShownDate   = 'kaal.eodShownDate'; // yyyymmdd
 
   // ── Onboarding profile (written once on finish, read-only after) ─────────────
   static const _kRole  = 'kaal.profile.role';
@@ -64,6 +65,15 @@ abstract final class AppLaunchPrefs {
   // user reopening (skip splash — feels like a resume).
   static Future<void> recordActive(SharedPreferences p) =>
       p.setInt(_lastActive, DateTime.now().millisecondsSinceEpoch);
+
+  // ── End-of-day reflection (splash-style) — show once per calendar day ────────
+  static int _dayStamp(DateTime n) => n.year * 10000 + n.month * 100 + n.day;
+
+  static bool eodShownToday(SharedPreferences p) =>
+      p.getInt(_eodShownDate) == _dayStamp(DateTime.now());
+
+  static Future<void> markEodShownToday(SharedPreferences p) =>
+      p.setInt(_eodShownDate, _dayStamp(DateTime.now()));
 
   static bool wasActiveWithin(SharedPreferences p, Duration within) {
     final ms = p.getInt(_lastActive);

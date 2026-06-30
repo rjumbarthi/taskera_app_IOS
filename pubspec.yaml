@@ -37,6 +37,7 @@ dependencies:
   in_app_purchase: ^3.2.0           # Play Store / App Store subscriptions (UPI shows inside Play checkout in India)
   crypto: ^3.0.3                    # SHA-256 for PKCE code challenge
   home_widget: ^0.6.0              # home-screen / lock-screen DTN widget (Android + iOS)
+  google_mobile_ads: ^5.1.0        # AdMob — interstitial + rewarded ads for free-plan users (Android/iOS only)
 
 dev_dependencies:
   flutter_test:

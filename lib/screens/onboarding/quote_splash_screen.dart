@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../routing/routes.dart';
@@ -64,10 +65,26 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
     }
     final isSignedIn = Supabase.instance.client.auth.currentUser != null;
     if (AppLaunchPrefs.skipAuth(prefs) || isSignedIn) {
-      context.go(KaalRoutes.focus);
+      // End-of-day reflection shows splash-style: first evening open each day
+      // when the "EOD reflection prompt" setting is on. It exits to Focus itself.
+      if (_shouldShowEod(prefs)) {
+        AppLaunchPrefs.markEodShownToday(prefs);
+        context.go(KaalRoutes.eodReflect);
+      } else {
+        context.go(KaalRoutes.focus);
+      }
     } else {
       context.go(KaalRoutes.signin);
     }
+  }
+
+  /// Show the EOD reflection on launch when the setting is on, it's evening
+  /// (≥ 6 PM local), and it hasn't already been shown today.
+  bool _shouldShowEod(SharedPreferences prefs) {
+    if (!ref.read(kaalSettingsProvider).sw('eodReflect')) return false;
+    if (DateTime.now().hour < 18) return false;
+    if (AppLaunchPrefs.eodShownToday(prefs)) return false;
+    return true;
   }
 
   void _skip() => _advance();

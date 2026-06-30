@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/providers/ai_access_provider.dart';
 import '../data/providers/auth_provider.dart';
 import '../data/database.dart' show Habit;
+import '../services/ad_service.dart';
 import '../data/providers/calendar_provider.dart';
 import '../data/providers/habits_provider.dart';
 import '../data/providers/notes_provider.dart';
@@ -173,7 +175,14 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
       routes: [
     // Root-level modals — accessible from any tab via root navigator
     GoRoute(path: KaalRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: PaywallScreen(from: s.uri.queryParameters['from']), state: s)),
-    GoRoute(path: KaalRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(showTerms: s.uri.queryParameters['tab'] != 'privacy'), state: s)),
+    GoRoute(path: KaalRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(tab: switch (s.uri.queryParameters['tab']) {
+      'privacy'   => LegalTab.privacy,
+      'copyright' => LegalTab.copyright,
+      'support'   => LegalTab.support,
+      'deletion'  => LegalTab.deletion,
+      'datainfo'  => LegalTab.dataInfo,
+      _           => LegalTab.terms,
+    }), state: s)),
     GoRoute(path: KaalRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
       ], // _NavShell.routes
     ),   // ShellRoute(_NavShell)
@@ -435,7 +444,13 @@ class _NavShell extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: KaalBottomNav(
               currentTab: tab,
-              onTabChanged: (t) => context.go(_routeForTab(t)),
+              onTabChanged: (t) {
+                // Free users see an occasional interstitial (capped in AdService).
+                if (!ProviderScope.containerOf(context, listen: false).read(isProProvider)) {
+                  AdService.instance.maybeShowInterstitial();
+                }
+                context.go(_routeForTab(t));
+              },
             ),
           ),
         ],
@@ -630,7 +645,12 @@ class _RouterShell extends ConsumerWidget {
               alignment: Alignment.bottomCenter,
               child: KaalBottomNav(
                 currentTab: tab,
-                onTabChanged: (t) => context.go(_NavShell._routeForTab(t)),
+                onTabChanged: (t) {
+                  if (!ProviderScope.containerOf(context, listen: false).read(isProProvider)) {
+                    AdService.instance.maybeShowInterstitial();
+                  }
+                  context.go(_NavShell._routeForTab(t));
+                },
               ),
             ),
           ],

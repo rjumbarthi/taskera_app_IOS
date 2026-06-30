@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../data/providers/ai_access_provider.dart';
 import '../routing/routes.dart';
+import '../services/ad_service.dart';
 import '../services/ai_service.dart';
+import '../util/platform_layout.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 
@@ -36,7 +38,24 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
   bool _loading = false;
   String? _error;
   bool _generated = false;
+  bool _adUnlock = false; // a rewarded ad granted one free insight
   List<Map<String, String>> _insights = const [];
+
+  Future<void> _watchAdForInsight() async {
+    final ad = ref.read(adServiceProvider);
+    if (!ad.rewardedReady) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ad not ready yet — try again in a moment.')),
+        );
+      }
+      return;
+    }
+    final earned = await ad.showRewarded();
+    if (!mounted || !earned) return;
+    setState(() => _adUnlock = true);
+    _generate();
+  }
 
   Future<void> _generate() async {
     if (_loading) return;
@@ -78,7 +97,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Text(unlocked ? '✦ KAAL AI' : '✦ KAAL AI · PRO',
+              Text((unlocked || _adUnlock) ? '✦ KAAL AI' : '✦ KAAL AI · PRO',
                   style: const TextStyle(
                       fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
                       letterSpacing: 0.4, color: KaalColors.acc2, height: 1)),
@@ -91,7 +110,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
                 ),
             ]),
             const SizedBox(height: 7),
-            if (unlocked) _body(colors) else _upgradeBody(context, colors),
+            if (unlocked || _adUnlock) _body(colors) else _upgradeBody(context, colors),
           ],
         ),
       ),
@@ -100,36 +119,58 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
 
   // Shown to free users instead of real AI output.
   Widget _upgradeBody(BuildContext context, KaalColors colors) {
-    return GestureDetector(
-      onTap: () => context.push(KaalRoutes.paywall),
-      behavior: HitTestBehavior.opaque,
-      child: Row(children: [
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Unlock AI insights with Kaal Pro',
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      GestureDetector(
+        onTap: () => context.push(KaalRoutes.paywall),
+        behavior: HitTestBehavior.opaque,
+        child: Row(children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Unlock AI insights with Kaal Pro',
+                  style: TextStyle(
+                      fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600,
+                      color: colors.ink, height: 1.3)),
+              const SizedBox(height: 2),
+              Text('Or connect your own OpenAI / Claude key in Settings → Integrations.',
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.35)),
+            ]),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
+            decoration: BoxDecoration(
+              color: KaalColors.accBg,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
+            ),
+            child: const Text('Upgrade →',
                 style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600,
-                    color: colors.ink, height: 1.3)),
-            const SizedBox(height: 2),
-            Text('Or connect your own OpenAI / Claude key in Settings → Integrations.',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.35)),
+                    fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                    color: KaalColors.acc2, height: 1)),
+          ),
+        ]),
+      ),
+      // Rewarded-ad path (mobile only): watch a short ad to get one insight free.
+      if (isMobile) ...[
+        const SizedBox(height: 9),
+        Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+        const SizedBox(height: 9),
+        GestureDetector(
+          onTap: _watchAdForInsight,
+          behavior: HitTestBehavior.opaque,
+          child: Row(children: [
+            Expanded(
+              child: Text('▶  Watch a short ad for one AI insight',
+                  style: TextStyle(
+                      fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                      color: colors.ink2, height: 1.3)),
+            ),
+            Text('Free',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
           ]),
         ),
-        const SizedBox(width: 8),
-        Container(
-          padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
-          decoration: BoxDecoration(
-            color: KaalColors.accBg,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
-          ),
-          child: const Text('Upgrade →',
-              style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
-                  color: KaalColors.acc2, height: 1)),
-        ),
-      ]),
-    );
+      ],
+    ]);
   }
 
   Widget _body(KaalColors colors) {

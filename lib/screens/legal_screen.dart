@@ -8,10 +8,12 @@ import '../widgets/add_back_button.dart';
 import '../widgets/kaal_top_bar.dart';
 import '../widgets/wallpaper_background.dart';
 
+enum LegalTab { terms, privacy, copyright, support, deletion, dataInfo }
+
 class LegalScreen extends ConsumerStatefulWidget {
-  /// Which tab to open first. true = Terms of Service, false = Privacy Policy.
-  final bool showTerms;
-  const LegalScreen({super.key, this.showTerms = true});
+  /// Which legal document to show.
+  final LegalTab tab;
+  const LegalScreen({super.key, this.tab = LegalTab.terms});
 
   @override
   ConsumerState<LegalScreen> createState() => _LegalScreenState();
@@ -23,7 +25,7 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
     final colors    = KaalTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
     final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
-    final showTerms = widget.showTerms;
+    final tab = widget.tab;
 
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
@@ -31,15 +33,27 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           KaalTopBar(
-            title: showTerms ? 'Terms of Service' : 'Privacy Policy',
+            title: switch (tab) {
+              LegalTab.terms     => 'Terms of Service',
+              LegalTab.privacy   => 'Privacy Policy',
+              LegalTab.copyright => 'Copyright & Licenses',
+              LegalTab.support   => 'Support & Help',
+              LegalTab.deletion  => 'Account & Data Deletion',
+              LegalTab.dataInfo  => 'Data, Permissions & Ads',
+            },
             leading: AddBackButton(onTap: () => Navigator.of(context).pop()),
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(16, 12, 16, safeBot + 32),
-              child: showTerms
-                  ? _TermsContent(colors: colors)
-                  : _PrivacyContent(colors: colors),
+              child: switch (tab) {
+                LegalTab.terms     => _TermsContent(colors: colors),
+                LegalTab.privacy   => _PrivacyContent(colors: colors),
+                LegalTab.copyright => _CopyrightContent(colors: colors),
+                LegalTab.support   => _SupportContent(colors: colors),
+                LegalTab.deletion  => _DeletionContent(colors: colors),
+                LegalTab.dataInfo  => _DataInfoContent(colors: colors),
+              },
             ),
           ),
         ]),
@@ -267,7 +281,10 @@ class _PrivacyContent extends StatelessWidget {
             '• Supabase — cloud database and authentication.\n'
             '• Google Sign-In / Google APIs — if you connect Google Calendar or Gmail.\n'
             '• Apple Sign-In — if you sign in with Apple.\n'
-            '• Microsoft Authentication — if you sign in with Microsoft.\n\n'
+            '• Microsoft Authentication — if you sign in with Microsoft.\n'
+            '• Anthropic / OpenAI — process the text you submit to AI features.\n'
+            '• Google AdMob — serves ads to free-plan users (see "Advertising" below).\n'
+            '• PostHog — anonymous, opt-out usage analytics.\n\n'
             'We encourage you to review the privacy policies of these services. We are not responsible for the data practices of third-party services.',
         colors: colors,
       ),
@@ -328,8 +345,339 @@ class _PrivacyContent extends StatelessWidget {
       ),
 
       _Section(
-        title: '13. Contact Us',
+        title: '13. Advertising',
+        body: 'The free plan of Kaal displays advertisements provided by Google AdMob. To serve '
+            'ads, AdMob may collect and use a device advertising identifier and limited device '
+            'information. Where required by law, we will request your consent before showing '
+            'personalized ads; you may also reset or limit the advertising identifier in your '
+            'device settings.\n\n'
+            'We do not share your tasks, notes, or other personal content with advertisers. '
+            'Kaal Pro is entirely ad-free — upgrading removes all advertising. For more, see '
+            'Google\'s policies at policies.google.com/technologies/ads.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '14. Contact Us',
         body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nr.official@jumbarthi.com\n\nKaal — a product of Port443 LLC\nHyderabad, India',
+        colors: colors,
+      ),
+    ]);
+  }
+}
+
+// ── Copyright & Licenses ──────────────────────────────────────────────────────
+
+class _CopyrightContent extends StatelessWidget {
+  final KaalColors colors;
+  const _CopyrightContent({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _Header(text: 'Kaal — Copyright & Licenses', colors: colors),
+      Text('Effective date: June 19, 2026  ·  Version 1.0',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              color: colors.ink3, height: 1.5)),
+      const SizedBox(height: 16),
+
+      _Section(
+        title: '1. Copyright',
+        body: '© 2026 Port443 LLC. All rights reserved.\n\n'
+            'The Kaal application, including its source code, design, user interface, graphics, '
+            'layout, text, and all other content (collectively, the "Materials"), is the '
+            'exclusive property of Port443 LLC and is protected by copyright, trade dress, and '
+            'other intellectual property laws of India and other jurisdictions.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '2. Trademarks',
+        body: 'Kaal™, the Kaal logo, and "Execution OS for high performers" are trademarks of '
+            'Port443 LLC. You may not use these marks without our prior written permission. All '
+            'other product and company names mentioned in the App may be trademarks of their '
+            'respective owners.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '3. Restrictions',
+        body: 'Except as expressly permitted by these terms or by applicable law, you may not '
+            'copy, reproduce, modify, adapt, translate, distribute, publicly display, sell, '
+            'lease, reverse engineer, decompile, or create derivative works from any part of the '
+            'Materials without the prior written consent of Port443 LLC.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '4. Open-Source Software',
+        body: 'Kaal is built with the Flutter framework and incorporates open-source software '
+            'components, each provided under its own license. We gratefully acknowledge their '
+            'authors. Key components include:\n\n'
+            '• Flutter & Dart SDK — © Google LLC, BSD-3-Clause License.\n'
+            '• Riverpod, go_router — MIT License.\n'
+            '• Drift (SQLite ORM) — MIT License.\n'
+            '• supabase_flutter — MIT License.\n'
+            '• shared_preferences, url_launcher, image_picker, flutter_local_notifications, '
+            'home_widget, in_app_purchase, window_manager — BSD-3-Clause / MIT Licenses.\n\n'
+            'Copies of these licenses are available from each project\'s repository. A complete, '
+            'machine-generated list of bundled packages and their licenses is available via the '
+            'system "Licenses" page (Settings → About on supported platforms).',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '5. Fonts',
+        body: 'Kaal uses the following typefaces under the SIL Open Font License, Version 1.1:\n\n'
+            '• Inter — © The Inter Project Authors (Rasmus Andersson).\n'
+            '• Fraunces — © The Fraunces Project Authors (Undercase Type).\n\n'
+            'The SIL Open Font License permits use, study, modification, and redistribution of '
+            'these fonts. The full license text is available at https://openfontlicense.org.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '6. Third-Party Notices',
+        body: 'Wallpaper imagery bundled with the App is either originally created by Port443 LLC '
+            'or licensed for redistribution. AI features are powered by third-party providers '
+            '(Anthropic, OpenAI) under their respective terms; content you submit to those '
+            'features is processed by the selected provider.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '7. DMCA & Infringement',
+        body: 'We respect the intellectual property rights of others. If you believe that '
+            'material available in the App infringes your copyright, please send a notice with '
+            'sufficient detail to identify the work and the alleged infringement to '
+            'r.official@jumbarthi.com, and we will respond promptly.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: '8. Contact',
+        body: 'For copyright, licensing, or permission requests, contact:\n\n'
+            'r.official@jumbarthi.com\n\n'
+            'Kaal — a product of Port443 LLC\nHyderabad, India',
+        colors: colors,
+      ),
+    ]);
+  }
+}
+
+// ── Support & Help ────────────────────────────────────────────────────────────
+
+class _SupportContent extends StatelessWidget {
+  final KaalColors colors;
+  const _SupportContent({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _Header(text: 'Support & Help', colors: colors),
+      Text('We\'re here to help you get the most out of Kaal.',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              color: colors.ink3, height: 1.5)),
+      const SizedBox(height: 16),
+
+      _Section(
+        title: 'Contact us',
+        body: 'Email our team at r.official@jumbarthi.com. We typically respond within 1–2 '
+            'business days. Please include your account email and a description of the issue '
+            '(and screenshots if relevant) so we can help faster.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Report a bug or request a feature',
+        body: 'Use Settings → About & Legal → "Report a bug · Request a feature" to send us '
+            'feedback directly from the app. Detailed reports with the steps to reproduce help '
+            'us fix things quickly.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Common questions',
+        body: 'Sync isn\'t working — Make sure you\'re signed in (Settings → top of screen). '
+            'Data syncs automatically over Wi-Fi or mobile data; check your connection.\n\n'
+            'I didn\'t get my sign-in code — Check spam/junk. Codes expire shortly; tap "Resend" '
+            'to get a new one. Make sure you entered the same email.\n\n'
+            'Restore a purchase — Go to Profile → Edit profile → Restore purchase. This works for '
+            'purchases made with the same App Store / Play Store account.\n\n'
+            'Set up AI — Add your own OpenAI or Claude key in Settings → Integrations, or upgrade '
+            'to Kaal Pro for built-in AI.\n\n'
+            'Reminders not firing — Allow notifications and, on Android, enable exact alarms when '
+            'prompted. Reminders re-arm automatically after a reboot.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Subscriptions & billing',
+        body: 'Manage or cancel Kaal Pro anytime in your device\'s App Store or Play Store '
+            'subscription settings. Billing questions about a charge are handled by Apple or '
+            'Google; for everything else, email us and we\'ll do our best to help.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Privacy, data & account deletion',
+        body: 'See Settings → About & Legal → Privacy Policy for how your data is handled, and '
+            '"Account & Data Deletion" for how to delete your account and data.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Still need help?',
+        body: 'Reach us directly:\n\nr.official@jumbarthi.com\n\n'
+            'Kaal — a product of Port443 LLC\nHyderabad, India',
+        colors: colors,
+      ),
+    ]);
+  }
+}
+
+// ── Account & Data Deletion ───────────────────────────────────────────────────
+
+class _DeletionContent extends StatelessWidget {
+  final KaalColors colors;
+  const _DeletionContent({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _Header(text: 'Account & Data Deletion', colors: colors),
+      Text('You are always in control of your data.',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              color: colors.ink3, height: 1.5)),
+      const SizedBox(height: 16),
+
+      _Section(
+        title: 'Delete your account in the app',
+        body: 'Go to Profile → Edit profile → Delete account. You\'ll be asked to confirm. This '
+            'permanently deletes your account and your synced content (tasks, habits, goals, '
+            'notes, calendar events, and profile information).',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Request deletion by email',
+        body: 'If you can\'t access the app, email r.official@jumbarthi.com from the address '
+            'associated with your account and ask us to delete it. We may ask you to verify '
+            'ownership of the account before processing the request.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'What gets deleted',
+        body: 'When you delete your account, we delete:\n'
+            '• Your profile and authentication record.\n'
+            '• All tasks, subtasks, habits, goals, notes, and calendar events synced to your '
+            'account.\n'
+            '• Your Pro entitlement record on our servers.\n\n'
+            'Data is deleted or irreversibly anonymised within 30 days.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'What may be retained',
+        body: 'We may retain limited information where required by law or for legitimate '
+            'business needs — for example, transaction/billing records held by Apple or Google, '
+            'and anonymised, non-identifying analytics. This information cannot be used to '
+            'identify you.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Clearing local data',
+        body: 'If you use Kaal without an account ("Skip — use local storage"), your data lives '
+            'only on your device. Deleting the app, or clearing its storage in your device '
+            'settings, removes that local data. Local data is not recoverable once removed.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Questions',
+        body: 'For any data or deletion request, contact:\n\nr.official@jumbarthi.com\n\n'
+            'Kaal — a product of Port443 LLC\nHyderabad, India',
+        colors: colors,
+      ),
+    ]);
+  }
+}
+
+// ── Data, Permissions & Ads (plain-language summary) ──────────────────────────
+
+class _DataInfoContent extends StatelessWidget {
+  final KaalColors colors;
+  const _DataInfoContent({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _Header(text: 'Data, Permissions & Ads', colors: colors),
+      Text('A plain-language summary. The full detail is in the Privacy Policy.',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              color: colors.ink3, height: 1.5)),
+      const SizedBox(height: 16),
+
+      _Section(
+        title: 'What data we collect',
+        body: '• Email address — to create and secure your account.\n'
+            '• Your content — tasks, habits, goals, notes, and calendar events you create '
+            '(synced to your account when you\'re signed in).\n'
+            '• Purchase status — whether you have Kaal Pro, to unlock paid features.\n'
+            '• Anonymous usage analytics — which screens/features are used, to improve the app. '
+            'This is not linked to your identity and can be turned off in '
+            'Settings → About & Legal → "Share anonymous usage analytics".\n\n'
+            'We do not sell your data. Your content is never used for advertising.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Permissions we use & why',
+        body: '• Notifications — to deliver the reminders and alarms you set.\n'
+            '• Exact alarms (Android) — so time-critical task/habit reminders fire at the '
+            'precise minute you chose.\n'
+            '• Full-screen alarm (Android) — to show alarm-style reminders you explicitly set.\n'
+            '• Run after restart — to re-arm your scheduled reminders after the device reboots.\n'
+            '• Photos / camera (optional) — only if you choose a profile photo.\n\n'
+            'Each permission is used only for the feature described and nothing else.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'AI features',
+        body: 'When you use an AI feature (Brain Dump, summaries, insights), the relevant text '
+            'you submit is sent to the AI provider that powers it — Anthropic or OpenAI, or your '
+            'own provider if you connect your own key in Settings → Integrations — solely to '
+            'generate your result. If you never use AI features, no content is sent to any AI '
+            'provider.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Ads (free plan only)',
+        body: 'The free plan shows ads delivered by Google AdMob. Ads may use a device '
+            'advertising identifier to limit repetition and, where you allow it, to show more '
+            'relevant ads. You can reset or limit this identifier in your device settings, and '
+            'where required we ask for your consent first.\n\n'
+            'Kaal Pro is completely ad-free. Upgrading removes all ads.',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Your choices',
+        body: '• Turn off anonymous analytics in Settings → About & Legal.\n'
+            '• Limit ad personalization in your device privacy settings.\n'
+            '• Upgrade to Kaal Pro to remove ads entirely.\n'
+            '• Delete your account and data anytime (see "Account & Data Deletion").',
+        colors: colors,
+      ),
+
+      _Section(
+        title: 'Learn more',
+        body: 'Full details are in the Privacy Policy. Questions? '
+            'r.official@jumbarthi.com\n\nKaal — a product of Port443 LLC',
         colors: colors,
       ),
     ]);

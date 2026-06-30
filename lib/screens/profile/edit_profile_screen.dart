@@ -15,6 +15,7 @@ import '../../data/providers/auth_provider.dart'
     show profileImagePathProvider, profileAvatarColorProvider, profileAvatarLogoProvider,
          profileDisplayNameProvider, displayNameProvider, currentUserProvider;
 import '../../services/auth_service.dart';
+import '../../util/kaal_dialogs.dart';
 import '../../widgets/kaal_avatar.dart' show kKaalAvatarColors;
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
@@ -215,6 +216,65 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             color: KaalColors.warn,
                             height: 1,
                           ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // ── delete account ──────────────────────────────────────
+                    GestureDetector(
+                      onTap: () async {
+                        final ok = await kaalConfirmDelete(
+                          context,
+                          message:
+                              'This permanently deletes your account and all your '
+                              'tasks, habits, goals and notes across every device. '
+                              'This cannot be undone.',
+                        );
+                        if (!ok) return;
+                        try {
+                          await ref.read(authServiceProvider).deleteAccount();
+                          await ref.read(profileImagePathProvider.notifier).clear();
+                          await ref
+                              .read(profileDisplayNameProvider.notifier)
+                              .setName('');
+                          if (context.mounted) context.go(KaalRoutes.signin);
+                        } catch (_) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Could not delete your account. Please try again or contact support.'),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Delete account',
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFFF453A),
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFFFF453A),
+                            height: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Permanently erases your account and data.',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          color: colors.ink3,
+                          height: 1.4,
                         ),
                       ),
                     ),
