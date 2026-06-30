@@ -1563,9 +1563,9 @@ class _ListCardInTasks extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header row
+          // Header row — opens the full checklist screen scrolled to this list.
           GestureDetector(
-            onTap: () => context.push(KaalRoutes.tasksLists),
+            onTap: () => context.push('${KaalRoutes.tasksLists}/${list.id}'),
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),

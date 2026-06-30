@@ -255,13 +255,43 @@ Future<void> _showListSheet(
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
-class ListsScreen extends ConsumerWidget {
-  const ListsScreen({super.key});
+class ListsScreen extends ConsumerStatefulWidget {
+  // When set, the screen opens scrolled to this checklist (deep-link from the
+  // Tasks list view) instead of resting at the top of the full list.
+  final int? initialListId;
+  const ListsScreen({super.key, this.initialListId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ListsScreen> createState() => _ListsScreenState();
+}
+
+class _ListsScreenState extends ConsumerState<ListsScreen> {
+  final _scrollCtrl = ScrollController();
+  final _cardKeys = <int, GlobalKey>{};
+  bool _scrolled = false;
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  // Once the cards are laid out, bring the deep-linked checklist into view.
+  void _maybeScrollToTarget() {
+    if (_scrolled || widget.initialListId == null) return;
+    final ctx = _cardKeys[widget.initialListId]?.currentContext;
+    if (ctx == null) return;
+    _scrolled = true;
+    Scrollable.ensureVisible(ctx,
+        duration: const Duration(milliseconds: 350),
+        alignment: 0.08, curve: Curves.easeOut);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
     final lists  = ref.watch(listsProvider).valueOrNull ?? [];
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeScrollToTarget());
 
     return Stack(
       children: [
@@ -304,19 +334,22 @@ class ListsScreen extends ConsumerWidget {
                         ],
                       ),
                     )
-                  : ListView.builder(
+                  : ListView(
+                      controller: _scrollCtrl,
                       padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
-                      itemCount: lists.length,
-                      itemBuilder: (_, i) => _ListCard(
-                        key: ValueKey(lists[i].id),
-                        list: lists[i],
-                        colors: colors,
-                        onEdit: () => _showListSheet(context, ref, existing: lists[i]),
-                        onDelete: () async {
-                          await ref.read(appDatabaseProvider).listsDao.deleteList(lists[i].id);
-                          ref.logActivity('Checklist "${lists[i].title}" deleted', type: 'checklist');
-                        },
-                      ),
+                      children: [
+                        for (final list in lists)
+                          _ListCard(
+                            key: _cardKeys.putIfAbsent(list.id, () => GlobalKey()),
+                            list: list,
+                            colors: colors,
+                            onEdit: () => _showListSheet(context, ref, existing: list),
+                            onDelete: () async {
+                              await ref.read(appDatabaseProvider).listsDao.deleteList(list.id);
+                              ref.logActivity('Checklist "${list.title}" deleted', type: 'checklist');
+                            },
+                          ),
+                      ],
                     ),
             ),
           ],

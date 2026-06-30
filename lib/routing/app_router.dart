@@ -249,6 +249,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                 GoRoute(path: 'quad/:q',         pageBuilder: (context, s) => slideRightPage(child: QuadScreen(quad: s.pathParameters['q'] ?? 'q1'),                     state: s)),
                 GoRoute(path: 'panel-comp',      pageBuilder: (context, s) => slideRightPage(child: const CompletedPanelScreen(),                                         state: s)),
                 GoRoute(path: 'lists',           pageBuilder: (context, s) => slideRightPage(child: const ListsScreen(),                                                   state: s)),
+                GoRoute(path: 'lists/:id',       pageBuilder: (context, s) => slideRightPage(child: ListsScreen(initialListId: int.tryParse(s.pathParameters['id'] ?? '')), state: s)),
                 GoRoute(path: 'logs',            pageBuilder: (context, s) => slideRightPage(child: const LogsScreen(standalone: false),                                   state: s)),
               ],
             ),
