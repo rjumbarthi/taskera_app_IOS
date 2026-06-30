@@ -1,0 +1,15 @@
+<!--
+  Supabase → Authentication → Emails → Templates → "Magic Link".
+  Uses {{ .Token }} (the 6-digit OTP) so the app's code-entry flow works on every
+  platform (the magic LINK can't return to a desktop app). Paste the body below.
+-->
+<h2 style="font-family:system-ui,Arial,sans-serif">Your Kaal sign-in code</h2>
+<p style="font-family:system-ui,Arial,sans-serif;color:#444">
+  Enter this code in the app to sign in. It expires shortly and can be used once.
+</p>
+<p style="font-family:monospace;font-size:30px;font-weight:700;letter-spacing:8px;color:#0A84FF">
+  {{ .Token }}
+</p>
+<p style="font-family:system-ui,Arial,sans-serif;color:#999;font-size:12px">
+  If you didn't request this, you can ignore this email. — Kaal · Port443 LLC
+</p>

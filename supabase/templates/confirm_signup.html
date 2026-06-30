@@ -1,0 +1,17 @@
+<!--
+  Supabase → Authentication → Emails → Templates → "Confirm signup".
+  signInWithOtp() uses THIS template for a brand-new email (and "Magic Link" for an
+  existing user) — both must use {{ .Token }} so first-time users also get a code.
+  Paste the body below.
+-->
+<h2 style="font-family:system-ui,Arial,sans-serif">Your Kaal sign-in code</h2>
+<p style="font-family:system-ui,Arial,sans-serif;color:#444">
+  Welcome to Kaal. Enter this code in the app to finish signing in. It expires
+  shortly and can be used once.
+</p>
+<p style="font-family:monospace;font-size:30px;font-weight:700;letter-spacing:8px;color:#0A84FF">
+  {{ .Token }}
+</p>
+<p style="font-family:system-ui,Arial,sans-serif;color:#999;font-size:12px">
+  If you didn't create a Kaal account, you can ignore this email. — Port443 LLC
+</p>
