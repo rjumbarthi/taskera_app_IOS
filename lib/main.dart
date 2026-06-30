@@ -26,6 +26,7 @@ import 'settings/prefs_provider.dart';
 import 'theme/kaal_theme.dart';
 import 'util/platform_layout.dart';
 import 'data/providers/auth_provider.dart';
+import 'data/providers/ai_access_provider.dart';
 import 'services/analytics_service.dart';
 import 'services/sync_service.dart';
 import 'services/google_service.dart';
@@ -281,6 +282,9 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
     AnalyticsService.instance.setEnabled(ref.read(kaalSettingsProvider).sw('analytics'));
     AnalyticsService.instance.capture('app_open');
     AnalyticsService.instance.attachToRouter(widget.router);
+    // Pull the server Pro entitlement (Razorpay webhook / store validators) when
+    // a session was restored on launch.
+    refreshProEntitlement(ref);
   }
 
   @override
@@ -309,6 +313,7 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
           AnalyticsService.instance.capture('signed_in');
           final sync = ref.read(syncServiceProvider);
           sync.syncAll().then((_) => sync.startRealtime());
+          refreshProEntitlement(ref);
           // Safety net: when sign-in completes (e.g. the Google OAuth deep link
           // returns), make sure the user actually lands on Focus. Only redirect
           // from the auth screens — never yank the user out of onboarding or an
@@ -323,6 +328,7 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
         if (state.event == AuthChangeEvent.signedOut) {
           AnalyticsService.instance.capture('signed_out');
           AnalyticsService.instance.resetIdentity();
+          refreshProEntitlement(ref); // clears the server entitlement flag
           ref.read(syncServiceProvider).stopRealtime();
           // Drop the previous user's Google API tokens so the next account can't
           // reach their Gmail/Calendar.

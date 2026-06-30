@@ -39,8 +39,9 @@ policy**, so the "Pay with UPI" button opens an **external** Razorpay link in th
 
 - Create a Razorpay **Payment Link** (or `razorpay.me/@handle`) for the plan.
 - Paste it into `AppConfig.razorpayUpiLink` (empty by default → button shows "coming soon").
-- Because it's external, the app can't auto-detect success — grant Pro via a Razorpay
-  webhook → your backend → set the user's entitlement (or have them restore on the store).
+- Because it's external, the app can't auto-detect success. Pass the Supabase
+  **user id in `notes.user_id`** when you create the Payment Link / Checkout, and the
+  **`razorpay-webhook`** edge function (§4) grants Pro on `payment.captured`.
 
 ## 3. Granting Pro (entitlement)
 On a successful store purchase, `PurchaseService` sets `kaal.isPro = true`, which unlocks
@@ -49,3 +50,23 @@ AI and other Pro features via `isProProvider` / `aiUnlockedProvider`.
 ⚠️ **For production, validate the purchase server-side** (e.g. a Supabase edge function
 checking `verificationData` with Google/Apple) before granting — the current client-side
 grant is a scaffold and is spoofable.
+
+## 4. Razorpay webhook — `supabase/functions/razorpay-webhook`
+1. `supabase functions deploy razorpay-webhook --no-verify-jwt`
+2. `supabase secrets set RAZORPAY_WEBHOOK_SECRET=whsec_...`
+3. Run `supabase/migrations/004_pro_entitlements.sql` (creates `public.pro_entitlements`,
+   RLS: users read their own row, only the service role writes).
+4. Razorpay Dashboard → Settings → Webhooks → add the function URL, the **same secret**,
+   and subscribe to `payment.captured` + the `subscription.*` events.
+5. When opening the payment link/checkout from the app, include **`notes.user_id`** = the
+   Supabase auth uid so the webhook knows whom to grant.
+
+The function verifies the HMAC signature, then upserts `pro_entitlements.is_pro`
+(grant on `payment.captured`/`subscription.activated`/`charged`, revoke on
+`cancelled`/`halted`/`completed`).
+
+### Remaining app-side wire-up (NOT done yet)
+The app still reads Pro from the local `kaal.isPro` pref. To honor this server entitlement
+(needed for Razorpay + cross-device), read the user's `pro_entitlements` row on
+launch/sign-in and set `kaal.isPro` from it — then `isProProvider` / `aiUnlockedProvider`
+pick it up automatically. Ask and I'll wire it.

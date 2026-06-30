@@ -72,6 +72,19 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     if (!ok && mounted) _paywallSoon(context, 'Could not open UPI checkout');
   }
 
+  // Re-deliver past store purchases; a restored sub flips isPro → the
+  // isProProvider listener in build() leaves the paywall.
+  Future<void> _restore() async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(AppL10n.of(context).checkingPurchases,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+      backgroundColor: const Color(0xFF1C1C1E),
+      duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+    ));
+    await ref.read(purchaseServiceProvider).restore();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors    = KaalTheme.of(context).colors;
@@ -163,16 +176,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(AppL10n.of(context).checkingPurchases,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                              color: Colors.white)),
-                      backgroundColor: const Color(0xFF1C1C1E),
-                      duration: const Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
-                    ));
-                  },
+                  onTap: _restore,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(child: Text(AppL10n.of(context).restorePurchase,
