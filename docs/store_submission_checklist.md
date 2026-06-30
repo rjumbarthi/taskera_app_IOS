@@ -3,7 +3,7 @@
 App facts (reuse everywhere):
 - **App name:** Kaal — Focus & Task Planner
 - **Android package:** `com.kaal.kaal_app` · **min SDK 28**
-- **Support email:** r.official@jumbarthi.com · **Address:** Hyderabad, India
+- **Support email:** kaal_support@jumbarthi.com · **Address:** Hyderabad, India
 - **URLs:** Privacy `https://jumbarthi.com/kaal/privacy` · Terms `…/terms` · Support `…/support` · Account/Data deletion `…/delete`
 - **Auth:** email/OTP + Google, Apple, Microsoft (or skip → local-only) · backend Supabase
 - **Sensitive bits:** notifications, exact alarms + full-screen alarm, Google Calendar (read-only), Kaal Pro subscription. Gmail sync & photo upload are **disabled ("coming soon")**.
@@ -26,7 +26,7 @@ App facts (reuse everywhere):
 
 **Store listing & setup**
 - [ ] Store listing (name, descriptions, graphics, category Productivity)
-- [ ] Contact details: email r.official@jumbarthi.com, website jumbarthi.com/kaal
+- [ ] Contact details: email kaal_support@jumbarthi.com, website jumbarthi.com/kaal
 - [ ] **Privacy policy URL** → `https://jumbarthi.com/kaal/privacy`
 
 **App content (Policy → App content)**

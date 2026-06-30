@@ -136,7 +136,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '3. Account Registration',
-        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at r.official@jumbarthi.com.',
+        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at kaal_support@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -217,7 +217,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '15. Contact',
-        body: 'If you have questions about these Terms, please contact us at:\nr.official@jumbarthi.com',
+        body: 'If you have questions about these Terms, please contact us at:\nkaal_support@jumbarthi.com',
         colors: colors,
       ),
     ]);
@@ -306,7 +306,7 @@ class _PrivacyContent extends StatelessWidget {
             '• Deletion: Request deletion of your account and associated data. Go to Profile → Edit profile → Delete account. Data is deleted within 30 days.\n'
             '• Portability: Request an export of your data in a machine-readable format.\n'
             '• Opt-out: You can disable optional analytics in Settings → Privacy.\n\n'
-            'To exercise these rights, contact us at r.official@jumbarthi.com.',
+            'To exercise these rights, contact us at kaal_support@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -322,13 +322,13 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '9. CCPA (California Users)',
-        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact r.official@jumbarthi.com.',
+        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact kaal_support@jumbarthi.com.',
         colors: colors,
       ),
 
       _Section(
         title: '10. Children\'s Privacy',
-        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at r.official@jumbarthi.com.',
+        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at kaal_support@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -359,7 +359,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '14. Contact Us',
-        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nr.official@jumbarthi.com\n\nKaal — a product of Port443 LLC\nHyderabad, India',
+        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nkaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC\nHyderabad, India',
         colors: colors,
       ),
     ]);
@@ -450,14 +450,14 @@ class _CopyrightContent extends StatelessWidget {
         body: 'We respect the intellectual property rights of others. If you believe that '
             'material available in the App infringes your copyright, please send a notice with '
             'sufficient detail to identify the work and the alleged infringement to '
-            'r.official@jumbarthi.com, and we will respond promptly.',
+            'kaal_support@jumbarthi.com, and we will respond promptly.',
         colors: colors,
       ),
 
       _Section(
         title: '8. Contact',
         body: 'For copyright, licensing, or permission requests, contact:\n\n'
-            'r.official@jumbarthi.com\n\n'
+            'kaal_support@jumbarthi.com\n\n'
             'Kaal — a product of Port443 LLC\nHyderabad, India',
         colors: colors,
       ),
@@ -482,7 +482,7 @@ class _SupportContent extends StatelessWidget {
 
       _Section(
         title: 'Contact us',
-        body: 'Email our team at r.official@jumbarthi.com. We typically respond within 1–2 '
+        body: 'Email our team at kaal_support@jumbarthi.com. We typically respond within 1–2 '
             'business days. Please include your account email and a description of the issue '
             '(and screenshots if relevant) so we can help faster.',
         colors: colors,
@@ -528,7 +528,7 @@ class _SupportContent extends StatelessWidget {
 
       _Section(
         title: 'Still need help?',
-        body: 'Reach us directly:\n\nr.official@jumbarthi.com\n\n'
+        body: 'Reach us directly:\n\nkaal_support@jumbarthi.com\n\n'
             'Kaal — a product of Port443 LLC\nHyderabad, India',
         colors: colors,
       ),
@@ -561,7 +561,7 @@ class _DeletionContent extends StatelessWidget {
 
       _Section(
         title: 'Request deletion by email',
-        body: 'If you can\'t access the app, email r.official@jumbarthi.com from the address '
+        body: 'If you can\'t access the app, email kaal_support@jumbarthi.com from the address '
             'associated with your account and ask us to delete it. We may ask you to verify '
             'ownership of the account before processing the request.',
         colors: colors,
@@ -597,7 +597,7 @@ class _DeletionContent extends StatelessWidget {
 
       _Section(
         title: 'Questions',
-        body: 'For any data or deletion request, contact:\n\nr.official@jumbarthi.com\n\n'
+        body: 'For any data or deletion request, contact:\n\nkaal_support@jumbarthi.com\n\n'
             'Kaal — a product of Port443 LLC\nHyderabad, India',
         colors: colors,
       ),
@@ -677,7 +677,7 @@ class _DataInfoContent extends StatelessWidget {
       _Section(
         title: 'Learn more',
         body: 'Full details are in the Privacy Policy. Questions? '
-            'r.official@jumbarthi.com\n\nKaal — a product of Port443 LLC',
+            'kaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC',
         colors: colors,
       ),
     ]);
