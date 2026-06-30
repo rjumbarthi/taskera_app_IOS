@@ -47,9 +47,17 @@ policy**, so the "Pay with UPI" button opens an **external** Razorpay link in th
 On a successful store purchase, `PurchaseService` sets `kaal.isPro = true`, which unlocks
 AI and other Pro features via `isProProvider` / `aiUnlockedProvider`.
 
-⚠️ **For production, validate the purchase server-side** (e.g. a Supabase edge function
-checking `verificationData` with Google/Apple) before granting — the current client-side
-grant is a scaffold and is spoofable.
+On a store purchase, `PurchaseService` calls the **`validate-purchase`** edge function with
+the buyer's JWT + receipt; it verifies with the store and upserts `pro_entitlements` (the
+realtime stream then unlocks Pro). A local optimistic grant is only the fallback when the
+validator is unreachable.
+
+- `supabase functions deploy validate-purchase`
+- `supabase secrets set APPLE_SHARED_SECRET=...` (App Store Connect → your subscription → app-specific shared secret)
+- `supabase secrets set GOOGLE_PLAY_SERVICE_ACCOUNT='{...}'` (Play service-account JSON)
+- ⚠️ **Android validation is a scaffold:** iOS `verifyReceipt` is implemented; the Google Play
+  Developer API call (`purchases.subscriptions.get`) is a TODO in the function. Wire it before
+  launch — until then Android purchases fall back to the unverified optimistic grant.
 
 ## 4. Razorpay webhook — `supabase/functions/razorpay-webhook`
 1. `supabase functions deploy razorpay-webhook --no-verify-jwt`

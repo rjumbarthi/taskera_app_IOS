@@ -445,7 +445,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: colors.ink, height: 1.3)),
                 const SizedBox(height: 4),
                 for (final s in ['✓ Tasks, Habits, Calendar, Notes',
-                  '✓ 5 AI uses/day (scoring, Brain Dump)',
+                  '✓ AI with your own OpenAI / Claude key',
                   '✓ Basic widgets'])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 3),

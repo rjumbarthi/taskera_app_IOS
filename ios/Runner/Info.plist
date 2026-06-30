@@ -16,6 +16,12 @@
 	<string>6.0</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Port443 LLC. All rights reserved.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Kaal uses the camera so you can attach photos to your notes and tasks.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kaal accesses your photo library so you can attach images to your notes and tasks.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Kaal uses the microphone for voice capture of notes and tasks.</string>
 	<key>CFBundleName</key>
 	<string>kaal_app</string>
 	<key>CFBundlePackageType</key>

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../config/app_config.dart';
 import '../data/providers/ai_access_provider.dart';
@@ -65,13 +67,33 @@ class PurchaseService {
     for (final p in purchases) {
       if (p.status == PurchaseStatus.purchased ||
           p.status == PurchaseStatus.restored) {
-        // NOTE: for production, validate p.verificationData server-side
-        // (e.g. a Supabase edge function) before granting entitlement.
-        await _grantPro();
+        // Server-authoritative: validate the receipt; the `validate-purchase`
+        // function upserts pro_entitlements and the realtime stream unlocks Pro.
+        // Fall back to an optimistic local grant if the validator isn't reachable
+        // (offline / not yet deployed).
+        final ok = await _validateWithServer(p);
+        if (!ok) await _grantPro();
       }
       if (p.pendingCompletePurchase) {
         await _iap.completePurchase(p);
       }
+    }
+  }
+
+  Future<bool> _validateWithServer(PurchaseDetails p) async {
+    try {
+      final res = await Supabase.instance.client.functions.invoke(
+        'validate-purchase',
+        body: {
+          'platform': Platform.isIOS ? 'ios' : 'android',
+          'productId': p.productID,
+          'token': p.verificationData.serverVerificationData,
+        },
+      );
+      final data = res.data;
+      return data is Map && data['is_pro'] == true;
+    } catch (_) {
+      return false;
     }
   }
 
