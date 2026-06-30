@@ -14,7 +14,6 @@ abstract final class KaalRoutes {
   static const goals       = '/focus/goals';
   static const predictive  = '/focus/predictive';
   static const eodReflect  = '/focus/reflect';
-  static const weeklyFocus = '/focus/weeklyfocus';
   // Tasks sub-screens
   static const tasksQuickAdd  = '/tasks/quickadd';
   static const tasksBoard     = '/tasks/board';
@@ -51,7 +50,6 @@ abstract final class KaalRoutes {
   static const signin   = '/signin';
   static const signup   = '/signup';
   static const onboard  = '/onboard';
-  static const agegate  = '/agegate';
 
   // Search tab
   static const search = '/search';

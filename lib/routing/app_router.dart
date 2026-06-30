@@ -41,7 +41,6 @@ import '../screens/focus/goal_detail_screen.dart';
 import '../screens/focus/goals_screen.dart';
 import '../screens/focus/pomodoro_screen.dart';
 import '../screens/focus/eod_reflect_screen.dart';
-import '../screens/focus/weekly_focus_review_screen.dart';
 import '../screens/focus/predictive_ai_screen.dart';
 import '../screens/focus/weekly_review_screen.dart';
 import '../screens/habits/add_habit_screen.dart';
@@ -75,7 +74,6 @@ import '../theme/kaal_theme.dart';
 import '../widgets/app_shell.dart';
 import '../widgets/kaal_avatar.dart';
 import '../widgets/kaal_bottom_nav.dart';
-import '../widgets/wallpaper_background.dart';
 import '../widgets/top_ico_button.dart';
 import 'current_tab.dart';
 import 'page_transitions.dart';
@@ -149,7 +147,6 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
       KaalRoutes.signin,
       KaalRoutes.signup,
       KaalRoutes.onboard,
-      KaalRoutes.agegate,
     };
     if (publicPaths.contains(path)) return null;
 
@@ -168,7 +165,6 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
     GoRoute(path: KaalRoutes.signin,      pageBuilder: (c, s) => fadePage(child: const SigninScreen(),        state: s)),
     GoRoute(path: KaalRoutes.signup,      pageBuilder: (c, s) => slideRightPage(child: const SignupScreen(),  state: s)),
     GoRoute(path: KaalRoutes.onboard,     pageBuilder: (c, s) => fadePage(child: const OnboardScreen(),      state: s)),
-    GoRoute(path: KaalRoutes.agegate,     pageBuilder: (c, s) => fadePage(child: const _FullPlaceholder(KaalRoutes.agegate), state: s)),
 
     // ── Authenticated shell — bottom nav always visible ──────────────────
     ShellRoute(
@@ -203,7 +199,6 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                 GoRoute(path: 'braindump',   pageBuilder: (context, s) => slideRightPage(child: const BrainDumpScreen(),                  state: s)),
                 GoRoute(path: 'predictive',  pageBuilder: (context, s) => slideRightPage(child: const PredictiveAiScreen(),                state: s)),
                 GoRoute(path: 'reflect',     pageBuilder: (context, s) => slideRightPage(child: const EodReflectScreen(),    state: s)),
-                GoRoute(path: 'weeklyfocus', pageBuilder: (context, s) => slideRightPage(child: const WeeklyFocusReviewScreen(), state: s)),
                 GoRoute(path: 'taskdetail/:id', pageBuilder: (context, s) => slideRightPage(child: TaskDetailScreen(taskId: s.pathParameters['id'] ?? ''), state: s)),
                 GoRoute(
                   path: 'focuslist',
@@ -235,7 +230,6 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                 GoRoute(path: 'edittask',        pageBuilder: (context, s) => slideRightPage(child: EditTaskScreen(initialQuad: int.tryParse(s.uri.queryParameters['quad'] ?? '')), state: s)),
                 GoRoute(path: 'edittask/:id',    pageBuilder: (context, s) => slideRightPage(child: EditTaskScreen(taskId: s.pathParameters['id']),    state: s)),
                 GoRoute(path: 'quickadd',        pageBuilder: (context, s) => slideRightPage(child: const QuickAddScreen(),                                              state: s)),
-                GoRoute(path: 'capture',         pageBuilder: (context, s) => slideRightPage(child: const InboxPanelScreen(),                                             state: s)),
                 GoRoute(path: 'inbox',           pageBuilder: (context, s) => slideRightPage(child: const InboxPanelScreen(),                                             state: s)),
                 GoRoute(path: 'board',           pageBuilder: (context, s) => slideRightPage(child: const BoardScreen(),                                                  state: s)),
                 GoRoute(path: 'upcoming',        pageBuilder: (context, s) => slideRightPage(child: const UpcomingScreen(),                                               state: s)),
@@ -717,28 +711,3 @@ class _ConflictsPill extends StatelessWidget {
 }
 
 
-// ── Placeholder widgets ───────────────────────────────────────────────────────
-
-// Standalone placeholder — provides its own wallpaper + background since it
-// lives outside the shell.
-class _FullPlaceholder extends StatelessWidget {
-  final String route;
-  const _FullPlaceholder(this.route);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Positioned.fill(child: WallpaperBackground()),
-        Scaffold(
-          body: Center(
-            child: Text(
-              'Route: $route',
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
