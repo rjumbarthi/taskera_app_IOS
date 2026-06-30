@@ -275,6 +275,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     setState(() => _open = _open == i ? null : i);
   }
 
+  // Shown when Dark/Light is picked — points the user at the wallpaper-brightness
+  // slider directly below the theme row (each theme stores its own brightness).
+  void _showBrightnessHint(int themeIdx) {
+    final name = themeIdx == 0 ? '🌙 Dark' : '☀️ Light';
+    final navBottom = MediaQuery.viewPaddingOf(context).bottom + 50 + 8;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(
+          '$name theme on · adjust wallpaper brightness below to suit',
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF1C1C1E),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.fromLTRB(12, 0, 12, navBottom),
+        duration: const Duration(seconds: 3),
+      ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors       = KaalTheme.of(context).colors;
@@ -369,6 +389,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Privacy Policy', right: '›', rightColor: colors.ink3,
                 colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=privacy')),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _SwRow(settingKey: 'analytics', label: 'Share anonymous usage analytics', colors: colors),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Support', right: '↗', rightColor: colors.ink3,
                 colors: colors, onTap: () => _openUrl('https://jumbarthi.com/kaal/support')),
@@ -518,7 +540,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _SetSec(AppL10n.of(context).themeAndAppearance, colors),
             _SetCard(colors: colors, children: [
               _VtRow(label: AppL10n.of(context).themeAndAppearance, options: themes, selected: s.theme, colors: colors,
-                  onTap: n.setTheme),
+                  onTap: (i) {
+                    final changed = i != s.theme;
+                    n.setTheme(i);
+                    // Dark & Light each keep their own wallpaper-brightness; nudge
+                    // the user to the slider right below so it matches the new look.
+                    if (changed && (i == 0 || i == 1)) _showBrightnessHint(i);
+                  }),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
               _DimSliderRow(value: s.wallpaperDim, colors: colors, onChanged: n.setWallpaperDim),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),

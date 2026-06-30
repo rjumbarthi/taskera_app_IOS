@@ -9,6 +9,14 @@ class AppConfig {
   static const supabaseUrl     = 'https://dutlcoxtxmnqektttffg.supabase.co';
   static const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1dGxjb3h0eG1ucWVrdHR0ZmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTk2MzcsImV4cCI6MjA5NTc5NTYzN30.zWEkDSfSH8IS8IuhTx7f3bzoRkwo9FnILvOk2aGmxoM';
 
+  // ── PostHog product analytics ─────────────────────────────────────────────
+  // app.posthog.com → Project Settings → Project API Key (starts with `phc_`).
+  // This is a write-only client key — safe to ship, like the Supabase anon key.
+  // Host: https://us.i.posthog.com (US cloud) or https://eu.i.posthog.com (EU).
+  // Until a real key is set, analytics is a silent no-op.
+  static const posthogApiKey = 'YOUR_POSTHOG_PROJECT_API_KEY';
+  static const posthogHost   = 'https://us.i.posthog.com';
+
   // ── Google OAuth ──────────────────────────────────────────────────────────
   // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs
   // Create one client per platform type (Web, Android, iOS).

@@ -26,6 +26,7 @@ import 'settings/prefs_provider.dart';
 import 'theme/kaal_theme.dart';
 import 'util/platform_layout.dart';
 import 'data/providers/auth_provider.dart';
+import 'services/analytics_service.dart';
 import 'services/sync_service.dart';
 import 'services/google_service.dart';
 import 'services/notification_service.dart';
@@ -118,6 +119,14 @@ void main() async {
     await reseedDatabase(db, langIdx: currentLang);
     await prefs.setBool('kaal.realData', true);
   }
+
+  // ── Product analytics ─────────────────────────────────────────────────────
+  // Mint/load the anonymous id, then bind to the signed-in user if there is one.
+  // The launch event + screen tracking start from KaalApp (after the opt-out is
+  // applied). No-op until a PostHog key is set in AppConfig.
+  await AnalyticsService.instance.init(prefs);
+  final analyticsUid = Supabase.instance.client.auth.currentUser?.id;
+  if (analyticsUid != null) AnalyticsService.instance.identify(analyticsUid);
 
   // ── Notifications ────────────────────────────────────────────────────────
   await NotificationService.instance.init();
@@ -254,15 +263,50 @@ const _kAccents = [
 const _kFontFamilies  = ['Inter', 'Fraunces', 'Inter', 'Inter'];
 const _kFontSizeScales = [0.85, 1.0, 1.15, 1.3];
 
-class KaalApp extends ConsumerWidget {
+class KaalApp extends ConsumerStatefulWidget {
   final GoRouter router;
   const KaalApp({super.key, required this.router});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<KaalApp> createState() => _KaalAppState();
+}
+
+class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // Product analytics — honor the opt-out, log the launch, then auto-track
+    // every screen view + back-navigation through the router.
+    AnalyticsService.instance.setEnabled(ref.read(kaalSettingsProvider).sw('analytics'));
+    AnalyticsService.instance.capture('app_open');
+    AnalyticsService.instance.attachToRouter(widget.router);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Re-resolve the "System" theme when the OS switches between light and dark.
+  @override
+  void didChangePlatformBrightness() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final router = widget.router;
+    // Keep analytics in step with the Settings → Privacy opt-out toggle.
+    ref.listen(kaalSettingsProvider.select((s) => s.sw('analytics')),
+        (_, on) => AnalyticsService.instance.setEnabled(on));
     ref.listen<AsyncValue<AuthState>>(authStateProvider, (_, next) {
       next.whenData((state) {
         if (state.event == AuthChangeEvent.signedIn) {
+          AnalyticsService.instance
+              .identify(Supabase.instance.client.auth.currentUser?.id ?? '');
+          AnalyticsService.instance.capture('signed_in');
           final sync = ref.read(syncServiceProvider);
           sync.syncAll().then((_) => sync.startRealtime());
           // Safety net: when sign-in completes (e.g. the Google OAuth deep link
@@ -277,6 +321,8 @@ class KaalApp extends ConsumerWidget {
           }
         }
         if (state.event == AuthChangeEvent.signedOut) {
+          AnalyticsService.instance.capture('signed_out');
+          AnalyticsService.instance.resetIdentity();
           ref.read(syncServiceProvider).stopRealtime();
           // Drop the previous user's Google API tokens so the next account can't
           // reach their Gmail/Calendar.
@@ -291,10 +337,15 @@ class KaalApp extends ConsumerWidget {
 
     final s = ref.watch(kaalSettingsProvider);
 
+    final systemDark = WidgetsBinding.instance.platformDispatcher
+            .platformBrightness ==
+        Brightness.dark;
     final themeMode = switch (s.theme) {
       0 => KaalThemeMode.dark,
       1 => KaalThemeMode.light,
-      _ => KaalThemeMode.glass, // 2=Glass, 3=System (treat as glass)
+      2 => KaalThemeMode.glass,
+      // 3 = System → follow the OS: glass for dark, light for light.
+      _ => systemDark ? KaalThemeMode.glass : KaalThemeMode.light,
     };
     final ac  = _kAccents[s.accent.clamp(0, _kAccents.length - 1)];
     final fam = _kFontFamilies[s.font.clamp(0, _kFontFamilies.length - 1)];
