@@ -35,6 +35,11 @@ abstract final class AppLaunchPrefs {
   static Future<void> markSkipAuth(SharedPreferences p) =>
       p.setBool(_skipAuth, true);
 
+  // Once a user has (or is creating) an account they're no longer local-only,
+  // so the mandatory-paywall gate must stop applying.
+  static Future<void> clearSkipAuth(SharedPreferences p) =>
+      p.setBool(_skipAuth, false);
+
   // Records the first-launch date once; never overwrites.
   static Future<void> recordInstallDate(SharedPreferences p) async {
     if (p.getInt(_installDate) == null) {

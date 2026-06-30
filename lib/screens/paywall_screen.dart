@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../l10n/app_l10n.dart';
 
+import '../settings/app_launch_prefs.dart';
 import '../settings/kaal_settings.dart';
+import '../settings/prefs_provider.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 import '../widgets/add_back_button.dart';
@@ -12,7 +14,10 @@ import '../widgets/wallpaper_background.dart';
 import '../routing/routes.dart';
 
 class PaywallScreen extends ConsumerStatefulWidget {
-  const PaywallScreen({super.key});
+  // `from == 'onboard'` marks the post-onboarding upsell. Combined with the
+  // skipAuth flag it becomes the mandatory gate for local-storage users.
+  final String? from;
+  const PaywallScreen({super.key, this.from});
 
   @override
   ConsumerState<PaywallScreen> createState() => _PaywallScreenState();
@@ -27,6 +32,25 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     final safeBot   = MediaQuery.of(context).padding.bottom;
     final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
 
+    // Mode: optional upsell after sign-up (from==onboard, has account) vs the
+    // mandatory gate for skip-auth/local-storage users vs normal (Settings).
+    final postOnboard = widget.from == 'onboard';
+    final skipAuth = AppLaunchPrefs.skipAuth(ref.read(sharedPreferencesProvider));
+    final mandatory = postOnboard && skipAuth;
+
+    void leave() {
+      if (mandatory) {
+        // No free pass for local-only — steer them to a (free) account instead,
+        // and drop the skipAuth flag so they don't loop back into this gate.
+        AppLaunchPrefs.clearSkipAuth(ref.read(sharedPreferencesProvider));
+        context.go(KaalRoutes.signup);
+      } else if (postOnboard) {
+        context.go(KaalRoutes.focus);
+      } else {
+        context.pop();
+      }
+    }
+
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
       Scaffold(
@@ -34,7 +58,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         body: Column(children: [
           KaalTopBar(
             title: 'Kaal Pro',
-            leading: AddBackButton(onTap: () => context.pop()),
+            leading: mandatory ? null : AddBackButton(onTap: leave),
           ),
           Expanded(
             child: ListView(
@@ -62,12 +86,17 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                         color: colors.ink2, height: 1.4)),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: leave,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Center(child: Text(AppL10n.of(context).maybeLater,
+                    child: Center(child: Text(
+                        mandatory
+                            ? 'Create a free account instead'
+                            : (postOnboard
+                                ? 'Continue with free plan'
+                                : AppL10n.of(context).maybeLater),
                         style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                            color: colors.ink3, height: 1))),
+                            color: mandatory ? KaalColors.acc2 : colors.ink3, height: 1))),
                   ),
                 ),
                 GestureDetector(

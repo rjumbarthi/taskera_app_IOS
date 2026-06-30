@@ -453,8 +453,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           onTap: () {
                             final prefs = ref.read(sharedPreferencesProvider);
                             AppLaunchPrefs.markSkipAuth(prefs);
-                            AppLaunchPrefs.completeOnboarding(prefs);
-                            context.go(KaalRoutes.focus);
+                            // Local-storage users run through onboarding too; the
+                            // mandatory Pro upsell is shown right after it.
+                            context.go(KaalRoutes.onboard);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(

@@ -134,13 +134,13 @@ class WidgetPreviewScreen extends ConsumerWidget {
                 const SizedBox(height: 6),
                 _RecentNotesMedium(),
                 const SizedBox(height: 8),
-                _SectionLabel('AI Inbox · Small', colors),
+                _SectionLabel('Inbox · Small', colors),
                 const SizedBox(height: 6),
-                _AiInboxSmall(),
+                _InboxSmall(),
                 const SizedBox(height: 8),
-                _SectionLabel('AI Inbox · Medium', colors),
+                _SectionLabel('Inbox · Medium', colors),
                 const SizedBox(height: 6),
-                _AiInboxMedium(),
+                _InboxMedium(),
                 const SizedBox(height: 8),
                 _SectionLabel('Lock Screen · Inline', colors),
                 const SizedBox(height: 6),
@@ -1588,7 +1588,7 @@ class _NoteRow extends StatelessWidget {
   }
 }
 
-class _AiInboxSmall extends StatelessWidget {
+class _InboxSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1607,7 +1607,7 @@ class _AiInboxSmall extends StatelessWidget {
           Container(width: 7, height: 7,
               decoration: const BoxDecoration(color: KaalColors.acc, shape: BoxShape.circle)),
           const SizedBox(width: 4),
-          const Text('AI Inbox',
+          const Text('Inbox',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1)),
         ]),
@@ -1628,7 +1628,7 @@ class _AiInboxSmall extends StatelessWidget {
   }
 }
 
-class _AiInboxMedium extends StatelessWidget {
+class _InboxMedium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1643,7 +1643,7 @@ class _AiInboxMedium extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const Expanded(child: Text('AI Inbox · 3 items',
+          const Expanded(child: Text('Inbox · 3 items',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   fontWeight: FontWeight.w600, color: Colors.white, height: 1))),
           Container(

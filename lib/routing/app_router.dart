@@ -176,7 +176,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           _NavShell(path: state.uri.path, child: child),
       routes: [
     // Root-level modals — accessible from any tab via root navigator
-    GoRoute(path: KaalRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: const PaywallScreen(), state: s)),
+    GoRoute(path: KaalRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: PaywallScreen(from: s.uri.queryParameters['from']), state: s)),
     GoRoute(path: KaalRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(showTerms: s.uri.queryParameters['tab'] != 'privacy'), state: s)),
     GoRoute(path: KaalRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
       ], // _NavShell.routes
@@ -294,7 +294,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           ],
         ),
 
-        // ── Inbox / AI Inbox (branch 4) ───────────────────────────────────
+        // ── Inbox (branch 4) ──────────────────────────────────────────────
         StatefulShellBranch(
           navigatorKey: _inboxKey,
           routes: [
@@ -388,7 +388,7 @@ class _NavShell extends StatelessWidget {
     if (path.startsWith('/tasks'))    return KaalTab.tasks;
     if (path.startsWith('/habits'))   return KaalTab.habits;
     if (path.startsWith('/cal'))      return KaalTab.calendar;
-    if (path.startsWith('/inbox'))    return KaalTab.aiInbox;
+    if (path.startsWith('/inbox'))    return KaalTab.inbox;
     if (path.startsWith('/notes'))    return KaalTab.notes;
     if (path.startsWith('/search'))   return KaalTab.search;
     if (path.startsWith('/settings')) return KaalTab.settings;
@@ -401,7 +401,7 @@ class _NavShell extends StatelessWidget {
     KaalTab.tasks    => KaalRoutes.tasks,
     KaalTab.habits   => KaalRoutes.habits,
     KaalTab.calendar => KaalRoutes.cal,
-    KaalTab.aiInbox  => KaalRoutes.inbox,
+    KaalTab.inbox  => KaalRoutes.inbox,
     KaalTab.notes    => KaalRoutes.notes,
     KaalTab.search   => KaalRoutes.search,
     KaalTab.settings => KaalRoutes.settings,
@@ -416,8 +416,14 @@ class _NavShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Full-screen readers with no tab context — show without the bottom nav.
-    if (path == KaalRoutes.legal || path == KaalRoutes.report) return child;
+    // Full-screen modals with no tab context — show without the bottom nav.
+    // (Paywall included so the post-onboarding mandatory gate can't be escaped
+    // by tapping a tab.)
+    if (path == KaalRoutes.legal ||
+        path == KaalRoutes.report ||
+        path == KaalRoutes.paywall) {
+      return child;
+    }
 
     final tab = _tabFromPath(path);
     final mq  = MediaQuery.of(context);
@@ -458,7 +464,7 @@ class _RouterShell extends ConsumerWidget {
       KaalTab.tasks    => str.tasks,
       KaalTab.habits   => str.habits,
       KaalTab.calendar => str.calendar,
-      KaalTab.aiInbox  => str.inbox,
+      KaalTab.inbox  => str.inbox,
       KaalTab.notes    => str.notes,
       KaalTab.search   => str.search,
       KaalTab.settings => str.settings,
@@ -500,7 +506,7 @@ class _RouterShell extends ConsumerWidget {
         KaalTab.habits   => '$habitCount active · 🔥 ${streakDays}d streak',
         KaalTab.calendar => '$eventCount ${eventCount == 1 ? 'event' : 'events'}${inviteCount > 0 ? ' · $inviteCount ${inviteCount == 1 ? 'invite' : 'invites'}' : ''}',
         KaalTab.notes    => '$noteCount ${noteCount == 1 ? 'note' : 'notes'}',
-        KaalTab.aiInbox  => 'Email · SMS · Parsed',
+        KaalTab.inbox  => 'Email · SMS · Parsed',
         _                => null,
       };
 
@@ -553,7 +559,7 @@ class _RouterShell extends ConsumerWidget {
           TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
           TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
         ];
-      case KaalTab.aiInbox:
+      case KaalTab.inbox:
         return [
           TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
           TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),

@@ -7,7 +7,7 @@ import '../theme/kaal_colors.dart';
 import '../theme/kaal_motion.dart';
 import '../theme/kaal_theme.dart';
 
-enum KaalTab { focus, tasks, habits, calendar, aiInbox, notes, search, settings, profile }
+enum KaalTab { focus, tasks, habits, calendar, inbox, notes, search, settings, profile }
 
 // ── Nav icon SVG strings — strokes/fills in white so ColorFilter.srcIn recolors them.
 
@@ -56,7 +56,7 @@ const _svgNotes =
     '<line x1="8" y1="17" x2="13" y2="17" stroke="white" stroke-width="1.8" stroke-linecap="round"/>'
     '</svg>';
 
-const _svgAiInbox =
+const _svgInbox =
     '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
     '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
     '<polyline points="22,6 12,13 2,6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
@@ -80,7 +80,7 @@ class KaalBottomNav extends ConsumerWidget {
         KaalTab.habits   => s.sw('habits'),
         KaalTab.calendar => s.sw('calendar'),
         KaalTab.notes    => s.sw('notes'),
-        KaalTab.aiInbox  => s.sw('inbox'),
+        KaalTab.inbox  => s.sw('inbox'),
         _                => true,
       };
 
@@ -88,7 +88,7 @@ class KaalBottomNav extends ConsumerWidget {
         KaalTab.habits   => 'Habits',
         KaalTab.calendar => 'Calendar',
         KaalTab.notes    => 'Notes',
-        KaalTab.aiInbox  => 'Inbox',
+        KaalTab.inbox  => 'Inbox',
         _                => '',
       };
 
@@ -115,7 +115,7 @@ class KaalBottomNav extends ConsumerWidget {
       KaalTab.habits   => true,
       KaalTab.calendar => true,
       KaalTab.notes    => true,
-      KaalTab.aiInbox  => true,
+      KaalTab.inbox  => true,
       KaalTab.search   => false,
       KaalTab.settings => false,
       KaalTab.profile  => false,
@@ -214,7 +214,7 @@ class _NavItemState extends State<_NavItem> {
         KaalTab.habits   => _svgHabits,
         KaalTab.calendar => _svgCalendar,
         KaalTab.notes    => _svgNotes,
-        KaalTab.aiInbox  => _svgAiInbox,
+        KaalTab.inbox  => _svgInbox,
         KaalTab.search   => _svgSearch,
         KaalTab.settings => _svgSettings,
         KaalTab.profile  => _svgProfile,
