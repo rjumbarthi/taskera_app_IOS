@@ -7,6 +7,12 @@ supabase/.temp/
 
 # Bundled screenshot archive (regenerate via the harness)
 screenshots/screenshots.zip
+
+# Generated Android Gradle build output
+android/build/
+
+# MS Office lock/owner temp files
+~$*
 *.pyc
 *.swp
 .DS_Store

@@ -40,6 +40,7 @@ abstract final class AdsConfig {
       ? (_ios ? _testRewardedIos : _testRewardedAndroid)
       : (_ios ? _prodRewardedIos : _prodRewardedAndroid);
 
-  /// Minimum gap between interstitials, so we never spam the user.
-  static const Duration interstitialMinGap = Duration(minutes: 3);
+  /// Minimum gap between interstitials, so we never spam the user. A free user
+  /// sees at most one interstitial every 2 hours (and only on a tab-switch).
+  static const Duration interstitialMinGap = Duration(hours: 2);
 }
