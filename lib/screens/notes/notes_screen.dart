@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/ai_insight_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -133,7 +134,12 @@ class NotesScreen extends ConsumerWidget {
           child: ListView(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
           children: [
-            _AIBanner(colors: colors),
+            AiInsightCard(
+              input: noteRows.isEmpty
+                  ? 'The user has no notes yet.'
+                  : 'My notes:\n${noteRows.take(20).map((n) => '- ${n.title}: ${n.body.length > 160 ? n.body.substring(0, 160) : n.body}').join('\n')}',
+              hint: 'See what Kaal AI notices across your notes',
+            ),
             const SizedBox(height: 8),
             if (pinned.isNotEmpty) ...[
               _SectionLabel(label: 'Pinned', colors: colors),
@@ -181,54 +187,6 @@ class NotesScreen extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// ── AI notice banner ──────────────────────────────────────────────────────────
-
-class _AIBanner extends StatelessWidget {
-  final KaalColors colors;
-  const _AIBanner({required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
-      decoration: BoxDecoration(
-        color: const Color(0x120A84FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '✦ AI NOTICED FROM YOUR NOTES',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.4,
-              color: KaalColors.acc2,
-              height: 1,
-            ),
-          ),
-          const SizedBox(height: 5),
-          RichText(
-            text: TextSpan(
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
-              children: [
-                const TextSpan(text: 'Your meeting prep note mentions '),
-                const TextSpan(text: 'Product Roadmap', style: TextStyle(color: KaalColors.acc2)),
-                const TextSpan(text: ' — added to Q2 task. Note from last week has '),
-                TextSpan(text: '3 pending action items', style: TextStyle(color: colors.successFg)),
-                const TextSpan(text: '.'),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

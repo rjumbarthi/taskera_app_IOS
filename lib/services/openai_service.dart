@@ -37,3 +37,46 @@ class OpenAiService {
 
 final openAiServiceProvider = Provider<OpenAiService>(
     (ref) => OpenAiService(const FlutterSecureStorage()));
+
+/// Same contract as [OpenAiService] for Anthropic (Claude) keys. Validated with
+/// a 1-token message call, stored in secure storage.
+class AnthropicService {
+  AnthropicService(this._s);
+  final FlutterSecureStorage _s;
+
+  static const _key = 'anthropic_api_key';
+
+  Future<bool> get isConnected async => await _s.read(key: _key) != null;
+
+  Future<bool> setKey(String apiKey) async {
+    try {
+      final res = await http.post(
+        Uri.parse('https://api.anthropic.com/v1/messages'),
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: jsonEncode({
+          'model': 'claude-haiku-4-5-20251001',
+          'max_tokens': 1,
+          'messages': [
+            {'role': 'user', 'content': 'hi'}
+          ],
+        }),
+      );
+      if (res.statusCode != 200) return false; // 401/403 = bad key
+      await _s.write(key: _key, value: apiKey);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<String?> getKey() => _s.read(key: _key);
+
+  Future<void> disconnect() => _s.delete(key: _key);
+}
+
+final anthropicServiceProvider = Provider<AnthropicService>(
+    (ref) => AnthropicService(const FlutterSecureStorage()));

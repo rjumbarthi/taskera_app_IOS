@@ -9,6 +9,7 @@ import '../../data/providers/habits_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/ai_insight_card.dart';
 
 // ── Badges ────────────────────────────────────────────────────────────────────
 
@@ -169,6 +170,10 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
       if (canExtend || shouldEase) suggestions.add(s);
     }
 
+    final aiInput = habits.isEmpty
+        ? 'The user has no habits yet.'
+        : 'My habits and their 30-day completion rate:\n${stats.map((s) => '- ${s.habit.name}: ${_freqShort(s.days)}, ${s.pct}% completed').join('\n')}';
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
       child: Column(
@@ -202,18 +207,11 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
           ),
           const SizedBox(height: 10),
 
-          // AI banner (static explainer copy)
-          Container(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-            decoration: BoxDecoration(
-              color: const Color(0x120A84FF),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
-            ),
-            child: Text(
-              '✦ Kaal watches your completion rates over the last 30 days and suggests smarter frequencies — never nags, always adapts.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.5),
-            ),
+          // Real on-demand Kaal AI — reasons over your habit completion data.
+          AiInsightCard(
+            input: aiInput,
+            hint: 'Suggest smarter habit frequencies',
+            margin: EdgeInsets.zero,
           ),
           const SizedBox(height: 16),
 

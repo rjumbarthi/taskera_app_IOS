@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
+import '../../settings/prefs_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_motion.dart';
 import '../../theme/kaal_shape.dart';
@@ -37,11 +38,55 @@ const _kInfoSvg = '<svg width="18" height="18" viewBox="0 0 22 22" fill="none" '
     '</svg>';
 
 
-class FocusDashboardScreen extends ConsumerWidget {
+class FocusDashboardScreen extends ConsumerStatefulWidget {
   const FocusDashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FocusDashboardScreen> createState() => _FocusDashboardScreenState();
+}
+
+class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeNudgeBrainDump());
+  }
+
+  // Once-a-day discovery nudge that points at the Brain Dump card. Stops once
+  // the user actually opens Brain Dump (BrainDumpScreen marks it used).
+  void _maybeNudgeBrainDump() {
+    if (!mounted) return;
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (prefs.getBool('kaal.brainDumpUsed') ?? false) return;
+    if (!ref.read(kaalSettingsProvider).sw('focusBrain')) return; // card hidden
+    final now = DateTime.now();
+    final today = '${now.year}-${now.month}-${now.day}';
+    if (prefs.getString('kaal.brainDumpNudgeDate') == today) return; // already today
+    prefs.setString('kaal.brainDumpNudgeDate', today);
+
+    final navBottom = MediaQuery.viewPaddingOf(context).bottom + 50 + 8;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: const Text(
+          '🧠 Brain Dump ↓  empty your head — Kaal AI sorts it into tasks & goals',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF1C1C1E),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.fromLTRB(12, 0, 12, navBottom),
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: 'Open',
+          textColor: const Color(0xFFCF7BFF),
+          onPressed: () => context.go(KaalRoutes.brainDump),
+        ),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final s = ref.watch(kaalSettingsProvider);
     final utilGrid = _UtilGrid(
       showPeak:  s.sw('focusPeak'),

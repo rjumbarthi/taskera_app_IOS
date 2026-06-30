@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/providers/tasks_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/ai_insight_card.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -24,19 +27,25 @@ const _scheduled = <_Scheduled>[];
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
-class DayScheduleScreen extends StatefulWidget {
+class DayScheduleScreen extends ConsumerStatefulWidget {
   const DayScheduleScreen({super.key});
 
   @override
-  State<DayScheduleScreen> createState() => _DayScheduleScreenState();
+  ConsumerState<DayScheduleScreen> createState() => _DayScheduleScreenState();
 }
 
-class _DayScheduleScreenState extends State<DayScheduleScreen> {
+class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
   final Set<int> _confirmed = {};
 
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final active = (ref.watch(allTasksProvider).valueOrNull ?? const [])
+        .where((t) => !t.isDone)
+        .toList();
+    final aiInput = active.isEmpty
+        ? 'The user has no active tasks to schedule.'
+        : 'My active tasks to schedule:\n${active.take(25).map((t) => '- ${t.title} (Q${t.quadrant})${t.dueLabel != null && t.dueLabel!.isNotEmpty ? ' · due ${t.dueLabel}' : ''}').join('\n')}';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -76,24 +85,11 @@ class _DayScheduleScreenState extends State<DayScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // AI banner
-                Container(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0x120A84FF),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
-                      children: const [
-                        TextSpan(text: '✦ ', style: TextStyle(color: KaalColors.acc2)),
-                        TextSpan(text: 'AI scans your calendar, peak hours and task scores to find optimal slots. ', style: TextStyle(color: KaalColors.acc2)),
-                        TextSpan(text: 'No tasks need scheduling yet.'),
-                      ],
-                    ),
-                  ),
+                // Real on-demand Kaal AI — reasons over your unscheduled tasks.
+                AiInsightCard(
+                  input: aiInput,
+                  hint: 'When should I tackle these today?',
+                  margin: EdgeInsets.zero,
                 ),
                 const SizedBox(height: 12),
 

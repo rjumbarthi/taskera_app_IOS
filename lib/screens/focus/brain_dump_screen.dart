@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart'
     show TasksCompanion, GoalsCompanion, CustomListsCompanion, CustomListItemsCompanion;
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/ai_access_provider.dart';
+import '../../routing/routes.dart';
 import '../../services/ai_service.dart';
 import '../../settings/prefs_provider.dart';
 import '../../theme/kaal_colors.dart';
@@ -38,6 +40,8 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
   void initState() {
     super.initState();
     final prefs = ref.read(sharedPreferencesProvider);
+    // Opening Brain Dump counts as "used" — stops the Focus discovery nudge.
+    prefs.setBool('kaal.brainDumpUsed', true);
     final saved = prefs.getString(_kPrefKey) ?? '';
     if (saved.isNotEmpty) _controller.text = saved;
     _controller.addListener(_onTextChanged);
@@ -57,6 +61,10 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
   Future<void> _process() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
+    if (!(await ref.read(aiUnlockedProvider.future))) {
+      if (mounted) _showAiUpgrade();
+      return;
+    }
     setState(() {
       _loading      = true;
       _error        = null;
@@ -90,6 +98,22 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
         });
       }
     }
+  }
+
+  void _showAiUpgrade() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text(
+          'AI is a Kaal Pro feature — upgrade, or add your own key in Settings',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+      backgroundColor: const Color(0xFF1C1C1E),
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 4),
+      action: SnackBarAction(
+        label: 'Upgrade',
+        textColor: KaalColors.acc2,
+        onPressed: () => context.push(KaalRoutes.paywall),
+      ),
+    ));
   }
 
   // ── DB write helpers ────────────────────────────────────────────────────────

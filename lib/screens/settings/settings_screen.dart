@@ -104,10 +104,6 @@ const _icoChatGPT =
     '<path d="M22.28 9.28a6 6 0 0 0-.52-4.92 6.06 6.06 0 0 0-6.5-2.9A6 6 0 0 0 10.76 0a6.06 6.06 0 0 0-5.77 4.19 6 6 0 0 0-4 2.9 6.06 6.06 0 0 0 .74 7.1 6 6 0 0 0 .52 4.93 6.06 6.06 0 0 0 6.5 2.9A6 6 0 0 0 13.24 24a6.06 6.06 0 0 0 5.77-4.19 6 6 0 0 0 4-2.9 6.06 6.06 0 0 0-.73-7.63zM13.24 22.5a4.5 4.5 0 0 1-2.89-1.05l.14-.08 4.8-2.77a.8.8 0 0 0 .4-.68v-6.77l2.03 1.17a.07.07 0 0 1 .04.06v5.6a4.51 4.51 0 0 1-4.52 4.52zm-9.7-4.14a4.5 4.5 0 0 1-.54-3.02l.14.09 4.8 2.77a.77.77 0 0 0 .78 0l5.86-3.38v2.34a.08.08 0 0 1-.03.07l-4.85 2.8a4.51 4.51 0 0 1-6.16-1.67zm-1.26-9.9a4.49 4.49 0 0 1 2.35-1.98v5.7a.77.77 0 0 0 .39.67l5.84 3.37-2.03 1.17a.08.08 0 0 1-.07 0l-4.85-2.8a4.51 4.51 0 0 1-1.63-6.13zm16.68 3.87l-5.86-3.38 2.03-1.17a.08.08 0 0 1 .07 0l4.85 2.8a4.5 4.5 0 0 1-.7 8.12v-5.7a.78.78 0 0 0-.39-.67zm2.02-3.04l-.14-.08-4.8-2.77a.78.78 0 0 0-.78 0L9.4 10.83V8.49a.07.07 0 0 1 .03-.07l4.85-2.79a4.5 4.5 0 0 1 6.7 4.66zm-12.7 4.18l-2.03-1.17a.07.07 0 0 1-.04-.06v-5.6a4.5 4.5 0 0 1 7.38-3.46l-.14.08-4.8 2.77a.79.79 0 0 0-.39.68v6.76zm1.1-2.37L12 9.75l2.34 1.35v2.7L12 15.15l-2.34-1.35V11.1z"/>'
     '</svg>';
 
-const _icoSiri =
-    '<svg width="11" height="11" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round">'
-    '<circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 2"/>'
-    '</svg>';
 
 const _icoICloud =
     '<svg width="13" height="13" viewBox="0 0 24 24" fill="white">'
@@ -169,11 +165,16 @@ final _intCalEmail = [
       const Color(0xFF34C759), _icoSms, _IntStatus.comingSoon),
 ];
 
+const _icoClaude =
+    '<svg width="11" height="11" viewBox="0 0 24 24" fill="white">'
+    '<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/>'
+    '</svg>';
+
 final _intAi = [
-  _IntService('ChatGPT / OpenAI', 'AI task decomposition · voice-to-tasks',
+  _IntService('ChatGPT / OpenAI', 'Use your own OpenAI key for all AI features',
       const Color(0xFF10A37F), _icoChatGPT, _IntStatus.connect),
-  _IntService('Siri Shortcuts', '"Hey Siri, add to Kaal" · voice capture',
-      Colors.transparent, _icoSiri, _IntStatus.connect),
+  _IntService('Claude (Anthropic)', 'Use your own Claude key for all AI features',
+      const Color(0xFFD97757), _icoClaude, _IntStatus.connect),
 ];
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -781,7 +782,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             style: TextStyle(fontFamily: 'Inter', fontSize: 15,
                 fontWeight: FontWeight.w600, color: Colors.white)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('Enter your secret API key (sk-…)',
+          Text('Enter your secret API key (sk-…). It powers all of Kaal’s AI.',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   color: colors.labelMuted)),
           const SizedBox(height: 12),
@@ -822,6 +823,67 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (confirmed == true && key.trim().isNotEmpty) {
       final ok =
           await ref.read(integrationsProvider.notifier).connectOpenAi(key.trim());
+      if (mounted && !ok) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Invalid API key — check and try again'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    }
+  }
+
+  // Shows an API-key entry dialog for Claude (Anthropic) and triggers connect.
+  Future<void> _connectAnthropic() async {
+    final colors = KaalTheme.of(context).colors;
+    String key = '';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Text('Claude (Anthropic) API key',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+                fontWeight: FontWeight.w600, color: Colors.white)),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text('Enter your secret API key (sk-ant-…). It powers all of Kaal’s AI.',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                  color: colors.labelMuted)),
+          const SizedBox(height: 12),
+          TextField(
+            autofocus: true,
+            onChanged: (v) => key = v,
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'sk-ant-…',
+              hintStyle: const TextStyle(color: Color(0x40FFFFFF)),
+              filled: true,
+              fillColor: colors.bdr0,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            ),
+          ),
+        ]),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('Cancel',
+                style: TextStyle(fontFamily: 'Inter', color: colors.labelMuted)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text('Connect',
+                style: TextStyle(fontFamily: 'Inter',
+                    color: KaalColors.acc2, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && key.trim().isNotEmpty) {
+      final ok =
+          await ref.read(integrationsProvider.notifier).connectAnthropic(key.trim());
       if (mounted && !ok) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Invalid API key — check and try again'),
@@ -915,10 +977,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       () => _comingSoon(context, 'SMS / iMessage'),
     ];
 
-    // AI Assistants: ChatGPT/OpenAI, Siri Shortcuts
+    // AI Assistants: ChatGPT/OpenAI, Claude/Anthropic
     final aiStatuses = [
       integrations.openAiConnected ? _IntStatus.connected : _IntStatus.connect,
-      _IntStatus.connect, // Siri — iOS SiriKit, coming soon
+      integrations.anthropicConnected ? _IntStatus.connected : _IntStatus.connect,
     ];
     final aiTaps = <VoidCallback?>[
       disabled
@@ -926,7 +988,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           : integrations.openAiConnected
               ? () => notifier.disconnectOpenAi()
               : _connectOpenAi,
-      () => _comingSoon(context, 'Siri Shortcuts'),
+      disabled
+          ? null
+          : integrations.anthropicConnected
+              ? () => notifier.disconnectAnthropic()
+              : _connectAnthropic,
     ];
 
     return _Sgrp(
@@ -1655,18 +1721,9 @@ class _IntServiceRow extends StatelessWidget {
           Container(
             width: 26, height: 26,
             decoration: BoxDecoration(
-              color: service.name == 'Siri Shortcuts'
-                  ? null
-                  : service.name == 'Google Calendar'
-                      ? Colors.white
-                      : service.iconBg,
-              gradient: service.name == 'Siri Shortcuts'
-                  ? const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF5856D6), Color(0xFF0A84FF)],
-                    )
-                  : null,
+              color: service.name == 'Google Calendar'
+                  ? Colors.white
+                  : service.iconBg,
               borderRadius: BorderRadius.circular(6),
               border: service.name == 'Google Calendar'
                   ? Border.all(width: 0.5, color: colors.bdr0)

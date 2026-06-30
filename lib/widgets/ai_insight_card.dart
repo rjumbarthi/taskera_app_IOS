@@ -1,0 +1,214 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../data/providers/ai_access_provider.dart';
+import '../routing/routes.dart';
+import '../services/ai_service.dart';
+import '../theme/kaal_colors.dart';
+import '../theme/kaal_theme.dart';
+
+/// On-demand "Kaal AI" insight card. Tapping **Generate** calls the built-in AI
+/// (the `ai-proxy` edge function → Claude/OpenAI) with [input] and renders the
+/// returned insights. It's on-demand by design so it never auto-burns the daily
+/// AI quota on every screen view. Replaces the old hardcoded "✦ Kaal AI" mockups.
+class AiInsightCard extends ConsumerStatefulWidget {
+  /// The real context the AI reasons over (built from the screen's live data).
+  final String input;
+
+  /// One-line prompt shown before the user generates.
+  final String hint;
+
+  final EdgeInsetsGeometry? margin;
+
+  const AiInsightCard({
+    super.key,
+    required this.input,
+    this.hint = 'Get a Kaal AI insight on this',
+    this.margin,
+  });
+
+  @override
+  ConsumerState<AiInsightCard> createState() => _AiInsightCardState();
+}
+
+class _AiInsightCardState extends ConsumerState<AiInsightCard> {
+  bool _loading = false;
+  String? _error;
+  bool _generated = false;
+  List<Map<String, String>> _insights = const [];
+
+  Future<void> _generate() async {
+    if (_loading) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final res = await ref.read(aiServiceProvider).getInsights(widget.input);
+      if (!mounted) return;
+      setState(() {
+        _insights = res;
+        _generated = true;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString().replaceFirst('Exception: ', '');
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = KaalTheme.of(context).colors;
+    final unlocked = ref.watch(aiUnlockedProvider).valueOrNull ?? false;
+    return Padding(
+      padding: widget.margin ?? const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
+        decoration: BoxDecoration(
+          color: const Color(0x120A84FF),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Text(unlocked ? '✦ KAAL AI' : '✦ KAAL AI · PRO',
+                  style: const TextStyle(
+                      fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+                      letterSpacing: 0.4, color: KaalColors.acc2, height: 1)),
+              const Spacer(),
+              if (unlocked && _generated && !_loading)
+                GestureDetector(
+                  onTap: _generate,
+                  child: Text('↻ Refresh',
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                ),
+            ]),
+            const SizedBox(height: 7),
+            if (unlocked) _body(colors) else _upgradeBody(context, colors),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Shown to free users instead of real AI output.
+  Widget _upgradeBody(BuildContext context, KaalColors colors) {
+    return GestureDetector(
+      onTap: () => context.push(KaalRoutes.paywall),
+      behavior: HitTestBehavior.opaque,
+      child: Row(children: [
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Unlock AI insights with Kaal Pro',
+                style: TextStyle(
+                    fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600,
+                    color: colors.ink, height: 1.3)),
+            const SizedBox(height: 2),
+            Text('Or connect your own OpenAI / Claude key in Settings → Integrations.',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.35)),
+          ]),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
+          decoration: BoxDecoration(
+            color: KaalColors.accBg,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
+          ),
+          child: const Text('Upgrade →',
+              style: TextStyle(
+                  fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                  color: KaalColors.acc2, height: 1)),
+        ),
+      ]),
+    );
+  }
+
+  Widget _body(KaalColors colors) {
+    if (_loading) {
+      return Row(children: [
+        const SizedBox(width: 13, height: 13,
+            child: CircularProgressIndicator(strokeWidth: 1.6, color: KaalColors.acc2)),
+        const SizedBox(width: 8),
+        Text('Thinking…', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+      ]);
+    }
+    if (_error != null) {
+      return GestureDetector(
+        onTap: _generate,
+        behavior: HitTestBehavior.opaque,
+        child: Text('$_error · tap to retry',
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Color(0xFFFF6B6B), height: 1.4)),
+      );
+    }
+    if (!_generated) {
+      return GestureDetector(
+        onTap: _generate,
+        behavior: HitTestBehavior.opaque,
+        child: Row(children: [
+          Expanded(
+            child: Text(widget.hint,
+                style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+            decoration: BoxDecoration(
+              color: KaalColors.accBg,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
+            ),
+            child: const Text('Generate',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+          ),
+        ]),
+      );
+    }
+    if (_insights.isEmpty) {
+      return Text('No insight available right now — tap ↻ to retry.',
+          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4));
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (int i = 0; i < _insights.length; i++) ...[
+          if (i > 0) const SizedBox(height: 8),
+          _InsightRow(item: _insights[i], colors: colors),
+        ],
+      ],
+    );
+  }
+}
+
+class _InsightRow extends StatelessWidget {
+  final Map<String, String> item;
+  final KaalColors colors;
+  const _InsightRow({required this.item, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    final title = item['title'] ?? '';
+    final detail = item['detail'] ?? '';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title.isNotEmpty)
+          Text(title,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink, height: 1.3)),
+        if (detail.isNotEmpty) ...[
+          if (title.isNotEmpty) const SizedBox(height: 2),
+          Text(detail,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11.5, color: colors.ink2, height: 1.45)),
+        ],
+      ],
+    );
+  }
+}

@@ -10,6 +10,7 @@ import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/ai_insight_card.dart';
 
 class WeeklyReviewScreen extends ConsumerStatefulWidget {
   const WeeklyReviewScreen({super.key});
@@ -69,24 +70,6 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
     ));
   }
 
-  String _insight(int done, int missed, String logged, List<({double frac, int count})> quads) {
-    if (done == 0 && missed == 0) {
-      return 'No completed tasks logged this week yet. Schedule a few Q2 tasks to build momentum.';
-    }
-    var best = 0;
-    var bestFrac = -1.0;
-    for (var i = 0; i < quads.length; i++) {
-      if (quads[i].count > 0 && quads[i].frac > bestFrac) { bestFrac = quads[i].frac; best = i; }
-    }
-    final qName = ['Q1', 'Q2', 'Q3', 'Q4'][best];
-    final pct = (bestFrac.clamp(0, 1) * 100).round();
-    final tail = missed > 0
-        ? ' $missed task${missed == 1 ? '' : 's'} slipped overdue — pull those into next week.'
-        : ' Nothing slipped overdue — great consistency.';
-    return 'You completed $done task${done == 1 ? '' : 's'} and logged $logged of focus this week. '
-        'Your strongest quadrant was $qName at $pct% completion.$tail';
-  }
-
   @override
   void dispose() {
     _biggestWinCtrl.dispose();
@@ -134,7 +117,18 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
       return (frac: tot == 0 ? 0.0 : dq / tot, count: dq);
     }
     final qs = [quadStat(1), quadStat(2), quadStat(3), quadStat(4)];
-    final insight = _insight(doneCount, missedCount, loggedStr, qs);
+    final pct = qs.map((q) => (q.frac.clamp(0, 1) * 100).round()).toList();
+    final aiInput = (StringBuffer()
+          ..writeln('Weekly review data ($dateRange):')
+          ..writeln('- Tasks completed: $doneCount')
+          ..writeln('- Tasks overdue/missed: $missedCount')
+          ..writeln('- Habits hit: $habitsHit of $habitsTotal')
+          ..writeln('- Focus time logged: $loggedStr')
+          ..writeln('- Quadrant completion: Q1 ${pct[0]}%, Q2 ${pct[1]}%, Q3 ${pct[2]}%, Q4 ${pct[3]}%')
+          ..write(_biggestWinCtrl.text.trim().isNotEmpty ? '- Biggest win: ${_biggestWinCtrl.text.trim()}\n' : '')
+          ..write(_drainCtrl.text.trim().isNotEmpty ? '- What drained energy: ${_drainCtrl.text.trim()}\n' : '')
+          ..write(_priorityCtrl.text.trim().isNotEmpty ? "- Next week's priority: ${_priorityCtrl.text.trim()}\n" : ''))
+        .toString();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -311,56 +305,11 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Kaal AI insight
-                Container(
-                  padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
-                  decoration: BoxDecoration(
-                    color: const Color(0x12BF5AF2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 13,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF5856D6), KaalColors.acc],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            'Kaal AI · Week insight',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFFBF5AF2),
-                              height: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        insight,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          color: colors.ink3,
-                          height: 1.55,
-                        ),
-                      ),
-                    ],
-                  ),
+                // Kaal AI insight — on-demand, real LLM
+                AiInsightCard(
+                  input: aiInput,
+                  hint: 'Reflect on my week with Kaal AI',
+                  margin: EdgeInsets.zero,
                 ),
                 const SizedBox(height: 10),
 

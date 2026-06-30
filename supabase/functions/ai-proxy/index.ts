@@ -43,11 +43,11 @@ const PROMPTS: Record<string, (content: string) => string> = {
     `{"context":"short label e.g. Trip to USA in July","tasks":[{"title":"...","quadrant":2}],"checklist":["item1","item2"],"goals":["goal1"]}`,
 };
 
-async function callClaude(prompt: string): Promise<string> {
+async function callClaude(prompt: string, key?: string): Promise<string> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
-      "x-api-key": Deno.env.get("ANTHROPIC_API_KEY") ?? "",
+      "x-api-key": key || Deno.env.get("ANTHROPIC_API_KEY") || "",
       "anthropic-version": "2023-06-01",
       "content-type": "application/json",
     },
@@ -62,11 +62,11 @@ async function callClaude(prompt: string): Promise<string> {
   return data.content?.[0]?.text ?? "";
 }
 
-async function callOpenAI(prompt: string): Promise<string> {
+async function callOpenAI(prompt: string, key?: string): Promise<string> {
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${Deno.env.get("OPENAI_API_KEY") ?? ""}`,
+      Authorization: `Bearer ${key || Deno.env.get("OPENAI_API_KEY") || ""}`,
       "content-type": "application/json",
     },
     body: JSON.stringify({
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { action, content } = await req.json();
+    const { action, content, apiKey, provider } = await req.json();
     const promptFn = PROMPTS[action as string];
     if (!promptFn) {
       return new Response(JSON.stringify({ error: "Unknown action" }), {
@@ -99,11 +99,18 @@ Deno.serve(async (req) => {
     const prompt = promptFn(content as string);
     let result = "";
 
-    // Try Claude first, fall back to OpenAI
-    try {
-      result = await callClaude(prompt);
-    } catch {
-      result = await callOpenAI(prompt);
+    if (apiKey) {
+      // User connected their own provider — run all AI on their chosen key.
+      result = provider === "anthropic"
+        ? await callClaude(prompt, apiKey as string)
+        : await callOpenAI(prompt, apiKey as string);
+    } else {
+      // Managed keys: try Claude first, fall back to OpenAI.
+      try {
+        result = await callClaude(prompt);
+      } catch {
+        result = await callOpenAI(prompt);
+      }
     }
 
     return new Response(JSON.stringify({ result }), {

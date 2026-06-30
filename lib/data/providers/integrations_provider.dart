@@ -24,6 +24,7 @@ class IntegrationsState {
     this.linearConnected         = false,
     this.githubConnected         = false,
     this.openAiConnected         = false,
+    this.anthropicConnected      = false,
     this.loading                 = false,
   });
 
@@ -38,6 +39,7 @@ class IntegrationsState {
   final bool linearConnected;
   final bool githubConnected;
   final bool openAiConnected;
+  final bool anthropicConnected;
   final bool loading;
 
   IntegrationsState copyWith({
@@ -52,6 +54,7 @@ class IntegrationsState {
     bool? linearConnected,
     bool? githubConnected,
     bool? openAiConnected,
+    bool? anthropicConnected,
     bool? loading,
   }) =>
       IntegrationsState(
@@ -67,6 +70,7 @@ class IntegrationsState {
         linearConnected:    linearConnected    ?? this.linearConnected,
         githubConnected:    githubConnected    ?? this.githubConnected,
         openAiConnected:    openAiConnected    ?? this.openAiConnected,
+        anthropicConnected: anthropicConnected ?? this.anthropicConnected,
         loading:            loading            ?? this.loading,
       );
 }
@@ -88,6 +92,7 @@ class IntegrationsNotifier extends Notifier<IntegrationsState> {
     final linear = ref.read(linearServiceProvider);
     final gh     = ref.read(githubServiceProvider);
     final oai    = ref.read(openAiServiceProvider);
+    final anth   = ref.read(anthropicServiceProvider);
 
     final results = await Future.wait([
       gs.isCalConnected,
@@ -101,6 +106,7 @@ class IntegrationsNotifier extends Notifier<IntegrationsState> {
       linear.isConnected,
       gh.isConnected,
       oai.isConnected,
+      anth.isConnected,
     ]);
 
     state = IntegrationsState(
@@ -115,6 +121,7 @@ class IntegrationsNotifier extends Notifier<IntegrationsState> {
       linearConnected:         results[8],
       githubConnected:         results[9],
       openAiConnected:         results[10],
+      anthropicConnected:      results[11],
     );
   }
 
@@ -330,6 +337,25 @@ class IntegrationsNotifier extends Notifier<IntegrationsState> {
   Future<void> disconnectOpenAi() async {
     await ref.read(openAiServiceProvider).disconnect();
     state = state.copyWith(openAiConnected: false);
+  }
+
+  // ── Anthropic / Claude ───────────────────────────────────────────────────────
+
+  Future<bool> connectAnthropic(String apiKey) async {
+    state = state.copyWith(loading: true);
+    try {
+      final ok = await ref.read(anthropicServiceProvider).setKey(apiKey);
+      state = state.copyWith(loading: false, anthropicConnected: ok);
+      return ok;
+    } catch (_) {
+      state = state.copyWith(loading: false);
+      return false;
+    }
+  }
+
+  Future<void> disconnectAnthropic() async {
+    await ref.read(anthropicServiceProvider).disconnect();
+    state = state.copyWith(anthropicConnected: false);
   }
 }
 

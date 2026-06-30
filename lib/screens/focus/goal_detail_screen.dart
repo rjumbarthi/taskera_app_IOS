@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/ai_insight_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -211,41 +212,15 @@ class _Body extends StatelessWidget {
                 _SupportingHabitsCard(goalId: int.tryParse(goalId) ?? 0, colors: colors),
                 const SizedBox(height: 10),
 
-                // AI insight
-                Container(
-                  padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
-                  decoration: BoxDecoration(
-                    color: const Color(0x120A84FF),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(width: 10, height: 10,
-                              decoration: const BoxDecoration(color: KaalColors.acc, shape: BoxShape.circle)),
-                          const SizedBox(width: 5),
-                          const Text('Kaal AI', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: KaalColors.acc2)),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Text.rich(
-                        TextSpan(
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.55),
-                          children: [
-                            const TextSpan(text: 'At current pace you\'ll complete '),
-                            TextSpan(
-                              text: '~${(goal.progressPct * 100).round() + 2}% by next month',
-                              style: TextStyle(color: colors.ink2, fontWeight: FontWeight.w600),
-                            ),
-                            const TextSpan(text: '. Link more Q2 tasks this week to stay on track.'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                // Real on-demand Kaal AI — reasons over this goal.
+                AiInsightCard(
+                  input: 'Goal: ${goal.title}\n'
+                      'Why it matters: ${goal.subtitle}\n'
+                      'Progress: ${(goal.progressPct * 100).round()}%'
+                      '${goal.notes != null && goal.notes!.trim().isNotEmpty ? '\nNotes: ${goal.notes!.trim()}' : ''}'
+                      '${goal.milestones.trim().isNotEmpty ? '\nMilestones: ${goal.milestones.trim().replaceAll('\n', '; ')}' : ''}',
+                  hint: 'How do I hit this goal faster?',
+                  margin: EdgeInsets.zero,
                 ),
               ],
             ),

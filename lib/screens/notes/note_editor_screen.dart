@@ -12,6 +12,8 @@ import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../services/activity_log_service.dart';
 import '../../services/ai_service.dart';
+import '../../data/providers/ai_access_provider.dart';
+import '../../routing/routes.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/goal_link_pickers.dart';
 
@@ -61,6 +63,22 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     if (body.isEmpty) {
       messenger.showSnackBar(
           const SnackBar(content: Text('Write a note first to scan it')));
+      return;
+    }
+    if (!(await ref.read(aiUnlockedProvider.future))) {
+      messenger.showSnackBar(SnackBar(
+        content: const Text(
+            'AI is a Kaal Pro feature — upgrade, or add your own key in Settings',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+        backgroundColor: const Color(0xFF1C1C1E),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          label: 'Upgrade',
+          textColor: KaalColors.acc2,
+          onPressed: () => context.push(KaalRoutes.paywall),
+        ),
+      ));
       return;
     }
     messenger.showSnackBar(const SnackBar(content: Text('✦ Scanning note…')));

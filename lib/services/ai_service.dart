@@ -2,19 +2,31 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'openai_service.dart';
+
 /// All AI calls are proxied through the Supabase Edge Function `ai-proxy`.
 /// The function holds the Anthropic / OpenAI API keys as secrets — they never
 /// touch the client.  Claude is tried first; OpenAI is the fallback.
 class AiService {
-  AiService(this._client);
+  AiService(this._client, [this._getUserCreds]);
   final SupabaseClient _client;
+  // When the user has connected their own AI provider (Settings → Integrations →
+  // OpenAI or Claude), their (provider, key) is sent to the proxy so ALL AI
+  // features run on the provider they chose.
+  final Future<({String provider, String key})?> Function()? _getUserCreds;
 
   // ── Low-level invoke ───────────────────────────────────────────────────────
 
   Future<String?> _invoke(String action, String content) async {
+    final creds = await _getUserCreds?.call();
     final res = await _client.functions.invoke(
       'ai-proxy',
-      body: {'action': action, 'content': content},
+      body: {
+        'action': action,
+        'content': content,
+        if (creds != null) 'provider': creds.provider,
+        if (creds != null) 'apiKey': creds.key,
+      },
     );
     final data = res.data is String ? jsonDecode(res.data) : res.data;
     final map = data as Map<String, dynamic>?;
@@ -92,5 +104,16 @@ class AiService {
 }
 
 final aiServiceProvider = Provider<AiService>(
-  (ref) => AiService(Supabase.instance.client),
+  (ref) => AiService(
+    Supabase.instance.client,
+    () async {
+      // Use whichever provider the user connected; Claude wins if both are set,
+      // otherwise fall back to Kaal's managed keys.
+      final anth = await ref.read(anthropicServiceProvider).getKey();
+      if (anth != null && anth.isNotEmpty) return (provider: 'anthropic', key: anth);
+      final oai = await ref.read(openAiServiceProvider).getKey();
+      if (oai != null && oai.isNotEmpty) return (provider: 'openai', key: oai);
+      return null;
+    },
+  ),
 );
