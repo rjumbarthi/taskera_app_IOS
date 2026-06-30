@@ -43,18 +43,69 @@ async function verifyApple(receipt: string): Promise<boolean> {
   return json.status === 0; // 0 = valid receipt
 }
 
-// Android — TODO: verify with Google Play Developer API using the service account.
-async function verifyAndroid(_productId: string, _token: string): Promise<boolean> {
-  const sa = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT");
-  if (!sa) {
-    console.warn("[validate-purchase] Android receipt NOT verified — Play service account not configured");
-    return true; // SCAFFOLD: grant optimistically until the Play API is wired
+function b64url(s: string): string {
+  return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function b64urlBytes(bytes: Uint8Array): string {
+  let s = "";
+  for (const b of bytes) s += String.fromCharCode(b);
+  return b64url(s);
+}
+
+// Exchange the service-account key for a short-lived androidpublisher token.
+async function googleAccessToken(sa: { client_email: string; private_key: string }): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  const claim = {
+    iss: sa.client_email,
+    scope: "https://www.googleapis.com/auth/androidpublisher",
+    aud: "https://oauth2.googleapis.com/token",
+    iat: now,
+    exp: now + 3600,
+  };
+  const unsigned = `${b64url(JSON.stringify({ alg: "RS256", typ: "JWT" }))}.${b64url(JSON.stringify(claim))}`;
+  const pem = sa.private_key
+    .replace(/-----BEGIN PRIVATE KEY-----/, "")
+    .replace(/-----END PRIVATE KEY-----/, "")
+    .replace(/\s/g, "");
+  const der = Uint8Array.from(atob(pem), (c) => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey(
+    "pkcs8", der, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["sign"],
+  );
+  const sig = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(unsigned));
+  const jwt = `${unsigned}.${b64urlBytes(new Uint8Array(sig))}`;
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
+  });
+  const json = await res.json();
+  return json.access_token as string;
+}
+
+// Android — verify the subscription token via the Play Developer API.
+async function verifyAndroid(productId: string, token: string): Promise<boolean> {
+  const saRaw = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT");
+  if (!saRaw) {
+    console.warn("[validate-purchase] Play service account not set — granting optimistically (UNVERIFIED)");
+    return true; // fallback until the secret is configured
   }
-  // TODO: mint a JWT from the service account, exchange for an access token, then
-  // GET androidpublisher/v3/applications/<pkg>/purchases/subscriptions/<id>/tokens/<token>
-  // and check paymentState/expiryTimeMillis. Returning false here forces the
-  // client optimistic fallback until implemented.
-  return false;
+  try {
+    const sa = JSON.parse(saRaw);
+    const pkg = Deno.env.get("ANDROID_PACKAGE") ?? "com.port443.kaal";
+    const accessToken = await googleAccessToken(sa);
+    const url =
+      `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${pkg}` +
+      `/purchases/subscriptions/${productId}/tokens/${token}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    if (!res.ok) return false;
+    const sub = await res.json();
+    // paymentState 1=received, 2=free trial; active while not expired.
+    const paid = sub.paymentState === 1 || sub.paymentState === 2;
+    return paid && Number(sub.expiryTimeMillis ?? 0) > Date.now();
+  } catch (e) {
+    console.error("[validate-purchase] Android verify failed", e);
+    return false;
+  }
 }
 
 Deno.serve(async (req) => {

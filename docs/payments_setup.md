@@ -55,9 +55,10 @@ validator is unreachable.
 - `supabase functions deploy validate-purchase`
 - `supabase secrets set APPLE_SHARED_SECRET=...` (App Store Connect → your subscription → app-specific shared secret)
 - `supabase secrets set GOOGLE_PLAY_SERVICE_ACCOUNT='{...}'` (Play service-account JSON)
-- ⚠️ **Android validation is a scaffold:** iOS `verifyReceipt` is implemented; the Google Play
-  Developer API call (`purchases.subscriptions.get`) is a TODO in the function. Wire it before
-  launch — until then Android purchases fall back to the unverified optimistic grant.
+- **Android** verifies via the Play Developer API (`purchases.subscriptions.get`). Set
+  `GOOGLE_PLAY_SERVICE_ACCOUNT` (service-account JSON with androidpublisher access) and
+  `ANDROID_PACKAGE=com.port443.kaal`. If the secret is missing it falls back to an
+  unverified optimistic grant.
 
 ## 4. Razorpay webhook — `supabase/functions/razorpay-webhook`
 1. `supabase functions deploy razorpay-webhook --no-verify-jwt`
