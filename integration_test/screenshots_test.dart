@@ -51,6 +51,8 @@ void main() {
       'kaal.dataSeeded': true,
       'kaal.realData': true,
       'kaal.listsSeeded': true,
+      // suppress the once-a-day Brain Dump discovery snackbar in captures
+      'kaal.brainDumpUsed': true,
       // unlock all gated tabs so every screen is reachable
       'kaal.toggle.habits': true,
       'kaal.toggle.calendar': true,
@@ -209,6 +211,24 @@ void main() {
         failed.add('$name <- $e');
         debugPrint('[shots] ✗ $name  ($location): $e');
       }
+    }
+
+    // ── Extra: Tasks 2×2 grid view (a toggle state, not a route) ────────────
+    try {
+      router.go(KaalRoutes.tasks);
+      await _settle(tester);
+      final toggle = find.text('⊞ 2×2');
+      if (toggle.evaluate().isNotEmpty) {
+        await tester.tap(toggle.first);
+        await _settle(tester);
+        await capture('20a_tasks_2x2');
+        ok++;
+        debugPrint('[shots] ✓ 20a_tasks_2x2 (2×2 toggle)');
+      } else {
+        debugPrint('[shots] ✗ 20a_tasks_2x2: "⊞ 2×2" toggle not found');
+      }
+    } catch (e) {
+      failed.add('20a_tasks_2x2 <- $e');
     }
 
     debugPrint('[shots] DONE: $ok/${shots.length} captured -> '

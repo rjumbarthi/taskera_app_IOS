@@ -29,21 +29,33 @@ const _tier3 = PricingTier(monthly: r'$0.99', yearlyPerMonth: r'$0.59', introFir
 
 // Tier 1 — high-income markets.
 const _tier1Countries = {
-  'US', 'CA', 'GB', 'IE', 'AU', 'NZ',
-  'DE', 'FR', 'NL', 'BE', 'LU', 'AT', 'CH', 'LI',
+  // North America
+  'US', 'CA',
+  // Western & Northern Europe
+  'GB', 'IE', 'DE', 'FR', 'NL', 'BE', 'LU', 'AT', 'CH', 'LI', 'MC',
   'SE', 'NO', 'DK', 'FI', 'IS',
-  'IT', 'ES', 'PT', 'MT', 'CY',
-  'JP', 'SG', 'HK', 'KR', 'TW',
-  'AE', 'QA', 'KW', 'BH', 'SA', 'IL',
+  // Southern & Central Europe (high income)
+  'IT', 'ES', 'PT', 'MT', 'CY', 'GR', 'SI', 'EE', 'LT', 'LV',
+  'CZ', 'SK', 'PL', 'HR',
+  // Asia-Pacific
+  'JP', 'KR', 'SG', 'HK', 'TW', 'AU', 'NZ', 'BN', 'MO',
+  // Gulf / Middle East
+  'AE', 'QA', 'KW', 'BH', 'SA', 'OM', 'IL',
 };
 
 // Tier 2 — middle-income markets.
 const _tier2Countries = {
-  'CN', 'BR', 'MX', 'RU', 'AR', 'CL', 'CO', 'PE', 'UY', 'CR', 'PA',
-  'PL', 'CZ', 'HU', 'RO', 'GR', 'SK', 'SI', 'HR', 'RS', 'BG',
-  'LT', 'LV', 'EE', 'UA',
-  'TR', 'TH', 'MY', 'ID', 'PH', 'VN',
-  'ZA', 'EG', 'MA', 'KZ', 'OM', 'JO', 'LB',
+  // Latin America
+  'BR', 'MX', 'AR', 'CL', 'CO', 'PE', 'UY', 'CR', 'PA', 'DO', 'EC', 'PY',
+  // Europe / Caucasus / Central Asia
+  'RU', 'TR', 'RO', 'BG', 'HU', 'RS', 'BA', 'MK', 'AL', 'ME',
+  'BY', 'UA', 'GE', 'AM', 'AZ', 'KZ',
+  // Asia
+  'CN', 'TH', 'MY', 'ID', 'PH', 'VN',
+  // Middle East / North Africa
+  'JO', 'LB', 'EG', 'MA', 'TN', 'DZ',
+  // Africa (upper-middle)
+  'ZA', 'BW', 'NA', 'MU', 'GA',
 };
 
 // Everything else (incl. India and most of South Asia / Africa) → tier 3.

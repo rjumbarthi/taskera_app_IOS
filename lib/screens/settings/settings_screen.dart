@@ -11,6 +11,10 @@ import '../../config/feature_flags.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../config/app_config.dart';
+import '../../data/providers/ai_access_provider.dart';
+import '../../services/purchase_service.dart';
 import '../../routing/routes.dart';
 import '../../settings/kaal_settings.dart';
 import '../../l10n/app_l10n.dart';
@@ -400,6 +404,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ── Section builders ──────────────────────────────────────────────────────
 
   Widget _sgrpKaalPro(KaalColors colors) {
+    final isPro = ref.watch(isProProvider);
     return _Sgrp(
       isOpen: _open == 0,
       onToggle: () => _toggle(0),
@@ -432,7 +437,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+              children: isPro
+                  ? _proActiveChildren(context, colors)
+                  : [
                 Text(AppL10n.of(context).freePlan,
                     style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
                         color: colors.ink, height: 1.3)),
@@ -503,6 +510,88 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ]),
       ),
     );
+  }
+
+  // Shown in place of the upsell once the user is Pro — no paywall, just status
+  // + manage/restore. Reacts live: isProProvider flips on purchase/entitlement.
+  List<Widget> _proActiveChildren(BuildContext context, KaalColors colors) {
+    Widget feature(String s) => Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.4)),
+        );
+    return [
+      Row(children: [
+        const Text('✦ Kaal Pro — active',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+                color: KaalColors.acc2, height: 1.3)),
+        const Spacer(),
+        Text('Thanks for your support',
+            style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
+                color: colors.successFg, height: 1)),
+      ]),
+      const SizedBox(height: 8),
+      for (final s in ['✦ Unlimited AI features', '✦ Home screen widget',
+        '✦ Export / share (PDF, image)', '✦ Pro badge + custom themes', '✦ Gmail deep sync'])
+        feature(s),
+      const SizedBox(height: 10),
+      GestureDetector(
+        onTap: _managePlaySubscription,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 11),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+            borderRadius: BorderRadius.circular(11),
+          ),
+          alignment: Alignment.center,
+          child: const Text('Manage subscription',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+                  color: Colors.white, height: 1)),
+        ),
+      ),
+      const SizedBox(height: 6),
+      GestureDetector(
+        onTap: _restorePurchase,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+              color: colors.surf2,
+              border: Border.all(width: 0.5, color: colors.bdr0),
+              borderRadius: BorderRadius.circular(11)),
+          alignment: Alignment.center,
+          child: const Text('Restore purchase',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600,
+                  color: KaalColors.acc2, height: 1)),
+        ),
+      ),
+    ];
+  }
+
+  Future<void> _managePlaySubscription() async {
+    final uri = Uri.parse('https://play.google.com/store/account/subscriptions'
+        '?sku=${AppConfig.proMonthlyProductId}&package=com.port443.kaal');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open subscription settings.')));
+      }
+    }
+  }
+
+  Future<void> _restorePurchase() async {
+    try {
+      await ref.read(purchaseServiceProvider).restore();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Checking for past purchases…')));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Restore failed. Please try again.')));
+      }
+    }
   }
 
   Widget _sgrpDisplay(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
