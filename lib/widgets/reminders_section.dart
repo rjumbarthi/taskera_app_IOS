@@ -62,9 +62,9 @@ class RemindersSection extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 11, 12, 11),
         decoration: BoxDecoration(
-          color: const Color(0x120A84FF),
+          color: colors.surf2,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
+          border: Border.all(width: 0.5, color: colors.bdr0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,7 +76,7 @@ class RemindersSection extends ConsumerWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: const Color(0x1F0A84FF),
+                    color: colors.bdr0,
                     borderRadius: BorderRadius.circular(9),
                   ),
                   alignment: Alignment.center,
@@ -106,16 +106,16 @@ class RemindersSection extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
                     decoration: BoxDecoration(
-                      color: KaalColors.accBg,
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
+                      border: Border.all(width: 0.5, color: colors.bdr),
                     ),
-                    child: const Text('+ Add',
+                    child: Text('+ Add',
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: KaalColors.acc2,
+                            color: colors.ink2,
                             height: 1)),
                   ),
                 ),
