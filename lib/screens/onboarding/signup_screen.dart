@@ -115,9 +115,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     successRoute: KaalRoutes.onboard,
   );
 
-  Future<void> _microsoftSignUp() => _run(
-    () => _auth.signInWithMicrosoft(),
-  );
 
   static String _friendlyError(Object e) {
     final msg = e.toString().toLowerCase();
@@ -472,7 +469,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           label: 'Apple',
                           icon: SvgPicture.string(_appleSvg(colors.ink), width: 18, height: 18),
                           colors: colors,
-                          onTap: null,
+                          comingSoon: true, // not yet configured
+                          onTap: () => _comingSoon(context, 'Apple sign-in'),
                         ),
                       ),
                     ],
@@ -484,7 +482,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     label: 'Microsoft',
                     icon: SvgPicture.string(_kMicrosoftSvg, width: 18, height: 18),
                     colors: colors,
-                    onTap: _loading ? null : _microsoftSignUp,
+                    comingSoon: true, // not available yet
+                    onTap: () => _comingSoon(context, 'Microsoft sign-in'),
                   ),
                   const SizedBox(height: 10),
 
@@ -682,22 +681,35 @@ class _FinputField extends StatelessWidget {
   }
 }
 
+// Floating "coming soon" toast — used for providers that aren't wired yet.
+void _comingSoon(BuildContext context, String what) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text('$what — coming soon',
+        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+    backgroundColor: const Color(0xFF1C1C1E),
+    behavior: SnackBarBehavior.floating,
+    duration: const Duration(seconds: 2),
+  ));
+}
+
 class _SocialBtn extends StatelessWidget {
   final String label;
   final Widget icon;
   final KaalColors colors;
   final VoidCallback? onTap;
+  final bool comingSoon; // dim like a disabled button but still tappable for the toast
   const _SocialBtn({
     required this.label,
     required this.icon,
     required this.colors,
     this.onTap,
+    this.comingSoon = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: onTap == null ? 0.38 : 1.0,
+      opacity: (onTap == null || comingSoon) ? 0.4 : 1.0,
       child: GestureDetector(
         onTap: onTap,
         child: Container(

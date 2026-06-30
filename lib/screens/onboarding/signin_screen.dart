@@ -11,6 +11,7 @@ import '../../settings/app_launch_prefs.dart';
 import '../../settings/prefs_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+import '../../util/platform_layout.dart';
 import '../../widgets/wallpaper_background.dart';
 
 // Screen: p-signin — Sign In (01-02)
@@ -105,11 +106,6 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   Future<void> _googleSignIn() => _run(
     () => _auth.signInWithGoogle(),
     successRoute: KaalRoutes.focus,
-  );
-
-  Future<void> _microsoftSignIn() => _run(
-    () => _auth.signInWithMicrosoft(),
-    // Microsoft uses a browser redirect — navigation happens via deep link handler
   );
 
   static String _friendlyError(Object e) {
@@ -420,7 +416,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           label: 'Google',
                           icon: SvgPicture.string(_kGoogleSvg, width: 18, height: 18),
                           colors: colors,
-                          onTap: _loading ? null : _googleSignIn,
+                          // Browser-OAuth can't return to a desktop app via the
+                          // deep-link scheme — guide desktop users to the mobile app.
+                          onTap: _loading
+                              ? null
+                              : isDesktop
+                                  ? () => setState(() => _error =
+                                      'Google sign-in is only available on the mobile app')
+                                  : _googleSignIn,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -429,7 +432,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           label: 'Apple',
                           icon: SvgPicture.string(_appleSvg(colors.ink), width: 18, height: 18),
                           colors: colors,
-                          onTap: null, // Apple Sign-In not yet configured
+                          comingSoon: true, // not yet configured
+                          onTap: () => _comingSoon(context, 'Apple sign-in'),
                         ),
                       ),
                     ],
@@ -444,7 +448,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                           label: 'Microsoft',
                           icon: SvgPicture.string(_kMicrosoftSvg, width: 18, height: 18),
                           colors: colors,
-                          onTap: _loading ? null : _microsoftSignIn,
+                          comingSoon: true, // not available yet
+                          onTap: () => _comingSoon(context, 'Microsoft sign-in'),
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -660,22 +665,35 @@ class _FinputField extends StatelessWidget {
 }
 
 // Social button — used both standalone (full width) and inside Row (Expanded).
+// Floating "coming soon" toast — used for providers that aren't wired yet.
+void _comingSoon(BuildContext context, String what) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text('$what — coming soon',
+        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+    backgroundColor: const Color(0xFF1C1C1E),
+    behavior: SnackBarBehavior.floating,
+    duration: const Duration(seconds: 2),
+  ));
+}
+
 class _SocialBtn extends StatelessWidget {
   final String label;
   final Widget icon;
   final KaalColors colors;
   final VoidCallback? onTap;
+  final bool comingSoon; // dim like a disabled button but still tappable for the toast
   const _SocialBtn({
     required this.label,
     required this.icon,
     required this.colors,
     this.onTap,
+    this.comingSoon = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: onTap == null ? 0.38 : 1.0,
+      opacity: (onTap == null || comingSoon) ? 0.4 : 1.0,
       child: GestureDetector(
         onTap: onTap,
         child: Container(
