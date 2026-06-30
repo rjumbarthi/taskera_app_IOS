@@ -1,6 +1,12 @@
 # Miscellaneous
 *.class
 *.log
+
+# Supabase CLI scratch state (not source)
+supabase/.temp/
+
+# Bundled screenshot archive (regenerate via the harness)
+screenshots/screenshots.zip
 *.pyc
 *.swp
 .DS_Store

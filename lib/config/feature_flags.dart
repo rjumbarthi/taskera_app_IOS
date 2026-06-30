@@ -19,3 +19,14 @@ library;
 /// report the now-unreachable Gmail branches as `dead_code`. This keeps it a
 /// single-line switch without tripping lints.
 final bool kGmailSyncEnabled = false;
+
+/// Seed starter/demo content on first launch (default lists like "Grocery
+/// Shopping", plus sample tasks, habits, goals, notes, calendar events).
+///
+/// **Keep this `false` for production / Play Store builds** so every new user
+/// starts with a completely empty app. Set it to `true` for development or
+/// screenshots when you want the app pre-populated.
+///
+/// Note: this only affects *fresh* installs. A device that was already seeded
+/// keeps its existing data; to test the empty state, reinstall or clear app data.
+final bool kSeedDemoData = false;

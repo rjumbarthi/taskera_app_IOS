@@ -13,6 +13,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/app_config.dart';
+import 'config/feature_flags.dart';
 import 'data/database.dart';
 import 'data/reminder.dart';
 import 'data/db_connection.dart' show deleteDatabaseFile;
@@ -96,30 +97,35 @@ void main() async {
   _applyTabUnlocks(prefs);
   final db = await _openDatabase();
 
-  // Seed default lists once on first launch
-  if (!(prefs.getBool('kaal.listsSeeded') ?? false)) {
-    if (await db.listsDao.isEmpty()) {
-      await db.listsDao.seedDefaults();
+  // Starter/demo content. Gated by kSeedDemoData so production builds start with
+  // a completely empty app — every new user begins with a blank slate. Flip the
+  // flag in lib/config/feature_flags.dart to pre-populate for dev/screenshots.
+  if (kSeedDemoData) {
+    // Seed default lists once on first launch
+    if (!(prefs.getBool('kaal.listsSeeded') ?? false)) {
+      if (await db.listsDao.isEmpty()) {
+        await db.listsDao.seedDefaults();
+      }
+      await prefs.setBool('kaal.listsSeeded', true);
     }
-    await prefs.setBool('kaal.listsSeeded', true);
-  }
 
-  // Inject starter tasks, habits, goals, notes, calendar ONCE as permanent real
-  // data. It is never auto-reseeded afterwards — switching language only changes
-  // the UI, not your data.
-  final currentLang   = prefs.getInt('kaal.lang') ?? 0;
-  final alreadySeeded = prefs.getBool('kaal.dataSeeded') ?? false;
-  final realDataReady = prefs.getBool('kaal.realData') ?? false;
-  if (!alreadySeeded) {
-    await seedDatabase(db, langIdx: currentLang);
-    await prefs.setBool('kaal.dataSeeded', true);
-    await prefs.setBool('kaal.realData', true);
-  } else if (!realDataReady) {
-    // One-time migration off the old auto-reseeding "demo data" model: refresh
-    // once in the current language to clear stale/wrong-language rows, then keep
-    // everything as permanent real data from here on.
-    await reseedDatabase(db, langIdx: currentLang);
-    await prefs.setBool('kaal.realData', true);
+    // Inject starter tasks, habits, goals, notes, calendar ONCE as permanent real
+    // data. It is never auto-reseeded afterwards — switching language only changes
+    // the UI, not your data.
+    final currentLang   = prefs.getInt('kaal.lang') ?? 0;
+    final alreadySeeded = prefs.getBool('kaal.dataSeeded') ?? false;
+    final realDataReady = prefs.getBool('kaal.realData') ?? false;
+    if (!alreadySeeded) {
+      await seedDatabase(db, langIdx: currentLang);
+      await prefs.setBool('kaal.dataSeeded', true);
+      await prefs.setBool('kaal.realData', true);
+    } else if (!realDataReady) {
+      // One-time migration off the old auto-reseeding "demo data" model: refresh
+      // once in the current language to clear stale/wrong-language rows, then keep
+      // everything as permanent real data from here on.
+      await reseedDatabase(db, langIdx: currentLang);
+      await prefs.setBool('kaal.realData', true);
+    }
   }
 
   // ── Product analytics ─────────────────────────────────────────────────────
