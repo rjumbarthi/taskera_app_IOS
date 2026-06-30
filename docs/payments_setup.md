@@ -65,8 +65,9 @@ The function verifies the HMAC signature, then upserts `pro_entitlements.is_pro`
 (grant on `payment.captured`/`subscription.activated`/`charged`, revoke on
 `cancelled`/`halted`/`completed`).
 
-### Remaining app-side wire-up (NOT done yet)
-The app still reads Pro from the local `kaal.isPro` pref. To honor this server entitlement
-(needed for Razorpay + cross-device), read the user's `pro_entitlements` row on
-launch/sign-in and set `kaal.isPro` from it — then `isProProvider` / `aiUnlockedProvider`
-pick it up automatically. Ask and I'll wire it.
+### App-side entitlement (wired)
+The app reads this server entitlement into `kaal.proServer` (`isProProvider = store purchase
+OR server entitlement`): a one-shot read on launch + sign-in/out, **plus a Supabase realtime
+subscription** (`serverProProvider`) on the user's row, so a just-paid user unlocks Pro
+mid-session without relaunching. The `004` migration adds `pro_entitlements` to the
+`supabase_realtime` publication for this — just run the migration.

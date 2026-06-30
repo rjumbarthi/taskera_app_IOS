@@ -19,3 +19,11 @@ alter table public.pro_entitlements enable row level security;
 drop policy if exists "read own entitlement" on public.pro_entitlements;
 create policy "read own entitlement" on public.pro_entitlements
   for select using (auth.uid() = user_id);
+
+-- Broadcast changes over realtime so a just-paid user unlocks Pro mid-session
+-- (RLS still limits each client to its own row). Idempotent.
+do $$
+begin
+  alter publication supabase_realtime add table public.pro_entitlements;
+exception when others then null;
+end $$;
