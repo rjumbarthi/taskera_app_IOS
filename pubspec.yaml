@@ -2,6 +2,9 @@ name: kaal_app
 description: "Kaal — Execution OS for high performers"
 publish_to: 'none'
 
+# First Play Store release. Format: semantic+versionCode.
+# Keep 1.0.0+1 for the initial upload; bump the +N (versionCode) on EVERY
+# subsequent upload — Play rejects a build whose versionCode it has seen before.
 version: 1.0.0+1
 
 environment:
