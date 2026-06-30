@@ -33,7 +33,8 @@ dependencies:
   http: ^1.2.0                      # HTTP client for Microsoft Graph + googleapis
   flutter_secure_storage: ^9.2.2    # encrypted token storage
   flutter_web_auth_2: ^4.0.0        # OAuth2 PKCE browser flow (Microsoft, all platforms)
-  url_launcher: ^6.3.0              # required by flutter_web_auth_2 on Windows
+  url_launcher: ^6.3.0              # required by flutter_web_auth_2 on Windows; also opens the Razorpay UPI link
+  in_app_purchase: ^3.2.0           # Play Store / App Store subscriptions (UPI shows inside Play checkout in India)
   crypto: ^3.0.3                    # SHA-256 for PKCE code challenge
   home_widget: ^0.6.0              # home-screen / lock-screen DTN widget (Android + iOS)
 

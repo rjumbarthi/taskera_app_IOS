@@ -17,6 +17,18 @@ class AppConfig {
   static const posthogApiKey = 'YOUR_POSTHOG_PROJECT_API_KEY';
   static const posthogHost   = 'https://us.i.posthog.com';
 
+  // ── Payments ──────────────────────────────────────────────────────────────
+  // Subscription product IDs — create these in Play Console + App Store Connect
+  // (use the SAME id on both stores). UPI/cards appear inside Play's checkout in
+  // India automatically — no separate UPI SDK is used for the in-app purchase.
+  static const proMonthlyProductId = 'kaal_pro_monthly';
+  static const proAnnualProductId  = 'kaal_pro_annual';
+
+  // Razorpay payment LINK (razorpay.me/... or a generated Payment Link). Opened
+  // in an external browser for a UPI checkout on your website — kept OUTSIDE the
+  // in-app purchase flow to stay within Play/Apple policy. Empty = not set up.
+  static const razorpayUpiLink = '';
+
   // ── Google OAuth ──────────────────────────────────────────────────────────
   // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs
   // Create one client per platform type (Web, Android, iOS).

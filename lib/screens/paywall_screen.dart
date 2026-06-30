@@ -12,6 +12,13 @@ import '../widgets/add_back_button.dart';
 import '../widgets/kaal_top_bar.dart';
 import '../widgets/wallpaper_background.dart';
 import '../routing/routes.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../config/app_config.dart';
+import '../config/pricing.dart';
+import '../data/providers/ai_access_provider.dart';
+import '../services/purchase_service.dart';
+import '../util/platform_layout.dart';
 
 class PaywallScreen extends ConsumerStatefulWidget {
   // `from == 'onboard'` marks the post-onboarding upsell. Combined with the
@@ -26,11 +33,52 @@ class PaywallScreen extends ConsumerStatefulWidget {
 class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   bool _annual = true;
 
+  // Start the Play/App Store subscription purchase for the selected plan. On
+  // success the purchase stream flips `kaal.isPro`, and the isProProvider
+  // listener in build() routes the user onward.
+  Future<void> _subscribe() async {
+    final svc = ref.read(purchaseServiceProvider);
+    if (!await svc.isStoreAvailable) {
+      if (mounted) {
+        _paywallSoon(context,
+            isDesktop ? 'Subscribe from the mobile app' : 'Store unavailable');
+      }
+      return;
+    }
+    final id = _annual
+        ? AppConfig.proAnnualProductId
+        : AppConfig.proMonthlyProductId;
+    ProductDetails? product;
+    for (final p in await svc.products()) {
+      if (p.id == id) product = p;
+    }
+    if (product == null) {
+      // Products not yet created in Play Console / App Store Connect.
+      if (mounted) _paywallSoon(context, 'Plan not available yet');
+      return;
+    }
+    await svc.buy(product);
+  }
+
+  // UPI via an external Razorpay link (kept outside the in-app purchase flow to
+  // stay within store policy). On Android, Play's own checkout also offers UPI.
+  Future<void> _payWithUpi() async {
+    if (AppConfig.razorpayUpiLink.isEmpty) {
+      _paywallSoon(context, 'UPI checkout');
+      return;
+    }
+    final ok = await launchUrl(Uri.parse(AppConfig.razorpayUpiLink),
+        mode: LaunchMode.externalApplication);
+    if (!ok && mounted) _paywallSoon(context, 'Could not open UPI checkout');
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors    = KaalTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
     final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final tier = tierForCountry(
+        WidgetsBinding.instance.platformDispatcher.locale.countryCode);
 
     // Mode: optional upsell after sign-up (from==onboard, has account) vs the
     // mandatory gate for skip-auth/local-storage users vs normal (Settings).
@@ -51,6 +99,11 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       }
     }
 
+    // A successful purchase flips isPro → leave the paywall automatically.
+    ref.listen(isProProvider, (_, isPro) {
+      if (isPro) leave();
+    });
+
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
       Scaffold(
@@ -68,12 +121,22 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 const SizedBox(height: 20),
                 _FeaturesList(colors: colors),
                 const SizedBox(height: 14),
-                _PriceToggle(annual: _annual, colors: colors,
+                _PriceToggle(annual: _annual, colors: colors, tier: tier,
                     onChanged: (v) => setState(() => _annual = v)),
+                if (tier.introFirstMonth != null) ...[
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Text(
+                        tier.introFirstMonth == r'$0.00'
+                            ? '🎉 First month free, then ${tier.monthly}/mo'
+                            : '🎉 First month ${tier.introFirstMonth}, then ${tier.monthly}/mo',
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  ),
+                ],
                 const SizedBox(height: 12),
-                _TrialButton(),
+                _TrialButton(onTap: _subscribe),
                 const SizedBox(height: 8),
-                _UpiButton(colors: colors),
+                _UpiButton(colors: colors, onTap: _payWithUpi),
                 const SizedBox(height: 8),
                 Text('No charge until trial ends. Cancel anytime in App Store or Play Store settings.',
                     textAlign: TextAlign.center,
@@ -274,7 +337,8 @@ class _PriceToggle extends StatelessWidget {
   final bool annual;
   final KaalColors colors;
   final ValueChanged<bool> onChanged;
-  const _PriceToggle({required this.annual, required this.colors, required this.onChanged});
+  final PricingTier tier;
+  const _PriceToggle({required this.annual, required this.colors, required this.tier, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -287,13 +351,13 @@ class _PriceToggle extends StatelessWidget {
       child: Row(children: [
         _PlanTab(
           label: 'Annual',
-          sub: '₹249/mo · Save 50%',
+          sub: '${tier.yearlyPerMonth}/mo · Save 40%',
           selected: annual,
           onTap: () => onChanged(true),
         ),
         _PlanTab(
           label: 'Monthly',
-          sub: '₹499/mo',
+          sub: '${tier.monthly}/mo',
           selected: !annual,
           onTap: () => onChanged(false),
         ),
@@ -356,10 +420,12 @@ void _paywallSoon(BuildContext context, String what) {
 }
 
 class _TrialButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _TrialButton({required this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _paywallSoon(context, 'Subscriptions'),
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -387,12 +453,13 @@ class _TrialButton extends StatelessWidget {
 
 class _UpiButton extends StatelessWidget {
   final KaalColors colors;
-  const _UpiButton({required this.colors});
+  final VoidCallback onTap;
+  const _UpiButton({required this.colors, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _paywallSoon(context, 'UPI payment'),
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 11),
