@@ -65,24 +65,30 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
     prefs.setString('kaal.brainDumpNudgeDate', today);
 
     final navBottom = MediaQuery.viewPaddingOf(context).bottom + 50 + 8;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: const Text(
-          '🧠 Brain Dump ↓  empty your head — Kaal AI sorts it into tasks & goals',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF1C1C1E),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: EdgeInsets.fromLTRB(12, 0, 12, navBottom),
-        duration: const Duration(seconds: 5),
-        action: SnackBarAction(
-          label: 'Open',
-          textColor: const Color(0xFFCF7BFF),
-          onPressed: () => context.go(KaalRoutes.brainDump),
-        ),
-      ));
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    final controller = messenger.showSnackBar(SnackBar(
+      content: const Text(
+        '🧠 Brain Dump ↓  empty your head — Kaal AI sorts it into tasks & goals',
+        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+      ),
+      backgroundColor: const Color(0xFF1C1C1E),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.fromLTRB(12, 0, 12, navBottom),
+      duration: const Duration(seconds: 4),
+      action: SnackBarAction(
+        label: 'Open',
+        textColor: const Color(0xFFCF7BFF),
+        onPressed: () => context.go(KaalRoutes.brainDump),
+      ),
+    ));
+    // Safety net: the Focus screen rebuilds every second (focus timer), which
+    // interferes with the SnackBar's internal auto-dismiss and leaves it stuck
+    // on screen. Force it closed after the duration.
+    Timer(const Duration(milliseconds: 4200), () {
+      try { controller.close(); } catch (_) {}
+    });
   }
 
   @override

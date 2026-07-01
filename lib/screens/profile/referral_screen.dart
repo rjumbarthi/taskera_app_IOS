@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/app_l10n.dart';
 import '../../settings/kaal_settings.dart';
@@ -151,35 +152,44 @@ class _ShareButtons extends StatelessWidget {
   final KaalColors colors;
   const _ShareButtons({required this.colors});
 
-  void _shareInvite(BuildContext context) {
-    Clipboard.setData(const ClipboardData(
-        text: 'Join me on Kaal — https://kaal.app/join/RJUMB14'));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Invite link copied — paste it anywhere to share',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
-        backgroundColor: Color(0xFF1C1C1E),
-        duration: Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  static const _invite = 'Join me on Kaal — https://kaal.app/join/RJUMB14';
+
+  // Open the target app with the invite prefilled; fall back to copying the
+  // link if the app/scheme isn't available (e.g. WhatsApp not installed).
+  Future<void> _share(BuildContext context, Uri uri) async {
+    try {
+      if (await launchUrl(uri, mode: LaunchMode.externalApplication)) return;
+    } catch (_) {/* fall through to clipboard */}
+    await Clipboard.setData(const ClipboardData(text: _invite));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invite link copied — paste it anywhere to share',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+          backgroundColor: Color(0xFF1C1C1E),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final text = Uri.encodeComponent(_invite);
     return Column(children: [
       _ShareBtn(
         label: '📱 Share via WhatsApp',
         bg: const Color(0xFF25D366),
         textColor: Colors.white,
-        onTap: () => _shareInvite(context),
+        onTap: () => _share(context, Uri.parse('https://wa.me/?text=$text')),
       ),
       const SizedBox(height: 7),
       _ShareBtn(
         label: '💬 Share via Messages',
         bg: colors.surf2,
         textColor: colors.ink,
-        onTap: () => _shareInvite(context),
+        onTap: () => _share(context, Uri.parse('sms:?body=$text')),
       ),
     ]);
   }
