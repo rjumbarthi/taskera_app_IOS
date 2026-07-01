@@ -76,7 +76,7 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: EdgeInsets.fromLTRB(12, 0, 12, navBottom),
-      duration: const Duration(seconds: 4),
+      duration: const Duration(milliseconds: 2500),
       action: SnackBarAction(
         label: 'Open',
         textColor: const Color(0xFFCF7BFF),
@@ -85,8 +85,8 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
     ));
     // Safety net: the Focus screen rebuilds every second (focus timer), which
     // interferes with the SnackBar's internal auto-dismiss and leaves it stuck
-    // on screen. Force it closed after the duration.
-    Timer(const Duration(milliseconds: 4200), () {
+    // on screen. Force it closed just after the duration.
+    Timer(const Duration(milliseconds: 2700), () {
       try { controller.close(); } catch (_) {}
     });
   }
