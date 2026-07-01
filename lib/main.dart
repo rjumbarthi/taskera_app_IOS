@@ -95,6 +95,24 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   await AppLaunchPrefs.recordInstallDate(prefs);
   _applyTabUnlocks(prefs);
+
+  // One-time cleanup: earlier builds seeded demo data. The app now ships empty
+  // (kSeedDemoData=false), but an app UPDATE keeps the old database — so a device
+  // upgrading from a seeded build would still show demo data. Wipe it ONCE here.
+  // Detected via the old seeding flags; fresh installs never set these, so a
+  // brand-new user's (empty) database is never touched.
+  if (!kSeedDemoData && !(prefs.getBool('kaal.demoWiped') ?? false)) {
+    final hadSeededData = (prefs.getBool('kaal.dataSeeded') ?? false) ||
+        (prefs.getBool('kaal.listsSeeded') ?? false);
+    if (hadSeededData) {
+      await deleteDatabaseFile();
+      await prefs.remove('kaal.dataSeeded');
+      await prefs.remove('kaal.realData');
+      await prefs.remove('kaal.listsSeeded');
+    }
+    await prefs.setBool('kaal.demoWiped', true);
+  }
+
   final db = await _openDatabase();
 
   // Starter/demo content. Gated by kSeedDemoData so production builds start with
