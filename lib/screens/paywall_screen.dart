@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -148,8 +149,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 ],
                 const SizedBox(height: 12),
                 _TrialButton(onTap: _subscribe),
-                const SizedBox(height: 8),
-                _UpiButton(colors: colors, onTap: _payWithUpi),
+                // External UPI link is hidden on Android — Play Billing already
+                // offers UPI to Indian users in its own checkout, and an external
+                // payment link for a subscription violates Play's billing policy.
+                if (defaultTargetPlatform != TargetPlatform.android) ...[
+                  const SizedBox(height: 8),
+                  _UpiButton(colors: colors, onTap: _payWithUpi),
+                ],
                 const SizedBox(height: 8),
                 Text('No charge until trial ends. Cancel anytime in App Store or Play Store settings.',
                     textAlign: TextAlign.center,

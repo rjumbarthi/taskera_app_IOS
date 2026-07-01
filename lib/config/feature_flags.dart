@@ -18,7 +18,7 @@ library;
 /// Intentionally a non-`const` `final`: a `const false` would make the analyzer
 /// report the now-unreachable Gmail branches as `dead_code`. This keeps it a
 /// single-line switch without tripping lints.
-final bool kGmailSyncEnabled = false;
+final bool kGmailSyncEnabled = true;
 
 /// Seed starter/demo content on first launch (default lists like "Grocery
 /// Shopping", plus sample tasks, habits, goals, notes, calendar events).
