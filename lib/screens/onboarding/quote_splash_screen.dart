@@ -59,22 +59,24 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
   void _advance() {
     if (!mounted) return;
     final prefs = ref.read(sharedPreferencesProvider);
+    final isSignedIn = Supabase.instance.client.auth.currentUser != null;
+    // Flow: splash → sign in → onboarding → focus. Unauthenticated users sign in
+    // FIRST; onboarding runs only after they're authenticated (or chose skip).
+    if (!(AppLaunchPrefs.skipAuth(prefs) || isSignedIn)) {
+      context.go(KaalRoutes.signin);
+      return;
+    }
     if (!AppLaunchPrefs.onboardingDone(prefs)) {
       context.go(KaalRoutes.onboard);
       return;
     }
-    final isSignedIn = Supabase.instance.client.auth.currentUser != null;
-    if (AppLaunchPrefs.skipAuth(prefs) || isSignedIn) {
-      // End-of-day reflection shows splash-style: first evening open each day
-      // when the "EOD reflection prompt" setting is on. It exits to Focus itself.
-      if (_shouldShowEod(prefs)) {
-        AppLaunchPrefs.markEodShownToday(prefs);
-        context.go(KaalRoutes.eodReflect);
-      } else {
-        context.go(KaalRoutes.focus);
-      }
+    // End-of-day reflection shows splash-style: first evening open each day
+    // when the "EOD reflection prompt" setting is on. It exits to Focus itself.
+    if (_shouldShowEod(prefs)) {
+      AppLaunchPrefs.markEodShownToday(prefs);
+      context.go(KaalRoutes.eodReflect);
     } else {
-      context.go(KaalRoutes.signin);
+      context.go(KaalRoutes.focus);
     }
   }
 

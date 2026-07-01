@@ -41,6 +41,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   AuthService get _auth => ref.read(authServiceProvider);
 
+  // After auth: send first-run users through onboarding, else straight to Focus.
+  String get _postAuthRoute =>
+      AppLaunchPrefs.onboardingDone(ref.read(sharedPreferencesProvider))
+          ? KaalRoutes.focus
+          : KaalRoutes.onboard;
+
   static final _emailRe = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
   bool get _emailValid => _emailRe.hasMatch(_email.text.trim());
   bool get _emailTouched => _email.text.isNotEmpty;
@@ -67,12 +73,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   Future<void> _signIn() => _run(
     () => _auth.signInWithEmail(_email.text, _password.text),
-    successRoute: KaalRoutes.focus,
+    successRoute: _postAuthRoute,
   );
 
   Future<void> _signInOtp() => _run(
     () => _auth.verifyOtp(_email.text, _otp.text),
-    successRoute: KaalRoutes.focus,
+    successRoute: _postAuthRoute,
   );
 
   Future<void> _sendOtp() async {
@@ -105,7 +111,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   Future<void> _googleSignIn() => _run(
     () => _auth.signInWithGoogle(),
-    successRoute: KaalRoutes.focus,
+    successRoute: _postAuthRoute,
   );
 
   static String _friendlyError(Object e) {
