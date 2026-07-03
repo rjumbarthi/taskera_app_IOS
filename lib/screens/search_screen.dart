@@ -3,14 +3,18 @@ import '../l10n/app_l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/database.dart' show Task, Note, Habit;
+import '../data/database.dart' show Task, Note, Habit, KaalDatabase, DbRow, DbProperty;
+import '../data/models/note_block.dart';
+import '../data/models/db_models.dart';
 import '../data/providers/tasks_provider.dart';
 import '../data/providers/notes_provider.dart';
 import '../data/providers/habits_provider.dart';
+import '../data/providers/databases_provider.dart';
 import '../routing/routes.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 import '../widgets/add_back_button.dart';
+import '../widgets/quick_capture_bar.dart';
 
 // ── Result model ──────────────────────────────────────────────────────────────
 
@@ -21,7 +25,7 @@ class _Result {
     required this.sub,
     required this.route,
   });
-  final String kind;   // 'Task' | 'Note' | 'Habit'
+  final String kind;   // 'Task' | 'Note' | 'Habit' | 'DB'
   final String title;
   final String sub;
   final String route;
@@ -41,7 +45,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   int _filter = 0;
   String _query = '';
 
-  static const _filters = ['All', 'Tasks', 'Notes', 'Habits'];
+  static const _filters = ['All', 'Tasks', 'Notes', 'Habits', 'Databases'];
 
   @override
   void dispose() {
@@ -53,6 +57,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     List<Task> tasks,
     List<Note> notes,
     List<Habit> habits,
+    List<KaalDatabase> databases,
+    List<DbRow> dbRows,
+    List<DbProperty> dbProps,
   ) {
     final q = _query.toLowerCase();
     final results = <_Result>[];
@@ -72,12 +79,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     if (_filter == 0 || _filter == 2) {
       for (final n in notes) {
+        final plain = BlockDocument.plainTextOf(n.body).replaceAll('\n', ' ');
         if (n.title.toLowerCase().contains(q) ||
-            n.body.toLowerCase().contains(q)) {
+            plain.toLowerCase().contains(q)) {
           results.add(_Result(
             kind: 'Note',
             title: n.title,
-            sub: n.body.length > 60 ? '${n.body.substring(0, 60)}…' : n.body,
+            sub: plain.length > 60 ? '${plain.substring(0, 60)}…' : plain,
             route: '${KaalRoutes.notesEditor}/${n.id}',
           ));
         }
@@ -97,6 +105,31 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       }
     }
 
+    if (_filter == 0 || _filter == 4) {
+      // Resolve each database's name and its title property (lowest sortOrder).
+      final dbName = {for (final d in databases) d.id: d.name};
+      final titleProp = <int, DbProperty>{};
+      for (final p in dbProps) {
+        final cur = titleProp[p.databaseId];
+        if (cur == null || p.sortOrder < cur.sortOrder) titleProp[p.databaseId] = p;
+      }
+      for (final row in dbRows) {
+        final cells = decodeCells(row);
+        // Search across all cell values plus the row's title.
+        final haystack = cells.values.map((v) => v.toString()).join(' ').toLowerCase();
+        final tp = titleProp[row.databaseId];
+        final title = tp == null ? '' : cellDisplay(cells[tp.id], propTypeOf(tp));
+        if (haystack.contains(q) || title.toLowerCase().contains(q)) {
+          results.add(_Result(
+            kind: 'DB',
+            title: title.isEmpty ? 'Untitled' : title,
+            sub: 'in ${dbName[row.databaseId] ?? 'database'}',
+            route: '${KaalRoutes.databases}/${row.databaseId}',
+          ));
+        }
+      }
+    }
+
     return results;
   }
 
@@ -106,11 +139,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final tasks   = ref.watch(allTasksProvider).value ?? [];
     final notes   = ref.watch(notesProvider).value ?? [];
     final habits  = ref.watch(habitsProvider).value ?? [];
-    final results = _query.isNotEmpty ? _buildResults(tasks, notes, habits) : <_Result>[];
+    final dbs     = ref.watch(databasesProvider).value ?? [];
+    final dbRows  = ref.watch(allDbRowsProvider).value ?? [];
+    final dbProps = ref.watch(allDbPropertiesProvider).value ?? [];
+    final results = _query.isNotEmpty
+        ? _buildResults(tasks, notes, habits, dbs, dbRows, dbProps)
+        : <_Result>[];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
       children: [
+        const QuickCaptureBar(),
+        const SizedBox(height: 12),
         Row(
           children: [
             AddBackButton(
@@ -145,7 +185,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             padding: const EdgeInsets.only(top: 16),
             child: Center(
               child: Text(
-                'Search tasks, notes, habits',
+                'Search tasks, notes, habits & databases',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 13,
                     color: colors.ink3, height: 1.6),
                 textAlign: TextAlign.center,
@@ -298,6 +338,7 @@ class _ResultTile extends StatelessWidget {
     'Task':  KaalColors.acc2,
     'Note':  Color(0xFF9FCD44),
     'Habit': KaalColors.q4,
+    'DB':    Color(0xFFBF5AF2),
   };
 
   @override

@@ -8,6 +8,7 @@ import 'tables/notes_table.dart';
 import 'tables/calendar_table.dart';
 import 'tables/lists_table.dart';
 import 'tables/focus_sessions_table.dart';
+import 'tables/databases_table.dart';
 
 export 'tables/tasks_table.dart';
 export 'tables/habits_table.dart';
@@ -16,6 +17,7 @@ export 'tables/notes_table.dart';
 export 'tables/calendar_table.dart';
 export 'tables/lists_table.dart';
 export 'tables/focus_sessions_table.dart';
+export 'tables/databases_table.dart';
 
 part 'database.g.dart';
 
@@ -506,6 +508,60 @@ class ListsDao extends DatabaseAccessor<AppDatabase> with _$ListsDaoMixin {
   }
 }
 
+@DriftAccessor(tables: [KaalDatabases, DbProperties, DbRows])
+class DatabasesDao extends DatabaseAccessor<AppDatabase> with _$DatabasesDaoMixin {
+  DatabasesDao(super.db);
+
+  // ── Databases ─────────────────────────────────────────────────────────────
+  Stream<List<KaalDatabase>> watchDatabases() => (select(kaalDatabases)
+        ..orderBy([(d) => OrderingTerm(expression: d.createdAt, mode: OrderingMode.desc)]))
+      .watch();
+
+  Stream<KaalDatabase?> watchDatabase(int id) =>
+      (select(kaalDatabases)..where((d) => d.id.equals(id))).watchSingleOrNull();
+
+  Future<int> createDatabase(KaalDatabasesCompanion entry) =>
+      into(kaalDatabases).insert(entry);
+
+  Future<void> updateDatabase(int id, KaalDatabasesCompanion data) =>
+      (update(kaalDatabases)..where((d) => d.id.equals(id))).write(data);
+
+  Future<void> deleteDatabase(int id) =>
+      (delete(kaalDatabases)..where((d) => d.id.equals(id))).go();
+
+  // ── Properties ────────────────────────────────────────────────────────────
+  Stream<List<DbProperty>> watchProperties(int dbId) => (select(dbProperties)
+        ..where((p) => p.databaseId.equals(dbId))
+        ..orderBy([(p) => OrderingTerm(expression: p.sortOrder)]))
+      .watch();
+
+  Future<void> upsertProperty(DbPropertiesCompanion entry) =>
+      into(dbProperties).insertOnConflictUpdate(entry);
+
+  Future<void> deleteProperty(String id) =>
+      (delete(dbProperties)..where((p) => p.id.equals(id))).go();
+
+  // ── Rows ──────────────────────────────────────────────────────────────────
+  Stream<List<DbRow>> watchRows(int dbId) => (select(dbRows)
+        ..where((r) => r.databaseId.equals(dbId))
+        ..orderBy([(r) => OrderingTerm(expression: r.sortOrder)]))
+      .watch();
+
+  Future<void> upsertRow(DbRowsCompanion entry) =>
+      into(dbRows).insertOnConflictUpdate(entry);
+
+  Future<void> updateRowCells(String id, String cellsJson) =>
+      (update(dbRows)..where((r) => r.id.equals(id)))
+          .write(DbRowsCompanion(cells: Value(cellsJson)));
+
+  Future<void> deleteRow(String id) =>
+      (delete(dbRows)..where((r) => r.id.equals(id))).go();
+
+  // ── Cross-database (for global search) ──────────────────────────────────────
+  Stream<List<DbRow>> watchAllRows() => select(dbRows).watch();
+  Stream<List<DbProperty>> watchAllProperties() => select(dbProperties).watch();
+}
+
 // ── Database ──────────────────────────────────────────────────────────────────
 
 @DriftDatabase(
@@ -525,8 +581,11 @@ class ListsDao extends DatabaseAccessor<AppDatabase> with _$ListsDaoMixin {
     CustomLists,
     CustomListItems,
     FocusSessions,
+    KaalDatabases,
+    DbProperties,
+    DbRows,
   ],
-  daos: [TasksDao, HabitsDao, GoalsDao, NotesDao, CalendarDao, ListsDao, FocusDao],
+  daos: [TasksDao, HabitsDao, GoalsDao, NotesDao, CalendarDao, ListsDao, FocusDao, DatabasesDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openDatabaseConnection());
@@ -570,7 +629,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -636,6 +695,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 15) {
         await m.addColumn(habits, habits.notes);
         await m.addColumn(goals, goals.notes);
+      }
+      if (from < 16) {
+        await m.createTable(kaalDatabases);
+        await m.createTable(dbProperties);
+        await m.createTable(dbRows);
       }
     },
   );

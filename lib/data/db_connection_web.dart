@@ -1,9 +1,26 @@
 import 'package:drift/drift.dart';
+import 'package:drift/wasm.dart';
 
-// Web is no longer a supported target. This stub only exists so the conditional
-// export in db_connection.dart still resolves; it is never compiled for the
-// native (Android/iOS/Windows) builds.
-LazyDatabase openDatabaseConnection() =>
-    throw UnsupportedError('Kaal does not support the web platform.');
+/// Web database backend (Drift on sqlite3 compiled to WebAssembly).
+///
+/// Requires two assets served from the web root (see `web/`):
+///   - `sqlite3.wasm`      — sqlite3 compiled to WASM
+///   - `drift_worker.js`   — drift's shared worker
+///
+/// `WasmDatabase.open` transparently picks the best available persistence
+/// backend for the browser (OPFS → IndexedDB → in-memory) so the same
+/// `kaal_db` name survives reloads wherever the browser allows it.
+LazyDatabase openDatabaseConnection() {
+  return LazyDatabase(() async {
+    final result = await WasmDatabase.open(
+      databaseName: 'kaal_db',
+      sqlite3Uri: Uri.parse('sqlite3.wasm'),
+      driftWorkerUri: Uri.parse('drift_worker.js'),
+    );
+    return result.resolvedExecutor;
+  });
+}
 
+/// No-op on web — persistence is managed by the browser, and the native
+/// "wipe demo data on upgrade" file deletion has no filesystem to act on.
 Future<void> deleteDatabaseFile() async {}

@@ -44,6 +44,7 @@ abstract final class KaalRoutes {
 
   // Notes sub-screens
   static const notesEditor  = '/notes/noteeditor';
+  static const databases    = '/notes/databases';
 
   // Onboarding (always public)
   static const quote    = '/quote';

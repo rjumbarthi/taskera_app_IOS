@@ -120,6 +120,24 @@ class ListsDaoManager {
       );
 }
 
+mixin _$DatabasesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $KaalDatabasesTable get kaalDatabases => attachedDatabase.kaalDatabases;
+  $DbPropertiesTable get dbProperties => attachedDatabase.dbProperties;
+  $DbRowsTable get dbRows => attachedDatabase.dbRows;
+  DatabasesDaoManager get managers => DatabasesDaoManager(this);
+}
+
+class DatabasesDaoManager {
+  final _$DatabasesDaoMixin _db;
+  DatabasesDaoManager(this._db);
+  $$KaalDatabasesTableTableManager get kaalDatabases =>
+      $$KaalDatabasesTableTableManager(_db.attachedDatabase, _db.kaalDatabases);
+  $$DbPropertiesTableTableManager get dbProperties =>
+      $$DbPropertiesTableTableManager(_db.attachedDatabase, _db.dbProperties);
+  $$DbRowsTableTableManager get dbRows =>
+      $$DbRowsTableTableManager(_db.attachedDatabase, _db.dbRows);
+}
+
 class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -7449,6 +7467,1177 @@ class FocusSessionsCompanion extends UpdateCompanion<FocusSession> {
   }
 }
 
+class $KaalDatabasesTable extends KaalDatabases
+    with TableInfo<$KaalDatabasesTable, KaalDatabase> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $KaalDatabasesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Untitled'),
+  );
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+    'icon',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('🗂️'),
+  );
+  static const VerificationMeta _defaultViewMeta = const VerificationMeta(
+    'defaultView',
+  );
+  @override
+  late final GeneratedColumn<String> defaultView = GeneratedColumn<String>(
+    'default_view',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('table'),
+  );
+  static const VerificationMeta _boardGroupPropMeta = const VerificationMeta(
+    'boardGroupProp',
+  );
+  @override
+  late final GeneratedColumn<String> boardGroupProp = GeneratedColumn<String>(
+    'board_group_prop',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    icon,
+    defaultView,
+    boardGroupProp,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'kaal_databases';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<KaalDatabase> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('icon')) {
+      context.handle(
+        _iconMeta,
+        icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
+    }
+    if (data.containsKey('default_view')) {
+      context.handle(
+        _defaultViewMeta,
+        defaultView.isAcceptableOrUnknown(
+          data['default_view']!,
+          _defaultViewMeta,
+        ),
+      );
+    }
+    if (data.containsKey('board_group_prop')) {
+      context.handle(
+        _boardGroupPropMeta,
+        boardGroupProp.isAcceptableOrUnknown(
+          data['board_group_prop']!,
+          _boardGroupPropMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  KaalDatabase map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return KaalDatabase(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      icon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon'],
+      )!,
+      defaultView: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}default_view'],
+      )!,
+      boardGroupProp: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}board_group_prop'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $KaalDatabasesTable createAlias(String alias) {
+    return $KaalDatabasesTable(attachedDatabase, alias);
+  }
+}
+
+class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
+  final int id;
+  final String name;
+  final String icon;
+
+  /// table | board | list
+  final String defaultView;
+
+  /// Property id used to group the board view (a select/status column).
+  final String? boardGroupProp;
+  final DateTime createdAt;
+  const KaalDatabase({
+    required this.id,
+    required this.name,
+    required this.icon,
+    required this.defaultView,
+    this.boardGroupProp,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['icon'] = Variable<String>(icon);
+    map['default_view'] = Variable<String>(defaultView);
+    if (!nullToAbsent || boardGroupProp != null) {
+      map['board_group_prop'] = Variable<String>(boardGroupProp);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  KaalDatabasesCompanion toCompanion(bool nullToAbsent) {
+    return KaalDatabasesCompanion(
+      id: Value(id),
+      name: Value(name),
+      icon: Value(icon),
+      defaultView: Value(defaultView),
+      boardGroupProp: boardGroupProp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(boardGroupProp),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory KaalDatabase.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return KaalDatabase(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      icon: serializer.fromJson<String>(json['icon']),
+      defaultView: serializer.fromJson<String>(json['defaultView']),
+      boardGroupProp: serializer.fromJson<String?>(json['boardGroupProp']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'icon': serializer.toJson<String>(icon),
+      'defaultView': serializer.toJson<String>(defaultView),
+      'boardGroupProp': serializer.toJson<String?>(boardGroupProp),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  KaalDatabase copyWith({
+    int? id,
+    String? name,
+    String? icon,
+    String? defaultView,
+    Value<String?> boardGroupProp = const Value.absent(),
+    DateTime? createdAt,
+  }) => KaalDatabase(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    icon: icon ?? this.icon,
+    defaultView: defaultView ?? this.defaultView,
+    boardGroupProp: boardGroupProp.present
+        ? boardGroupProp.value
+        : this.boardGroupProp,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  KaalDatabase copyWithCompanion(KaalDatabasesCompanion data) {
+    return KaalDatabase(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      icon: data.icon.present ? data.icon.value : this.icon,
+      defaultView: data.defaultView.present
+          ? data.defaultView.value
+          : this.defaultView,
+      boardGroupProp: data.boardGroupProp.present
+          ? data.boardGroupProp.value
+          : this.boardGroupProp,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('KaalDatabase(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('defaultView: $defaultView, ')
+          ..write('boardGroupProp: $boardGroupProp, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, icon, defaultView, boardGroupProp, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is KaalDatabase &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.icon == this.icon &&
+          other.defaultView == this.defaultView &&
+          other.boardGroupProp == this.boardGroupProp &&
+          other.createdAt == this.createdAt);
+}
+
+class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String> icon;
+  final Value<String> defaultView;
+  final Value<String?> boardGroupProp;
+  final Value<DateTime> createdAt;
+  const KaalDatabasesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.defaultView = const Value.absent(),
+    this.boardGroupProp = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  KaalDatabasesCompanion.insert({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.defaultView = const Value.absent(),
+    this.boardGroupProp = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  static Insertable<KaalDatabase> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? icon,
+    Expression<String>? defaultView,
+    Expression<String>? boardGroupProp,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (icon != null) 'icon': icon,
+      if (defaultView != null) 'default_view': defaultView,
+      if (boardGroupProp != null) 'board_group_prop': boardGroupProp,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  KaalDatabasesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String>? icon,
+    Value<String>? defaultView,
+    Value<String?>? boardGroupProp,
+    Value<DateTime>? createdAt,
+  }) {
+    return KaalDatabasesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      defaultView: defaultView ?? this.defaultView,
+      boardGroupProp: boardGroupProp ?? this.boardGroupProp,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
+    if (defaultView.present) {
+      map['default_view'] = Variable<String>(defaultView.value);
+    }
+    if (boardGroupProp.present) {
+      map['board_group_prop'] = Variable<String>(boardGroupProp.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('KaalDatabasesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('defaultView: $defaultView, ')
+          ..write('boardGroupProp: $boardGroupProp, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbPropertiesTable extends DbProperties
+    with TableInfo<$DbPropertiesTable, DbProperty> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbPropertiesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _databaseIdMeta = const VerificationMeta(
+    'databaseId',
+  );
+  @override
+  late final GeneratedColumn<int> databaseId = GeneratedColumn<int>(
+    'database_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES kaal_databases (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('text'),
+  );
+  static const VerificationMeta _configMeta = const VerificationMeta('config');
+  @override
+  late final GeneratedColumn<String> config = GeneratedColumn<String>(
+    'config',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    databaseId,
+    name,
+    type,
+    config,
+    sortOrder,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'db_properties';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbProperty> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('database_id')) {
+      context.handle(
+        _databaseIdMeta,
+        databaseId.isAcceptableOrUnknown(data['database_id']!, _databaseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_databaseIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('config')) {
+      context.handle(
+        _configMeta,
+        config.isAcceptableOrUnknown(data['config']!, _configMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbProperty map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbProperty(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      databaseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}database_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      config: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}config'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+    );
+  }
+
+  @override
+  $DbPropertiesTable createAlias(String alias) {
+    return $DbPropertiesTable(attachedDatabase, alias);
+  }
+}
+
+class DbProperty extends DataClass implements Insertable<DbProperty> {
+  final String id;
+  final int databaseId;
+  final String name;
+
+  /// text | number | select | multiSelect | date | checkbox | url
+  final String type;
+
+  /// JSON config. For select/multiSelect: `{"options":[{"name":..,"color":..}]}`.
+  final String config;
+  final int sortOrder;
+  const DbProperty({
+    required this.id,
+    required this.databaseId,
+    required this.name,
+    required this.type,
+    required this.config,
+    required this.sortOrder,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['database_id'] = Variable<int>(databaseId);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
+    map['config'] = Variable<String>(config);
+    map['sort_order'] = Variable<int>(sortOrder);
+    return map;
+  }
+
+  DbPropertiesCompanion toCompanion(bool nullToAbsent) {
+    return DbPropertiesCompanion(
+      id: Value(id),
+      databaseId: Value(databaseId),
+      name: Value(name),
+      type: Value(type),
+      config: Value(config),
+      sortOrder: Value(sortOrder),
+    );
+  }
+
+  factory DbProperty.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbProperty(
+      id: serializer.fromJson<String>(json['id']),
+      databaseId: serializer.fromJson<int>(json['databaseId']),
+      name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String>(json['type']),
+      config: serializer.fromJson<String>(json['config']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'databaseId': serializer.toJson<int>(databaseId),
+      'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String>(type),
+      'config': serializer.toJson<String>(config),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+    };
+  }
+
+  DbProperty copyWith({
+    String? id,
+    int? databaseId,
+    String? name,
+    String? type,
+    String? config,
+    int? sortOrder,
+  }) => DbProperty(
+    id: id ?? this.id,
+    databaseId: databaseId ?? this.databaseId,
+    name: name ?? this.name,
+    type: type ?? this.type,
+    config: config ?? this.config,
+    sortOrder: sortOrder ?? this.sortOrder,
+  );
+  DbProperty copyWithCompanion(DbPropertiesCompanion data) {
+    return DbProperty(
+      id: data.id.present ? data.id.value : this.id,
+      databaseId: data.databaseId.present
+          ? data.databaseId.value
+          : this.databaseId,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      config: data.config.present ? data.config.value : this.config,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbProperty(')
+          ..write('id: $id, ')
+          ..write('databaseId: $databaseId, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('config: $config, ')
+          ..write('sortOrder: $sortOrder')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, databaseId, name, type, config, sortOrder);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbProperty &&
+          other.id == this.id &&
+          other.databaseId == this.databaseId &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.config == this.config &&
+          other.sortOrder == this.sortOrder);
+}
+
+class DbPropertiesCompanion extends UpdateCompanion<DbProperty> {
+  final Value<String> id;
+  final Value<int> databaseId;
+  final Value<String> name;
+  final Value<String> type;
+  final Value<String> config;
+  final Value<int> sortOrder;
+  final Value<int> rowid;
+  const DbPropertiesCompanion({
+    this.id = const Value.absent(),
+    this.databaseId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.config = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DbPropertiesCompanion.insert({
+    required String id,
+    required int databaseId,
+    required String name,
+    this.type = const Value.absent(),
+    this.config = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       databaseId = Value(databaseId),
+       name = Value(name);
+  static Insertable<DbProperty> custom({
+    Expression<String>? id,
+    Expression<int>? databaseId,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? config,
+    Expression<int>? sortOrder,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (databaseId != null) 'database_id': databaseId,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (config != null) 'config': config,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DbPropertiesCompanion copyWith({
+    Value<String>? id,
+    Value<int>? databaseId,
+    Value<String>? name,
+    Value<String>? type,
+    Value<String>? config,
+    Value<int>? sortOrder,
+    Value<int>? rowid,
+  }) {
+    return DbPropertiesCompanion(
+      id: id ?? this.id,
+      databaseId: databaseId ?? this.databaseId,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      config: config ?? this.config,
+      sortOrder: sortOrder ?? this.sortOrder,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (databaseId.present) {
+      map['database_id'] = Variable<int>(databaseId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (config.present) {
+      map['config'] = Variable<String>(config.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbPropertiesCompanion(')
+          ..write('id: $id, ')
+          ..write('databaseId: $databaseId, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('config: $config, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbRowsTable extends DbRows with TableInfo<$DbRowsTable, DbRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbRowsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _databaseIdMeta = const VerificationMeta(
+    'databaseId',
+  );
+  @override
+  late final GeneratedColumn<int> databaseId = GeneratedColumn<int>(
+    'database_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES kaal_databases (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _cellsMeta = const VerificationMeta('cells');
+  @override
+  late final GeneratedColumn<String> cells = GeneratedColumn<String>(
+    'cells',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    databaseId,
+    cells,
+    sortOrder,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'db_rows';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('database_id')) {
+      context.handle(
+        _databaseIdMeta,
+        databaseId.isAcceptableOrUnknown(data['database_id']!, _databaseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_databaseIdMeta);
+    }
+    if (data.containsKey('cells')) {
+      context.handle(
+        _cellsMeta,
+        cells.isAcceptableOrUnknown(data['cells']!, _cellsMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      databaseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}database_id'],
+      )!,
+      cells: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cells'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DbRowsTable createAlias(String alias) {
+    return $DbRowsTable(attachedDatabase, alias);
+  }
+}
+
+class DbRow extends DataClass implements Insertable<DbRow> {
+  final String id;
+  final int databaseId;
+  final String cells;
+  final int sortOrder;
+  final DateTime createdAt;
+  const DbRow({
+    required this.id,
+    required this.databaseId,
+    required this.cells,
+    required this.sortOrder,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['database_id'] = Variable<int>(databaseId);
+    map['cells'] = Variable<String>(cells);
+    map['sort_order'] = Variable<int>(sortOrder);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  DbRowsCompanion toCompanion(bool nullToAbsent) {
+    return DbRowsCompanion(
+      id: Value(id),
+      databaseId: Value(databaseId),
+      cells: Value(cells),
+      sortOrder: Value(sortOrder),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory DbRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbRow(
+      id: serializer.fromJson<String>(json['id']),
+      databaseId: serializer.fromJson<int>(json['databaseId']),
+      cells: serializer.fromJson<String>(json['cells']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'databaseId': serializer.toJson<int>(databaseId),
+      'cells': serializer.toJson<String>(cells),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  DbRow copyWith({
+    String? id,
+    int? databaseId,
+    String? cells,
+    int? sortOrder,
+    DateTime? createdAt,
+  }) => DbRow(
+    id: id ?? this.id,
+    databaseId: databaseId ?? this.databaseId,
+    cells: cells ?? this.cells,
+    sortOrder: sortOrder ?? this.sortOrder,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  DbRow copyWithCompanion(DbRowsCompanion data) {
+    return DbRow(
+      id: data.id.present ? data.id.value : this.id,
+      databaseId: data.databaseId.present
+          ? data.databaseId.value
+          : this.databaseId,
+      cells: data.cells.present ? data.cells.value : this.cells,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbRow(')
+          ..write('id: $id, ')
+          ..write('databaseId: $databaseId, ')
+          ..write('cells: $cells, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, databaseId, cells, sortOrder, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbRow &&
+          other.id == this.id &&
+          other.databaseId == this.databaseId &&
+          other.cells == this.cells &&
+          other.sortOrder == this.sortOrder &&
+          other.createdAt == this.createdAt);
+}
+
+class DbRowsCompanion extends UpdateCompanion<DbRow> {
+  final Value<String> id;
+  final Value<int> databaseId;
+  final Value<String> cells;
+  final Value<int> sortOrder;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const DbRowsCompanion({
+    this.id = const Value.absent(),
+    this.databaseId = const Value.absent(),
+    this.cells = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DbRowsCompanion.insert({
+    required String id,
+    required int databaseId,
+    this.cells = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       databaseId = Value(databaseId);
+  static Insertable<DbRow> custom({
+    Expression<String>? id,
+    Expression<int>? databaseId,
+    Expression<String>? cells,
+    Expression<int>? sortOrder,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (databaseId != null) 'database_id': databaseId,
+      if (cells != null) 'cells': cells,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DbRowsCompanion copyWith({
+    Value<String>? id,
+    Value<int>? databaseId,
+    Value<String>? cells,
+    Value<int>? sortOrder,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return DbRowsCompanion(
+      id: id ?? this.id,
+      databaseId: databaseId ?? this.databaseId,
+      cells: cells ?? this.cells,
+      sortOrder: sortOrder ?? this.sortOrder,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (databaseId.present) {
+      map['database_id'] = Variable<int>(databaseId.value);
+    }
+    if (cells.present) {
+      map['cells'] = Variable<String>(cells.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbRowsCompanion(')
+          ..write('id: $id, ')
+          ..write('databaseId: $databaseId, ')
+          ..write('cells: $cells, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7469,6 +8658,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $FocusSessionsTable focusSessions = $FocusSessionsTable(this);
+  late final $KaalDatabasesTable kaalDatabases = $KaalDatabasesTable(this);
+  late final $DbPropertiesTable dbProperties = $DbPropertiesTable(this);
+  late final $DbRowsTable dbRows = $DbRowsTable(this);
   late final TasksDao tasksDao = TasksDao(this as AppDatabase);
   late final HabitsDao habitsDao = HabitsDao(this as AppDatabase);
   late final GoalsDao goalsDao = GoalsDao(this as AppDatabase);
@@ -7476,6 +8668,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final CalendarDao calendarDao = CalendarDao(this as AppDatabase);
   late final ListsDao listsDao = ListsDao(this as AppDatabase);
   late final FocusDao focusDao = FocusDao(this as AppDatabase);
+  late final DatabasesDao databasesDao = DatabasesDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7496,6 +8689,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     customLists,
     customListItems,
     focusSessions,
+    kaalDatabases,
+    dbProperties,
+    dbRows,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -7562,6 +8758,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [TableUpdate('custom_list_items', kind: UpdateKind.delete)],
     ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'kaal_databases',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('db_properties', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'kaal_databases',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('db_rows', kind: UpdateKind.delete)],
+    ),
   ]);
 }
 
@@ -7626,7 +8836,7 @@ final class $$TasksTableReferences
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.subtasks,
-    aliasName: $_aliasNameGenerator(db.tasks.id, db.subtasks.taskId),
+    aliasName: 'tasks__id__subtasks__task_id',
   );
 
   $$SubtasksTableProcessedTableManager get subtasksRefs {
@@ -8225,9 +9435,8 @@ final class $$SubtasksTableReferences
     extends BaseReferences<_$AppDatabase, $SubtasksTable, Subtask> {
   $$SubtasksTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TasksTable _taskIdTable(_$AppDatabase db) => db.tasks.createAlias(
-    $_aliasNameGenerator(db.subtasks.taskId, db.tasks.id),
-  );
+  static $TasksTable _taskIdTable(_$AppDatabase db) =>
+      db.tasks.createAlias('subtasks__task_id__tasks__id');
 
   $$TasksTableProcessedTableManager get taskId {
     final $_column = $_itemColumn<int>('task_id')!;
@@ -8560,7 +9769,7 @@ final class $$HabitsTableReferences
   static MultiTypedResultKey<$SubHabitsTable, List<SubHabit>>
   _subHabitsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.subHabits,
-    aliasName: $_aliasNameGenerator(db.habits.id, db.subHabits.habitId),
+    aliasName: 'habits__id__sub_habits__habit_id',
   );
 
   $$SubHabitsTableProcessedTableManager get subHabitsRefs {
@@ -8578,7 +9787,7 @@ final class $$HabitsTableReferences
   static MultiTypedResultKey<$HabitLogsTable, List<HabitLog>>
   _habitLogsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.habitLogs,
-    aliasName: $_aliasNameGenerator(db.habits.id, db.habitLogs.habitId),
+    aliasName: 'habits__id__habit_logs__habit_id',
   );
 
   $$HabitLogsTableProcessedTableManager get habitLogsRefs {
@@ -9131,9 +10340,8 @@ final class $$SubHabitsTableReferences
     extends BaseReferences<_$AppDatabase, $SubHabitsTable, SubHabit> {
   $$SubHabitsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $HabitsTable _habitIdTable(_$AppDatabase db) => db.habits.createAlias(
-    $_aliasNameGenerator(db.subHabits.habitId, db.habits.id),
-  );
+  static $HabitsTable _habitIdTable(_$AppDatabase db) =>
+      db.habits.createAlias('sub_habits__habit_id__habits__id');
 
   $$HabitsTableProcessedTableManager get habitId {
     final $_column = $_itemColumn<int>('habit_id')!;
@@ -9441,9 +10649,8 @@ final class $$HabitLogsTableReferences
     extends BaseReferences<_$AppDatabase, $HabitLogsTable, HabitLog> {
   $$HabitLogsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $HabitsTable _habitIdTable(_$AppDatabase db) => db.habits.createAlias(
-    $_aliasNameGenerator(db.habitLogs.habitId, db.habits.id),
-  );
+  static $HabitsTable _habitIdTable(_$AppDatabase db) =>
+      db.habits.createAlias('habit_logs__habit_id__habits__id');
 
   $$HabitsTableProcessedTableManager get habitId {
     final $_column = $_itemColumn<int>('habit_id')!;
@@ -9761,7 +10968,7 @@ final class $$GoalsTableReferences
   static MultiTypedResultKey<$GoalTaskLinksTable, List<GoalTaskLink>>
   _goalTaskLinksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.goalTaskLinks,
-    aliasName: $_aliasNameGenerator(db.goals.id, db.goalTaskLinks.goalId),
+    aliasName: 'goals__id__goal_task_links__goal_id',
   );
 
   $$GoalTaskLinksTableProcessedTableManager get goalTaskLinksRefs {
@@ -9779,7 +10986,7 @@ final class $$GoalsTableReferences
   static MultiTypedResultKey<$GoalHabitLinksTable, List<GoalHabitLink>>
   _goalHabitLinksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.goalHabitLinks,
-    aliasName: $_aliasNameGenerator(db.goals.id, db.goalHabitLinks.goalId),
+    aliasName: 'goals__id__goal_habit_links__goal_id',
   );
 
   $$GoalHabitLinksTableProcessedTableManager get goalHabitLinksRefs {
@@ -10349,9 +11556,8 @@ final class $$GoalTaskLinksTableReferences
     super.$_typedResult,
   );
 
-  static $GoalsTable _goalIdTable(_$AppDatabase db) => db.goals.createAlias(
-    $_aliasNameGenerator(db.goalTaskLinks.goalId, db.goals.id),
-  );
+  static $GoalsTable _goalIdTable(_$AppDatabase db) =>
+      db.goals.createAlias('goal_task_links__goal_id__goals__id');
 
   $$GoalsTableProcessedTableManager get goalId {
     final $_column = $_itemColumn<int>('goal_id')!;
@@ -10614,9 +11820,8 @@ final class $$GoalHabitLinksTableReferences
     super.$_typedResult,
   );
 
-  static $GoalsTable _goalIdTable(_$AppDatabase db) => db.goals.createAlias(
-    $_aliasNameGenerator(db.goalHabitLinks.goalId, db.goals.id),
-  );
+  static $GoalsTable _goalIdTable(_$AppDatabase db) =>
+      db.goals.createAlias('goal_habit_links__goal_id__goals__id');
 
   $$GoalsTableProcessedTableManager get goalId {
     final $_column = $_itemColumn<int>('goal_id')!;
@@ -10892,7 +12097,7 @@ final class $$NotesTableReferences
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.noteTags,
-    aliasName: $_aliasNameGenerator(db.notes.id, db.noteTags.noteId),
+    aliasName: 'notes__id__note_tags__note_id',
   );
 
   $$NoteTagsTableProcessedTableManager get noteTagsRefs {
@@ -10910,7 +12115,7 @@ final class $$NotesTableReferences
   static MultiTypedResultKey<$NoteTaskLinksTable, List<NoteTaskLink>>
   _noteTaskLinksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.noteTaskLinks,
-    aliasName: $_aliasNameGenerator(db.notes.id, db.noteTaskLinks.noteId),
+    aliasName: 'notes__id__note_task_links__note_id',
   );
 
   $$NoteTaskLinksTableProcessedTableManager get noteTaskLinksRefs {
@@ -11325,9 +12530,8 @@ final class $$NoteTagsTableReferences
     extends BaseReferences<_$AppDatabase, $NoteTagsTable, NoteTag> {
   $$NoteTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $NotesTable _noteIdTable(_$AppDatabase db) => db.notes.createAlias(
-    $_aliasNameGenerator(db.noteTags.noteId, db.notes.id),
-  );
+  static $NotesTable _noteIdTable(_$AppDatabase db) =>
+      db.notes.createAlias('note_tags__note_id__notes__id');
 
   $$NotesTableProcessedTableManager get noteId {
     final $_column = $_itemColumn<int>('note_id')!;
@@ -11658,9 +12862,8 @@ final class $$NoteTaskLinksTableReferences
     super.$_typedResult,
   );
 
-  static $NotesTable _noteIdTable(_$AppDatabase db) => db.notes.createAlias(
-    $_aliasNameGenerator(db.noteTaskLinks.noteId, db.notes.id),
-  );
+  static $NotesTable _noteIdTable(_$AppDatabase db) =>
+      db.notes.createAlias('note_task_links__note_id__notes__id');
 
   $$NotesTableProcessedTableManager get noteId {
     final $_column = $_itemColumn<int>('note_id')!;
@@ -12202,9 +13405,7 @@ final class $$CustomListsTableReferences
   $$CustomListsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $CustomListsTable _parentIdTable(_$AppDatabase db) =>
-      db.customLists.createAlias(
-        $_aliasNameGenerator(db.customLists.parentId, db.customLists.id),
-      );
+      db.customLists.createAlias('custom_lists__parent_id__custom_lists__id');
 
   $$CustomListsTableProcessedTableManager? get parentId {
     final $_column = $_itemColumn<int>('parent_id');
@@ -12223,10 +13424,7 @@ final class $$CustomListsTableReferences
   static MultiTypedResultKey<$CustomListItemsTable, List<CustomListItem>>
   _customListItemsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.customListItems,
-    aliasName: $_aliasNameGenerator(
-      db.customLists.id,
-      db.customListItems.listId,
-    ),
+    aliasName: 'custom_lists__id__custom_list_items__list_id',
   );
 
   $$CustomListItemsTableProcessedTableManager get customListItemsRefs {
@@ -12655,10 +13853,8 @@ final class $$CustomListItemsTableReferences
     super.$_typedResult,
   );
 
-  static $CustomListsTable _listIdTable(_$AppDatabase db) =>
-      db.customLists.createAlias(
-        $_aliasNameGenerator(db.customListItems.listId, db.customLists.id),
-      );
+  static $CustomListsTable _listIdTable(_$AppDatabase db) => db.customLists
+      .createAlias('custom_list_items__list_id__custom_lists__id');
 
   $$CustomListsTableProcessedTableManager get listId {
     final $_column = $_itemColumn<int>('list_id')!;
@@ -13166,6 +14362,1076 @@ typedef $$FocusSessionsTableProcessedTableManager =
       FocusSession,
       PrefetchHooks Function()
     >;
+typedef $$KaalDatabasesTableCreateCompanionBuilder =
+    KaalDatabasesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String> icon,
+      Value<String> defaultView,
+      Value<String?> boardGroupProp,
+      Value<DateTime> createdAt,
+    });
+typedef $$KaalDatabasesTableUpdateCompanionBuilder =
+    KaalDatabasesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String> icon,
+      Value<String> defaultView,
+      Value<String?> boardGroupProp,
+      Value<DateTime> createdAt,
+    });
+
+final class $$KaalDatabasesTableReferences
+    extends BaseReferences<_$AppDatabase, $KaalDatabasesTable, KaalDatabase> {
+  $$KaalDatabasesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$DbPropertiesTable, List<DbProperty>>
+  _dbPropertiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbProperties,
+    aliasName: 'kaal_databases__id__db_properties__database_id',
+  );
+
+  $$DbPropertiesTableProcessedTableManager get dbPropertiesRefs {
+    final manager = $$DbPropertiesTableTableManager(
+      $_db,
+      $_db.dbProperties,
+    ).filter((f) => f.databaseId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbPropertiesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DbRowsTable, List<DbRow>> _dbRowsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.dbRows,
+    aliasName: 'kaal_databases__id__db_rows__database_id',
+  );
+
+  $$DbRowsTableProcessedTableManager get dbRowsRefs {
+    final manager = $$DbRowsTableTableManager(
+      $_db,
+      $_db.dbRows,
+    ).filter((f) => f.databaseId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbRowsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$KaalDatabasesTableFilterComposer
+    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
+  $$KaalDatabasesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get defaultView => $composableBuilder(
+    column: $table.defaultView,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get boardGroupProp => $composableBuilder(
+    column: $table.boardGroupProp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> dbPropertiesRefs(
+    Expression<bool> Function($$DbPropertiesTableFilterComposer f) f,
+  ) {
+    final $$DbPropertiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbProperties,
+      getReferencedColumn: (t) => t.databaseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbPropertiesTableFilterComposer(
+            $db: $db,
+            $table: $db.dbProperties,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbRowsRefs(
+    Expression<bool> Function($$DbRowsTableFilterComposer f) f,
+  ) {
+    final $$DbRowsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbRows,
+      getReferencedColumn: (t) => t.databaseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbRowsTableFilterComposer(
+            $db: $db,
+            $table: $db.dbRows,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$KaalDatabasesTableOrderingComposer
+    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
+  $$KaalDatabasesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get defaultView => $composableBuilder(
+    column: $table.defaultView,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get boardGroupProp => $composableBuilder(
+    column: $table.boardGroupProp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$KaalDatabasesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
+  $$KaalDatabasesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<String> get defaultView => $composableBuilder(
+    column: $table.defaultView,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get boardGroupProp => $composableBuilder(
+    column: $table.boardGroupProp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> dbPropertiesRefs<T extends Object>(
+    Expression<T> Function($$DbPropertiesTableAnnotationComposer a) f,
+  ) {
+    final $$DbPropertiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbProperties,
+      getReferencedColumn: (t) => t.databaseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbPropertiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbProperties,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbRowsRefs<T extends Object>(
+    Expression<T> Function($$DbRowsTableAnnotationComposer a) f,
+  ) {
+    final $$DbRowsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbRows,
+      getReferencedColumn: (t) => t.databaseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbRowsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbRows,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$KaalDatabasesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $KaalDatabasesTable,
+          KaalDatabase,
+          $$KaalDatabasesTableFilterComposer,
+          $$KaalDatabasesTableOrderingComposer,
+          $$KaalDatabasesTableAnnotationComposer,
+          $$KaalDatabasesTableCreateCompanionBuilder,
+          $$KaalDatabasesTableUpdateCompanionBuilder,
+          (KaalDatabase, $$KaalDatabasesTableReferences),
+          KaalDatabase,
+          PrefetchHooks Function({bool dbPropertiesRefs, bool dbRowsRefs})
+        > {
+  $$KaalDatabasesTableTableManager(_$AppDatabase db, $KaalDatabasesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$KaalDatabasesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$KaalDatabasesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$KaalDatabasesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> icon = const Value.absent(),
+                Value<String> defaultView = const Value.absent(),
+                Value<String?> boardGroupProp = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => KaalDatabasesCompanion(
+                id: id,
+                name: name,
+                icon: icon,
+                defaultView: defaultView,
+                boardGroupProp: boardGroupProp,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> icon = const Value.absent(),
+                Value<String> defaultView = const Value.absent(),
+                Value<String?> boardGroupProp = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => KaalDatabasesCompanion.insert(
+                id: id,
+                name: name,
+                icon: icon,
+                defaultView: defaultView,
+                boardGroupProp: boardGroupProp,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$KaalDatabasesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({dbPropertiesRefs = false, dbRowsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (dbPropertiesRefs) db.dbProperties,
+                    if (dbRowsRefs) db.dbRows,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (dbPropertiesRefs)
+                        await $_getPrefetchedData<
+                          KaalDatabase,
+                          $KaalDatabasesTable,
+                          DbProperty
+                        >(
+                          currentTable: table,
+                          referencedTable: $$KaalDatabasesTableReferences
+                              ._dbPropertiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$KaalDatabasesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbPropertiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.databaseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (dbRowsRefs)
+                        await $_getPrefetchedData<
+                          KaalDatabase,
+                          $KaalDatabasesTable,
+                          DbRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$KaalDatabasesTableReferences
+                              ._dbRowsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$KaalDatabasesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbRowsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.databaseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$KaalDatabasesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $KaalDatabasesTable,
+      KaalDatabase,
+      $$KaalDatabasesTableFilterComposer,
+      $$KaalDatabasesTableOrderingComposer,
+      $$KaalDatabasesTableAnnotationComposer,
+      $$KaalDatabasesTableCreateCompanionBuilder,
+      $$KaalDatabasesTableUpdateCompanionBuilder,
+      (KaalDatabase, $$KaalDatabasesTableReferences),
+      KaalDatabase,
+      PrefetchHooks Function({bool dbPropertiesRefs, bool dbRowsRefs})
+    >;
+typedef $$DbPropertiesTableCreateCompanionBuilder =
+    DbPropertiesCompanion Function({
+      required String id,
+      required int databaseId,
+      required String name,
+      Value<String> type,
+      Value<String> config,
+      Value<int> sortOrder,
+      Value<int> rowid,
+    });
+typedef $$DbPropertiesTableUpdateCompanionBuilder =
+    DbPropertiesCompanion Function({
+      Value<String> id,
+      Value<int> databaseId,
+      Value<String> name,
+      Value<String> type,
+      Value<String> config,
+      Value<int> sortOrder,
+      Value<int> rowid,
+    });
+
+final class $$DbPropertiesTableReferences
+    extends BaseReferences<_$AppDatabase, $DbPropertiesTable, DbProperty> {
+  $$DbPropertiesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $KaalDatabasesTable _databaseIdTable(_$AppDatabase db) => db
+      .kaalDatabases
+      .createAlias('db_properties__database_id__kaal_databases__id');
+
+  $$KaalDatabasesTableProcessedTableManager get databaseId {
+    final $_column = $_itemColumn<int>('database_id')!;
+
+    final manager = $$KaalDatabasesTableTableManager(
+      $_db,
+      $_db.kaalDatabases,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_databaseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbPropertiesTableFilterComposer
+    extends Composer<_$AppDatabase, $DbPropertiesTable> {
+  $$DbPropertiesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get config => $composableBuilder(
+    column: $table.config,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$KaalDatabasesTableFilterComposer get databaseId {
+    final $$KaalDatabasesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableFilterComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbPropertiesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbPropertiesTable> {
+  $$DbPropertiesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get config => $composableBuilder(
+    column: $table.config,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$KaalDatabasesTableOrderingComposer get databaseId {
+    final $$KaalDatabasesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableOrderingComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbPropertiesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbPropertiesTable> {
+  $$DbPropertiesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get config =>
+      $composableBuilder(column: $table.config, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  $$KaalDatabasesTableAnnotationComposer get databaseId {
+    final $$KaalDatabasesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbPropertiesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbPropertiesTable,
+          DbProperty,
+          $$DbPropertiesTableFilterComposer,
+          $$DbPropertiesTableOrderingComposer,
+          $$DbPropertiesTableAnnotationComposer,
+          $$DbPropertiesTableCreateCompanionBuilder,
+          $$DbPropertiesTableUpdateCompanionBuilder,
+          (DbProperty, $$DbPropertiesTableReferences),
+          DbProperty,
+          PrefetchHooks Function({bool databaseId})
+        > {
+  $$DbPropertiesTableTableManager(_$AppDatabase db, $DbPropertiesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbPropertiesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbPropertiesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbPropertiesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int> databaseId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<String> config = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbPropertiesCompanion(
+                id: id,
+                databaseId: databaseId,
+                name: name,
+                type: type,
+                config: config,
+                sortOrder: sortOrder,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required int databaseId,
+                required String name,
+                Value<String> type = const Value.absent(),
+                Value<String> config = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbPropertiesCompanion.insert(
+                id: id,
+                databaseId: databaseId,
+                name: name,
+                type: type,
+                config: config,
+                sortOrder: sortOrder,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbPropertiesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({databaseId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (databaseId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.databaseId,
+                                referencedTable: $$DbPropertiesTableReferences
+                                    ._databaseIdTable(db),
+                                referencedColumn: $$DbPropertiesTableReferences
+                                    ._databaseIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbPropertiesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbPropertiesTable,
+      DbProperty,
+      $$DbPropertiesTableFilterComposer,
+      $$DbPropertiesTableOrderingComposer,
+      $$DbPropertiesTableAnnotationComposer,
+      $$DbPropertiesTableCreateCompanionBuilder,
+      $$DbPropertiesTableUpdateCompanionBuilder,
+      (DbProperty, $$DbPropertiesTableReferences),
+      DbProperty,
+      PrefetchHooks Function({bool databaseId})
+    >;
+typedef $$DbRowsTableCreateCompanionBuilder =
+    DbRowsCompanion Function({
+      required String id,
+      required int databaseId,
+      Value<String> cells,
+      Value<int> sortOrder,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$DbRowsTableUpdateCompanionBuilder =
+    DbRowsCompanion Function({
+      Value<String> id,
+      Value<int> databaseId,
+      Value<String> cells,
+      Value<int> sortOrder,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$DbRowsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbRowsTable, DbRow> {
+  $$DbRowsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $KaalDatabasesTable _databaseIdTable(_$AppDatabase db) =>
+      db.kaalDatabases.createAlias('db_rows__database_id__kaal_databases__id');
+
+  $$KaalDatabasesTableProcessedTableManager get databaseId {
+    final $_column = $_itemColumn<int>('database_id')!;
+
+    final manager = $$KaalDatabasesTableTableManager(
+      $_db,
+      $_db.kaalDatabases,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_databaseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbRowsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbRowsTable> {
+  $$DbRowsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cells => $composableBuilder(
+    column: $table.cells,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$KaalDatabasesTableFilterComposer get databaseId {
+    final $$KaalDatabasesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableFilterComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbRowsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbRowsTable> {
+  $$DbRowsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cells => $composableBuilder(
+    column: $table.cells,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$KaalDatabasesTableOrderingComposer get databaseId {
+    final $$KaalDatabasesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableOrderingComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbRowsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbRowsTable> {
+  $$DbRowsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get cells =>
+      $composableBuilder(column: $table.cells, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$KaalDatabasesTableAnnotationComposer get databaseId {
+    final $$KaalDatabasesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.databaseId,
+      referencedTable: $db.kaalDatabases,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$KaalDatabasesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.kaalDatabases,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbRowsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbRowsTable,
+          DbRow,
+          $$DbRowsTableFilterComposer,
+          $$DbRowsTableOrderingComposer,
+          $$DbRowsTableAnnotationComposer,
+          $$DbRowsTableCreateCompanionBuilder,
+          $$DbRowsTableUpdateCompanionBuilder,
+          (DbRow, $$DbRowsTableReferences),
+          DbRow,
+          PrefetchHooks Function({bool databaseId})
+        > {
+  $$DbRowsTableTableManager(_$AppDatabase db, $DbRowsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbRowsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbRowsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbRowsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int> databaseId = const Value.absent(),
+                Value<String> cells = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbRowsCompanion(
+                id: id,
+                databaseId: databaseId,
+                cells: cells,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required int databaseId,
+                Value<String> cells = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbRowsCompanion.insert(
+                id: id,
+                databaseId: databaseId,
+                cells: cells,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$DbRowsTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({databaseId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (databaseId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.databaseId,
+                                referencedTable: $$DbRowsTableReferences
+                                    ._databaseIdTable(db),
+                                referencedColumn: $$DbRowsTableReferences
+                                    ._databaseIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbRowsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbRowsTable,
+      DbRow,
+      $$DbRowsTableFilterComposer,
+      $$DbRowsTableOrderingComposer,
+      $$DbRowsTableAnnotationComposer,
+      $$DbRowsTableCreateCompanionBuilder,
+      $$DbRowsTableUpdateCompanionBuilder,
+      (DbRow, $$DbRowsTableReferences),
+      DbRow,
+      PrefetchHooks Function({bool databaseId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13200,4 +15466,10 @@ class $AppDatabaseManager {
       $$CustomListItemsTableTableManager(_db, _db.customListItems);
   $$FocusSessionsTableTableManager get focusSessions =>
       $$FocusSessionsTableTableManager(_db, _db.focusSessions);
+  $$KaalDatabasesTableTableManager get kaalDatabases =>
+      $$KaalDatabasesTableTableManager(_db, _db.kaalDatabases);
+  $$DbPropertiesTableTableManager get dbProperties =>
+      $$DbPropertiesTableTableManager(_db, _db.dbProperties);
+  $$DbRowsTableTableManager get dbRows =>
+      $$DbRowsTableTableManager(_db, _db.dbRows);
 }

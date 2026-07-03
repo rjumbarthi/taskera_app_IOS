@@ -54,6 +54,8 @@ import '../screens/calendar/gmail_sync_screen.dart';
 import '../screens/calendar/cal_sync_screen.dart';
 import '../screens/calendar/conflicts_screen.dart';
 import '../screens/notes/note_editor_screen.dart';
+import '../screens/databases/databases_list_screen.dart';
+import '../screens/databases/database_detail_screen.dart';
 import '../screens/onboarding/onboard_screen.dart';
 import '../screens/onboarding/quote_splash_screen.dart';
 import '../screens/onboarding/signin_screen.dart';
@@ -324,6 +326,8 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
               routes: [
                 GoRoute(path: 'noteeditor',     pageBuilder: (context, s) => slideRightPage(child: const NoteEditorScreen(),                         state: s)),
                 GoRoute(path: 'noteeditor/:id', pageBuilder: (context, s) => slideRightPage(child: NoteEditorScreen(noteId: s.pathParameters['id']), state: s)),
+                GoRoute(path: 'databases',      pageBuilder: (context, s) => slideRightPage(child: const DatabasesListScreen(),                     state: s)),
+                GoRoute(path: 'databases/:id',  pageBuilder: (context, s) => slideRightPage(child: DatabaseDetailScreen(databaseId: int.tryParse(s.pathParameters['id'] ?? '') ?? 0), state: s)),
               ],
             ),
           ],

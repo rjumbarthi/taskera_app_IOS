@@ -1,0 +1,87 @@
+# Codemagic CI/CD — builds & signs the Kaal iOS app on macOS build servers.
+# You do NOT need a Mac. Everything below runs in Codemagic's cloud.
+#
+# ── ONE-TIME SETUP in the Codemagic web UI (see ios/IOS_BUILD.md for details) ──
+#   1. Sign up at codemagic.io and connect this Git repository.
+#   2. Team settings → Integrations → App Store Connect → add an API key
+#      (from App Store Connect → Users and Access → Integrations → App Store
+#      Connect API). Name it EXACTLY:  KaalAppStoreConnect
+#   3. In App Store Connect, register the bundle id `com.port443.kaal` and create
+#      the app record (so TestFlight has somewhere to receive the build).
+#   4. Put the app's numeric Apple ID into APP_STORE_APP_ID below (App Store
+#      Connect → your app → App Information → "Apple ID").
+#   5. Push to the branch this workflow watches, or press "Start new build".
+# ───────────────────────────────────────────────────────────────────────────────
+
+workflows:
+  ios-testflight:
+    name: Kaal iOS — TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    integrations:
+      # Must match the App Store Connect API key name you created in the UI.
+      app_store_connect: KaalAppStoreConnect
+
+    environment:
+      ios_signing:
+        distribution_type: app_store          # TestFlight / App Store signing
+        bundle_identifier: com.port443.kaal
+      vars:
+        # App Store Connect numeric Apple ID of the app record (fill this in).
+        APP_STORE_APP_ID: 0000000000
+        BUNDLE_ID: "com.port443.kaal"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    scripts:
+      - name: Flutter packages
+        script: flutter pub get
+
+      - name: CocoaPods install
+        script: find . -name "Podfile" -execdir pod install \;
+
+      - name: Compute next build number
+        script: |
+          set -e
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo "0")
+          NEXT=$(( ${LATEST:-0} + 1 ))
+          echo "Next build number: $NEXT (latest on TestFlight: ${LATEST:-0})"
+          echo "BUILD_NUMBER=$NEXT" >> "$CM_ENV"
+
+      - name: Apply provisioning profiles to Xcode project
+        script: xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          flutter build ipa --release \
+            --build-number="$BUILD_NUMBER" \
+            --export-options-plist="$HOME/export_options.plist"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      # Delivers the signed .ipa straight to TestFlight. Add tester groups here
+      # once you've created them in App Store Connect.
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # beta_groups:
+        #   - Internal Testers
+
+      # Optional: email yourself the build result + artifacts.
+      # email:
+      #   recipients:
+      #     - r@jumbarthi.com
+      #   notify:
+      #     success: true
+      #     failure: true

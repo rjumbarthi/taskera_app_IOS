@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,7 +25,9 @@ Widget buildKaalAvatarFace({
   required double size,
 }) {
   final bgColor = kKaalAvatarColors[colorIdx.clamp(0, kKaalAvatarColors.length - 1)];
-  final hasImage = imagePath != null && File(imagePath).existsSync();
+  // dart:io File is unavailable on web (image upload is gated off there too),
+  // so only attempt a file-backed avatar on native platforms.
+  final hasImage = !kIsWeb && imagePath != null && File(imagePath).existsSync();
 
   if (hasImage) {
     return Container(

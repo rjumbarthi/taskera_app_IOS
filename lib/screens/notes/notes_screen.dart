@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:drift/drift.dart' show Value;
 import '../../data/database.dart' show Note, NoteTag, NotesCompanion, Task, Habit, Goal;
+import '../../data/models/note_block.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/notes_provider.dart';
 import '../../data/providers/tasks_provider.dart';
@@ -58,10 +59,16 @@ String _previewOf(String body) =>
 
 // ── DB → display model mapping ─────────────────────────────────────────────
 
+// One-line preview: collapse block newlines to spaces and clip to 120 chars.
+String _preview(String plain) {
+  final flat = plain.replaceAll('\n', ' ').trim();
+  return flat.length > 120 ? '${flat.substring(0, 120)}…' : flat;
+}
+
 _Note _rowToNote(Note n, List<NoteTag> tags) => _Note(
       id: n.id,
       title: n.title,
-      preview: n.body.length > 120 ? '${n.body.substring(0, 120)}…' : n.body,
+      preview: _preview(BlockDocument.plainTextOf(n.body)),
       time: n.timeLabel,
       aiLabel: n.aiLabel,
       isPinned: n.isPinned,
@@ -137,8 +144,39 @@ class NotesScreen extends ConsumerWidget {
             AiInsightCard(
               input: noteRows.isEmpty
                   ? 'The user has no notes yet.'
-                  : 'My notes:\n${noteRows.take(20).map((n) => '- ${n.title}: ${n.body.length > 160 ? n.body.substring(0, 160) : n.body}').join('\n')}',
+                  : 'My notes:\n${noteRows.take(20).map((n) {
+                      final t = BlockDocument.plainTextOf(n.body).replaceAll('\n', ' ');
+                      return '- ${n.title}: ${t.length > 160 ? t.substring(0, 160) : t}';
+                    }).join('\n')}',
               hint: 'See what Kaal AI notices across your notes',
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () => context.push(KaalRoutes.databases),
+              child: Container(
+                padding: const EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  color: const Color(0x120A84FF),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
+                ),
+                child: Row(children: [
+                  const Text('🗂️', style: TextStyle(fontSize: 20)),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Databases',
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 14.5, fontWeight: FontWeight.w600, color: colors.ink)),
+                        Text('Tables, boards & lists — Notion-style',
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right_rounded, size: 20, color: colors.ink3),
+                ]),
+              ),
             ),
             const SizedBox(height: 8),
             if (pinned.isNotEmpty) ...[

@@ -74,5 +74,20 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Deep-link scheme so Supabase OAuth (Google/Microsoft) returns to the app.
+	     Matches AppConfig.deepLinkScheme = 'io.supabase.kaalapp'. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>io.supabase.kaalapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.supabase.kaalapp</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

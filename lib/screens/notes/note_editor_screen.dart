@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/database.dart' show NotesCompanion, Task;
+import '../../data/models/note_block.dart';
 import '../../data/providers/database_provider.dart';
+import '../../widgets/block_editor/block_editor.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../util/kaal_dialogs.dart';
@@ -27,7 +29,12 @@ class NoteEditorScreen extends ConsumerStatefulWidget {
 
 class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   final _titleCtrl = TextEditingController();
-  final _bodyCtrl  = TextEditingController();
+
+  // Block-document state. `_seed` is the immutable document the BlockEditor is
+  // built from (keyed on its identity); `_doc` holds the latest edited content
+  // for saving. They diverge after the first keystroke.
+  BlockDocument? _seed;
+  BlockDocument _doc = BlockDocument.empty();
 
   // Ids of tasks linked to this note (source of truth while editing).
   final Set<int> _linkedTaskIds = {};
@@ -38,7 +45,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   @override
   void initState() {
     super.initState();
-    if (_parsedId != null) _loadNote();
+    if (_parsedId != null) {
+      _loadNote();
+    } else {
+      _seed = _doc; // fresh note: editor ready immediately
+    }
   }
 
   Future<void> _loadNote() async {
@@ -47,8 +58,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     final links = await dao.getTaskLinks(_parsedId!);
     if (note != null && mounted) {
       _titleCtrl.text = note.title;
-      _bodyCtrl.text  = note.body;
+      final loaded = BlockDocument.decode(note.body);
       setState(() {
+        _seed = loaded;
+        _doc = loaded;
         _pinned = note.isPinned;
         _linkedTaskIds
           ..clear()
@@ -58,7 +71,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   Future<void> _aiScan() async {
-    final body = _bodyCtrl.text.trim();
+    final body = _doc.plainText.trim();
     final messenger = ScaffoldMessenger.of(context);
     if (body.isEmpty) {
       messenger.showSnackBar(
@@ -125,7 +138,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         _parsedId!,
         NotesCompanion(
           title: Value(title),
-          body: Value(_bodyCtrl.text),
+          body: Value(_doc.encode()),
           isPinned: Value(_pinned),
           timeLabel: const Value('Just now'),
         ),
@@ -136,7 +149,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       final newId = await dao.insertNote(
         NotesCompanion(
           title: Value(title),
-          body: Value(_bodyCtrl.text),
+          body: Value(_doc.encode()),
           isPinned: Value(_pinned),
           timeLabel: const Value('Just now'),
         ),
@@ -156,12 +169,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   static const _quadColors = [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4, Color(0xFF8E8E93)];
   static const _goals  = ['🚀 Launch MVP', '💪 Fitness', '📚 Read 12 books', 'None'];
   static const _labels = ['#idea', '#meeting', '#research', '#journal', '#braindump', '+ New'];
-  static const _fmtBtns = ['B', 'I', 'U', '• List', '1.'];
 
   @override
   void dispose() {
     _titleCtrl.dispose();
-    _bodyCtrl.dispose();
     super.dispose();
   }
 
@@ -314,57 +325,57 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   ],
                 ),
               ),
-              // Note body
+              // Note body — Notion-style block editor
               _FormRow(
                 label: 'Note body',
                 colors: colors,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Format toolbar
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          for (final btn in _fmtBtns) ...[
-                            _FmtBtn(label: btn, colors: colors),
-                            const SizedBox(width: 4),
-                          ],
-                          const SizedBox(width: 8),
-                          // AI scan btn
-                          GestureDetector(
-                            onTap: _aiScan,
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
-                              ),
-                              child: const Text('✦ AI scan', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: KaalColors.acc2)),
-                            ),
+                    // Toolbar (AI scan only — formatting is inline via blocks)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Type '/' for blocks · '#', '-', '[]' shortcuts",
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3),
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: _aiScan,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
+                            ),
+                            child: const Text('✦ AI scan', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: KaalColors.acc2)),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    // Body text area
+                    const SizedBox(height: 6),
                     Container(
-                      constraints: const BoxConstraints(minHeight: 140),
+                      constraints: const BoxConstraints(minHeight: 160),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(width: 0.5, color: colors.bdr2),
                       ),
-                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                      child: TextField(
-                        controller: _bodyCtrl,
-                        maxLines: null,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.65),
-                        decoration: InputDecoration(
-                          hintText: AppL10n.of(context).startWritingHint,
-                          hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
-                          border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero,
-                        ),
-                      ),
+                      padding: const EdgeInsets.fromLTRB(6, 8, 6, 8),
+                      child: _seed == null
+                          ? const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 40),
+                              child: Center(child: SizedBox(
+                                  width: 18, height: 18,
+                                  child: CircularProgressIndicator(strokeWidth: 2))),
+                            )
+                          : BlockEditor(
+                              key: ValueKey(_seed),
+                              document: _seed!,
+                              colors: colors,
+                              onChanged: (d) => _doc = d,
+                            ),
                     ),
                   ],
                 ),
@@ -563,28 +574,6 @@ class _ColorChip extends StatelessWidget {
         ),
         child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? activeColor : colors.ink2, height: 1)),
-      ),
-    );
-  }
-}
-
-class _FmtBtn extends StatelessWidget {
-  final String label;
-  final KaalColors colors;
-  const _FmtBtn({required this.label, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Rich text formatting coming soon'))),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(width: 0.5, color: colors.bdr),
-        ),
-        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink2)),
       ),
     );
   }
