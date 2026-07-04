@@ -32,6 +32,29 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   String? _error;
 
   @override
+  void initState() {
+    super.initState();
+    // On web, OAuth is a full-page redirect: if it fails (cancelled, provider
+    // not configured, callback error), Supabase sends the browser back with the
+    // error encoded in the URL. Surface it instead of failing silently.
+    if (isWeb) _checkOAuthReturnError();
+  }
+
+  void _checkOAuthReturnError() {
+    final uri = Uri.base;
+    final params = <String, String>{
+      ...uri.queryParameters,
+      if (uri.fragment.isNotEmpty) ...Uri.splitQueryString(uri.fragment),
+    };
+    final raw = params['error_description'] ?? params['error'];
+    if (raw == null || raw.isEmpty) return;
+    final decoded = raw.replaceAll('+', ' ');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => _error = _friendlyError(decoded));
+    });
+  }
+
+  @override
   void dispose() {
     _email.dispose();
     _password.dispose();
@@ -120,7 +143,30 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       return 'Wrong email or password';
     }
     if (msg.contains('email not confirmed')) return 'Please confirm your email first';
-    if (msg.contains('cancelled')) return 'Sign-in cancelled';
+    // ── OAuth-specific (Google / Microsoft via Supabase) ──────────────────────
+    if (msg.contains('access_denied') ||
+        msg.contains('cancelled') ||
+        msg.contains('canceled')) {
+      return 'Sign-in cancelled';
+    }
+    if (msg.contains('provider is not enabled') ||
+        msg.contains('provider_disabled') ||
+        msg.contains('unsupported provider') ||
+        msg.contains('validation_failed')) {
+      return 'Google sign-in isn\'t set up yet. Use email, or tap "Skip — use local storage".';
+    }
+    if (msg.contains('redirect') &&
+        (msg.contains('mismatch') || msg.contains('not allowed') || msg.contains('invalid'))) {
+      return 'Sign-in redirect not allowed — this site must be whitelisted in Supabase → Auth → URL Configuration.';
+    }
+    if (msg.contains('bad_oauth_state') || msg.contains('flow_state')) {
+      return 'Sign-in session expired — please try again.';
+    }
+    if (msg.contains('server_error') ||
+        msg.contains('unable to exchange') ||
+        msg.contains('oauth')) {
+      return 'Google sign-in failed. Check the provider setup and try again.';
+    }
     if (msg.contains('no such host') || msg.contains('your_project_ref') ||
         msg.contains('socketfailed')) {
       return 'Backend not configured — fill in lib/config/app_config.dart (see SETUP.md)';
