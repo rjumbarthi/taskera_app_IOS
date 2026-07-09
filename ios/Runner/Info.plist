@@ -22,6 +22,12 @@
 	<string>Kaal accesses your photo library so you can attach images to your notes and tasks.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Kaal uses the microphone for voice capture of notes and tasks.</string>
+	<!-- AdMob application id. Required by the Google Mobile Ads SDK or the app
+	     crashes on launch. This is Google's official iOS TEST app id (mirrors the
+	     test id in AndroidManifest). Replace with your real AdMob iOS app id
+	     before shipping ads to production. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>CFBundleName</key>
 	<string>kaal_app</string>
 	<key>CFBundlePackageType</key>
