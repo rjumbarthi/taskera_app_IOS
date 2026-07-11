@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'secure_store.dart';
 import 'package:http/http.dart' as http;
 
 class OpenAiService {
@@ -36,7 +37,7 @@ class OpenAiService {
 }
 
 final openAiServiceProvider = Provider<OpenAiService>(
-    (ref) => OpenAiService(const FlutterSecureStorage()));
+    (ref) => OpenAiService(kSecureStorage));
 
 /// Same contract as [OpenAiService] for Anthropic (Claude) keys. Validated with
 /// a 1-token message call, stored in secure storage.
@@ -79,4 +80,4 @@ class AnthropicService {
 }
 
 final anthropicServiceProvider = Provider<AnthropicService>(
-    (ref) => AnthropicService(const FlutterSecureStorage()));
+    (ref) => AnthropicService(kSecureStorage));

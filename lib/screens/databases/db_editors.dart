@@ -8,6 +8,7 @@ import '../../data/providers/database_provider.dart';
 import '../../data/providers/databases_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
+import '../../util/input_limits.dart';
 
 // ── Persistence helpers ──────────────────────────────────────────────────────
 
@@ -109,6 +110,7 @@ Future<String?> _editTextValue(
       content: TextField(
         controller: ctrl,
         autofocus: true,
+        inputFormatters: maxLen(kMaxCell),
         keyboardType: number ? const TextInputType.numberWithOptions(decimal: true) : null,
         style: TextStyle(fontFamily: 'Inter', color: colors.ink),
         decoration: InputDecoration(

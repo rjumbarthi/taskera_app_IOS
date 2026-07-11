@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show NotesCompanion, Task;
 import '../../data/models/note_block.dart';
 import '../../data/providers/database_provider.dart';
+import '../../util/input_limits.dart';
 import '../../widgets/block_editor/block_editor.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
@@ -221,6 +222,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     Expanded(
                       child: TextField(
                         controller: _titleCtrl,
+                        inputFormatters: maxLen(kMaxTitle),
                         style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink, height: 1.3),
                         decoration: InputDecoration(
                           hintText: '"Product Roadmap thoughts"',

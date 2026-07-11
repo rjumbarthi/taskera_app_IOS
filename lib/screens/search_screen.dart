@@ -13,6 +13,7 @@ import '../data/providers/databases_provider.dart';
 import '../routing/routes.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
+import '../util/input_limits.dart';
 import '../widgets/add_back_button.dart';
 import '../widgets/quick_capture_bar.dart';
 
@@ -247,6 +248,7 @@ class _SearchInput extends StatelessWidget {
             child: TextField(
               controller: ctrl,
               autofocus: true,
+              inputFormatters: maxLen(kMaxSearch),
               onChanged: onChange,
               style: TextStyle(
                   fontFamily: 'Inter', fontSize: 14, color: colors.ink, height: 1),

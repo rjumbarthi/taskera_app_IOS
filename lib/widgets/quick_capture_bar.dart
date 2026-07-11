@@ -7,6 +7,7 @@ import '../data/database.dart';
 import '../data/models/note_block.dart';
 import '../data/providers/database_provider.dart';
 import '../routing/routes.dart';
+import '../util/input_limits.dart';
 import '../theme/kaal_colors.dart';
 import '../theme/kaal_theme.dart';
 
@@ -101,6 +102,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
             controller: _ctrl,
             maxLines: null,
             minLines: 1,
+            inputFormatters: maxLen(kMaxLongText),
             textInputAction: TextInputAction.newline,
             style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink, height: 1.4),
             decoration: InputDecoration(

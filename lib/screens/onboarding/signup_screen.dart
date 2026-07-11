@@ -7,6 +7,7 @@ import '../../config/app_config.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../services/auth_service.dart';
+import 'otp_cooldown.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../util/platform_layout.dart';
@@ -21,7 +22,8 @@ class SignupScreen extends ConsumerStatefulWidget {
   ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends ConsumerState<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen>
+    with OtpCooldownMixin {
   final _email    = TextEditingController();
   final _password = TextEditingController();
   final _confirm  = TextEditingController();
@@ -33,6 +35,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   void dispose() {
+    disposeOtpCooldown();
     _email.dispose();
     _password.dispose();
     _confirm.dispose();
@@ -62,7 +65,21 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     }
   }
 
+  // Client-side password policy (server minimum is also enforced by Supabase).
+  static String? _passwordProblem(String pw) {
+    if (pw.length < 8) return 'Password must be at least 8 characters';
+    if (!pw.contains(RegExp(r'[A-Za-z]')) || !pw.contains(RegExp(r'[0-9]'))) {
+      return 'Use both letters and numbers in your password';
+    }
+    return null;
+  }
+
   Future<void> _createAccount() async {
+    final pwProblem = _passwordProblem(_password.text);
+    if (pwProblem != null) {
+      setState(() => _error = pwProblem);
+      return;
+    }
     if (_password.text != _confirm.text) {
       setState(() => _error = 'Passwords do not match');
       return;
@@ -94,10 +111,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       setState(() => _error = 'Enter your email first');
       return;
     }
+    if (otpOnCooldown) return;
     setState(() { _loading = true; _error = null; });
     try {
       await _auth.sendOtp(_email.text);
-      if (mounted) setState(() { _otpMode = true; _loading = false; });
+      if (mounted) {
+        setState(() { _otpMode = true; _loading = false; });
+        startOtpCooldown();
+      }
     } catch (e) {
       if (mounted) setState(() { _error = _friendlyError(e); _loading = false; });
     }
@@ -108,7 +129,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     successRoute: KaalRoutes.onboard,
   );
 
-  Future<void> _resendOtp() => _run(() => _auth.sendOtp(_email.text));
+  Future<void> _resendOtp() async {
+    if (otpOnCooldown) return;
+    await _run(() => _auth.sendOtp(_email.text));
+    if (mounted) startOtpCooldown();
+  }
 
   Future<void> _googleSignUp() => _run(
     () => _auth.signInWithGoogle(),
@@ -220,15 +245,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: _resendOtp,
+                          onTap: otpOnCooldown ? null : _resendOtp,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: const Text(
-                              'Resend OTP',
+                            child: Text(
+                              resendLabel(),
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 12,
-                                color: KaalColors.acc,
+                                color: otpOnCooldown
+                                    ? KaalColors.acc.withAlpha(0x80)
+                                    : KaalColors.acc,
                               ),
                             ),
                           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'secure_store.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
@@ -66,4 +67,4 @@ class NotionService {
 }
 
 final notionServiceProvider = Provider<NotionService>(
-    (ref) => NotionService(const FlutterSecureStorage()));
+    (ref) => NotionService(kSecureStorage));

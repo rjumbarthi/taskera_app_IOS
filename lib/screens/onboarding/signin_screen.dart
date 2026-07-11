@@ -7,6 +7,7 @@ import '../../config/app_config.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../services/auth_service.dart';
+import 'otp_cooldown.dart';
 import '../../settings/app_launch_prefs.dart';
 import '../../settings/prefs_provider.dart';
 import '../../theme/kaal_colors.dart';
@@ -23,7 +24,8 @@ class SigninScreen extends ConsumerStatefulWidget {
   ConsumerState<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SigninScreenState extends ConsumerState<SigninScreen> {
+class _SigninScreenState extends ConsumerState<SigninScreen>
+    with OtpCooldownMixin {
   final _email    = TextEditingController();
   final _password = TextEditingController();
   final _otp      = TextEditingController();
@@ -56,6 +58,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   @override
   void dispose() {
+    disposeOtpCooldown();
     _email.dispose();
     _password.dispose();
     _otp.dispose();
@@ -113,16 +116,24 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       setState(() => _error = 'Enter your email first');
       return;
     }
+    if (otpOnCooldown) return;
     setState(() { _loading = true; _error = null; });
     try {
       await _auth.sendOtp(_email.text);
-      if (mounted) setState(() { _otpMode = true; _loading = false; });
+      if (mounted) {
+        setState(() { _otpMode = true; _loading = false; });
+        startOtpCooldown();
+      }
     } catch (e) {
       if (mounted) setState(() { _error = _friendlyError(e); _loading = false; });
     }
   }
 
-  Future<void> _resendOtp() => _run(() => _auth.sendOtp(_email.text));
+  Future<void> _resendOtp() async {
+    if (otpOnCooldown) return;
+    await _run(() => _auth.sendOtp(_email.text));
+    if (mounted) startOtpCooldown();
+  }
 
   Future<void> _forgotPassword() async {
     if (!_emailValid) {
@@ -281,15 +292,19 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: _otpMode ? _resendOtp : _forgotPassword,
+                        onTap: _otpMode
+                            ? (otpOnCooldown ? null : _resendOtp)
+                            : _forgotPassword,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            _otpMode ? 'Resend OTP' : 'Forgot password?',
-                            style: const TextStyle(
+                            _otpMode ? resendLabel() : 'Forgot password?',
+                            style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 12,
-                              color: KaalColors.acc,
+                              color: (_otpMode && otpOnCooldown)
+                                  ? KaalColors.acc.withAlpha(0x80)
+                                  : KaalColors.acc,
                             ),
                           ),
                         ),

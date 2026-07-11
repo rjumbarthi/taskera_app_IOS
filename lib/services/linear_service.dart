@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'secure_store.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
@@ -75,4 +76,4 @@ class LinearService {
 }
 
 final linearServiceProvider = Provider<LinearService>(
-    (ref) => LinearService(const FlutterSecureStorage()));
+    (ref) => LinearService(kSecureStorage));

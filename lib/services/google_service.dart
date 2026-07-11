@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'secure_store.dart';
 import 'package:googleapis/calendar/v3.dart' as gcal;
 import 'package:googleapis/gmail/v1.dart' as gml;
 import 'package:http/http.dart' as http;
@@ -241,5 +242,5 @@ class GoogleService {
 }
 
 final googleServiceProvider = Provider<GoogleService>((ref) {
-  return GoogleService(const FlutterSecureStorage());
+  return GoogleService(kSecureStorage);
 });

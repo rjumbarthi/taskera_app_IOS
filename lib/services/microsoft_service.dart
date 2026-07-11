@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'secure_store.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
 
@@ -189,5 +190,5 @@ class MicrosoftService {
 }
 
 final microsoftServiceProvider = Provider<MicrosoftService>(
-  (ref) => MicrosoftService(const FlutterSecureStorage()),
+  (ref) => MicrosoftService(kSecureStorage),
 );

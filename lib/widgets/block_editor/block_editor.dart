@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../data/models/note_block.dart';
 import '../../theme/kaal_colors.dart';
+import '../../util/input_limits.dart';
 import 'block_types.dart';
 
 /// A Notion-style block editor.
@@ -513,6 +514,7 @@ class _BlockEditorState extends State<BlockEditor> {
           maxLines: null,
           keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.newline,
+          inputFormatters: maxLen(kMaxLongText),
           onChanged: (v) => _onTextChanged(i, v),
           style: _styleFor(b, colors),
           cursorColor: KaalColors.acc,
