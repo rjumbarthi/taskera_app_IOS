@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../config/feature_flags.dart';
+import '../../data/providers/announcements_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
@@ -331,6 +332,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // About & Legal — fully inlined here (no separate subscreen).
 
   Widget _sgrpAboutLegal(KaalColors colors) {
+    // Only surface the Messages row when there's actually something to show —
+    // no empty "no messages" entry.
+    final hasMsgs = (ref.watch(announcementsProvider).valueOrNull ?? const []).isNotEmpty;
+    final unreadMsgs = ref.watch(unreadAnnouncementCountProvider);
     return _Sgrp(
       isOpen: _open == 9,
       onToggle: () => _toggle(9),
@@ -373,6 +378,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ]),
           _SetSec('Feedback & Legal', colors),
           _SetCard(colors: colors, children: [
+            if (hasMsgs) ...[
+              _NavRow(label: 'Messages · What\'s New',
+                  right: unreadMsgs > 0 ? '$unreadMsgs new' : '›',
+                  rightColor: unreadMsgs > 0 ? KaalColors.acc2 : colors.ink3,
+                  colors: colors, onTap: () => context.push(KaalRoutes.messages)),
+              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            ],
             _NavRow(label: 'Report a bug · Request a feature', right: '›', rightColor: KaalColors.acc2,
                 colors: colors, onTap: () => context.push(KaalRoutes.report)),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),

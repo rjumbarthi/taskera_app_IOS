@@ -69,6 +69,7 @@ import '../screens/profile/edit_profile_screen.dart';
 import '../screens/profile/referral_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/settings/notification_center_screen.dart';
+import '../screens/settings/messages_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/settings/student_mode_screen.dart';
 import '../screens/settings/logs_screen.dart';
@@ -358,6 +359,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                 GoRoute(path: 'studentmode',  pageBuilder: (c, s) => slideRightPage(child: const StudentModeScreen(),                state: s)),
                 GoRoute(path: 'notifcenter',  pageBuilder: (c, s) => slideRightPage(child: const NotificationCenterScreen(),         state: s)),
                 GoRoute(path: 'widget',       pageBuilder: (c, s) => slideRightPage(child: const WidgetPreviewScreen(),              state: s)),
+                GoRoute(path: 'messages',     pageBuilder: (c, s) => slideRightPage(child: const MessagesScreen(),                  state: s)),
               ],
             ),
           ],

@@ -61,6 +61,7 @@ abstract final class KaalRoutes {
   static const studentMode  = '/settings/studentmode';
   static const notifCenter  = '/settings/notifcenter';
   static const widget       = '/settings/widget';
+  static const messages     = '/settings/messages';
 
   // Profile tab + sub-screens
   static const profile      = '/profile';
