@@ -411,9 +411,9 @@ Future<void> _seedCalendar(AppDatabase db, int lang) async {
       slot: '2 PM', color: 0xFF0A84FF, overdue: false, invite: false,
     ),
     (
-      title:   _s(['Design sync','デザイン同期','Design-Sync','디자인 싱크','Synchronisation design','设计同步','Sincronización de diseño','Sincronização de design','डिज़ाइन सिंक','مزامنة التصميم','డిజైన్ సింక్','Sincronizzazione design','Ontwerpsynchronisatie','வடிவமைப்பு ஒத்திசைவு','ವಿನ್ಯಾಸ ಸಿಂಕ್','‌ഡി‌സൈ‌ൻ ‌സിം‌ക്','डिझाइन सिंक','design sync','ডিজাইন সিঙ্ক'], lang),
-      subtitle: '60 min · 3 people',
-      slot: '2 PM', color: 0xFF34C759, overdue: false, invite: true,
+      title:   _s(['Team standup','チーム朝会','Team-Standup','팀 스탠드업','Réunion équipe','团队站会','Reunión de equipo','Reunião de equipe','टीम स्टैंडअप','اجتماع الفريق','టీమ్ స్టాండప్','Riunione team','Teamoverleg','குழு நிற்பு','ತಂಡ ಸ್ಟ್ಯಾಂಡಪ್','‌ടീം ‌സ്റ്റാ‌ൻ‌ഡ‌പ്പ്','टीम स्टँडअप','team standup','টিম স্ট্যান্ডআপ'], lang),
+      subtitle: '30 min · 3 people',
+      slot: '4 PM', color: 0xFF34C759, overdue: false, invite: true,
     ),
     (
       title:   _s(['Product roadmap research','製品ロードマップリサーチ','Produktroadmap-Recherche','제품 로드맵 연구','Recherche roadmap produit','产品路线图研究','Investigación roadmap producto','Pesquisa roadmap produto','प्रोडक्ट रोडमैप रिसर्च','بحث خارطة طريق المنتج','ప్రొడక్ట్ రోడ్‌మ్యాప్ పరిశోధన','Ricerca roadmap prodotto','Productroadmaponderzoek','தயாரிப்பு ரோட்மேப் ஆராய்ச்சி','ಉತ್ಪನ್ನ ರೋಡ್‌ಮ್ಯಾಪ್ ಸಂಶೋಧನೆ','‌പ്ര‌ൊ‌ഡ‌ക്ട് ‌റോ‌ഡ്‌മ‌ാ‌പ്പ് ‌ഗ‌വേ‌ഷ‌ണം','उत्पाद रोडमॅप संशोधन','product roadmap sanshodhan','পণ্য রোডম্যাপ গবেষণা'], lang),
