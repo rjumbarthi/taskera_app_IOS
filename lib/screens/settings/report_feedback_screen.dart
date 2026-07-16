@@ -49,7 +49,7 @@ const _areas = <String, List<String>>{
   ],
   'Inbox': [
     'Emails / Gmail',
-    'Kaal AI suggestions',
+    'Kaal suggestions',
     'Integrations',
     'Add task',
   ],
