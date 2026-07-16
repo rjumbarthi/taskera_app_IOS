@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../data/providers/announcements_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/feature_flags_provider.dart';
+import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -832,6 +833,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _sgrpCalInbox(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n, IntegrationsState integrations) {
     final gmailEnabled = ref.watch(gmailEnabledProvider);
     final calendarEnabled = ref.watch(calendarEnabledProvider);
+    final inboxCount = ref.watch(inboxTasksProvider).value?.length ?? 0;
     return _Sgrp(
       isOpen: _open == 5,
       onToggle: () => _toggle(5),
@@ -850,7 +852,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               rightColor: calendarEnabled ? colors.successFg : KaalColors.acc2,
               colors: colors, onTap: () => context.go(KaalRoutes.calSync)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).inboxLabel, right: '4 new', rightColor: KaalColors.warn,
+          _NavRow(label: AppL10n.of(context).inboxLabel,
+              right: inboxCount > 0 ? '$inboxCount new' : '',
+              rightColor: KaalColors.warn,
               colors: colors, onTap: () {
                 final router = GoRouter.of(context);
                 WidgetsBinding.instance.addPostFrameCallback((_) => router.go(KaalRoutes.inbox));
