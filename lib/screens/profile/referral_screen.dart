@@ -204,13 +204,6 @@ class _ShareButtons extends StatelessWidget {
         textColor: Colors.white,
         onTap: () => _share(context, Uri.parse('https://wa.me/?text=$text')),
       ),
-      const SizedBox(height: 7),
-      _ShareBtn(
-        label: '💬 Share via Messages',
-        bg: colors.surf2,
-        textColor: colors.ink,
-        onTap: () => _share(context, Uri.parse('sms:?body=$text')),
-      ),
     ]);
   }
 }
