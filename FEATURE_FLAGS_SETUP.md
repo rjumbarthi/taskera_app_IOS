@@ -19,10 +19,17 @@ alter table public.app_flags enable row level security;
 drop policy if exists "read flags" on public.app_flags;
 create policy "read flags" on public.app_flags for select using (true);
 
--- Seed both features OFF:
+-- Seed features OFF:
 insert into public.app_flags (key, enabled) values
   ('gmail', false),
-  ('calendar', false)
+  ('calendar', false),
+  ('microsoft', false)
+on conflict (key) do nothing;
+```
+
+Already created the table with just gmail/calendar? Add the new key:
+```sql
+insert into public.app_flags (key, enabled) values ('microsoft', false)
 on conflict (key) do nothing;
 ```
 
@@ -45,6 +52,18 @@ The app picks up the change on next launch/refresh — no rebuild, no store revi
 |---|---|---|---|
 | `gmail` | Gmail inbox (connect + parsing) | `gmail.readonly` (**restricted**) | Keep OFF until OAuth verification **+ CASA** clear. |
 | `calendar` | Google Calendar sync | `calendar.readonly` (sensitive) | Turn ON once Calendar OAuth verification clears. |
+| `microsoft` | Microsoft sign-in (sign-in/sign-up) | Azure OAuth | Turn ON once the Azure provider + client id are configured in Supabase. |
+
+### Adding new flags for future features
+Any gated feature can read `ref.watch(featureEnabledProvider('<key>'))` (default
+OFF). To make a *new* "coming soon" feature remotely switchable: (1) build the
+feature, (2) gate its entry point on `featureEnabledProvider('<key>')`, (3)
+`insert into public.app_flags (key, enabled) values ('<key>', false);`.
+
+> Note: a flag only reveals a feature that **exists in code**. Placeholder
+> "coming soon" items with no implementation yet (Apple sign-in, Outlook, iCloud,
+> SMS, auto-sort, saved filters, etc.) must be built first — a flag alone can't
+> turn them on.
 
 - Code: `lib/data/providers/feature_flags_provider.dart` (`gmailEnabledProvider`,
   `calendarEnabledProvider`). When off, entry points show **"Soon"** / "Coming soon"

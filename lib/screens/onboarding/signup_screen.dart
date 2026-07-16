@@ -7,6 +7,7 @@ import '../../config/app_config.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../services/auth_service.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import 'otp_cooldown.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -157,6 +158,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     );
   }
 
+  Future<void> _microsoftSignUp() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.signInWithMicrosoft(),
+      successRoute: KaalRoutes.onboard,
+    );
+  }
+
 
   static String _friendlyError(Object e) {
     final msg = e.toString().toLowerCase();
@@ -182,6 +191,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final microsoftEnabled = ref.watch(microsoftSignInEnabledProvider);
 
     return Stack(
       children: [
@@ -526,8 +536,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                     label: 'Microsoft',
                     icon: SvgPicture.string(_kMicrosoftSvg, width: 18, height: 18),
                     colors: colors,
-                    comingSoon: true, // not available yet
-                    onTap: () => _comingSoon(context, 'Microsoft sign-in'),
+                    comingSoon: !microsoftEnabled,
+                    onTap: microsoftEnabled
+                        ? _microsoftSignUp
+                        : () => _comingSoon(context, 'Microsoft sign-in'),
                   ),
                   const SizedBox(height: 10),
 

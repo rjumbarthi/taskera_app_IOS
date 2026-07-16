@@ -47,9 +47,20 @@ final remoteFlagsProvider = FutureProvider<Map<String, bool>>((ref) async {
 bool _flag(Ref ref, String key) =>
     ref.watch(remoteFlagsProvider).valueOrNull?[key] ?? false;
 
+/// Generic remote flag by key — `ref.watch(featureEnabledProvider('microsoft'))`.
+/// Any gated feature can read this; add its key to the `app_flags` table to
+/// turn it on without a rebuild. Unknown/absent keys read `false` (fail-closed).
+final featureEnabledProvider =
+    Provider.family<bool, String>((ref, key) => _flag(ref, key));
+
 /// Gmail inbox feature (`gmail.readonly`, restricted scope). Off until Google
 /// OAuth verification + CASA clear, then set `gmail = true` in `app_flags`.
 final gmailEnabledProvider = Provider<bool>((ref) => _flag(ref, 'gmail'));
 
 /// Google Calendar feature (`calendar.readonly`, sensitive scope).
 final calendarEnabledProvider = Provider<bool>((ref) => _flag(ref, 'calendar'));
+
+/// Microsoft sign-in (Azure OAuth via Supabase). Implemented; flip on once the
+/// Azure provider + client id are configured.
+final microsoftSignInEnabledProvider =
+    Provider<bool>((ref) => _flag(ref, 'microsoft'));

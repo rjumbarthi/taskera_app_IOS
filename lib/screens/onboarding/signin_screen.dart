@@ -10,6 +10,7 @@ import '../../services/auth_service.dart';
 import 'otp_cooldown.dart';
 import '../../settings/app_launch_prefs.dart';
 import '../../settings/prefs_provider.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../util/platform_layout.dart';
@@ -167,6 +168,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
     );
   }
 
+  Future<void> _microsoftSignIn() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.signInWithMicrosoft(),
+      successRoute: _postAuthRoute,
+    );
+  }
+
   static String _friendlyError(Object e) {
     final msg = e.toString().toLowerCase();
     if (msg.contains('invalid login') || msg.contains('invalid credentials')) {
@@ -213,6 +222,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final microsoftEnabled = ref.watch(microsoftSignInEnabledProvider);
 
     return Stack(
       children: [
@@ -534,8 +544,10 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           label: 'Microsoft',
                           icon: SvgPicture.string(_kMicrosoftSvg, width: 18, height: 18),
                           colors: colors,
-                          comingSoon: true, // not available yet
-                          onTap: () => _comingSoon(context, 'Microsoft sign-in'),
+                          comingSoon: !microsoftEnabled,
+                          onTap: microsoftEnabled
+                              ? _microsoftSignIn
+                              : () => _comingSoon(context, 'Microsoft sign-in'),
                         ),
                       ),
                       const SizedBox(width: 6),
