@@ -1019,30 +1019,43 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 }
               };
 
+    // Remote flag per integration (default OFF → row shows "Soon", connect
+    // blocked). Flip a key in the Supabase `app_flags` table to enable one.
+    bool fe(String k) => ref.watch(featureEnabledProvider(k));
+    // Force "coming soon" when the flag is off, else keep the real status/tap.
+    List<_IntStatus> gateS(List<String> keys, List<_IntStatus> st) =>
+        [for (var i = 0; i < st.length; i++) fe(keys[i]) ? st[i] : _IntStatus.comingSoon];
+    List<VoidCallback?> gateT(List<String> keys, List<String> names, List<VoidCallback?> tp) =>
+        [for (var i = 0; i < tp.length; i++) fe(keys[i]) ? tp[i] : (() => _comingSoon(context, names[i]))];
+
     // Productivity: Notion, Todoist, Apple Reminders
-    final productivityStatuses = [
+    const pKeys = ['notion', 'todoist', 'apple_reminders'];
+    const pNames = ['Notion', 'Todoist', 'Apple Reminders'];
+    final productivityStatuses = gateS(pKeys, [
       integrations.notionConnected   ? _IntStatus.connected : _IntStatus.connect,
       integrations.todoistConnected  ? _IntStatus.connected : _IntStatus.connect,
       _IntStatus.connect, // Apple Reminders — native, coming soon
-    ];
-    final productivityTaps = <VoidCallback?>[
+    ]);
+    final productivityTaps = gateT(pKeys, pNames, <VoidCallback?>[
       tap(integrations.notionConnected,
           notifier.disconnectNotion, notifier.connectNotion),
       tap(integrations.todoistConnected,
           notifier.disconnectTodoist, notifier.connectTodoist),
       () => _comingSoon(context, 'Apple Reminders'),
-    ];
+    ]);
 
     // Work & Corporate: Slack, Jira, Asana, Linear, Microsoft Teams, GitHub
-    final workStatuses = [
+    const wKeys = ['slack', 'jira', 'asana', 'linear', 'teams', 'github'];
+    const wNames = ['Slack', 'Jira', 'Asana', 'Linear', 'Microsoft Teams', 'GitHub'];
+    final workStatuses = gateS(wKeys, [
       integrations.slackConnected    ? _IntStatus.connected : _IntStatus.connect,
       integrations.jiraConnected     ? _IntStatus.connected : _IntStatus.connect,
       integrations.asanaConnected    ? _IntStatus.connected : _IntStatus.connect,
       integrations.linearConnected   ? _IntStatus.connected : _IntStatus.connect,
       integrations.microsoftConnected? _IntStatus.connected : _IntStatus.connect,
       integrations.githubConnected   ? _IntStatus.connected : _IntStatus.connect,
-    ];
-    final workTaps = <VoidCallback?>[
+    ]);
+    final workTaps = gateT(wKeys, wNames, <VoidCallback?>[
       tap(integrations.slackConnected,
           notifier.disconnectSlack,    notifier.connectSlack),
       tap(integrations.jiraConnected,
@@ -1055,17 +1068,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           notifier.disconnectMicrosoft, notifier.connectMicrosoft),
       tap(integrations.githubConnected,
           notifier.disconnectGitHub,   notifier.connectGitHub),
-    ];
+    ]);
 
-    // Calendar & Email: Google Calendar, Gmail (live) · Outlook/iCloud/SMS (soon)
-    final calEmailStatuses = [
+    // Calendar & Email: Google Calendar, Gmail · Outlook/iCloud/SMS (unbuilt)
+    const cKeys = ['calendar', 'gmail', 'outlook', 'icloud', 'sms'];
+    const cNames = ['Google Calendar', 'Gmail', 'Outlook / Hotmail', 'iCloud Mail', 'SMS / iMessage'];
+    final calEmailStatuses = gateS(cKeys, [
       integrations.googleCalendarConnected ? _IntStatus.connected : _IntStatus.connect,
       integrations.gmailConnected          ? _IntStatus.active    : _IntStatus.connect,
       _IntStatus.comingSoon, // Outlook / Hotmail
       _IntStatus.comingSoon, // iCloud Mail
       _IntStatus.comingSoon, // SMS / iMessage
-    ];
-    final calEmailTaps = <VoidCallback?>[
+    ]);
+    final calEmailTaps = gateT(cKeys, cNames, <VoidCallback?>[
       tap(integrations.googleCalendarConnected,
           notifier.disconnectCalendar, notifier.connectGoogleCalendar),
       tap(integrations.gmailConnected,
@@ -1073,14 +1088,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       () => _comingSoon(context, 'Outlook / Hotmail'),
       () => _comingSoon(context, 'iCloud Mail'),
       () => _comingSoon(context, 'SMS / iMessage'),
-    ];
+    ]);
 
-    // AI Assistants: ChatGPT/OpenAI, Claude/Anthropic
-    final aiStatuses = [
+    // AI Assistants: ChatGPT/OpenAI, Claude/Anthropic (bring-your-own-key)
+    const aiKeys = ['openai', 'anthropic'];
+    const aiNames = ['ChatGPT / OpenAI', 'Claude / Anthropic'];
+    final aiStatuses = gateS(aiKeys, [
       integrations.openAiConnected ? _IntStatus.connected : _IntStatus.connect,
       integrations.anthropicConnected ? _IntStatus.connected : _IntStatus.connect,
-    ];
-    final aiTaps = <VoidCallback?>[
+    ]);
+    final aiTaps = gateT(aiKeys, aiNames, <VoidCallback?>[
       disabled
           ? null
           : integrations.openAiConnected
@@ -1091,7 +1108,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           : integrations.anthropicConnected
               ? () => notifier.disconnectAnthropic()
               : _connectAnthropic,
-    ];
+    ]);
 
     return _Sgrp(
       isOpen: _open == 6,

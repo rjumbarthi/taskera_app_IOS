@@ -19,19 +19,21 @@ alter table public.app_flags enable row level security;
 drop policy if exists "read flags" on public.app_flags;
 create policy "read flags" on public.app_flags for select using (true);
 
--- Seed features OFF:
+-- Seed every gated feature/integration OFF:
 insert into public.app_flags (key, enabled) values
-  ('gmail', false),
-  ('calendar', false),
-  ('microsoft', false)
+  ('gmail', false), ('calendar', false), ('microsoft', false),
+  ('notion', false), ('todoist', false), ('slack', false),
+  ('jira', false), ('asana', false), ('linear', false),
+  ('teams', false), ('github', false),
+  ('openai', false), ('anthropic', false)
 on conflict (key) do nothing;
 ```
 
-Already created the table with just gmail/calendar? Add the new key:
-```sql
-insert into public.app_flags (key, enabled) values ('microsoft', false)
-on conflict (key) do nothing;
-```
+Already created the table with only some keys? This same INSERT is safe to
+re-run — `on conflict do nothing` adds only the missing rows.
+
+> `apple_reminders`, `outlook`, `icloud`, `sms` are intentionally omitted —
+> they're unbuilt placeholders (no code), so a flag can't turn them on.
 
 No insert/update policy = users can't change flags; only you (dashboard) can.
 
@@ -53,6 +55,9 @@ The app picks up the change on next launch/refresh — no rebuild, no store revi
 | `gmail` | Gmail inbox (connect + parsing) | `gmail.readonly` (**restricted**) | Keep OFF until OAuth verification **+ CASA** clear. |
 | `calendar` | Google Calendar sync | `calendar.readonly` (sensitive) | Turn ON once Calendar OAuth verification clears. |
 | `microsoft` | Microsoft sign-in (sign-in/sign-up) | Azure OAuth | Turn ON once the Azure provider + client id are configured in Supabase. |
+| `notion`, `todoist`, `slack`, `github` | Settings → Integrations rows | OAuth **with client secret** | ⚠️ Keep OFF until token exchange is moved to a backend proxy (client secret currently ships in the app — see SECURITY.md). |
+| `jira`, `asana`, `linear`, `teams` | Settings → Integrations rows | OAuth (PKCE, no secret) | Turn ON once each provider's client id is configured. |
+| `openai`, `anthropic` | Settings → Integrations (AI, bring-your-own-key) | none | Safe to turn ON anytime — the user pastes their own API key. |
 
 ### Adding new flags for future features
 Any gated feature can read `ref.watch(featureEnabledProvider('<key>'))` (default
