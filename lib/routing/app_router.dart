@@ -522,7 +522,7 @@ class _RouterShell extends ConsumerWidget {
         KaalTab.habits   => '$habitCount active · 🔥 ${streakDays}d streak',
         KaalTab.calendar => '$eventCount ${eventCount == 1 ? 'event' : 'events'}${inviteCount > 0 ? ' · $inviteCount ${inviteCount == 1 ? 'invite' : 'invites'}' : ''}',
         KaalTab.notes    => '$noteCount ${noteCount == 1 ? 'note' : 'notes'}',
-        KaalTab.inbox  => 'Email · SMS · Parsed',
+        KaalTab.inbox  => 'Email · Parsed',
         _                => null,
       };
 

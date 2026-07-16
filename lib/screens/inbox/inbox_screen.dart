@@ -497,10 +497,6 @@ class _SourcePills extends StatelessWidget {
           emoji: '☁️', label: 'iCloud', accent: const Color(0xFF8E8E93),
           soon: true, colors: colors, onTap: () => onSoon('iCloud Mail'),
         ),
-        _SourceChip(
-          emoji: '💬', label: 'SMS / iMessage', accent: const Color(0xFF34C759),
-          soon: true, colors: colors, onTap: () => onSoon('SMS / iMessage'),
-        ),
       ],
     );
   }

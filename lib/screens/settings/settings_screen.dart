@@ -115,11 +115,6 @@ const _icoICloud =
     '<path d="M18.5 10.5a5.5 5.5 0 0 0-10.9-1A4 4 0 0 0 4 13.5 4 4 0 0 0 8 17.5h10a3.5 3.5 0 0 0 .5-7z"/>'
     '</svg>';
 
-const _icoSms =
-    '<svg width="12" height="12" viewBox="0 0 24 24" fill="white">'
-    '<path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.5 3.4 6-.2 1.2-.8 2.4-1.6 3.3 1.6-.1 3.2-.6 4.6-1.5 1.1.3 2.3.5 3.6.5 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>'
-    '</svg>';
-
 // ── Integration data model ────────────────────────────────────────────────────
 
 enum _IntStatus { connected, active, connect, comingSoon }
@@ -166,8 +161,6 @@ final _intCalEmail = [
       const Color(0xFF0078D4), _icoOutlook, _IntStatus.comingSoon),
   _IntService('iCloud Mail', 'Apple Mail · IMAP sign-in',
       const Color(0xFF3693F3), _icoICloud, _IntStatus.comingSoon),
-  _IntService('SMS / iMessage', 'Capture tasks from texts',
-      const Color(0xFF34C759), _icoSms, _IntStatus.comingSoon),
 ];
 
 const _icoClaude =
@@ -876,8 +869,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               colors: colors, onTap: () => context.go(KaalRoutes.calGmail)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'suggestTasks', label: AppL10n.of(context).suggestTasksInbox, colors: colors),
-          Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _SwRow(settingKey: 'messages', label: 'Messages (SMS/iMessage)', colors: colors),
         ]),
       ),
     );
@@ -1086,15 +1077,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           notifier.disconnectGitHub,   notifier.connectGitHub),
     ]);
 
-    // Calendar & Email: Google Calendar, Gmail · Outlook/iCloud/SMS (unbuilt)
-    const cKeys = ['calendar', 'gmail', 'outlook', 'icloud', 'sms'];
-    const cNames = ['Google Calendar', 'Gmail', 'Outlook / Hotmail', 'iCloud Mail', 'SMS / iMessage'];
+    // Calendar & Email: Google Calendar, Gmail · Outlook/iCloud (unbuilt)
+    const cKeys = ['calendar', 'gmail', 'outlook', 'icloud'];
+    const cNames = ['Google Calendar', 'Gmail', 'Outlook / Hotmail', 'iCloud Mail'];
     final calEmailStatuses = gateS(cKeys, [
       integrations.googleCalendarConnected ? _IntStatus.connected : _IntStatus.connect,
       integrations.gmailConnected          ? _IntStatus.active    : _IntStatus.connect,
       _IntStatus.comingSoon, // Outlook / Hotmail
       _IntStatus.comingSoon, // iCloud Mail
-      _IntStatus.comingSoon, // SMS / iMessage
     ]);
     final calEmailTaps = gateT(cKeys, cNames, <VoidCallback?>[
       tap(integrations.googleCalendarConnected,
@@ -1103,7 +1093,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           notifier.disconnectGmail,    notifier.connectGmail),
       () => _comingSoon(context, 'Outlook / Hotmail'),
       () => _comingSoon(context, 'iCloud Mail'),
-      () => _comingSoon(context, 'SMS / iMessage'),
     ]);
 
     // AI Assistants: ChatGPT/OpenAI, Claude/Anthropic (bring-your-own-key)
