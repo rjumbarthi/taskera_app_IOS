@@ -4,25 +4,11 @@
 /// that gates on it — no other code changes required.
 library;
 
-/// Gmail inbox sync.
-///
-/// The Gmail feature uses the **restricted** `gmail.readonly` OAuth scope, which
-/// requires Google OAuth app verification *plus* an annual CASA security
-/// assessment before it can ship in a production (non-Testing) app. That work is
-/// deferred to a later release, so Gmail is surfaced as "Coming soon" for now.
-///
-/// The full implementation stays in place (`GoogleService`, inbox parsing,
-/// `GmailSyncScreen`) — set this to `true` once verification + CASA clear to
-/// re-enable every Gmail entry point at once.
-///
-/// Intentionally a non-`const` `final`: a `const false` would make the analyzer
-/// report the now-unreachable Gmail branches as `dead_code`. This keeps it a
-/// single-line switch without tripping lints.
-///
-/// Currently OFF: Gmail (`gmail.readonly`, restricted scope) is gated as "Coming
-/// soon" so production/Play builds ship without triggering the unverified OAuth
-/// consent. Flip to `true` only after Google OAuth verification + CASA clear.
-final bool kGmailSyncEnabled = false;
+// Gmail & Google Calendar are now controlled by REMOTE flags in Supabase
+// (`app_flags` table) — see `data/providers/feature_flags_provider.dart` and
+// `FEATURE_FLAGS_SETUP.md`. This lets them be turned on/off without a new build
+// (e.g. flip Gmail on the moment OAuth verification + CASA clear). Both default
+// to OFF (fail-closed) so an un-verified scope is never exposed in production.
 
 /// Seed starter/demo content on first launch (default lists like "Grocery
 /// Shopping", plus sample tasks, habits, goals, notes, calendar events).

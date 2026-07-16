@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../config/feature_flags.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
@@ -31,7 +31,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
   }
 
   Future<void> _connect() async {
-    if (!kGmailSyncEnabled) {
+    if (!ref.read(gmailEnabledProvider)) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Gmail sync — coming soon in the next update.'),
         behavior: SnackBarBehavior.floating,
@@ -74,6 +74,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final gmailEnabled = ref.watch(gmailEnabledProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -123,7 +124,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
                               Text(_connected
                                       ? '● Connected · Syncs every 15 min · 5 min in-app'
-                                      : (kGmailSyncEnabled ? '○ Not connected' : '○ Coming soon'),
+                                      : (gmailEnabled ? '○ Not connected' : '○ Coming soon'),
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                                       color: _connected ? colors.successFg : colors.ink3)),
                             ],
@@ -162,7 +163,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                           child: _connecting
                               ? const SizedBox(width: 14, height: 14,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : Text(kGmailSyncEnabled ? '${AppL10n.of(context).connect} Gmail' : 'Coming soon',
+                              : Text(gmailEnabled ? '${AppL10n.of(context).connect} Gmail' : 'Coming soon',
                                   style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
                       ),

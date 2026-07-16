@@ -31,7 +31,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
   bool _otpMode             = false;
   bool _loading             = false;
   bool _confirmationPending = false;
+  bool _accepted            = false; // Terms of Service + Privacy Policy consent
   String? _error;
+
+  /// Blocks account creation until the user has accepted the legal terms.
+  bool _consentOk() {
+    if (_accepted) return true;
+    setState(() => _error =
+        'Please accept the Terms of Service and Privacy Policy to continue.');
+    return false;
+  }
 
   @override
   void dispose() {
@@ -75,6 +84,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
   }
 
   Future<void> _createAccount() async {
+    if (!_consentOk()) return;
     final pwProblem = _passwordProblem(_password.text);
     if (pwProblem != null) {
       setState(() => _error = pwProblem);
@@ -103,6 +113,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
   }
 
   Future<void> _sendOtp() async {
+    if (!_consentOk()) return;
     if (!_backendConfigured) {
       if (mounted) context.go(KaalRoutes.onboard);
       return;
@@ -124,10 +135,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     }
   }
 
-  Future<void> _verifyAndCreate() => _run(
-    () => _auth.verifyOtp(_email.text, _otp.text),
-    successRoute: KaalRoutes.onboard,
-  );
+  Future<void> _verifyAndCreate() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.verifyOtp(_email.text, _otp.text),
+      successRoute: KaalRoutes.onboard,
+    );
+  }
 
   Future<void> _resendOtp() async {
     if (otpOnCooldown) return;
@@ -135,10 +149,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     if (mounted) startOtpCooldown();
   }
 
-  Future<void> _googleSignUp() => _run(
-    () => _auth.signInWithGoogle(),
-    successRoute: KaalRoutes.onboard,
-  );
+  Future<void> _googleSignUp() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.signInWithGoogle(),
+      successRoute: KaalRoutes.onboard,
+    );
+  }
 
 
   static String _friendlyError(Object e) {
@@ -555,49 +572,49 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                   ),
                   const SizedBox(height: 10),
 
-                  // ── Terms · Privacy ───────────────────────────────────────
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'By signing up you agree to our ',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11,
-                          color: colors.ink3,
+                  // ── Terms & Privacy — required consent checkbox ───────────
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => setState(() { _accepted = !_accepted; if (_accepted) _error = null; }),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 18, height: 18,
+                          margin: const EdgeInsets.only(top: 1),
+                          decoration: BoxDecoration(
+                            color: _accepted ? KaalColors.acc : Colors.transparent,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(width: 1.2, color: _accepted ? KaalColors.acc : colors.ink3),
+                          ),
+                          child: _accepted ? const Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () => context.push(KaalRoutes.legal),
-                        child: const Text(
-                          'Terms',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11,
-                            color: KaalColors.acc,
+                        const SizedBox(width: 9),
+                        Expanded(
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text('I agree to the ',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                              GestureDetector(
+                                onTap: () => context.push(KaalRoutes.legal),
+                                child: const Text('Terms of Service',
+                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1.45)),
+                              ),
+                              Text(' and ',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                              GestureDetector(
+                                onTap: () => context.push('${KaalRoutes.legal}?tab=privacy'),
+                                child: const Text('Privacy Policy',
+                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1.45)),
+                              ),
+                              Text('.',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                            ],
                           ),
                         ),
-                      ),
-                      Text(
-                        ' · ',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11,
-                          color: colors.ink3,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => context.push(KaalRoutes.legal),
-                        child: const Text(
-                          'Privacy',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11,
-                            color: KaalColors.acc,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 4),
 

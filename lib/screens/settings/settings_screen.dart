@@ -7,9 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../config/feature_flags.dart';
 import '../../data/providers/announcements_provider.dart';
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -830,6 +830,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _sgrpCalInbox(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n, IntegrationsState integrations) {
+    final gmailEnabled = ref.watch(gmailEnabledProvider);
+    final calendarEnabled = ref.watch(calendarEnabledProvider);
     return _Sgrp(
       isOpen: _open == 5,
       onToggle: () => _toggle(5),
@@ -842,8 +844,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         child: _SetCard(colors: colors, children: [
           _NavRow(
               label: AppL10n.of(context).calendarSync,
-              right: integrations.googleCalendarConnected ? AppL10n.of(context).connected : '',
-              rightColor: colors.successFg,
+              right: !calendarEnabled
+                  ? 'Soon'
+                  : (integrations.googleCalendarConnected ? AppL10n.of(context).connected : ''),
+              rightColor: calendarEnabled ? colors.successFg : KaalColors.acc2,
               colors: colors, onTap: () => context.go(KaalRoutes.calSync)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).inboxLabel, right: '4 new', rightColor: KaalColors.warn,
@@ -852,7 +856,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 WidgetsBinding.instance.addPostFrameCallback((_) => router.go(KaalRoutes.inbox));
               }),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).gmailSync, right: kGmailSyncEnabled ? '' : 'Soon', rightColor: KaalColors.acc2,
+          _NavRow(label: AppL10n.of(context).gmailSync, right: gmailEnabled ? '' : 'Soon', rightColor: KaalColors.acc2,
               colors: colors, onTap: () => context.go(KaalRoutes.calGmail)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'suggestTasks', label: AppL10n.of(context).suggestTasksInbox, colors: colors),

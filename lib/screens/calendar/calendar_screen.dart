@@ -180,7 +180,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(0, 6, 0, 16),
                   children: [
-                    _AIBanner(colors: colors),
+                    _WeekInsightBanner(colors: colors),
                     const SizedBox(height: 7),
                     _DayCard(
                       colors: colors,
@@ -569,17 +569,17 @@ class _DayCell extends StatelessWidget {
   }
 }
 
-// ── AI insight banner ─────────────────────────────────────────────────────────
+// ── Week insight banner (on-device: conflicts + busy-day heuristics; no AI) ────
 
-class _AIBanner extends ConsumerStatefulWidget {
+class _WeekInsightBanner extends ConsumerStatefulWidget {
   final KaalColors colors;
-  const _AIBanner({required this.colors});
+  const _WeekInsightBanner({required this.colors});
 
   @override
-  ConsumerState<_AIBanner> createState() => _AIBannerState();
+  ConsumerState<_WeekInsightBanner> createState() => _WeekInsightBannerState();
 }
 
-class _AIBannerState extends ConsumerState<_AIBanner> {
+class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
   bool _dismissed = false;
 
   static const _wd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -686,7 +686,7 @@ class _AIBannerState extends ConsumerState<_AIBanner> {
                   ),
                 ),
                 const SizedBox(width: 5),
-                Text(AppL10n.of(context).aiThisWeek, style: const TextStyle(
+                const Text('This week', style: TextStyle(
                   fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
                   color: KaalColors.acc2, letterSpacing: 0.3, height: 1,
                 )),

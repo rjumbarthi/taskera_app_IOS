@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/providers/integrations_provider.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
@@ -33,6 +34,14 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
   }
 
   Future<void> _connect() async {
+    if (!ref.read(calendarEnabledProvider)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Google Calendar sync — coming soon.'),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
     setState(() => _connecting = true);
     try {
       final ok = await ref.read(integrationsProvider.notifier).connectGoogleCalendar();
@@ -179,7 +188,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                   ),
-                  child: Text('Synced events and AI prep suggestions will appear here after your next sync.',
+                  child: Text('Synced events will appear here after your next sync.',
                       style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
                 ),
                 const SizedBox(height: 14),

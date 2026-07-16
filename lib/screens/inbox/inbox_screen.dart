@@ -7,7 +7,7 @@ import 'package:googleapis/gmail/v1.dart' as gml;
 
 import '../../data/database.dart'
     show TasksCompanion, HabitsCompanion, NotesCompanion, CalendarEventsCompanion;
-import '../../config/feature_flags.dart';
+import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../services/google_service.dart';
 import '../../l10n/app_l10n.dart';
@@ -94,7 +94,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
 
   Future<void> _loadEmails() async {
     // Gmail sync is coming in a later release — don't attempt to connect/fetch.
-    if (!kGmailSyncEnabled) { if (mounted) setState(() => _gmailConnected = false); return; }
+    if (!ref.read(gmailEnabledProvider)) { if (mounted) setState(() => _gmailConnected = false); return; }
     final gs = ref.read(googleServiceProvider);
     final connected = await gs.isGmailConnected;
     if (!mounted) return;
@@ -164,7 +164,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   // into with a different method (email, OTP) or not at all, explain what's
   // needed instead of silently doing nothing.
   Future<void> _connectGmail() async {
-    if (!kGmailSyncEnabled) { _snack('Gmail sync — coming soon in the next update.'); return; }
+    if (!ref.read(gmailEnabledProvider)) { _snack('Gmail sync — coming soon in the next update.'); return; }
     final gs = ref.read(googleServiceProvider);
 
     if (await gs.isGmailConnected) { await _loadEmails(); return; }
@@ -334,6 +334,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
+    final gmailEnabled = ref.watch(gmailEnabledProvider);
     final visibleEmails = [
       for (int i = 0; i < _fetchedEmails.length; i++)
         if (!_archivedEmails.contains(i)) i,
@@ -349,6 +350,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         const SizedBox(height: 6),
         _SourcePills(
           colors: colors,
+          gmailEnabled: gmailEnabled,
           gmailConnected: _gmailConnected,
           onGmail: _connectGmail,
           onSoon: (name) => _snack('$name is coming soon.'),
@@ -364,7 +366,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           colors: colors,
         ),
         const SizedBox(height: 6),
-        if (kGmailSyncEnabled && !_gmailConnected && !_loading) ...[
+        if (gmailEnabled && !_gmailConnected && !_loading) ...[
           _ConnectGmailPrompt(colors: colors, onConnect: _connectGmail),
           const SizedBox(height: 8),
         ],
@@ -391,7 +393,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
             padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
             child: Center(
               child: Text(
-                _error ?? (!kGmailSyncEnabled
+                _error ?? (!gmailEnabled
                     ? 'Gmail sync is coming soon. Add tasks manually above for now.'
                     : (_gmailConnected ? AppL10n.of(context).noEmailsLastTwoWeeks : AppL10n.of(context).connectGmailSeeEmails)),
                 textAlign: TextAlign.center,
@@ -413,7 +415,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         if (_fetchedActions.isNotEmpty) ...[
           const SizedBox(height: 2),
           _SectionRow(
-            left: Text('✦ ${AppL10n.of(context).aiFound} ${_fetchedActions.length} ${AppL10n.of(context).actionableItems}',
+            left: Text('${_fetchedActions.length} ${AppL10n.of(context).actionableItems}',
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5, color: colors.successFg, height: 1)),
             right: Text(AppL10n.of(context).fromYourInbox,
@@ -440,11 +442,13 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
 
 class _SourcePills extends StatelessWidget {
   final KaalColors colors;
+  final bool gmailEnabled;
   final bool gmailConnected;
   final VoidCallback onGmail;
   final void Function(String name) onSoon;
   const _SourcePills({
     required this.colors,
+    required this.gmailEnabled,
     required this.gmailConnected,
     required this.onGmail,
     required this.onSoon,
@@ -458,10 +462,10 @@ class _SourcePills extends StatelessWidget {
       children: [
         _SourceChip(
           emoji: '📧', label: 'Gmail', accent: const Color(0xFFEA4335),
-          connected: kGmailSyncEnabled && gmailConnected,
-          soon: !kGmailSyncEnabled,
+          connected: gmailEnabled && gmailConnected,
+          soon: !gmailEnabled,
           colors: colors,
-          onTap: kGmailSyncEnabled ? onGmail : () => onSoon('Gmail'),
+          onTap: gmailEnabled ? onGmail : () => onSoon('Gmail'),
         ),
         _SourceChip(
           emoji: '📨', label: 'Outlook', accent: const Color(0xFF0A84FF),
@@ -885,7 +889,7 @@ class _EmailItem extends StatelessWidget {
 
 // ── Email detail bottom sheet ─────────────────────────────────────────────────
 
-// ── Kaal AI email → suggestions ───────────────────────────────────────────────
+// ── Email → suggestions (on-device keyword heuristics; no AI, no server) ──────
 
 enum _SugType { task, habit, invite, note }
 
@@ -920,7 +924,8 @@ String? _firstTimeSlot(String text) {
   return min != null ? '${m.group(1)}:$min $ap' : '${m.group(1)} $ap';
 }
 
-// Heuristic "Kaal AI": turns an email into add-to-Kaal suggestions.
+// On-device keyword heuristics: turn an email into add-to-Kaal suggestions.
+// No AI/LLM and no network — email text never leaves the device.
 List<_Suggestion> _kaalSuggest(String subject, String sender, String body) {
   final text  = '$subject\n$body'.toLowerCase();
   final clean = _cleanSubject(subject);
@@ -952,7 +957,7 @@ List<_Suggestion> _kaalSuggest(String subject, String sender, String body) {
   return out;
 }
 
-// ── Email detail sheet (full body + Kaal AI add-cards) ────────────────────────
+// ── Email detail sheet (full body + on-device suggestion add-cards) ───────────
 
 class _EmailDetailSheet extends ConsumerStatefulWidget {
   final _Email email;
@@ -1015,7 +1020,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
           title: Value(s.title),
           body: Value(_body ?? widget.email.preview),
           timeLabel: const Value('now'),
-          aiLabel: const Value('✦ From email'),
+          aiLabel: const Value('From email'),
         ));
         where = 'Notes';
       case _SugType.invite:
@@ -1089,13 +1094,13 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                     ),
             ),
             const SizedBox(height: 14),
-            // Kaal AI suggestions
+            // On-device suggestions (keyword heuristics — no AI, no server)
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                   decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(4)),
-                  child: const Text('✦ KAAL AI', style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  child: const Text('SUGGESTED', style: TextStyle(fontFamily: 'Inter', fontSize: 9,
                       fontWeight: FontWeight.w700, color: KaalColors.acc2)),
                 ),
                 const SizedBox(width: 6),
@@ -1159,7 +1164,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
   }
 }
 
-// ── Kaal AI suggestion card ───────────────────────────────────────────────────
+// ── Suggestion card ───────────────────────────────────────────────────────────
 
 class _SuggestionCard extends StatelessWidget {
   final _Suggestion s;
