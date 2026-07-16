@@ -10,6 +10,7 @@ import '../../widgets/goal_meta_label.dart';
 import '../../services/auth_service.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/habits_provider.dart';
+import '../../data/providers/ai_access_provider.dart';
 import '../../data/providers/notes_provider.dart';
 import '../../data/providers/calendar_provider.dart';
 import '../../data/providers/goals_provider.dart';
@@ -1223,6 +1224,7 @@ class _AccountCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
+    final isPro = ref.watch(isProProvider);
     final l = AppL10n.of(context);
 
     final email = user?.email ?? 'Local storage (this device)';
@@ -1266,7 +1268,7 @@ class _AccountCard extends ConsumerWidget {
         _AccountRow(label: 'Email', value: email, colors: colors),
         _AccountRow(label: 'Sign-in', value: signIn, colors: colors),
         _AccountRow(label: 'Member since', value: memberSince, colors: colors),
-        _AccountRow(label: 'Plan', value: 'Free', colors: colors),
+        _AccountRow(label: 'Plan', value: isPro ? 'Pro' : 'Free', colors: colors),
       ]),
     );
   }

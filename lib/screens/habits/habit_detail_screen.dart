@@ -19,6 +19,16 @@ class HabitDetailScreen extends ConsumerStatefulWidget {
   ConsumerState<HabitDetailScreen> createState() => _HabitDetailScreenState();
 }
 
+// Format minutes-from-midnight (0–1439) as "6:30 AM".
+String _fmtReminder(int mins) {
+  final h24 = (mins ~/ 60) % 24;
+  final m = mins % 60;
+  final ampm = h24 < 12 ? 'AM' : 'PM';
+  var h = h24 % 12;
+  if (h == 0) h = 12;
+  return '$h:${m.toString().padLeft(2, '0')} $ampm';
+}
+
 class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
   late int _year;
   late int _month;
@@ -493,11 +503,15 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('6:30 AM', style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w500, color: colors.ink)),
-                            Text(AppL10n.of(context).everyWeekday, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                            Text(
+                                habit?.scheduledTime != null ? _fmtReminder(habit!.scheduledTime!) : 'Not set',
+                                style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w500, color: colors.ink)),
+                            Text(
+                                habit?.frequencyLabel.isNotEmpty == true ? habit!.frequencyLabel : AppL10n.of(context).everyWeekday,
+                                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
                           ],
                         ),
-                        const _ToggleWidget(initial: true),
+                        _ToggleWidget(initial: habit?.scheduledTime != null),
                       ],
                     ),
                   ],

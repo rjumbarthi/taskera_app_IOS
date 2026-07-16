@@ -1160,7 +1160,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: _SetCard(colors: colors, children: [
-          _NavRow(label: AppL10n.of(context).realTimeSync, right: '● Live', rightColor: colors.successFg,
+          _NavRow(label: AppL10n.of(context).realTimeSync, right: 'Soon', rightColor: colors.ink3,
               colors: colors, onTap: () => _comingSoon(context, 'Real-time sync details')),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'cloudSync', label: AppL10n.of(context).cloudSync, colors: colors),

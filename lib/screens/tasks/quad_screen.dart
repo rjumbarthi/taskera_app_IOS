@@ -189,7 +189,8 @@ class _FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final score = task.urgencyScore ?? 5.0;
+    final hasScore = task.urgencyScore != null;
+    final score = task.urgencyScore ?? 0;
     final scoreStr = score.toStringAsFixed(1);
     final qLabel = _quadLabel(switch (task.quadrant) {
       1 => 'q1',
@@ -197,7 +198,7 @@ class _FeaturedCard extends StatelessWidget {
       3 => 'q3',
       _ => 'q4',
     });
-    final meta = '$qLabel · Score $scoreStr/10';
+    final meta = hasScore ? '$qLabel · Score $scoreStr/10' : qLabel;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -210,7 +211,7 @@ class _FeaturedCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'KAAL AI · SCORE-BASED RECOMMENDATION',
+            'SUGGESTED FOCUS',
             style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 9,
@@ -232,38 +233,40 @@ class _FeaturedCard extends StatelessWidget {
           Text(meta,
               style:
                   TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Text('Priority',
-                  style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
-              const Spacer(),
-              Text(scoreStr,
-                  style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                      color: color)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(2),
-            child: SizedBox(
-              height: 3,
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: (score * 10).round(),
-                      child: Container(color: color)),
-                  Expanded(
-                      flex: (100 - (score * 10).round()).clamp(0, 100),
-                      child: Container(color: colors.surf3)),
-                ],
+          if (hasScore) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Text('Priority',
+                    style: TextStyle(
+                        fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                const Spacer(),
+                Text(scoreStr,
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: color)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: SizedBox(
+                height: 3,
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: (score * 10).round(),
+                        child: Container(color: color)),
+                    Expanded(
+                        flex: (100 - (score * 10).round()).clamp(0, 100),
+                        child: Container(color: colors.surf3)),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () => showFocusSession(context, taskId: task.id),

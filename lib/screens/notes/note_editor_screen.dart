@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/database.dart' show NotesCompanion, Task;
+import '../../data/database.dart' show NotesCompanion, Task, Goal;
 import '../../data/models/note_block.dart';
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/goals_provider.dart';
 import '../../util/input_limits.dart';
 import '../../widgets/block_editor/block_editor.dart';
 import '../../data/providers/tasks_provider.dart';
@@ -162,13 +163,12 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   int        _quadIdx   = 1; // Q2
-  int        _goalIdx   = 3; // None
+  int        _goalIdx   = 9999; // defaults to "None" (the last chip)
   bool       _pinned    = false;
   final Set<int> _selLabels  = {0}; // #idea
 
   static const _quads  = ['Q1 · Do Now', 'Q2 · Schedule', 'Q3 · Delegate', 'Q4 · Eliminate', 'None'];
   static const _quadColors = [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4, Color(0xFF8E8E93)];
-  static const _goals  = ['🚀 Launch MVP', '💪 Fitness', '📚 Read 12 books', 'None'];
   static const _labels = ['#idea', '#meeting', '#research', '#journal', '#braindump', '+ New'];
 
   @override
@@ -181,6 +181,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
     final allTasks    = ref.watch(allTasksProvider).value ?? const <Task>[];
+    // Real goals from the DB + a trailing "None" chip (selection is display-only
+    // for now — note→goal linking persistence is a separate feature).
+    final goalChips = <String>[
+      ...(ref.watch(goalsProvider).value ?? const <Goal>[]).map((g) => g.title),
+      'None',
+    ];
+    final goalSel = (_goalIdx >= 0 && _goalIdx < goalChips.length)
+        ? _goalIdx
+        : goalChips.length - 1;
     final linkedTasks = allTasks.where((t) => _linkedTaskIds.contains(t.id)).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -293,10 +302,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 child: Wrap(
                   spacing: 5, runSpacing: 5,
                   children: [
-                    for (int i = 0; i < _goals.length; i++)
+                    for (int i = 0; i < goalChips.length; i++)
                       _Chip(
-                        label: _goals[i],
-                        selected: _goalIdx == i,
+                        label: goalChips[i],
+                        selected: goalSel == i,
                         colors: colors,
                         onTap: () => setState(() => _goalIdx = i),
                       ),
