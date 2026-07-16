@@ -18,7 +18,11 @@ library;
 /// Intentionally a non-`const` `final`: a `const false` would make the analyzer
 /// report the now-unreachable Gmail branches as `dead_code`. This keeps it a
 /// single-line switch without tripping lints.
-final bool kGmailSyncEnabled = true;
+///
+/// Currently OFF: Gmail (`gmail.readonly`, restricted scope) is gated as "Coming
+/// soon" so production/Play builds ship without triggering the unverified OAuth
+/// consent. Flip to `true` only after Google OAuth verification + CASA clear.
+final bool kGmailSyncEnabled = false;
 
 /// Seed starter/demo content on first launch (default lists like "Grocery
 /// Shopping", plus sample tasks, habits, goals, notes, calendar events).

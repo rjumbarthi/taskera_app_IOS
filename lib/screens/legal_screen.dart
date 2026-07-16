@@ -290,6 +290,15 @@ class _PrivacyContent extends StatelessWidget {
       ),
 
       _Section(
+        title: 'Google User Data & Gmail (Limited Use)',
+        body: 'Kaal offers an optional feature that connects your Google account so you can review your unread emails inside Kaal and turn them into tasks, notes, or calendar items. If you enable it, Kaal uses read-only Gmail access (gmail.readonly) to (a) list your unread messages\' sender, subject and date, and (b) read a message\'s contents only when you open it, so you can convert it into a task or note.\n\n'
+            'Your Gmail data is processed on your device to provide this feature and is shown only to you. We do not store your email content on our servers; only the tasks or notes you choose to create are saved. We never send, modify, label, or delete your email.\n\n'
+            'Kaal\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. We do not sell Gmail data, use it for advertising, use it to train AI or machine-learning models, or transfer it to others except as needed to provide this feature, to comply with applicable law, or in a merger or acquisition with equivalent protections. No human reads your email except with your explicit consent, for security or abuse investigations, or where required by law.\n\n'
+            'You can disconnect Google access at any time in Settings → Integrations, which revokes Kaal\'s access to your Gmail.',
+        colors: colors,
+      ),
+
+      _Section(
         title: '6. Data Sharing',
         body: 'We do not sell, trade, or rent your personal information to third parties. We may share information with:\n\n'
             '• Service providers who assist us in operating the App (e.g., cloud hosting, crash analytics), bound by confidentiality agreements.\n'
