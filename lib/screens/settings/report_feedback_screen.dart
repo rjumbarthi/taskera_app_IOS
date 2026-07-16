@@ -11,7 +11,7 @@ import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/wallpaper_background.dart';
 
-const _founderEmail = 'r@jumbarthi.com';
+const _supportEmail = 'kaal_support@jumbarthi.com';
 const _appVersion = 'v1.0.0';
 
 // Prepopulated tab → screen / sub-screen map so reporting is one-tap easy.
@@ -145,7 +145,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
         '$desc\n\n—\nWhere: $_where\nFrom: $email\nApp: Kaal $_appVersion',
       );
       final mailto = Uri.parse(
-        'mailto:$_founderEmail?subject=$subject&body=$body',
+        'mailto:$_supportEmail?subject=$subject&body=$body',
       );
       bool ok = false;
       try {
@@ -155,11 +155,11 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
         // 3) Last resort: copy a ready-to-send report to the clipboard.
         await Clipboard.setData(
           ClipboardData(
-            text: '[Kaal $type] $_where\n\n$desc\n\nSend to: $_founderEmail',
+            text: '[Kaal $type] $_where\n\n$desc\n\nSend to: $_supportEmail',
           ),
         );
         if (mounted) setState(() => _sending = false);
-        _snack('Report copied — email it to $_founderEmail');
+        _snack('Report copied — email it to $_supportEmail');
         return;
       }
     }
