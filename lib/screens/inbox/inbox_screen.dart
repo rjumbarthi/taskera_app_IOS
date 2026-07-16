@@ -370,6 +370,28 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           _ConnectGmailPrompt(colors: colors, onConnect: _connectGmail),
           const SizedBox(height: 8),
         ],
+        if (gmailEnabled && _gmailConnected) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(11, 8, 11, 8),
+            decoration: BoxDecoration(
+              color: const Color(0x120A84FF),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
+            ),
+            child: Row(children: [
+              const Text('ℹ️', style: TextStyle(fontSize: 12)),
+              const SizedBox(width: 7),
+              Expanded(
+                child: Text(
+                  'Only new incoming emails are processed into tasks & habits — your existing inbox history isn\'t scanned.',
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.4),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 8),
+        ],
         _SectionRow(
           left: Text(AppL10n.of(context).recentInboxLabel,
             style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,

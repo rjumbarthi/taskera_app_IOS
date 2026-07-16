@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../data/providers/auth_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../settings/kaal_settings.dart';
 import '../../theme/kaal_colors.dart';
@@ -19,6 +20,8 @@ class ReferralScreen extends ConsumerWidget {
     final colors   = KaalTheme.of(context).colors;
     final safeBot  = MediaQuery.of(context).padding.bottom;
     final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    // Per-user referral code derived from the account id (null when local-only).
+    final code = referralCodeFor(ref.watch(currentUserProvider)?.id);
 
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
@@ -35,9 +38,9 @@ class ReferralScreen extends ConsumerWidget {
               children: [
                 _HeroSection(colors: colors),
                 const SizedBox(height: 12),
-                _ReferralLinkCard(colors: colors),
+                _ReferralLinkCard(colors: colors, code: code),
                 const SizedBox(height: 12),
-                _ShareButtons(colors: colors),
+                _ShareButtons(colors: colors, code: code),
                 const SizedBox(height: 16),
                 _StatsCard(colors: colors),
               ],
@@ -47,6 +50,17 @@ class ReferralScreen extends ConsumerWidget {
       ),
     ]);
   }
+}
+
+/// Deterministic per-user referral code from the account id (a UUID). Returns
+/// null for local-only users (no account ⇒ no personal link). NOTE: join
+/// attribution needs a backend (`referrals` table + landing page); until then
+/// the code is unique per user but the Invited/Joined stats stay 0.
+String? referralCodeFor(String? uid) {
+  if (uid == null || uid.isEmpty) return null;
+  final clean = uid.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
+  if (clean.isEmpty) return null;
+  return clean.substring(0, clean.length < 8 ? clean.length : 8).toUpperCase();
 }
 
 // ── Hero section ──────────────────────────────────────────────────────────────
@@ -81,7 +95,8 @@ class _HeroSection extends StatelessWidget {
 
 class _ReferralLinkCard extends StatefulWidget {
   final KaalColors colors;
-  const _ReferralLinkCard({required this.colors});
+  final String? code;
+  const _ReferralLinkCard({required this.colors, this.code});
 
   @override
   State<_ReferralLinkCard> createState() => _ReferralLinkCardState();
@@ -91,7 +106,8 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
   bool _copied = false;
 
   void _copy() {
-    Clipboard.setData(const ClipboardData(text: 'kaal.app/join/RJUMB14'));
+    if (widget.code == null) return;
+    Clipboard.setData(ClipboardData(text: 'kaal.app/join/${widget.code}'));
     setState(() => _copied = true);
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) setState(() => _copied = false);
@@ -121,9 +137,10 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
                 color: c.surf2,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text('kaal.app/join/RJUMB14',
+              child: Text(
+                  widget.code != null ? 'kaal.app/join/${widget.code}' : 'Sign in to get your link',
                   style: TextStyle(fontFamily: 'ui-monospace, monospace',
-                      fontSize: 12, color: KaalColors.acc2, height: 1)),
+                      fontSize: 12, color: widget.code != null ? KaalColors.acc2 : c.ink3, height: 1)),
             ),
           ),
           const SizedBox(width: 6),
@@ -150,9 +167,12 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
 
 class _ShareButtons extends StatelessWidget {
   final KaalColors colors;
-  const _ShareButtons({required this.colors});
+  final String? code;
+  const _ShareButtons({required this.colors, this.code});
 
-  static const _invite = 'Join me on Kaal — https://kaal.app/join/RJUMB14';
+  String get _invite => code != null
+      ? 'Join me on Kaal — https://kaal.app/join/$code'
+      : 'Join me on Kaal — https://kaal.app';
 
   // Open the target app with the invite prefilled; fall back to copying the
   // link if the app/scheme isn't available (e.g. WhatsApp not installed).
@@ -160,7 +180,7 @@ class _ShareButtons extends StatelessWidget {
     try {
       if (await launchUrl(uri, mode: LaunchMode.externalApplication)) return;
     } catch (_) {/* fall through to clipboard */}
-    await Clipboard.setData(const ClipboardData(text: _invite));
+    await Clipboard.setData(ClipboardData(text: _invite));
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

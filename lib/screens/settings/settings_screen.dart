@@ -433,16 +433,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       titleWidget: const Text('Kaal Pro',
           style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
               color: KaalColors.acc2, height: 1)),
-      badge: Container(
-        padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: const Text('✦ PRO',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
-                color: Colors.white, height: 1)),
-      ),
+      // "✦ PRO" badge only for actual subscribers; free users see "Upgrade".
+      badge: isPro
+          ? Container(
+              padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Text('✦ PRO',
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                      color: Colors.white, height: 1)),
+            )
+          : Container(
+              padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(width: 0.5, color: KaalColors.acc2),
+              ),
+              child: const Text('Upgrade',
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                      color: KaalColors.acc2, height: 1)),
+            ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: _SetCard(colors: colors, children: [

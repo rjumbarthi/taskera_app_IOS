@@ -624,7 +624,11 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   text: 'locally on this device',
                                   style: TextStyle(color: KaalColors.acc),
                                 ),
-                                TextSpan(text: '. Sign in for cloud sync.'),
+                                TextSpan(text: '. Sign in for free cloud sync. '),
+                                TextSpan(
+                                  text: 'Skip (local storage) requires a Kaal Pro subscription.',
+                                  style: TextStyle(color: KaalColors.acc2, fontWeight: FontWeight.w600),
+                                ),
                               ],
                             ),
                           ),
