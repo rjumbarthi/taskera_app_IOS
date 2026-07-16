@@ -53,7 +53,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               AddBackButton(onTap: () => context.pop()),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('Messages',
+                child: Text('Message from Founder',
                     style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
               ),
               GestureDetector(

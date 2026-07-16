@@ -380,7 +380,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _SetSec('Feedback & Legal', colors),
           _SetCard(colors: colors, children: [
             if (hasMsgs) ...[
-              _NavRow(label: 'Messages · What\'s New',
+              _NavRow(label: 'Message from Founder to you',
                   right: unreadMsgs > 0 ? '$unreadMsgs new' : '›',
                   rightColor: unreadMsgs > 0 ? KaalColors.acc2 : colors.ink3,
                   colors: colors, onTap: () => context.push(KaalRoutes.messages)),
@@ -1165,10 +1165,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'cloudSync', label: AppL10n.of(context).cloudSync, colors: colors),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).connectedDevices, right: '2 active', rightColor: KaalColors.acc2,
+          _NavRow(label: AppL10n.of(context).connectedDevices, right: 'Soon', rightColor: colors.ink3,
               colors: colors, onTap: () => _comingSoon(context, 'Connected devices')),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).backUpNow, right: 'Last: today 9:41',
+          _NavRow(label: AppL10n.of(context).backUpNow, right: 'Soon',
               rightColor: colors.ink3, colors: colors, onTap: () => _comingSoon(context, 'Backup')),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).exportJson, right: '›', rightColor: colors.ink3,

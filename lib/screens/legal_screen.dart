@@ -205,7 +205,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '13. Governing Law',
-        body: 'These Terms are governed by the laws of India, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in Hyderabad, India.',
+        body: 'These Terms are governed by the laws of the State of Maryland, USA, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in Maryland, USA.',
         colors: colors,
       ),
 
@@ -369,7 +369,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '14. Contact Us',
-        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nkaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC\nHyderabad, India',
+        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nkaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -468,7 +468,7 @@ class _CopyrightContent extends StatelessWidget {
         title: '8. Contact',
         body: 'For copyright, licensing, or permission requests, contact:\n\n'
             'kaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nHyderabad, India',
+            'Kaal — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -539,7 +539,7 @@ class _SupportContent extends StatelessWidget {
       _Section(
         title: 'Still need help?',
         body: 'Reach us directly:\n\nkaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nHyderabad, India',
+            'Kaal — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -608,7 +608,7 @@ class _DeletionContent extends StatelessWidget {
       _Section(
         title: 'Questions',
         body: 'For any data or deletion request, contact:\n\nkaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nHyderabad, India',
+            'Kaal — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
