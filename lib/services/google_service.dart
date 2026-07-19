@@ -30,7 +30,11 @@ class GoogleService {
   final FlutterSecureStorage _storage;
   final _supabase = Supabase.instance.client;
 
-  static const _scopeCalendar    = 'https://www.googleapis.com/auth/calendar.readonly';
+  // Least-privilege scopes (Google OAuth verification). Calendar uses the
+  // narrower events-only read scope — the app only calls events.list, never
+  // reads calendar lists/settings. Gmail needs full readonly because the inbox
+  // feature reads message BODIES (gmail.metadata returns headers only).
+  static const _scopeCalendar    = 'https://www.googleapis.com/auth/calendar.events.readonly';
   static const _scopeGmail       = 'https://www.googleapis.com/auth/gmail.readonly';
   static const _keyCalToken      = 'google_cal_token';
   static const _keyCalRefresh    = 'google_cal_refresh';

@@ -57,7 +57,7 @@ final featureEnabledProvider =
 /// OAuth verification + CASA clear, then set `gmail = true` in `app_flags`.
 final gmailEnabledProvider = Provider<bool>((ref) => _flag(ref, 'gmail'));
 
-/// Google Calendar feature (`calendar.readonly`, sensitive scope).
+/// Google Calendar feature (`calendar.events.readonly`, sensitive scope).
 final calendarEnabledProvider = Provider<bool>((ref) => _flag(ref, 'calendar'));
 
 /// Microsoft sign-in (Azure OAuth via Supabase). Implemented; flip on once the
