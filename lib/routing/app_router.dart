@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,8 @@ import '../data/providers/notes_provider.dart';
 import '../data/providers/tasks_provider.dart';
 import '../l10n/app_l10n.dart';
 import '../settings/app_launch_prefs.dart';
+import '../settings/kaal_settings.dart';
+import '../settings/prefs_provider.dart';
 import '../screens/focus/focus_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/habits/habits_screen.dart';
@@ -636,7 +639,12 @@ class _RouterShell extends ConsumerWidget {
         );
 
     final mq  = MediaQuery.of(context);
-    return MediaQuery(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _handleBack(context, ref);
+      },
+      child: MediaQuery(
       data: mq.copyWith(
         padding: mq.padding.copyWith(
           bottom: mq.padding.bottom + _NavShell._kNavContentHeight,
@@ -662,7 +670,45 @@ class _RouterShell extends ConsumerWidget {
           ],
         ),
       ),
+      ),
     );
+  }
+
+  // System back at a tab root: never silently exits. If it's the user's chosen
+  // end-of-day hour or later (and today's reflection hasn't shown yet), route to
+  // the EOD reflection instead of leaving. Otherwise require a second back press
+  // within 2 s to exit — so a stray back never drops the user out of the app.
+  static DateTime? _lastBackAt;
+
+  void _handleBack(BuildContext context, WidgetRef ref) {
+    final router = GoRouter.of(context);
+    if (router.canPop()) {
+      router.pop();
+      return;
+    }
+
+    final prefs   = ref.read(sharedPreferencesProvider);
+    final eodOn   = ref.read(kaalSettingsProvider).sw('eodReflect');
+    if (eodOn && AppLaunchPrefs.shouldShowEodOnExit(prefs)) {
+      AppLaunchPrefs.markEodShownToday(prefs);
+      context.push(KaalRoutes.eodReflect);
+      _lastBackAt = null;
+      return;
+    }
+
+    final now = DateTime.now();
+    if (_lastBackAt != null && now.difference(_lastBackAt!) < const Duration(seconds: 2)) {
+      SystemNavigator.pop();
+      return;
+    }
+    _lastBackAt = now;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(const SnackBar(
+        content: Text('Press back again to exit'),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ));
   }
 }
 

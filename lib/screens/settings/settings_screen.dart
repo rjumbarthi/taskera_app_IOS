@@ -18,7 +18,9 @@ import '../../config/app_config.dart';
 import '../../data/providers/ai_access_provider.dart';
 import '../../services/purchase_service.dart';
 import '../../routing/routes.dart';
+import '../../settings/app_launch_prefs.dart';
 import '../../settings/kaal_settings.dart';
+import '../../settings/prefs_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -187,9 +189,15 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   int? _open = 0;
 
+  // Preset end-of-day reflection times (shown on app exit at/after this hour).
+  static const _eodHourOptions = [17, 18, 20, 21, 22];
+  static const _eodHourLabels  = ['5 PM', '6 PM', '8 PM', '9 PM', '10 PM'];
+  late int _eodHour;
+
   @override
   void initState() {
     super.initState();
+    _eodHour = AppLaunchPrefs.eodHour(ref.read(sharedPreferencesProvider));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(integrationsProvider.notifier).checkStatus();
     });
@@ -829,6 +837,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           for (int i = 0; i < rows.length; i++) ...[
             if (i > 0) Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _SwRow(settingKey: rows[i].$1, label: rows[i].$2, colors: colors),
+            // When the end-of-day reflection is enabled, let the user pick the
+            // hour it may appear (it only shows on app exit at/after this time).
+            if (rows[i].$1 == 'eodReflect' && s.sw('eodReflect')) ...[
+              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+              _VtRow(
+                label: l.eodReflectTime,
+                options: _eodHourLabels,
+                selected: _eodHourOptions.indexOf(_eodHour).clamp(0, _eodHourOptions.length - 1),
+                colors: colors,
+                onTap: (idx) {
+                  final h = _eodHourOptions[idx];
+                  AppLaunchPrefs.setEodHour(ref.read(sharedPreferencesProvider), h);
+                  setState(() => _eodHour = h);
+                },
+              ),
+            ],
           ],
         ]),
       ),

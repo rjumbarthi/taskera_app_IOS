@@ -6,6 +6,7 @@ abstract final class AppLaunchPrefs {
   static const _installDate    = 'kaal.installDate';
   static const _lastActive     = 'kaal.lastActiveAt';
   static const _eodShownDate   = 'kaal.eodShownDate'; // yyyymmdd
+  static const _eodHour        = 'kaal.eodHour';      // 0–23, default 18 (6 PM)
 
   // ── Onboarding profile (written once on finish, read-only after) ─────────────
   static const _kRole  = 'kaal.profile.role';
@@ -74,6 +75,17 @@ abstract final class AppLaunchPrefs {
 
   static Future<void> markEodShownToday(SharedPreferences p) =>
       p.setInt(_eodShownDate, _dayStamp(DateTime.now()));
+
+  /// The hour (0–23, local) at/after which the end-of-day reflection may appear
+  /// on app exit. Defaults to 18 (6 PM).
+  static int eodHour(SharedPreferences p) => p.getInt(_eodHour) ?? 18;
+  static Future<void> setEodHour(SharedPreferences p, int h) =>
+      p.setInt(_eodHour, h.clamp(0, 23));
+
+  /// Whether the end-of-day reflection should be shown now (on exit): it's the
+  /// user's chosen EOD hour or later, and it hasn't been shown yet today.
+  static bool shouldShowEodOnExit(SharedPreferences p) =>
+      DateTime.now().hour >= eodHour(p) && !eodShownToday(p);
 
   static bool wasActiveWithin(SharedPreferences p, Duration within) {
     final ms = p.getInt(_lastActive);
