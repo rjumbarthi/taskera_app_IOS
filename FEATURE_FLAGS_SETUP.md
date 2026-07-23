@@ -53,7 +53,7 @@ The app picks up the change on next launch/refresh — no rebuild, no store revi
 | Flag key | Controls | Scope | Notes |
 |---|---|---|---|
 | `gmail` | Gmail inbox (connect + parsing) | `gmail.readonly` (**restricted**) | Keep OFF until OAuth verification **+ CASA** clear. |
-| `calendar` | Google Calendar sync | `calendar.readonly` (sensitive) | Turn ON once Calendar OAuth verification clears. |
+| `calendar` | Google Calendar sync | `calendar.events.readonly` (sensitive) | Turn ON once Calendar OAuth verification clears. |
 | `microsoft` | Microsoft sign-in (sign-in/sign-up) | Azure OAuth | Turn ON once the Azure provider + client id are configured in Supabase. |
 | `notion`, `todoist`, `slack`, `github` | Settings → Integrations rows | OAuth **with client secret** | ⚠️ Keep OFF until token exchange is moved to a backend proxy (client secret currently ships in the app — see SECURITY.md). |
 | `jira`, `asana`, `linear`, `teams` | Settings → Integrations rows | OAuth (PKCE, no secret) | Turn ON once each provider's client id is configured. |

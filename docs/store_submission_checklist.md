@@ -46,7 +46,7 @@ App facts (reuse everywhere):
 - [ ] **No** foreground-service, location, SMS, call-log, or "all files" permissions (confirm none crept in).
 
 **Google OAuth (because of Google Calendar)**
-- [ ] Google Calendar uses a **sensitive** scope (`calendar.readonly`). Complete **OAuth consent screen** setup + verification in Google Cloud Console (logo, app domain jumbarthi.com, privacy/terms links, scopes justification). *(No CASA needed — that's only for the disabled Gmail `gmail.readonly` restricted scope.)*
+- [ ] Google Calendar uses a **sensitive** scope (`calendar.events.readonly`). Complete **OAuth consent screen** setup + verification in Google Cloud Console (logo, app domain jumbarthi.com, privacy/terms links, scopes justification). *(No CASA needed — that's only for the disabled Gmail `gmail.readonly` restricted scope.)*
 - [ ] OAuth consent links must point to the live privacy/terms URLs (now live ✅).
 
 **Monetization**

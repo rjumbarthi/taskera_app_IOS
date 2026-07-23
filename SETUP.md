@@ -61,7 +61,7 @@ supabase secrets set OPENAI_API_KEY=sk-...
 ### 2b. Configure OAuth consent screen
 - APIs & Services → OAuth consent screen
 - Application type: External
-- Add scopes: `calendar.readonly`, `gmail.readonly`
+- Add scopes: `calendar.events.readonly`, `gmail.readonly`
 - Add your test email as a test user (while in "Testing" mode)
 
 ### 2c. Create OAuth credentials
