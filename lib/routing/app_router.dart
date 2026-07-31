@@ -566,7 +566,6 @@ class _RouterShell extends ConsumerWidget {
         ];
       case KaalTab.calendar:
         return [
-          const _ConflictsPill(),
           TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
           TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
           TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
@@ -755,31 +754,4 @@ class _SyncPill extends ConsumerWidget {
     );
   }
 }
-
-// Conflicts pill: amber ⚡ tag for calendar top bar
-class _ConflictsPill extends StatelessWidget {
-  const _ConflictsPill();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
-      decoration: BoxDecoration(
-        color: const Color(0x1AFFB900),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(width: 0.5, color: const Color(0x40FFB900)),
-      ),
-      child: const Text(
-        '⚡ 2 conflicts',
-        style: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 9,
-          color: Color(0xFFFFB900),
-          height: 1,
-        ),
-      ),
-    );
-  }
-}
-
 
