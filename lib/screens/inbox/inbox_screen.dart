@@ -129,13 +129,21 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     if (mounted) setState(() => _loading = false);
   }
 
-  // Maps a Gmail API failure to a clear, actionable message.
+  // Maps a Gmail API failure to a clear, actionable message. Matching is kept
+  // strict on purpose: bare substrings like "access"/"permission"/"scope" appear
+  // in many benign error strings and would wrongly tell the user their access
+  // was revoked. Only real auth (401) and real scope-denial (403) signals map to
+  // the alarming messages; everything else is a soft retry.
   static String _gmailError(Object e) {
     final s = e.toString().toLowerCase();
-    if (s.contains('401') || s.contains('unauthor') || s.contains('invalid_grant') || s.contains('expired') || s.contains('invalid credentials')) {
+    if (s.contains('401') || s.contains('unauthorized') || s.contains('invalid_grant') ||
+        s.contains('invalid credentials') || s.contains('token has been expired') ||
+        s.contains('token expired')) {
       return 'Gmail access expired. Tap Connect Gmail to reconnect and refresh access.';
     }
-    if (s.contains('403') || s.contains('insufficient') || s.contains('permission') || s.contains('scope') || s.contains('access_denied')) {
+    if (s.contains('403') || s.contains('access_denied') || s.contains('permission_denied') ||
+        s.contains('insufficientpermissions') || s.contains('insufficient permission') ||
+        s.contains('insufficient authentication scopes')) {
       return 'Gmail permission not granted. Reconnect and allow read-only Gmail access.';
     }
     return "Couldn't load Gmail. Pull down to retry.";
@@ -417,7 +425,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
               child: Text(
                 _error ?? (!gmailEnabled
                     ? 'Gmail sync is coming soon. Add tasks manually above for now.'
-                    : (_gmailConnected ? AppL10n.of(context).noEmailsLastTwoWeeks : AppL10n.of(context).connectGmailSeeEmails)),
+                    : (_gmailConnected ? AppL10n.of(context).inboxEmptyHint : AppL10n.of(context).connectGmailSeeEmails)),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'Inter', fontSize: 13, height: 1.4,
                     color: _error != null ? KaalColors.warn : colors.ink3)),

@@ -48,8 +48,46 @@ class SyncService {
       ]);
 
   Future<void> syncAll() async {
-    await pullAll();
+    // Push BEFORE pull. This is a local-first store: a pull that runs first would
+    // overwrite un-pushed local edits with stale server rows (e.g. an invite the
+    // user just accepted reverts to pending, a declined event reappears). Pushing
+    // first makes the server reflect local intent, so the subsequent pull is a
+    // no-op for those rows instead of clobbering them.
     await pushAll();
+    await pullAll();
+  }
+
+  // ── Targeted write-through — keep the server in step the instant a local edit
+  // happens, so a background pull (or realtime echo) can't resurrect old state.
+
+  /// Mirror one calendar event to the server immediately (used right after a
+  /// local invite *accept*, which flips is_invite → false).
+  Future<void> pushCalendarEvent(CalendarEvent e) async {
+    if (!_can) return;
+    try {
+      await _client.from('calendar_events').upsert({
+        'id'         : e.id,
+        'user_id'    : _uid,
+        'title'      : e.title,
+        'subtitle'   : e.subtitle,
+        'time_slot'  : e.timeSlot,
+        'color_value': e.colorValue,
+        'is_overdue' : e.isOverdue,
+        'is_invite'  : e.isInvite,
+        'event_date' : e.eventDate?.toIso8601String(),
+        'source'     : 'local',
+      }, onConflict: 'id');
+    } catch (_) {/* offline — the next full push reconciles it */}
+  }
+
+  /// Delete one calendar event on the server immediately (used right after a
+  /// local invite *decline*, which deletes the row). Without this the next pull
+  /// re-adds the declined event, since a plain push never propagates deletes.
+  Future<void> deleteCalendarEventRemote(int id) async {
+    if (!_can) return;
+    try {
+      await _client.from('calendar_events').delete().eq('id', id).eq('user_id', _uid!);
+    } catch (_) {/* offline — realtime/manual cleanup reconciles it */}
   }
 
   // ── Realtime ────────────────────────────────────────────────────────────────

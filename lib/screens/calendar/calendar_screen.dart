@@ -1027,6 +1027,9 @@ class _EventBlock extends ConsumerWidget {
                     // Schedule pre (15-min) + at-start notifications for the event.
                     final ev = await dao.getEvent(event.id);
                     if (ev != null) {
+                      // Write the accepted state through to the server now, so a
+                      // background sync can't revert the invite to pending.
+                      await ref.read(syncServiceProvider).pushCalendarEvent(ev);
                       final svc = ref.read(notificationServiceProvider);
                       await svc.scheduleCalendarReminder(ev);
                       await svc.scheduleEventStart(ev);
@@ -1037,8 +1040,11 @@ class _EventBlock extends ConsumerWidget {
                 _InviteBtn(
                   label: 'Decline',
                   bg: Colors.transparent, border: colors.bdr, textColor: colors.ink3,
-                  onTap: () {
-                    ref.read(appDatabaseProvider).calendarDao.deleteEvent(event.id);
+                  onTap: () async {
+                    final id = event.id;
+                    await ref.read(appDatabaseProvider).calendarDao.deleteEvent(id);
+                    // Delete on the server too, or the next pull re-adds it.
+                    await ref.read(syncServiceProvider).deleteCalendarEventRemote(id);
                     ref.logActivity('Calendar invite "${event.title}" declined', type: 'calendar');
                   },
                 ),
