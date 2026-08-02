@@ -97,6 +97,20 @@ Future<void> notificationBackgroundResponse(NotificationResponse r) async {
     final queue = prefs.getStringList(_kDtnQueueKey) ?? <String>[];
     queue.add('${action == kDtnDone ? 'done' : 'skip'}:$id');
     await prefs.setStringList(_kDtnQueueKey, queue);
+    // Dismiss the ongoing card right now so the tap has an immediate visible
+    // effect. Without this, the card (ongoing + autoCancel:false) just sits
+    // there unchanged and the action looks like it did nothing — it's only
+    // applied to the DB silently on the next app open. This runs in the
+    // background isolate, so init a fresh plugin instance to cancel by id.
+    try {
+      final plugin = FlutterLocalNotificationsPlugin();
+      await plugin.initialize(const InitializationSettings(
+        android: AndroidInitializationSettings('ic_stat_focus'),
+        iOS: DarwinInitializationSettings(
+            requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
+      ));
+      await plugin.cancel(kDtnNotifId);
+    } catch (_) {/* best-effort — the app resync cancels/refreshes it anyway */}
     return;
   }
 
@@ -391,8 +405,9 @@ class NotificationService {
               ? NotificationVisibility.public
               : NotificationVisibility.secret,
           actions: const [
-            // Done/Skip apply in the background without opening the app; the card
-            // is dismissed and the next task is shown when the app next runs.
+            // Done/Skip run in the background isolate without opening the app: the
+            // card is dismissed immediately for feedback, the action is queued, and
+            // it's applied to the DB (and the next task's card shown) on next open.
             AndroidNotificationAction(kDtnDone, '✓ Done', showsUserInterface: false),
             AndroidNotificationAction(kDtnSkip, '⏭ Skip', showsUserInterface: false),
             // Focus needs the UI — it opens the task to start a focus session.
