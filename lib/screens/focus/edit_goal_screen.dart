@@ -153,6 +153,15 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   Future<void> _save() async {
     final title = _nameCtrl.text.trim();
     if (title.isEmpty) return;
+    // Flush a milestone typed into the field but not yet committed with the
+    // "+Add" button — otherwise it's silently lost on save.
+    final pendingMilestone = _milestoneCtrl.text.trim();
+    if (pendingMilestone.isNotEmpty &&
+        _milestones.length < 5 &&
+        !_milestones.contains(pendingMilestone)) {
+      _milestones.add(pendingMilestone);
+      _milestoneCtrl.clear();
+    }
     setState(() => _loading = true);
     try {
       final color    = _catIdx != null ? _cats[_catIdx!].$2 : const Color(0xFF0A84FF);
