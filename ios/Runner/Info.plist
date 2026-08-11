@@ -22,12 +22,31 @@
 	<string>Kaal accesses your photo library so you can attach images to your notes and tasks.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Kaal uses the microphone for voice capture of notes and tasks.</string>
+	<!-- Required by AdMob / Google Mobile Ads (IDFA + App Tracking Transparency).
+	     Apple rejects ad-supported apps that link ATT without this string. -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Allow tracking so Kaal can show you more relevant ads. Kaal works fully either way, and your data is never sold.</string>
+	<!-- Export-compliance: Kaal only uses standard, exempt encryption (HTTPS/TLS).
+	     Declaring this here skips the App Store Connect encryption question on every
+	     upload. Set to true only if you add non-exempt/custom cryptography. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<!-- AdMob application id. Required by the Google Mobile Ads SDK or the app
 	     crashes on launch. This is Google's official iOS TEST app id (mirrors the
 	     test id in AndroidManifest). Replace with your real AdMob iOS app id
 	     before shipping ads to production. -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network.
+	     Add other ad networks' ids here if you enable mediation. Missing this loses
+	     ad attribution but is not a rejection blocker. -->
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>CFBundleName</key>
 	<string>kaal_app</string>
 	<key>CFBundlePackageType</key>
