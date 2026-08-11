@@ -231,6 +231,15 @@ class GoogleService {
       scopes: scope,
       redirectTo: 'io.supabase.kaalapp://login-callback',
       authScreenLaunchMode: LaunchMode.externalApplication,
+      // Force Google to always render the full consent screen listing every
+      // requested scope, even for an account that authorized Kaal before.
+      // Without prompt=consent, a returning account skips the scope screen —
+      // which is why OAuth verification couldn't see the scopes in the demo.
+      // access_type=offline also ensures a refresh token is issued.
+      queryParams: const {
+        'access_type': 'offline',
+        'prompt': 'consent',
+      },
     );
 
     // Only signedIn carries a providerToken — tokenRefreshed does not.
