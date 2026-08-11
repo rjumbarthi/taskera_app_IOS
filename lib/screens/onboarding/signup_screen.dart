@@ -166,6 +166,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     );
   }
 
+  Future<void> _appleSignUp() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.signInWithApple(),
+      successRoute: KaalRoutes.onboard,
+    );
+  }
+
 
   static String _friendlyError(Object e) {
     final msg = e.toString().toLowerCase();
@@ -523,8 +531,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                           label: 'Apple',
                           icon: SvgPicture.string(_appleSvg(colors.ink), width: 18, height: 18),
                           colors: colors,
-                          comingSoon: true, // not yet configured
-                          onTap: () => _comingSoon(context, 'Apple sign-in'),
+                          // Native Sign in with Apple is Apple-platforms only.
+                          comingSoon: !_auth.appleSignInSupported,
+                          onTap: _loading
+                              ? null
+                              : _auth.appleSignInSupported
+                                  ? _appleSignUp
+                                  : () => _comingSoon(context, 'Apple sign-in'),
                         ),
                       ),
                     ],

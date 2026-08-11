@@ -38,7 +38,8 @@ dependencies:
   flutter_web_auth_2: ^4.0.0        # OAuth2 PKCE browser flow (Microsoft, all platforms)
   url_launcher: ^6.3.0              # required by flutter_web_auth_2 on Windows; also opens the Razorpay UPI link
   in_app_purchase: ^3.2.0           # Play Store / App Store subscriptions (UPI shows inside Play checkout in India)
-  crypto: ^3.0.3                    # SHA-256 for PKCE code challenge
+  crypto: ^3.0.3                    # SHA-256 for PKCE code challenge + Apple nonce
+  sign_in_with_apple: ^6.1.0        # Sign in with Apple (App Store Guideline 4.8)
   home_widget: ^0.6.0              # home-screen / lock-screen DTN widget (Android + iOS)
   google_mobile_ads: ^9.0.0        # AdMob — interstitial + rewarded ads for free-plan users (Android/iOS only)
 

@@ -176,6 +176,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
     );
   }
 
+  Future<void> _appleSignIn() async {
+    if (!_consentOk()) return;
+    return _run(
+      () => _auth.signInWithApple(),
+      successRoute: _postAuthRoute,
+    );
+  }
+
   static String _friendlyError(Object e) {
     final msg = e.toString().toLowerCase();
     if (msg.contains('invalid login') || msg.contains('invalid credentials')) {
@@ -528,8 +536,13 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           label: 'Apple',
                           icon: SvgPicture.string(_appleSvg(colors.ink), width: 18, height: 18),
                           colors: colors,
-                          comingSoon: true, // not yet configured
-                          onTap: () => _comingSoon(context, 'Apple sign-in'),
+                          // Native Sign in with Apple is Apple-platforms only.
+                          comingSoon: !_auth.appleSignInSupported,
+                          onTap: _loading
+                              ? null
+                              : _auth.appleSignInSupported
+                                  ? _appleSignIn
+                                  : () => _comingSoon(context, 'Apple sign-in'),
                         ),
                       ),
                     ],

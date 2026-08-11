@@ -1,5 +1,10 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../config/app_config.dart';
@@ -58,6 +63,59 @@ class AuthService {
       redirectTo: _redirect('login-callback'),
     );
   }
+
+  // ── Apple (native Sign in with Apple → Supabase id-token) ─────────────────
+  // Required by App Store Guideline 4.8 because the app offers Google login.
+  // Uses the native Apple sheet (not a browser) and exchanges the returned
+  // identity token with Supabase. A nonce binds the two: Apple signs the SHA-256
+  // of the raw nonce into the token, and Supabase re-hashes the raw nonce we
+  // pass to verify it — defeating token replay.
+
+  static String _rawNonce([int length = 32]) {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._';
+    final rand = Random.secure();
+    return List.generate(length, (_) => chars[rand.nextInt(chars.length)]).join();
+  }
+
+  Future<void> signInWithApple() async {
+    final rawNonce    = _rawNonce();
+    final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: const [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: hashedNonce,
+    );
+
+    final idToken = credential.identityToken;
+    if (idToken == null) {
+      throw const AuthException('No identity token returned from Apple.');
+    }
+
+    await _client.auth.signInWithIdToken(
+      provider: OAuthProvider.apple,
+      idToken: idToken,
+      nonce: rawNonce,
+    );
+
+    // Apple only sends the full name on the FIRST authorization, and never in
+    // the id-token — persist it to user metadata so the profile isn't blank.
+    final given  = credential.givenName;
+    final family = credential.familyName;
+    if ((given != null && given.isNotEmpty) || (family != null && family.isNotEmpty)) {
+      final full = [given, family].where((s) => s != null && s.isNotEmpty).join(' ').trim();
+      if (full.isNotEmpty && (currentUser?.userMetadata?['full_name'] == null)) {
+        await _client.auth.updateUser(UserAttributes(data: {'full_name': full}));
+      }
+    }
+  }
+
+  /// Native Sign in with Apple is only available on Apple platforms.
+  bool get appleSignInSupported =>
+      !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS ||
+                  defaultTargetPlatform == TargetPlatform.macOS);
 
   // ── Microsoft (browser-based PKCE via Supabase OAuth) ─────────────────────
 
