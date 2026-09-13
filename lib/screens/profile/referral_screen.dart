@@ -82,7 +82,7 @@ class _HeroSection extends StatelessWidget {
                 fontVariations: const [FontVariation('wght', 700)],
                 color: colors.ink, height: 1.2)),
         const SizedBox(height: 6),
-        Text('Invite a friend. When they start a trial, you both get\n1 month of Kaal Pro free.',
+        Text('Invite a friend. When they subscribe to Kaal Pro, you both get\n1 month free.',
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Inter', fontSize: 13,
                 color: colors.ink3, height: 1.5)),

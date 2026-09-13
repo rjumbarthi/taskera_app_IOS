@@ -334,13 +334,11 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
     // Keep analytics in step with the Settings → Privacy opt-out toggle.
     ref.listen(kaalSettingsProvider.select((s) => s.sw('analytics')),
         (_, on) => AnalyticsService.instance.setEnabled(on));
-    // Realtime Pro entitlement — unlock the moment the webhook grants it.
+    // Realtime Pro entitlement — unlock/lock the moment the store validator or
+    // webhook changes the row (re-fetches into the local cache via the same
+    // path used on launch, so the expiry-aware isPro check stays consistent).
     ref.listen(serverProProvider, (_, next) {
-      next.whenData((isPro) {
-        ref.read(sharedPreferencesProvider).setBool('kaal.proServer', isPro);
-        ref.invalidate(isProProvider);
-        ref.invalidate(aiUnlockedProvider);
-      });
+      next.whenData((_) => refreshProEntitlement(ref));
     });
     ref.listen<AsyncValue<AuthState>>(authStateProvider, (_, next) {
       next.whenData((state) {

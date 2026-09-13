@@ -91,6 +91,8 @@ Deno.serve(async (req) => {
     {
       user_id: userId,
       is_pro: grant,
+      status: grant ? "active" : "revoked",
+      will_renew: grant,
       provider: "razorpay",
       source: type,
       updated_at: new Date().toISOString(),

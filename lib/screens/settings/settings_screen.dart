@@ -14,7 +14,6 @@ import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../config/app_config.dart';
 import '../../data/providers/ai_access_provider.dart';
 import '../../services/purchase_service.dart';
 import '../../routing/routes.dart';
@@ -482,13 +481,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Text('✦ Pro — \$2.99/mo',
+                    const Text('✦ Kaal Pro',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
                             color: KaalColors.acc2, height: 1)),
                     const Spacer(),
-                    Text('Annual · Save 50%',
+                    Text('Monthly or annual',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
-                            color: colors.successFg, height: 1)),
+                            color: colors.ink3, height: 1)),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -510,7 +509,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       borderRadius: BorderRadius.circular(11),
                     ),
                     alignment: Alignment.center,
-                    child: Text(AppL10n.of(context).startFreeTrial,
+                    child: Text(AppL10n.of(context).upgrade,
                         style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
                             color: Colors.white, height: 1)),
                   ),
@@ -592,9 +591,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ];
   }
 
+  // Deep-links to the platform's own subscription management, per Guideline
+  // 3.1.1 — Kaal must not offer a custom cancellation/payment mechanism.
   Future<void> _managePlaySubscription() async {
-    final uri = Uri.parse('https://play.google.com/store/account/subscriptions'
-        '?sku=${AppConfig.proMonthlyProductId}&package=com.port443.kaal');
+    final uri = Platform.isIOS
+        ? Uri.parse('https://apps.apple.com/account/subscriptions')
+        : Uri.parse('https://play.google.com/store/account/subscriptions'
+            '?package=com.port443.kaal');
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {

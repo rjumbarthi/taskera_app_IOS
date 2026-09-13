@@ -26,8 +26,20 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// iOS — App Store verifyReceipt (auto sandbox fallback on 21007).
-async function verifyApple(receipt: string): Promise<boolean> {
+interface Entitlement {
+  valid: boolean;
+  status: "active" | "cancelled" | "grace_period" | "billing_retry" | "expired" | "revoked";
+  currentPeriodEnd: string | null; // ISO
+  willRenew: boolean;
+}
+
+const EXPIRED: Entitlement = { valid: false, status: "expired", currentPeriodEnd: null, willRenew: false };
+
+// iOS — App Store verifyReceipt (auto sandbox fallback on 21007). Reads
+// latest_receipt_info + pending_renewal_info so a cancelled subscription still
+// grants Pro until its paid period actually ends, and grace/billing-retry are
+// distinguishable from a hard expiry.
+async function verifyApple(receipt: string, productId: string): Promise<Entitlement> {
   const password = Deno.env.get("APPLE_SHARED_SECRET") ?? "";
   const body = JSON.stringify({
     "receipt-data": receipt,
@@ -40,7 +52,34 @@ async function verifyApple(receipt: string): Promise<boolean> {
     res = await fetch("https://sandbox.itunes.apple.com/verifyReceipt", { method: "POST", body });
     json = await res.json();
   }
-  return json.status === 0; // 0 = valid receipt
+  if (json.status !== 0) return EXPIRED;
+
+  const infos: any[] = json.latest_receipt_info ?? [];
+  // Latest transaction for this product (or the most recent overall as a fallback).
+  const matching = infos.filter((i) => !productId || i.product_id === productId);
+  const pool = matching.length ? matching : infos;
+  const latest = pool.reduce((a, b) =>
+    Number(a?.expires_date_ms ?? 0) > Number(b?.expires_date_ms ?? 0) ? a : b, pool[0]);
+  if (!latest) return EXPIRED;
+
+  const expiresMs = Number(latest.expires_date_ms ?? 0);
+  const expired = expiresMs > 0 && expiresMs <= Date.now();
+
+  const renewalInfos: any[] = json.pending_renewal_info ?? [];
+  const renewal = renewalInfos.find((r) => r.product_id === latest.product_id) ?? renewalInfos[0];
+  const willRenew = renewal?.auto_renew_status === "1";
+  const inBillingRetry = renewal?.is_in_billing_retry_period === "1";
+  const inGrace = expired && inBillingRetry; // Apple grace period surfaces as billing-retry + not-yet-expired-for-access
+
+  if (expired && !inGrace) {
+    return { valid: false, status: "expired", currentPeriodEnd: new Date(expiresMs).toISOString(), willRenew };
+  }
+  return {
+    valid: true,
+    status: inBillingRetry ? "billing_retry" : willRenew ? "active" : "cancelled",
+    currentPeriodEnd: new Date(expiresMs).toISOString(),
+    willRenew,
+  };
 }
 
 function b64url(s: string): string {
@@ -83,11 +122,13 @@ async function googleAccessToken(sa: { client_email: string; private_key: string
 }
 
 // Android — verify the subscription token via the Play Developer API.
-async function verifyAndroid(productId: string, token: string): Promise<boolean> {
+async function verifyAndroid(productId: string, token: string): Promise<Entitlement> {
   const saRaw = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT");
   if (!saRaw) {
     console.warn("[validate-purchase] Play service account not set — granting optimistically (UNVERIFIED)");
-    return true; // fallback until the secret is configured
+    // Fallback until the secret is configured. No real expiry known, so don't
+    // pretend to have one — the client should re-validate once this is wired up.
+    return { valid: true, status: "active", currentPeriodEnd: null, willRenew: true };
   }
   try {
     const sa = JSON.parse(saRaw);
@@ -97,14 +138,21 @@ async function verifyAndroid(productId: string, token: string): Promise<boolean>
       `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${pkg}` +
       `/purchases/subscriptions/${productId}/tokens/${token}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
-    if (!res.ok) return false;
+    if (!res.ok) return EXPIRED;
     const sub = await res.json();
-    // paymentState 1=received, 2=free trial; active while not expired.
-    const paid = sub.paymentState === 1 || sub.paymentState === 2;
-    return paid && Number(sub.expiryTimeMillis ?? 0) > Date.now();
+    const expiresMs = Number(sub.expiryTimeMillis ?? 0);
+    const expired = expiresMs > 0 && expiresMs <= Date.now();
+    const currentPeriodEnd = expiresMs ? new Date(expiresMs).toISOString() : null;
+    const willRenew = sub.autoRenewing === true;
+    // paymentState: 0=pending, 1=received, 2=free trial, 3=pending deferred upgrade/downgrade.
+    if (sub.paymentState === 0) {
+      return { valid: false, status: "billing_retry", currentPeriodEnd, willRenew };
+    }
+    if (expired) return { valid: false, status: "expired", currentPeriodEnd, willRenew };
+    return { valid: true, status: willRenew ? "active" : "cancelled", currentPeriodEnd, willRenew };
   } catch (e) {
     console.error("[validate-purchase] Android verify failed", e);
-    return false;
+    return EXPIRED;
   }
 }
 
@@ -128,21 +176,17 @@ Deno.serve(async (req) => {
   const { platform, productId, token } = payload;
   if (!platform || !token) return new Response("Missing fields", { status: 400, headers: cors });
 
-  const valid = platform === "ios"
-    ? await verifyApple(token)
+  const entitlement = platform === "ios"
+    ? await verifyApple(token, productId ?? "")
     : await verifyAndroid(productId ?? "", token);
-
-  if (!valid) {
-    return new Response(JSON.stringify({ is_pro: false }), {
-      status: 200,
-      headers: { ...cors, "Content-Type": "application/json" },
-    });
-  }
 
   const { error } = await admin.from("pro_entitlements").upsert(
     {
       user_id: userId,
-      is_pro: true,
+      is_pro: entitlement.valid,
+      status: entitlement.status,
+      current_period_end: entitlement.currentPeriodEnd,
+      will_renew: entitlement.willRenew,
       provider: platform === "ios" ? "appstore" : "play",
       source: "store",
       updated_at: new Date().toISOString(),
@@ -151,7 +195,11 @@ Deno.serve(async (req) => {
   );
   if (error) return new Response(`DB error: ${error.message}`, { status: 500, headers: cors });
 
-  return new Response(JSON.stringify({ is_pro: true }), {
+  return new Response(JSON.stringify({
+    is_pro: entitlement.valid,
+    status: entitlement.status,
+    current_period_end: entitlement.currentPeriodEnd,
+  }), {
     headers: { ...cors, "Content-Type": "application/json" },
   });
 });

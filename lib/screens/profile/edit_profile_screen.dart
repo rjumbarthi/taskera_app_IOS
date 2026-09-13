@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:go_router/go_router.dart';
 import '../../l10n/app_l10n.dart';
@@ -25,7 +21,7 @@ import '../../widgets/wallpaper_background.dart';
 
 // ── Picker tab ────────────────────────────────────────────────────────────────
 
-enum _PickerTab { color, logo, photo }
+enum _PickerTab { color, logo }
 
 
 // ── App logo definitions ──────────────────────────────────────────────────────
@@ -60,7 +56,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   _PickerTab _tab      = _PickerTab.color;
   int        _colorIdx = 0;
   int?       _logoIdx;
-  XFile?     _image;
 
   @override
   void initState() {
@@ -85,27 +80,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 
-  // Photo upload is not shipping yet — surface "coming soon" instead of opening
-  // the gallery picker. (Avatar colour + app-logo options still work.)
-  void _pickImage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Coming soon in the next update.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   Future<void> _save() async {
     await ref.read(profileDisplayNameProvider.notifier).setName(_nameCtrl.text.trim());
     await ref.read(profileAvatarColorProvider.notifier).setColor(_colorIdx);
     await ref.read(profileAvatarLogoProvider.notifier).setLogo(_logoIdx);
-    if (_image != null) {
-      final docsDir = await getApplicationDocumentsDirectory();
-      final dest = File('${docsDir.path}/kaal_profile_avatar.jpg');
-      await File(_image!.path).copy(dest.path);
-      await ref.read(profileImagePathProvider.notifier).setPath(dest.path);
-    }
     if (mounted) context.pop();
   }
 
@@ -154,7 +132,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       initials:  _initials,
                       colorIdx:  _colorIdx,
                       logoIdx:   _logoIdx,
-                      image:     _image,
                       colors:    colors,
                     ),
                     const SizedBox(height: 16),
@@ -163,13 +140,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       tab:      _tab,
                       colorIdx: _colorIdx,
                       logoIdx:  _logoIdx,
-                      image:    _image,
                       colors:   colors,
                       onTab:    (t) => setState(() => _tab = t),
-                      onColor:  (i) => setState(() { _colorIdx = i; _logoIdx = null; _image = null; }),
-                      onLogo:   (i) => setState(() { _logoIdx = i; _image = null; }),
-                      onPickGallery: _pickImage,
-                      onClearImage:  () => setState(() => _image = null),
+                      onColor:  (i) => setState(() { _colorIdx = i; _logoIdx = null; }),
+                      onLogo:   (i) => setState(() { _logoIdx = i; }),
                     ),
                     const SizedBox(height: 24),
                     // ── name field ──────────────────────────────────────────
@@ -296,21 +270,16 @@ class _AvatarHero extends StatelessWidget {
   final String initials;
   final int colorIdx;
   final int? logoIdx;
-  final XFile? image;
   final KaalColors colors;
   const _AvatarHero({required this.initials, required this.colorIdx,
-      required this.logoIdx, required this.image, required this.colors});
+      required this.logoIdx, required this.colors});
 
   @override
   Widget build(BuildContext context) {
     final bgColor = kKaalAvatarColors[colorIdx];
 
     Widget face;
-    if (image != null) {
-      face = ClipOval(
-        child: Image.file(File(image!.path), width: 72, height: 72, fit: BoxFit.cover),
-      );
-    } else if (logoIdx != null) {
+    if (logoIdx != null) {
       final logo = _kLogos[logoIdx!];
       face = Container(
         width: 72, height: 72,
@@ -371,19 +340,15 @@ class _PickerCard extends StatelessWidget {
   final _PickerTab tab;
   final int colorIdx;
   final int? logoIdx;
-  final XFile? image;
   final KaalColors colors;
   final ValueChanged<_PickerTab> onTab;
   final ValueChanged<int> onColor;
   final ValueChanged<int> onLogo;
-  final VoidCallback onPickGallery;
-  final VoidCallback onClearImage;
 
   const _PickerCard({
     required this.tab, required this.colorIdx, required this.logoIdx,
-    required this.image, required this.colors,
+    required this.colors,
     required this.onTab, required this.onColor, required this.onLogo,
-    required this.onPickGallery, required this.onClearImage,
   });
 
   @override
@@ -407,8 +372,6 @@ class _PickerCard extends StatelessWidget {
           child: switch (tab) {
             _PickerTab.color => _ColorBody(selected: colorIdx, colors: colors, onTap: onColor),
             _PickerTab.logo  => _LogoBody(selected: logoIdx, colors: colors, colorIdx: colorIdx, onTap: onLogo),
-            _PickerTab.photo => _PhotoBody(image: image, colors: colors,
-                onGallery: onPickGallery, onClear: onClearImage),
           },
         ),
       ]),
@@ -444,7 +407,6 @@ class _TabRow extends StatelessWidget {
   String _tabLabel(_PickerTab t) => switch (t) {
     _PickerTab.color => 'Colour',
     _PickerTab.logo  => 'App logo',
-    _PickerTab.photo => 'Photo',
   };
 }
 
@@ -560,107 +522,6 @@ class _LogoBody extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-// ── Photo body ────────────────────────────────────────────────────────────────
-
-class _PhotoBody extends StatelessWidget {
-  final XFile? image;
-  final KaalColors colors;
-  final VoidCallback onGallery;
-  final VoidCallback onClear;
-  const _PhotoBody({required this.image, required this.colors,
-      required this.onGallery, required this.onClear});
-
-  @override
-  Widget build(BuildContext context) {
-    if (image != null) {
-      return Row(children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.file(File(image!.path),
-              width: 56, height: 56, fit: BoxFit.cover),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(AppL10n.of(context).photoSelected,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                    fontWeight: FontWeight.w500, color: colors.ink, height: 1.2)),
-            const SizedBox(height: 3),
-            Text(AppL10n.of(context).tapToReplace,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: colors.ink3, height: 1.3)),
-          ]),
-        ),
-        GestureDetector(
-          onTap: onClear,
-          child: Container(
-            width: 28, height: 28,
-            decoration: BoxDecoration(
-              color: const Color(0x1FFF2D55),
-              shape: BoxShape.circle,
-              border: Border.all(width: 0.5, color: const Color(0x33FF2D55)),
-            ),
-            child: const Icon(Icons.close_rounded, size: 14, color: KaalColors.warn),
-          ),
-        ),
-      ]);
-    }
-
-    return _PhotoBtn(
-      icon: Icons.photo_library_outlined,
-      label: 'Upload from gallery',
-      sub: 'JPG, PNG · max 10 MB',
-      onTap: onGallery,
-      colors: colors,
-    );
-  }
-}
-
-class _PhotoBtn extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String sub;
-  final VoidCallback onTap;
-  final KaalColors colors;
-  const _PhotoBtn({required this.icon, required this.label, required this.sub,
-      required this.onTap, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-        decoration: BoxDecoration(
-          color: colors.surf2,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 0.5, color: colors.bdr),
-        ),
-        child: Row(children: [
-          Container(
-            width: 34, height: 34,
-            decoration: BoxDecoration(
-              color: KaalColors.accBg,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, size: 17, color: KaalColors.acc2),
-          ),
-          const SizedBox(width: 12),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(label,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                    fontWeight: FontWeight.w500, color: colors.ink, height: 1.2)),
-            Text(sub,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: colors.ink3, height: 1.3)),
-          ])),
-          Icon(Icons.chevron_right_rounded, size: 18, color: colors.ink3),
-        ]),
-      ),
     );
   }
 }
