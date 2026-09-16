@@ -8,6 +8,8 @@ import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../services/auth_service.dart';
 import '../../data/providers/feature_flags_provider.dart';
+import '../../settings/app_launch_prefs.dart';
+import '../../settings/prefs_provider.dart';
 import 'otp_cooldown.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -67,7 +69,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     setState(() { _loading = true; _error = null; });
     try {
       await fn();
-      if (mounted && successRoute != null) context.go(successRoute);
+      if (mounted && successRoute != null) {
+        AppLaunchPrefs.clearSkipAuth(ref.read(sharedPreferencesProvider));
+        context.go(successRoute);
+      }
     } catch (e) {
       if (mounted) setState(() => _error = _friendlyError(e));
     } finally {
@@ -104,6 +109,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
       final res = await _auth.signUpWithEmailResult(_email.text, _password.text);
       if (!mounted) return;
       if (res.session != null) {
+        AppLaunchPrefs.clearSkipAuth(ref.read(sharedPreferencesProvider));
         context.go(KaalRoutes.onboard);
       } else {
         setState(() { _loading = false; _confirmationPending = true; });
@@ -183,6 +189,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     if (msg.contains('weak password')) return 'Password is too weak (min 6 chars)';
     if (msg.contains('invalid email')) return 'Invalid email address';
     if (msg.contains('cancelled')) return 'Sign-up cancelled';
+    if (msg.contains('timed out')) return 'Sign-up timed out — please try again.';
     if (msg.contains('no such host') || msg.contains('your_project_ref') ||
         msg.contains('socketfailed')) {
       return 'Backend not configured — fill in lib/config/app_config.dart (see SETUP.md)';

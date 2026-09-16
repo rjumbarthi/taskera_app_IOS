@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_l10n.dart';
 import '../../data/providers/auth_provider.dart'
-    show displayNameProvider, currentUserProvider;
+    show displayNameProvider, currentUserProvider,
+         profileImagePathProvider, profileDisplayNameProvider;
 import '../../widgets/kaal_avatar.dart';
 import '../../widgets/goal_meta_label.dart';
 import '../../services/auth_service.dart';
@@ -42,7 +43,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Future<void> _signOut() async {
     setState(() => _signingOut = true);
+    // Actually end the Supabase session, then clear local profile overrides
+    // so the next user (or a re-sign-in) doesn't inherit stale name/avatar.
     await ref.read(authServiceProvider).signOut();
+    await ref.read(profileImagePathProvider.notifier).clear();
+    await ref.read(profileDisplayNameProvider.notifier).setName('');
     if (mounted) context.go(KaalRoutes.signin);
   }
 

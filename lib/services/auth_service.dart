@@ -55,14 +55,37 @@ class AuthService {
         type: OtpType.email,
       );
 
+  /// [signInWithOAuth]'s Future resolves as soon as the browser/webview is
+  /// launched, not when the user actually finishes (or abandons) the flow —
+  /// the real outcome arrives later via the deep-link callback: a
+  /// [AuthChangeEvent.signedIn] event on success, or a stream error on
+  /// failure (supabase_flutter's deep-link handler calls `notifyException`
+  /// for a failed `getSessionFromUrl`, e.g. cancelled/misconfigured/bad
+  /// state). This waits for that real outcome so callers can safely navigate
+  /// only once sign-in has actually completed. Mirrors the pattern already
+  /// used in GoogleService._oauthViaSupabase.
+  Future<void> _oauthSignInAndWait(
+    Future<void> Function() launch, {
+    Duration timeout = const Duration(minutes: 3),
+  }) async {
+    // Subscribe before launching so a fast callback can't be missed.
+    final signedIn = authStateChanges
+        .where((s) => s.event == AuthChangeEvent.signedIn)
+        .first
+        .timeout(timeout, onTimeout: () => throw const AuthException(
+            'Sign-in timed out — please try again.'));
+    await launch();
+    await signedIn;
+  }
+
   // ── Google (browser-based PKCE via Supabase OAuth) ─────────────────────────
 
-  Future<void> signInWithGoogle() async {
-    await _client.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: _redirect('login-callback'),
-    );
-  }
+  Future<void> signInWithGoogle() => _oauthSignInAndWait(() async {
+        await _client.auth.signInWithOAuth(
+          OAuthProvider.google,
+          redirectTo: _redirect('login-callback'),
+        );
+      });
 
   // ── Apple (native Sign in with Apple → Supabase id-token) ─────────────────
   // Required by App Store Guideline 4.8 because the app offers Google login.
@@ -119,12 +142,12 @@ class AuthService {
 
   // ── Microsoft (browser-based PKCE via Supabase OAuth) ─────────────────────
 
-  Future<void> signInWithMicrosoft() async {
-    await _client.auth.signInWithOAuth(
-      OAuthProvider.azure,
-      redirectTo: _redirect('login-callback'),
-    );
-  }
+  Future<void> signInWithMicrosoft() => _oauthSignInAndWait(() async {
+        await _client.auth.signInWithOAuth(
+          OAuthProvider.azure,
+          redirectTo: _redirect('login-callback'),
+        );
+      });
 
   // ── Sign out ──────────────────────────────────────────────────────────────
 

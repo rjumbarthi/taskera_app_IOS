@@ -99,7 +99,13 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
     setState(() { _loading = true; _error = null; });
     try {
       await fn();
-      if (mounted && successRoute != null) context.go(successRoute);
+      if (mounted && successRoute != null) {
+        // Any real sign-in means the user is no longer local-only — the
+        // mandatory-paywall gate must stop applying regardless of how
+        // skipAuth got set previously (e.g. an earlier "Skip" tap).
+        AppLaunchPrefs.clearSkipAuth(ref.read(sharedPreferencesProvider));
+        context.go(successRoute);
+      }
     } catch (e) {
       if (mounted) setState(() => _error = _friendlyError(e));
     } finally {
@@ -208,6 +214,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
     }
     if (msg.contains('bad_oauth_state') || msg.contains('flow_state')) {
       return 'Sign-in session expired — please try again.';
+    }
+    if (msg.contains('timed out')) {
+      return 'Sign-in timed out — please try again.';
     }
     if (msg.contains('server_error') ||
         msg.contains('unable to exchange') ||
