@@ -43,6 +43,7 @@ dependencies:
   sign_in_with_apple: ^6.1.0        # Sign in with Apple (App Store Guideline 4.8)
   home_widget: ^0.6.0              # home-screen / lock-screen DTN widget (Android + iOS)
   google_mobile_ads: ^9.0.0        # AdMob — interstitial + rewarded ads for free-plan users (Android/iOS only)
+  app_tracking_transparency: ^2.0.6+1  # iOS ATT prompt (Guideline 5.1.1) — must precede ad SDK init
 
 dev_dependencies:
   flutter_test:

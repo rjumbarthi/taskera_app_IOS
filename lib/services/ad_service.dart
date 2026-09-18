@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -22,9 +25,19 @@ class AdService {
   bool get _supported => isMobile && AdsConfig.enabled;
 
   /// Initialize the SDK and warm up the first ads. Safe to call once at startup.
+  ///
+  /// On iOS this must request App Tracking Transparency *before* the ad SDK
+  /// initializes — Info.plist declares NSUserTrackingUsageDescription, and
+  /// Apple requires the actual system prompt to back that up (Guideline 5.1.1).
   Future<void> init() async {
     if (_initialized || !_supported) return;
     _initialized = true;
+    if (Platform.isIOS) {
+      final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+      if (status == TrackingStatus.notDetermined) {
+        await AppTrackingTransparency.requestTrackingAuthorization();
+      }
+    }
     await MobileAds.instance.initialize();
     _loadInterstitial();
     _loadRewarded();
