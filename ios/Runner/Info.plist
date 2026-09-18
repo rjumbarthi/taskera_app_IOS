@@ -28,11 +28,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<!-- AdMob application id. Required by the Google Mobile Ads SDK or the app
-	     crashes on launch. This is Google's official iOS TEST app id (mirrors the
-	     test id in AndroidManifest). Replace with your real AdMob iOS app id
-	     before shipping ads to production. -->
+	     crashes on launch. Real Kaal iOS AdMob app id. Ad units still use
+	     Google's test unit ids (AdsConfig.useTestAds) until the 4 real ad
+	     unit ids + Android app id are ready. -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-9013964076288950~7410101558</string>
 	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network.
 	     Add other ad networks' ids here if you enable mediation. Missing this loses
 	     ad attribution but is not a rejection blocker. -->
