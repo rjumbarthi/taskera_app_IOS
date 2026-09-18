@@ -13,6 +13,14 @@
 // from the In-App Purchase key in App Store Connect → Users and Access →
 // Integrations → Keys).
 //
+// IMPORTANT: until Kaal is actually released on the App Store, Apple's
+// PRODUCTION App Store Server API returns 401 (not 404) for every request,
+// regardless of environment — confirmed by other developers hitting the same
+// issue pre-release. So the sandbox fallback must trigger on ANY non-OK
+// response, not just 404, or it never actually reaches sandbox. Once Kaal is
+// live on the App Store this still works correctly (production will then
+// return real 404s for genuinely-sandbox-only transactions).
+//
 // Secrets: supabase secrets set APPLE_IAP_KEY_ID=... APPLE_IAP_ISSUER_ID=...
 //          APPLE_IAP_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----...' APPLE_BUNDLE_ID=...
 //          GOOGLE_PLAY_SERVICE_ACCOUNT='{...}' (Play, JSON)
@@ -52,13 +60,6 @@ function b64urlBytes(bytes: Uint8Array): string {
   return b64url(s);
 }
 
-// Decode a JWS payload WITHOUT verifying its signature. Safe here because the
-// only JWS we decode without independent verification is Apple's own response
-// body, received over a TLS connection we just authenticated ourselves via our
-// signed request — transport auth is the trust anchor, not the JWS signature.
-// ponytail: skips x5c chain verification; upgrade if this ever needs to trust
-// a JWS from an untrusted/unauthenticated source (e.g. verifying the client's
-// own transaction JWS directly instead of asking Apple).
 function decodeJwsPayload(jws: string): any {
   const parts = jws.split(".");
   if (parts.length < 2) throw new Error("not a JWS");
@@ -76,7 +77,10 @@ async function appStoreServerJwt(): Promise<string> {
 
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: "ES256", kid: keyId, typ: "JWT" };
-  const payload = { iss: issuerId, iat: now, exp: now + 1200, aud: "appstoreconnect-v1", bid: bundleId };
+  const payload = {
+    iss: issuerId, iat: now, exp: now + 1200, aud: "appstoreconnect-v1", bid: bundleId,
+    nonce: crypto.randomUUID(),
+  };
   const unsigned = `${b64url(JSON.stringify(header))}.${b64url(JSON.stringify(payload))}`;
 
   const pkcs8 = pem
@@ -94,30 +98,34 @@ async function appStoreServerJwt(): Promise<string> {
 }
 
 // iOS — App Store Server API. `transactionJws` is the StoreKit2 transaction
-// JWS from the client (verificationData.serverVerificationData). We only
-// decode it locally to extract the transaction id — the actual entitlement
-// decision comes from Apple's authoritative /inApps/v1/subscriptions lookup,
-// which also gives real subscription status (active/expired/billing-retry/
-// grace-period/revoked) and auto-renew status, unlike a raw receipt/transaction.
+// JWS from the client. We decode it locally only to extract the transaction
+// id; the entitlement decision comes from Apple's authoritative
+// /inApps/v1/subscriptions lookup (real subscription status + auto-renew).
 async function verifyApple(transactionJws: string, productId: string): Promise<Entitlement> {
   try {
     const decoded = decodeJwsPayload(transactionJws);
     const originalTransactionId = decoded.originalTransactionId ?? decoded.transactionId;
     if (!originalTransactionId) return { ...EXPIRED, debug: "no_transaction_id_in_jws" };
 
-    const jwt = await appStoreServerJwt();
-    const lookup = (base: string) =>
-      fetch(`${base}/inApps/v1/subscriptions/${originalTransactionId}`, {
-        headers: { Authorization: `Bearer ${jwt}` },
+    const lookup = async (base: string) => {
+      const jwt = await appStoreServerJwt(); // fresh JWT (with new nonce) per call
+      return fetch(`${base}/inApps/v1/subscriptions/${originalTransactionId}`, {
+        headers: { Authorization: `Bearer ${jwt}`, Accept: "application/json" },
       });
+    };
 
     let res = await lookup("https://api.storekit.itunes.apple.com");
-    if (res.status === 404) {
+    let usedSandbox = false;
+    // Pre-release apps get 401 from production regardless of environment, and
+    // even post-release a genuinely-wrong-environment lookup can 404 — so any
+    // non-OK production response falls back to sandbox rather than only 404.
+    if (!res.ok) {
+      usedSandbox = true;
       res = await lookup("https://api.storekit-sandbox.itunes.apple.com");
     }
     if (!res.ok) {
       const text = await res.text();
-      return { ...EXPIRED, debug: `appstore_api_${res.status}_${text.slice(0, 150)}` };
+      return { ...EXPIRED, debug: `appstore_api_${res.status}_sb_${usedSandbox}_${text.slice(0, 120)}` };
     }
 
     const body = await res.json();
@@ -134,7 +142,7 @@ async function verifyApple(transactionJws: string, productId: string): Promise<E
         }
       }
     }
-    if (!latestTxn) return { ...EXPIRED, debug: "no_matching_subscription_txn" };
+    if (!latestTxn) return { ...EXPIRED, debug: `no_matching_txn_sb_${usedSandbox}` };
 
     const expiresMs = Number(latestTxn.expiresDate ?? 0);
     const willRenew = latestRenewal?.autoRenewStatus === 1;
