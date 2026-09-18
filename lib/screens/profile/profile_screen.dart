@@ -100,6 +100,7 @@ class _HeroCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final name    = ref.watch(displayNameProvider);
     final user    = ref.watch(currentUserProvider);
+    final isPro   = ref.watch(isProProvider);
     final display = name ?? 'User';
     final l = AppL10n.of(context);
     final memberSince = () {
@@ -127,19 +128,20 @@ class _HeroCard extends ConsumerWidget {
         ]),
       ),
       const Spacer(),
-      GestureDetector(
-        onTap: () => context.push(KaalRoutes.paywall),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
-            borderRadius: BorderRadius.circular(8),
+      if (!isPro)
+        GestureDetector(
+          onTap: () => context.push(KaalRoutes.paywall),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(AppL10n.of(context).goPro,
+                style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                    fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
           ),
-          child: Text(AppL10n.of(context).goPro,
-              style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                  fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
         ),
-      ),
     ]);
   }
 }
