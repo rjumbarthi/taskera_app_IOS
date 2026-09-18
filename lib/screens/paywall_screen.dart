@@ -229,8 +229,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             : (postOnboard
                                 ? 'Continue with free plan'
                                 : AppL10n.of(context).maybeLater),
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                            color: mandatory ? KaalColors.acc2 : colors.ink3, height: 1))),
+                        style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+                            color: KaalColors.acc2, height: 1))),
                   ),
                 ),
                 GestureDetector(
@@ -238,8 +238,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(child: Text(AppL10n.of(context).restorePurchase,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11,
-                            color: colors.ink3, height: 1))),
+                        style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                            color: KaalColors.acc2, height: 1))),
                   ),
                 ),
                 const SizedBox(height: 4),
