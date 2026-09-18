@@ -173,7 +173,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         body: Column(children: [
           KaalTopBar(
             title: 'Kaal Pro',
-            leading: mandatory ? null : AddBackButton(onTap: leave),
+            leading: AddBackButton(
+                onTap: mandatory ? () => context.go(KaalRoutes.signin) : leave),
           ),
           Expanded(
             child: ListView(
