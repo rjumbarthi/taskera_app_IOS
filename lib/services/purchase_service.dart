@@ -43,7 +43,7 @@ class PurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _sub;
 
-  static const Set<String> productIds = {
+  static Set<String> get productIds => {
     AppConfig.proMonthlyProductId,
     AppConfig.proAnnualProductId,
   };

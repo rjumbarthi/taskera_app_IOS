@@ -1,6 +1,9 @@
 // All configuration constants — fill these in after running through SETUP.md.
 // NEVER commit real API keys to git. Add this file to .gitignore or use
 // `flutter run --dart-define=SUPABASE_URL=...` to inject at build time.
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class AppConfig {
   AppConfig._();
 
@@ -18,11 +21,22 @@ class AppConfig {
   static const posthogHost   = 'https://us.i.posthog.com';
 
   // ── Payments ──────────────────────────────────────────────────────────────
-  // Subscription product IDs — create these in Play Console + App Store Connect
-  // (use the SAME id on both stores). UPI/cards appear inside Play's checkout in
-  // India automatically — no separate UPI SDK is used for the in-app purchase.
-  static const proMonthlyProductId = 'kaal_pro_monthly';
-  static const proAnnualProductId  = 'kaal_pro_annual';
+  // Subscription product IDs. Intended to be the SAME id on both stores, but
+  // the iOS App Store Connect subscriptions were created as
+  // com.port443.kaal.pro.monthly/.annual instead of kaal_pro_monthly/annual —
+  // and Apple product IDs can never be edited once created — so iOS gets its
+  // own constants here while Android keeps the original plain ids. UPI/cards
+  // appear inside Play's checkout in India automatically — no separate UPI
+  // SDK is used for the in-app purchase.
+  static const _proMonthlyProductIdAndroid = 'kaal_pro_monthly';
+  static const _proAnnualProductIdAndroid  = 'kaal_pro_annual';
+  static const proMonthlyProductIdIOS = 'com.port443.kaal.pro.monthly';
+  static const proAnnualProductIdIOS  = 'com.port443.kaal.pro.annual';
+
+  static String get proMonthlyProductId =>
+      (!kIsWeb && Platform.isIOS) ? proMonthlyProductIdIOS : _proMonthlyProductIdAndroid;
+  static String get proAnnualProductId =>
+      (!kIsWeb && Platform.isIOS) ? proAnnualProductIdIOS : _proAnnualProductIdAndroid;
 
   // Razorpay payment LINK (razorpay.me/... or a generated Payment Link). Opened
   // in an external browser for a UPI checkout on your website — kept OUTSIDE the
