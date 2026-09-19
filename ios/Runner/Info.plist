@@ -33,6 +33,10 @@
 	     unit ids + Android app id are ready. -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9013964076288950~7410101558</string>
+	<!-- Native Google Sign-In (google_sign_in package) — required for
+	     GoogleSignIn() to work on iOS. Matches AppConfig.googleClientIdIos. -->
+	<key>GIDClientID</key>
+	<string>657874499735-v5ocrfin2as18hgu3lv3ba726vdggsmp.apps.googleusercontent.com</string>
 	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network.
 	     Add other ad networks' ids here if you enable mediation. Missing this loses
 	     ad attribution but is not a rejection blocker. -->
@@ -107,6 +111,16 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>io.supabase.kaalapp</string>
+			</array>
+		</dict>
+		<!-- Reversed GIDClientID — required callback scheme for native Google
+		     Sign-In on iOS. Matches AppConfig.googleClientIdIos. -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.657874499735-v5ocrfin2as18hgu3lv3ba726vdggsmp</string>
 			</array>
 		</dict>
 	</array>

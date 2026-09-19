@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -78,9 +79,35 @@ class AuthService {
     await signedIn;
   }
 
-  // ── Google (browser-based PKCE via Supabase OAuth) ─────────────────────────
+  // ── Google ──────────────────────────────────────────────────────────────
+  // Native sign-in sheet on iOS (matches Sign in with Apple's UX, no browser
+  // hop); browser-based PKCE via Supabase OAuth everywhere else.
 
-  Future<void> signInWithGoogle() => _oauthSignInAndWait(() async {
+  bool get _isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+
+  Future<void> signInWithGoogle() =>
+      _isIOS ? _signInWithGoogleNative() : _signInWithGoogleBrowser();
+
+  Future<void> _signInWithGoogleNative() async {
+    final googleSignIn = GoogleSignIn(
+      clientId: AppConfig.googleClientIdIos,
+      scopes: const ['email'],
+    );
+    final account = await googleSignIn.signIn();
+    if (account == null) throw const AuthException('Sign-in cancelled.');
+    final auth = await account.authentication;
+    final idToken = auth.idToken;
+    if (idToken == null) {
+      throw const AuthException('No identity token returned from Google.');
+    }
+    await _client.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+      accessToken: auth.accessToken,
+    );
+  }
+
+  Future<void> _signInWithGoogleBrowser() => _oauthSignInAndWait(() async {
         await _client.auth.signInWithOAuth(
           OAuthProvider.google,
           redirectTo: _redirect('login-callback'),
