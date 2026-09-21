@@ -7,6 +7,7 @@ import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/google_access_sheet.dart';
 
 class GmailSyncScreen extends ConsumerStatefulWidget {
   const GmailSyncScreen({super.key});
@@ -39,6 +40,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
       ));
       return;
     }
+    if (!await confirmGoogleAccess(context, GoogleAccess.gmail) || !mounted) return;
     setState(() => _connecting = true);
     try {
       final ok = await ref.read(integrationsProvider.notifier).connectGmail();

@@ -16,7 +16,7 @@ abstract final class AdsConfig {
   static const bool enabled = true;
 
   /// Use Google's sample ad units (safe for development). Set false for release.
-  static const bool useTestAds = true;
+  static const bool useTestAds = false;
 
   // ── Test IDs (Google-provided, always safe to load) ─────────────────────────
   static const _testInterstitialAndroid = 'ca-app-pub-3940256099942544/1033173712';
@@ -25,20 +25,25 @@ abstract final class AdsConfig {
   static const _testRewardedIos         = 'ca-app-pub-3940256099942544/1712485313';
 
   // ── Production IDs — REPLACE before going live ──────────────────────────────
-  static const _prodInterstitialAndroid = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  static const _prodInterstitialAndroid = 'ca-app-pub-9013964076288950/1324943461'; // kaal_ad_Interstitial
   static const _prodInterstitialIos     = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodRewardedAndroid     = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  static const _prodRewardedAndroid     = 'ca-app-pub-9013964076288950/3839426160'; // kaal_ad_rewarded
   static const _prodRewardedIos         = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
 
   static bool get _ios => Platform.isIOS;
 
-  static String get interstitialUnitId => useTestAds
-      ? (_ios ? _testInterstitialIos : _testInterstitialAndroid)
-      : (_ios ? _prodInterstitialIos : _prodInterstitialAndroid);
+  // A production ID that is still the XXXX placeholder falls back to Google's
+  // test unit, so an unfilled slot loads a test ad instead of failing outright.
+  static String _pick(String prod, String test) =>
+      useTestAds || prod.contains('XXXX') ? test : prod;
 
-  static String get rewardedUnitId => useTestAds
-      ? (_ios ? _testRewardedIos : _testRewardedAndroid)
-      : (_ios ? _prodRewardedIos : _prodRewardedAndroid);
+  static String get interstitialUnitId => _ios
+      ? _pick(_prodInterstitialIos, _testInterstitialIos)
+      : _pick(_prodInterstitialAndroid, _testInterstitialAndroid);
+
+  static String get rewardedUnitId => _ios
+      ? _pick(_prodRewardedIos, _testRewardedIos)
+      : _pick(_prodRewardedAndroid, _testRewardedAndroid);
 
   /// Minimum gap between interstitials, so we never spam the user. A free user
   /// sees at most one interstitial every 2 hours (and only on a tab-switch).

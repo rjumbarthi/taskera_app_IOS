@@ -47,7 +47,8 @@ AndroidNotificationDetails _reminderAndroidDetails(bool isAlarm) =>
       icon: 'ic_stat_focus',
       importance: isAlarm ? Importance.max : Importance.high,
       priority:   isAlarm ? Priority.max   : Priority.high,
-      fullScreenIntent: isAlarm,
+      // No full-screen intent: USE_FULL_SCREEN_INTENT is not allowed for this app
+      // category on Google Play. Alarms stay heads-up + alarm sound/category.
       category: isAlarm
           ? AndroidNotificationCategory.alarm
           : AndroidNotificationCategory.reminder,

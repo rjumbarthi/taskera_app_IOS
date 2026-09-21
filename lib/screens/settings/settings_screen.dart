@@ -20,6 +20,7 @@ import '../../routing/routes.dart';
 import '../../settings/app_launch_prefs.dart';
 import '../../settings/kaal_settings.dart';
 import '../../settings/prefs_provider.dart';
+import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -154,7 +155,7 @@ final _intWork = [
 ];
 
 final _intCalEmail = [
-  _IntService('Google Calendar', 'Events → tasks · two-way deadline sync',
+  _IntService('Google Calendar', 'Events → tasks · read-only',
       const Color(0xFF4285F4), _icoGCal, _IntStatus.connected),
   _IntService('Gmail', 'Emails parsed on-device · Kaal suggestions',
       const Color(0xFFEA4335), _icoGmail, _IntStatus.active),
@@ -1115,9 +1116,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ]);
     final calEmailTaps = gateT(cKeys, cNames, <VoidCallback?>[
       tap(integrations.googleCalendarConnected,
-          notifier.disconnectCalendar, notifier.connectGoogleCalendar),
+          notifier.disconnectCalendar,
+          () async => await confirmGoogleAccess(context, GoogleAccess.calendar) &&
+              await notifier.connectGoogleCalendar()),
       tap(integrations.gmailConnected,
-          notifier.disconnectGmail,    notifier.connectGmail),
+          notifier.disconnectGmail,
+          () async => await confirmGoogleAccess(context, GoogleAccess.gmail) &&
+              await notifier.connectGmail()),
       () => _comingSoon(context, 'Outlook / Hotmail'),
       () => _comingSoon(context, 'iCloud Mail'),
     ]);

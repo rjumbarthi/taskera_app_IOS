@@ -10,6 +10,7 @@ import '../../data/database.dart'
 import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../services/google_service.dart';
+import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
@@ -186,6 +187,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
       return;
     }
 
+    if (!mounted || !await confirmGoogleAccess(context, GoogleAccess.gmail) || !mounted) return;
     setState(() => _loading = true);
     bool ok = false;
     try { ok = await gs.connectGmail(); } catch (_) {}

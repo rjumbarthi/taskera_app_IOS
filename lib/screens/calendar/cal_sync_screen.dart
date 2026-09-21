@@ -6,6 +6,7 @@ import '../../data/providers/feature_flags_provider.dart';
 import '../../theme/kaal_colors.dart';
 import '../../theme/kaal_theme.dart';
 import '../../widgets/add_back_button.dart';
+import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
 
 class CalSyncScreen extends ConsumerStatefulWidget {
@@ -16,7 +17,6 @@ class CalSyncScreen extends ConsumerStatefulWidget {
 }
 
 class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
-  int  _syncDir      = 0; // 0=Both, 1=Push, 2=Pull
   bool _prepTasks    = true;
   bool _conflictDet  = true;
   bool _connected    = false;
@@ -42,6 +42,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
       ));
       return;
     }
+    if (!await confirmGoogleAccess(context, GoogleAccess.calendar) || !mounted) return;
     setState(() => _connecting = true);
     try {
       final ok = await ref.read(integrationsProvider.notifier).connectGoogleCalendar();
@@ -68,8 +69,6 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
     if (mounted) setState(() => _connected = false);
   }
 
-  static const _syncDirs = ['Both ways', 'Tasks → Cal only', 'Cal → Tasks only'];
-
   @override
   Widget build(BuildContext context) {
     final colors = KaalTheme.of(context).colors;
@@ -89,7 +88,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(AppL10n.of(context).calendarSync, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('Two-way · Google Calendar', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text('One-way · Google Calendar → Kaal (read-only)', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -150,8 +149,6 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          _CountCell(value: '0', label: 'Tasks → Calendar', valueColor: colors.ink),
-                          const SizedBox(width: 8),
                           _CountCell(value: '0',  label: 'Events → Tasks',   valueColor: KaalColors.acc2),
                         ],
                       ),
@@ -207,40 +204,6 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Sync direction segmented
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 11),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(AppL10n.of(context).syncDirection, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2)),
-                          const SizedBox(height: 7),
-                          Row(
-                            children: [
-                              for (int i = 0; i < _syncDirs.length; i++) ...[
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => setState(() => _syncDir = i),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 7),
-                                      decoration: BoxDecoration(
-                                        color: _syncDir == i ? const Color(0x1A0A84FF) : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(7),
-                                        border: Border.all(width: 0.5, color: _syncDir == i ? const Color(0x330A84FF) : colors.bdr),
-                                      ),
-                                      child: Text(_syncDirs[i], textAlign: TextAlign.center,
-                                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
-                                          color: _syncDir == i ? KaalColors.acc2 : colors.ink3, height: 1)),
-                                    ),
-                                  ),
-                                ),
-                                if (i < _syncDirs.length - 1) const SizedBox(width: 5),
-                              ],
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
                     _SettingRow(label: 'Suggest prep tasks from events', value: _prepTasks,
                       onChanged: (v) => setState(() => _prepTasks = v), colors: colors),
                     _SettingRow(label: 'Conflict detection', value: _conflictDet,
