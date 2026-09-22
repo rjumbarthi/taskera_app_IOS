@@ -190,6 +190,12 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
       _           => LegalTab.terms,
     }), state: s)),
     GoRoute(path: KaalRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
+    // Was nested under the Profile tab's StatefulShellBranch, but it's also
+    // pushed from the paywall — a different ShellRoute entirely. Pushing a
+    // StatefulShellRoute-nested path from outside that shell renders blank
+    // (two separate navigator trees), so this needs to live at the root
+    // alongside the other cross-shell modals above.
+    GoRoute(path: KaalRoutes.referral, pageBuilder: (c, s) => slideRightPage(child: const ReferralScreen(), state: s)),
       ], // _NavShell.routes
     ),   // ShellRoute(_NavShell)
 
@@ -378,7 +384,6 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
                   NoTransitionPage<void>(key: state.pageKey, child: const ProfileScreen()),
               routes: [
                 GoRoute(path: 'edit',         pageBuilder: (c, s) => slideRightPage(child: const EditProfileScreen(),   state: s)),
-                GoRoute(path: 'referral',     pageBuilder: (c, s) => slideRightPage(child: const ReferralScreen(),      state: s)),
                 GoRoute(path: 'weeklyreview', pageBuilder: (c, s) => slideRightPage(child: const WeeklyReviewScreen(),  state: s)),
               ],
             ),
