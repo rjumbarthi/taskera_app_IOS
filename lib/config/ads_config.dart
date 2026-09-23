@@ -26,9 +26,9 @@ abstract final class AdsConfig {
 
   // ── Production IDs — REPLACE before going live ──────────────────────────────
   static const _prodInterstitialAndroid = 'ca-app-pub-9013964076288950/1324943461'; // kaal_ad_Interstitial
-  static const _prodInterstitialIos     = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  static const _prodInterstitialIos     = 'ca-app-pub-9013964076288950/7049993571'; // kaal_ad_Interstitial
   static const _prodRewardedAndroid     = 'ca-app-pub-9013964076288950/3839426160'; // kaal_ad_rewarded
-  static const _prodRewardedIos         = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  static const _prodRewardedIos         = 'ca-app-pub-9013964076288950/5899643566'; // kaal_ad_rewarded
 
   static bool get _ios => Platform.isIOS;
 
