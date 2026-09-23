@@ -1,0 +1,289 @@
+name: TaskEra iOS wBuild
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-ios:
+    name: Build TaskEra iOS IPA
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Select Xcode 26.6 GA
+        run: |
+          set -e
+          sudo xcode-select -s /Applications/Xcode_26.6.app
+
+          echo "=== Xcode Path ==="
+          xcode-select -p
+
+          echo "=== Xcode Version ==="
+          xcodebuild -version
+
+          echo "=== Xcode Developer Directory ==="
+          xcode-select -p
+
+          test "$(xcodebuild -version | head -1)" = "Xcode 26.6"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Verify Flutter
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Flutter pub get
+        run: |
+          flutter pub get
+
+      - name: Install Apple Distribution certificate
+        env:
+          P12_BASE64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          KEYCHAIN_PATH="$RUNNER_TEMP/taskera-signing.keychain-db"
+          P12_PATH="$RUNNER_TEMP/TaskEra_Distribution_2026.p12"
+
+          echo "Creating temporary keychain..."
+
+          security create-keychain \
+            -p "$P12_PASSWORD" \
+            "$KEYCHAIN_PATH"
+
+          security set-keychain-settings \
+            -lut 21600 \
+            "$KEYCHAIN_PATH"
+
+          security unlock-keychain \
+            -p "$P12_PASSWORD" \
+            "$KEYCHAIN_PATH"
+
+          echo "Decoding P12..."
+
+          printf '%s' "$P12_BASE64" \
+            | base64 --decode \
+            > "$P12_PATH"
+
+          echo "P12 size:"
+          wc -c "$P12_PATH"
+
+          echo "Importing P12..."
+
+          security import "$P12_PATH" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$P12_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/security \
+            -T /usr/bin/productbuild \
+            -T /usr/bin/productsign
+
+          security list-keychains -d user -s \
+            "$KEYCHAIN_PATH" \
+            "$HOME/Library/Keychains/login.keychain-db"
+
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          security unlock-keychain \
+            -p "$P12_PASSWORD" \
+            "$KEYCHAIN_PATH"
+
+          echo "Code signing identities:"
+
+          security find-identity \
+            -v \
+            -p codesigning
+
+      - name: Install provisioning profile
+        env:
+          PROFILE_BASE64: ${{ secrets.APPSTORE_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          set -euo pipefail
+
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          PROFILE_PATH="$PROFILE_DIR/TaskEra_AppStore_2026.mobileprovision"
+
+          mkdir -p "$PROFILE_DIR"
+
+          echo "Decoding provisioning profile..."
+
+          printf '%s' "$PROFILE_BASE64" \
+            | base64 --decode \
+            > "$PROFILE_PATH"
+
+          echo "Profile size:"
+          wc -c "$PROFILE_PATH"
+
+          echo "Validating provisioning profile..."
+
+          security cms \
+            -D \
+            -i "$PROFILE_PATH" \
+            > "$RUNNER_TEMP/taskera-profile.plist"
+
+          PROFILE_NAME=$(
+            /usr/libexec/PlistBuddy \
+              -c "Print :Name" \
+              "$RUNNER_TEMP/taskera-profile.plist"
+          )
+
+          APP_ID=$(
+            /usr/libexec/PlistBuddy \
+              -c "Print :Entitlements:application-identifier" \
+              "$RUNNER_TEMP/taskera-profile.plist"
+          )
+
+          TEAM_ID=$(
+            /usr/libexec/PlistBuddy \
+              -c "Print :Entitlements:com.apple.developer.team-identifier" \
+              "$RUNNER_TEMP/taskera-profile.plist"
+          )
+
+          echo "Profile name: $PROFILE_NAME"
+          echo "Application ID: $APP_ID"
+          echo "Team ID: $TEAM_ID"
+
+          test "$PROFILE_NAME" = "TaskEra_AppStore_2026"
+          test "$APP_ID" = "3DNDH5L226.com.port443.taskera"
+          test "$TEAM_ID" = "3DNDH5L226"
+
+          echo "Provisioning profile validation successful."
+
+      - name: Verify signing
+        run: |
+          set -e
+
+          echo "Signing identities:"
+          security find-identity -v -p codesigning
+
+          echo ""
+          echo "Provisioning profiles:"
+          ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/"
+
+      - name: Verify Bundle ID
+        run: |
+          set -e
+
+          grep -n "PRODUCT_BUNDLE_IDENTIFIER" \
+            ios/Runner.xcodeproj/project.pbxproj
+
+      - name: Verify ExportOptions.plist
+        run: |
+          set -e
+
+          test -f ios/ExportOptions.plist
+          plutil -lint ios/ExportOptions.plist
+
+          echo "ExportOptions.plist:"
+          cat ios/ExportOptions.plist
+
+      - name: Build Flutter iOS
+        run: |
+          set -e
+
+          flutter build ios \
+            --release \
+            --no-codesign \
+            --build-number=1
+
+      - name: Archive TaskEra
+        run: |
+          set -euo pipefail
+
+          mkdir -p build/ios/archive
+
+          echo "=== Signing identities ==="
+          security find-identity -v -p codesigning
+
+          echo "=== Installed profiles ==="
+          ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/"
+
+          echo "=== Runner Release signing settings ==="
+
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -showBuildSettings \
+            | grep -E \
+              'PRODUCT_BUNDLE_IDENTIFIER|DEVELOPMENT_TEAM|CODE_SIGN_STYLE|CODE_SIGN_IDENTITY|PROVISIONING_PROFILE'
+
+          echo "=== Archiving Runner ==="
+
+          xcodebuild \
+          -workspace ios/Runner.xcworkspace \
+          -scheme Runner \
+            -configuration Release \
+           -sdk iphoneos \
+             -archivePath build/ios/archive/Runner.xcarchive \
+            archive
+
+      - name: Export TaskEra IPA
+        run: |
+          set -e
+
+          mkdir -p build/ios/ipa
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ios/ExportOptions.plist
+
+      - name: Verify IPA
+        run: |
+          set -e
+
+          echo "Generated IPA files:"
+
+          find build/ios/ipa \
+            -type f \
+            -name "*.ipa" \
+            -print
+
+          IPA_COUNT=$(
+            find build/ios/ipa \
+              -type f \
+              -name "*.ipa" \
+              | wc -l \
+              | tr -d ' '
+          )
+
+          if [ "$IPA_COUNT" -eq 0 ]; then
+            echo "ERROR: No IPA generated."
+            exit 1
+          fi
+
+          echo "IPA successfully generated."
+
+      - name: Upload to TestFlight
+        uses: apple-actions/upload-testflight-build@v4
+        with:
+          app-path: build/ios/ipa/taskera_app.ipa
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          wait-for-processing: true
+
+      - name: Upload Xcode Archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: TaskEra-iOS-Archive
+          path: build/ios/archive/*.xcarchive
+          if-no-files-found: error
+          retention-days: 14
