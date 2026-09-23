@@ -34,7 +34,6 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
   int? _focus;
   int? _peak;
   int? _quadrant;
-  bool _indiaOpen = false;
   bool _saving = false;
   final _taskCtrl = TextEditingController();
 
@@ -42,11 +41,6 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     'English', '日本語', 'Deutsch', '한국어', 'Français',
     '中文', 'Español', 'Português', 'Italiano', 'Nederlands', 'العربية',
   ];
-  static const _indiaLangs = [
-    'हिन्दी', 'తెలుగు', 'தமிழ்', 'ಕನ್ನಡ',
-    'മലയാളം', 'मराठी', 'ગુજરાતી', 'বাংলা',
-  ];
-  static const _indiaOffset = 11;
 
   static const _roleOpts = [
     ('💼', 'Professional / PM / Founder', 'Projects, meetings, deadlines'),
@@ -265,46 +259,11 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     );
   }
 
-  // ── Language chips (world + collapsible Indian group) ─────────────────────
+  // ── Language chips ──────────────────────────────────────────────────────
   Widget _languageBlock(TaskEraColors colors) {
-    final indiaSelected = _langIdx >= _indiaOffset;
-    if (indiaSelected && !_indiaOpen) _indiaOpen = true;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Wrap(spacing: 6, runSpacing: 6, children: [
-          for (int i = 0; i < _worldLangs.length; i++) _langChip(i, _worldLangs[i], colors),
-        ]),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () => setState(() => _indiaOpen = !_indiaOpen),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-            decoration: BoxDecoration(
-              color: indiaSelected ? TaskEraColors.accBg : colors.surf2,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(width: 0.5,
-                  color: indiaSelected ? const Color(0x4D0A84FF) : colors.bdr0),
-            ),
-            child: Row(children: [
-              Text('🇮🇳  Indian Languages', style: TextStyle(
-                fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
-                color: indiaSelected ? TaskEraColors.acc2 : colors.ink2, height: 1)),
-              const Spacer(),
-              Icon(_indiaOpen ? Icons.expand_less : Icons.expand_more, size: 16,
-                  color: indiaSelected ? TaskEraColors.acc2 : colors.ink3),
-            ]),
-          ),
-        ),
-        if (_indiaOpen) ...[
-          const SizedBox(height: 8),
-          Wrap(spacing: 6, runSpacing: 6, children: [
-            for (int i = 0; i < _indiaLangs.length; i++)
-              _langChip(_indiaOffset + i, _indiaLangs[i], colors),
-          ]),
-        ],
-      ],
-    );
+    return Wrap(spacing: 6, runSpacing: 6, children: [
+      for (int i = 0; i < _worldLangs.length; i++) _langChip(i, _worldLangs[i], colors),
+    ]);
   }
 
   Widget _langChip(int idx, String label, TaskEraColors colors) {

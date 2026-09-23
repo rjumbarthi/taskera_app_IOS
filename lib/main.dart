@@ -270,14 +270,12 @@ String _computeInitialLocation(SharedPreferences prefs) {
   return TaskEraRoutes.quote;
 }
 
-// Matches AppStrings index order (0-18)
+// Matches AppStrings index order (0-10). Global build — no Indian-language
+// group (see Kaal for that; TaskEra targets the global market).
 const _kLocales = [
   Locale('en'), Locale('ja'), Locale('de'), Locale('ko'),
   Locale('fr'), Locale('zh'), Locale('es'), Locale('pt'),
   Locale('it'), Locale('nl'), Locale('ar'),
-  // Indian group (11-18)
-  Locale('hi'), Locale('te'), Locale('ta'), Locale('kn'),
-  Locale('ml'), Locale('mr'), Locale('gu'), Locale('bn'),
 ];
 
 // Ordered to match settings screen accent picker

@@ -1580,17 +1580,10 @@ class _LangRow extends StatefulWidget {
 }
 
 class _LangRowState extends State<_LangRow> {
-  bool _indiaOpen = false;
-
   static const _worldLangs = [
     'English', '日本語', 'Deutsch', '한국어', 'Français',
     '中文', 'Español', 'Português', 'Italiano', 'Nederlands', 'العربية',
   ];
-  static const _indiaLangs = [
-    'हिन्दी', 'తెలుగు', 'தமிழ்', 'ಕನ್ನಡ',
-    'മലയാളം', 'मराठी', 'ગુજરાતી', 'বাংলা',
-  ];
-  static const _indiaOffset = 11;
 
   Widget _chip(int idx, String label) {
     final sel = widget.selected == idx;
@@ -1615,59 +1608,12 @@ class _LangRowState extends State<_LangRow> {
 
   @override
   Widget build(BuildContext context) {
-    final indiaSelected = widget.selected >= _indiaOffset;
-    if (indiaSelected && !_indiaOpen) _indiaOpen = true;
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Wrap(
+        spacing: 4, runSpacing: 4,
         children: [
-          Wrap(
-            spacing: 4, runSpacing: 4,
-            children: [
-              for (int i = 0; i < _worldLangs.length; i++) _chip(i, _worldLangs[i]),
-            ],
-          ),
-          const SizedBox(height: 6),
-          GestureDetector(
-            onTap: () => setState(() => _indiaOpen = !_indiaOpen),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
-                decoration: BoxDecoration(
-                  color: indiaSelected ? TaskEraColors.accBg : widget.colors.surf2,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(width: 0.5,
-                      color: indiaSelected ? const Color(0x4D0A84FF) : widget.colors.bdr0),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('🇮🇳  Indian Languages', style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
-                      color: indiaSelected ? TaskEraColors.acc2 : widget.colors.ink3,
-                      height: 1,
-                    )),
-                    const SizedBox(width: 4),
-                    Icon(_indiaOpen ? Icons.expand_less : Icons.expand_more,
-                        size: 13,
-                        color: indiaSelected ? TaskEraColors.acc2 : widget.colors.ink3),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          if (_indiaOpen) ...[
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 4, runSpacing: 4,
-              children: [
-                for (int i = 0; i < _indiaLangs.length; i++)
-                  _chip(_indiaOffset + i, _indiaLangs[i]),
-              ],
-            ),
-          ],
+          for (int i = 0; i < _worldLangs.length; i++) _chip(i, _worldLangs[i]),
         ],
       ),
     );
