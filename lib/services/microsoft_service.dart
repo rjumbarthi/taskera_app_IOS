@@ -14,10 +14,10 @@ import '../util/platform_layout.dart';
 /// Microsoft Graph OAuth2 service using PKCE.
 ///
 /// Platform notes:
-/// - Android / iOS : registers `kaalapp://` custom scheme via AndroidManifest / Info.plist
+/// - Android / iOS : registers `taskeraapp://` custom scheme via AndroidManifest / Info.plist
 /// - Windows / macOS: flutter_web_auth_2 spins up a localhost server for the callback
 ///
-/// Azure Portal setup: register `kaalapp://microsoft-auth` (mobile) and
+/// Azure Portal setup: register `taskeraapp://microsoft-auth` (mobile) and
 /// `http://localhost` (desktop) as redirect URIs for the app registration.
 class MicrosoftService {
   MicrosoftService(this._storage);
@@ -31,10 +31,10 @@ class MicrosoftService {
   static const _keyRefresh = 'ms_refresh_token';
 
   // Desktop uses http://localhost (flutter_web_auth_2 handles port selection).
-  // Mobile uses the kaalapp:// custom scheme registered in AndroidManifest/Info.plist.
+  // Mobile uses the taskeraapp:// custom scheme registered in AndroidManifest/Info.plist.
   static String get _redirectUri =>
       isDesktop ? 'http://localhost' : AppConfig.microsoftRedirectUri;
-  static String get _callbackScheme => isDesktop ? 'http' : 'kaalapp';
+  static String get _callbackScheme => isDesktop ? 'http' : 'taskeraapp';
 
   Future<bool> get isConnected async =>
       (await _storage.read(key: _keyAccess)) != null;

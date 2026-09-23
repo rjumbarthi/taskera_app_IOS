@@ -5,11 +5,11 @@ import '../../data/database.dart';
 import '../../data/providers/lists_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_top_bar.dart';
+import '../../widgets/taskera_top_bar.dart';
 import '../../widgets/wallpaper_background.dart';
 
 class StudentModeScreen extends ConsumerWidget {
@@ -17,23 +17,23 @@ class StudentModeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
 
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          KaalTopBar(
+          TaskEraTopBar(
             title: 'Student Mode',
             subtitle: 'UPSC · JEE · MBA · Board exams',
             leading: AddBackButton(onTap: () => Navigator.of(context).pop()),
             actions: [
               Container(width: 8, height: 8,
                   decoration: const BoxDecoration(
-                      color: KaalColors.q2, shape: BoxShape.circle)),
+                      color: TaskEraColors.q2, shape: BoxShape.circle)),
             ],
           ),
           Expanded(
@@ -64,7 +64,7 @@ class StudentModeScreen extends ConsumerWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel(this.text, this.colors);
 
   @override
@@ -82,7 +82,7 @@ class _SectionLabel extends StatelessWidget {
 // ── Exam countdowns ───────────────────────────────────────────────────────────
 
 class _ExamCountdowns extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ExamCountdowns({required this.colors});
 
   @override
@@ -100,7 +100,7 @@ class _ExamCountdowns extends StatelessWidget {
 }
 
 class _AddExamCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _AddExamCard({required this.colors});
 
   @override
@@ -166,7 +166,7 @@ class _DashedBorderPainter extends CustomPainter {
 // ── Study plan card ───────────────────────────────────────────────────────────
 
 class _StudyPlanCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StudyPlanCard({required this.colors});
 
   @override
@@ -194,7 +194,7 @@ class _StudyPlanCard extends StatelessWidget {
 // ── Subject groups ────────────────────────────────────────────────────────────
 
 class _SubjectGroups extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SubjectGroups({required this.colors});
 
   @override
@@ -245,7 +245,7 @@ class _SubjectGroups extends ConsumerWidget {
 /// One subject row backed by a real [CustomList]; counts come from its items.
 class _SubjectRowLive extends ConsumerWidget {
   final CustomList list;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SubjectRowLive({required this.list, required this.colors});
 
   @override
@@ -277,7 +277,7 @@ class _SubjectRow extends StatelessWidget {
   final Color quadColor;
   final Color iconBg;
   final Color border;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SubjectRow({required this.emoji, required this.label, required this.sub,
       required this.quadLabel, required this.quadColor, required this.iconBg,
       required this.border, required this.colors});
@@ -323,7 +323,7 @@ class _SubjectRow extends StatelessWidget {
 // ── Week stats card ───────────────────────────────────────────────────────────
 
 class _WeekStatsCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _WeekStatsCard({required this.colors});
 
   @override
@@ -371,10 +371,10 @@ class _WeekStatsCard extends ConsumerWidget {
               bg: colors.surf2, valueColor: colors.ink),
           const SizedBox(width: 6),
           _WeekCell(value: '$doneThisWeek', label: 'Done',
-              bg: colors.surf2, valueColor: KaalColors.q2),
+              bg: colors.surf2, valueColor: TaskEraColors.q2),
           const SizedBox(width: 6),
           _WeekCell(value: '$streak🔥', label: 'Day streak',
-              bg: const Color(0x14FFB900), valueColor: KaalColors.q4),
+              bg: const Color(0x14FFB900), valueColor: TaskEraColors.q4),
         ]),
       ]),
     );

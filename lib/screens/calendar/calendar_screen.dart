@@ -14,9 +14,9 @@ import '../../services/sync_service.dart';
 import '../../data/providers/database_provider.dart';
 import '../../services/notification_service.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
-import '../../widgets/kaal_sheet.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
+import '../../widgets/taskera_sheet.dart';
 import '../../services/activity_log_service.dart';
 import '../../l10n/app_l10n.dart';
 
@@ -130,7 +130,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final allEvents = ref.watch(calendarEventsProvider).valueOrNull ?? [];
     final dots = _computeDots(allEvents);
     final selectedDate = DateTime(_year, _month, _selected);
@@ -150,7 +150,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               colors: colors,
               onPrev: _prev, onNext: _next, onToday: _today,
               onToggle: (v) => setState(() => _monthView = v),
-              onConnections: () => context.push(KaalRoutes.calSync),
+              onConnections: () => context.push(TaskEraRoutes.calSync),
             ),
             _WeekdayRow(colors: colors),
             if (_monthView)
@@ -174,7 +174,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refresh,
-                color: KaalColors.acc2,
+                color: TaskEraColors.acc2,
                 backgroundColor: const Color(0xFF1C1C1E),
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -200,12 +200,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           right: 16,
           bottom: 16 + MediaQuery.paddingOf(context).bottom,
           child: GestureDetector(
-            onTap: () => context.push(KaalRoutes.calAddSlot),
+            onTap: () => context.push(TaskEraRoutes.calAddSlot),
             child: Container(
               width: 42,
               height: 42,
               decoration: const BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
               ),
@@ -224,7 +224,7 @@ class _MonthNav extends StatelessWidget {
   final int year;
   final int month;
   final bool monthView;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onPrev;
   final VoidCallback onNext;
   final VoidCallback onToday;
@@ -266,12 +266,12 @@ class _MonthNav extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
               decoration: BoxDecoration(
-                color: KaalColors.accBg,
+                color: TaskEraColors.accBg,
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
               ),
               child: Text(AppL10n.of(context).today,
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: KaalColors.acc2, height: 1)),
+                style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1)),
             ),
           ),
           const Spacer(),
@@ -311,7 +311,7 @@ class _MonthNav extends StatelessWidget {
 
 class _NavCircle extends StatelessWidget {
   final String svg;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _NavCircle({required this.svg, required this.colors, required this.onTap});
 
@@ -332,7 +332,7 @@ class _NavCircle extends StatelessWidget {
 class _ViewBtn extends StatelessWidget {
   final String label;
   final bool active;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _ViewBtn({required this.label, required this.active, required this.colors, required this.onTap});
 
@@ -343,7 +343,7 @@ class _ViewBtn extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
         decoration: BoxDecoration(
-          color: active ? KaalColors.acc : Colors.transparent,
+          color: active ? TaskEraColors.acc : Colors.transparent,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Text(label, style: TextStyle(
@@ -358,7 +358,7 @@ class _ViewBtn extends StatelessWidget {
 // ── Weekday headers ───────────────────────────────────────────────────────────
 
 class _WeekdayRow extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _WeekdayRow({required this.colors});
 
   static const _labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -384,7 +384,7 @@ class _WeekStrip extends StatelessWidget {
   final DateTime selected;
   final DateTime today;
   final List<CalendarEvent> allEvents;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<DateTime> onTap;
 
   const _WeekStrip({
@@ -421,7 +421,7 @@ class _WeekStrip extends StatelessWidget {
                       width: 24, height: 24,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isToday ? KaalColors.acc : (isSelected ? colors.surf3 : Colors.transparent),
+                        color: isToday ? TaskEraColors.acc : (isSelected ? colors.surf3 : Colors.transparent),
                       ),
                       child: Center(
                         child: Text('${day.day}', style: TextStyle(
@@ -464,7 +464,7 @@ class _CalGrid extends StatelessWidget {
   final int todayDay;
   final int selected;
   final Map<int, List<Color>> dots;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onTap;
 
   const _CalGrid({
@@ -514,7 +514,7 @@ class _DayCell extends StatelessWidget {
   final bool isToday;
   final bool isSelected;
   final List<Color> dots;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onTap;
 
   const _DayCell({
@@ -538,7 +538,7 @@ class _DayCell extends StatelessWidget {
               width: 24, height: 24,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isToday ? KaalColors.acc : (isSelected ? colors.surf3 : Colors.transparent),
+                color: isToday ? TaskEraColors.acc : (isSelected ? colors.surf3 : Colors.transparent),
               ),
               child: Center(
                 child: Text('$day', style: TextStyle(
@@ -572,7 +572,7 @@ class _DayCell extends StatelessWidget {
 // ── Week insight banner (on-device: conflicts + busy-day heuristics; no AI) ────
 
 class _WeekInsightBanner extends ConsumerStatefulWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _WeekInsightBanner({required this.colors});
 
   @override
@@ -616,9 +616,9 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
         TextSpan(
             text:
                 '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'} this week — '),
-        TextSpan(text: c.a.title, style: const TextStyle(color: KaalColors.acc2)),
+        TextSpan(text: c.a.title, style: const TextStyle(color: TaskEraColors.acc2)),
         const TextSpan(text: ' clashes with '),
-        TextSpan(text: c.b.title, style: const TextStyle(color: KaalColors.acc2)),
+        TextSpan(text: c.b.title, style: const TextStyle(color: TaskEraColors.acc2)),
         const TextSpan(text: '. '),
         TextSpan(
             text: c.overlap ? 'Move one to resolve.' : 'Add a buffer between them.',
@@ -688,7 +688,7 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
                 const SizedBox(width: 5),
                 const Text('This week', style: TextStyle(
                   fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
-                  color: KaalColors.acc2, letterSpacing: 0.3, height: 1,
+                  color: TaskEraColors.acc2, letterSpacing: 0.3, height: 1,
                 )),
               ],
             ),
@@ -702,10 +702,10 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
               children: [
                 if (showMove) ...[
                   GestureDetector(
-                    onTap: () => context.push(KaalRoutes.calConflicts),
+                    onTap: () => context.push(TaskEraRoutes.calConflicts),
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
-                      decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(6)),
+                      decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
                       child: Text(AppL10n.of(context).moveIt, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
                     ),
                   ),
@@ -755,7 +755,7 @@ List<_Slot> _rowsToSlots(List<CalendarEvent> rows) {
 // ── Day detail card ───────────────────────────────────────────────────────────
 
 class _DayCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final DateTime selectedDate;
   final List<CalendarEvent> events;
   final int conflictCount;
@@ -808,7 +808,7 @@ class _DayCard extends ConsumerWidget {
                   ),
                   if (conflictCount > 0)
                     GestureDetector(
-                      onTap: () => context.push(KaalRoutes.calConflicts),
+                      onTap: () => context.push(TaskEraRoutes.calConflicts),
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
                         decoration: BoxDecoration(
@@ -851,7 +851,7 @@ class _DayCard extends ConsumerWidget {
 class _SlotRow extends StatelessWidget {
   final _Slot slot;
   final bool isLast;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SlotRow({required this.slot, required this.isLast, required this.colors});
 
   @override
@@ -888,7 +888,7 @@ class _SlotRow extends StatelessWidget {
 
 class _EventBlock extends ConsumerWidget {
   final _Event event;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EventBlock({required this.event, required this.colors});
 
   void _showDetail(BuildContext ctx, WidgetRef ref) {
@@ -900,7 +900,7 @@ class _EventBlock extends ConsumerWidget {
       builder: (sheetCtx) => SafeArea(
         child: Container(
           margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-          child: KaalSheetSurface(
+          child: TaskEraSheetSurface(
             borderRadius: BorderRadius.circular(16),
             child: Container(
           padding: const EdgeInsets.all(16),
@@ -1002,7 +1002,7 @@ class _EventBlock extends ConsumerWidget {
                             style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1),
                             children: [
                               TextSpan(text: '${event.subtitle} · '),
-                              const TextSpan(text: 'Invite', style: TextStyle(color: KaalColors.q4)),
+                              const TextSpan(text: 'Invite', style: TextStyle(color: TaskEraColors.q4)),
                             ],
                           ))
                         : Text(event.subtitle,

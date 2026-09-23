@@ -1,7 +1,7 @@
 import 'dart:math' show pi;
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
 class DonutSegment {
   final double value; // raw hours / minutes / any unit
@@ -29,7 +29,7 @@ class DonutChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return SizedBox(
       width: size,
       height: size,
@@ -127,14 +127,14 @@ class _DonutPainter extends CustomPainter {
 }
 
 /// Convenience factory matching the Q1/Q2/Q3 + Unplanned donut on the Focus screen.
-class KaalQuadrantDonut extends StatelessWidget {
+class TaskEraQuadrantDonut extends StatelessWidget {
   final double q1Hours;
   final double q2Hours;
   final double q3Hours;
   final double unplannedHours;
   final String centerText;
 
-  const KaalQuadrantDonut({
+  const TaskEraQuadrantDonut({
     super.key,
     required this.q1Hours,
     required this.q2Hours,
@@ -149,9 +149,9 @@ class KaalQuadrantDonut extends StatelessWidget {
       centerText: centerText,
       centerLabel: 'hrs focus',
       segments: [
-        DonutSegment(value: q1Hours, color: KaalColors.q1),
-        DonutSegment(value: q2Hours, color: KaalColors.q2),
-        DonutSegment(value: q3Hours, color: KaalColors.q3),
+        DonutSegment(value: q1Hours, color: TaskEraColors.q1),
+        DonutSegment(value: q2Hours, color: TaskEraColors.q2),
+        DonutSegment(value: q3Hours, color: TaskEraColors.q3),
         DonutSegment(value: unplannedHours, color: const Color(0x4DFFFFFF)),
       ],
     );

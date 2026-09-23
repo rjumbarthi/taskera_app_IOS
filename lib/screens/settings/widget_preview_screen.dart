@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_l10n.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_top_bar.dart';
+import '../../widgets/taskera_top_bar.dart';
 import '../../widgets/wallpaper_background.dart';
 
 class WidgetPreviewScreen extends ConsumerWidget {
@@ -14,16 +14,16 @@ class WidgetPreviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
 
     return Stack(children: [
       Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          KaalTopBar(
+          TaskEraTopBar(
             title: AppL10n.of(context).widgetPreview,
             leading: AddBackButton(onTap: () => Navigator.of(context).pop()),
             actions: [
@@ -31,7 +31,7 @@ class WidgetPreviewScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF5856D6), KaalColors.acc],
+                    colors: [Color(0xFF5856D6), TaskEraColors.acc],
                     begin: Alignment.topLeft, end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(5),
@@ -158,7 +158,7 @@ class WidgetPreviewScreen extends ConsumerWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel(this.text, this.colors);
 
   @override
@@ -173,7 +173,7 @@ class _SectionLabel extends StatelessWidget {
 // ── Pro gate banner ───────────────────────────────────────────────────────────
 
 class _ProGateBanner extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ProGateBanner({required this.colors});
 
   @override
@@ -196,7 +196,7 @@ class _ProGateBanner extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(AppL10n.of(context).homeWidgetsPro,
                 style: TextStyle(fontFamily: 'Inter', fontSize: 12,
-                    fontWeight: FontWeight.w700, color: KaalColors.acc2, height: 1.2)),
+                    fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1.2)),
             Text(AppL10n.of(context).upgradeForWidgets,
                 style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                     color: colors.ink3, height: 1.3)),
@@ -207,7 +207,7 @@ class _ProGateBanner extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF5856D6), KaalColors.acc],
+              colors: [Color(0xFF5856D6), TaskEraColors.acc],
               begin: Alignment.topLeft, end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(7),
@@ -222,7 +222,7 @@ class _ProGateBanner extends StatelessWidget {
 }
 
 class _PreviewNote extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _PreviewNote({required this.colors});
 
   @override
@@ -233,7 +233,7 @@ class _PreviewNote extends StatelessWidget {
         color: colors.surf2,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text('Preview only. Add Kaal widgets to iOS home screen after upgrading.',
+      child: Text('Preview only. Add TaskEra widgets to iOS home screen after upgrading.',
           style: TextStyle(fontFamily: 'Inter', fontSize: 12,
               color: colors.ink3, height: 1.4)),
     );
@@ -264,7 +264,7 @@ class _ActiveFocusHomeWidget extends StatelessWidget {
         Row(children: [
           const Icon(Icons.access_time_rounded, color: Color(0xFF0A84FF), size: 13),
           const SizedBox(width: 5),
-          const Text('KAAL LIVE',
+          const Text('TASKERA LIVE',
               style: TextStyle(fontFamily: 'Inter', fontSize: 9,
                   fontWeight: FontWeight.w700, color: Color(0xFF409CFF), height: 1)),
           const Spacer(),
@@ -372,14 +372,14 @@ class _TopTaskSmall extends StatelessWidget {
           Container(width: 8, height: 8,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(width: 1.5, color: KaalColors.acc),
+              border: Border.all(width: 1.5, color: TaskEraColors.acc),
             ),
             child: Center(child: Container(width: 3, height: 3,
                 decoration: const BoxDecoration(
                   color: Color(0xFF3D8BFF), shape: BoxShape.circle))),
           ),
           const SizedBox(width: 5),
-          const Text('Kaal',
+          const Text('TaskEra',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
         ]),
@@ -395,7 +395,7 @@ class _TopTaskSmall extends StatelessWidget {
         ),
         Row(children: [
           Container(width: 5, height: 5,
-              decoration: const BoxDecoration(color: KaalColors.q1, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q1, shape: BoxShape.circle)),
           const SizedBox(width: 4),
           const Text('Q1 · Score 9.2',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
@@ -556,15 +556,15 @@ class _TodayTasksMedium extends StatelessWidget {
                   color: Color(0x4DFFFFFF), height: 1)),
         ]),
         const SizedBox(height: 8),
-        _TaskLine(dot: KaalColors.q1, text: 'Assignment submission', badge: 'P1',
+        _TaskLine(dot: TaskEraColors.q1, text: 'Assignment submission', badge: 'P1',
             badgeBg: const Color(0x24FF453A), badgeFg: const Color(0xFFFF8080)),
         const SizedBox(height: 4),
-        _TaskLine(dot: KaalColors.q2, text: 'Study for exam — Chapter 4', badge: 'P2',
+        _TaskLine(dot: TaskEraColors.q2, text: 'Study for exam — Chapter 4', badge: 'P2',
             badgeBg: const Color(0x24FF9500), badgeFg: const Color(0xFFFF9500)),
         const SizedBox(height: 4),
         Opacity(
           opacity: 0.6,
-          child: _TaskLine(dot: KaalColors.q2, text: 'Morning journaling', badge: 'P3',
+          child: _TaskLine(dot: TaskEraColors.q2, text: 'Morning journaling', badge: 'P3',
               badgeBg: Colors.transparent, badgeFg: const Color(0x59FFFFFF)),
         ),
       ]),
@@ -625,7 +625,7 @@ class _GoalsProgressMedium extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Container(width: 8, height: 8,
-              decoration: const BoxDecoration(color: KaalColors.q2, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q2, shape: BoxShape.circle)),
           const SizedBox(width: 5),
           const Text('Goals · April',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
@@ -633,7 +633,7 @@ class _GoalsProgressMedium extends StatelessWidget {
         ]),
         const SizedBox(height: 10),
         _GoalBar(label: 'Launch MVP', percent: 0.60,
-            pctColor: const Color(0xFF9FCD44), barColor: KaalColors.q2),
+            pctColor: const Color(0xFF9FCD44), barColor: TaskEraColors.q2),
         const SizedBox(height: 7),
         _GoalBar(label: 'Exercise habit', percent: 0.43,
             pctColor: const Color(0xFFBF5AF2), barColor: const Color(0xFFBF5AF2)),
@@ -705,21 +705,21 @@ class _QuadSummaryMedium extends StatelessWidget {
         Row(children: [
           Expanded(child: _QuadMiniCell(label: 'Q1 Do Now', count: '2',
               bg: const Color(0x26F25022), border: const Color(0x4DF25022),
-              labelColor: KaalColors.q1)),
+              labelColor: TaskEraColors.q1)),
           const SizedBox(width: 4),
           Expanded(child: _QuadMiniCell(label: 'Q2 Schedule', count: '6',
               bg: const Color(0x1F7FBA00), border: const Color(0x407FBA00),
-              labelColor: KaalColors.q2)),
+              labelColor: TaskEraColors.q2)),
         ]),
         const SizedBox(height: 4),
         Row(children: [
           Expanded(child: _QuadMiniCell(label: 'Q3 Delegate', count: '4',
               bg: const Color(0x1A00A4EF), border: const Color(0x3300A4EF),
-              labelColor: KaalColors.q3)),
+              labelColor: TaskEraColors.q3)),
           const SizedBox(width: 4),
           Expanded(child: _QuadMiniCell(label: 'Q4 Eliminate', count: '2',
               bg: const Color(0x1AFFB900), border: const Color(0x33FFB900),
-              labelColor: KaalColors.q4)),
+              labelColor: TaskEraColors.q4)),
         ]),
       ]),
     );
@@ -811,7 +811,7 @@ class _ActiveFocusLarge extends StatelessWidget {
         Row(children: [
           const Icon(Icons.access_time_rounded, color: Color(0xFF0A84FF), size: 17),
           const SizedBox(width: 7),
-          const Text('KAAL LIVE',
+          const Text('TASKERA LIVE',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   fontWeight: FontWeight.w800, letterSpacing: 0.6,
                   color: Color(0xFF409CFF), height: 1)),
@@ -922,7 +922,7 @@ class _TodayCommandLarge extends StatelessWidget {
           Expanded(child: _CommandQuadCell(
             label: 'Q1 DO NOW', count: '2', sub: '1 overdue',
             bg: const Color(0x29F25022), border: const Color(0x59F25022),
-            color: KaalColors.q1,
+            color: TaskEraColors.q1,
           )),
           const SizedBox(width: 7),
           Expanded(child: _CommandQuadCell(
@@ -932,10 +932,10 @@ class _TodayCommandLarge extends StatelessWidget {
           )),
         ]),
         const SizedBox(height: 12),
-        _LargeLine(dot: KaalColors.q1, text: 'Submit assignment before deadline'),
+        _LargeLine(dot: TaskEraColors.q1, text: 'Submit assignment before deadline'),
         const SizedBox(height: 6),
         Opacity(opacity: 0.72,
-            child: _LargeLine(dot: KaalColors.q2, text: 'Study for exam - Chapter 4')),
+            child: _LargeLine(dot: TaskEraColors.q2, text: 'Study for exam - Chapter 4')),
       ]),
     );
   }
@@ -1038,10 +1038,10 @@ class _TodayCardLarge extends StatelessWidget {
                   fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
         ]),
         const SizedBox(height: 10),
-        _TodayCardLine(dot: KaalColors.q1, text: 'Submit assignment before deadline',
+        _TodayCardLine(dot: TaskEraColors.q1, text: 'Submit assignment before deadline',
             badge: 'Q1', badgeBg: const Color(0x24FF453A), badgeFg: const Color(0xFFFF8080)),
         const SizedBox(height: 6),
-        Opacity(opacity: 0.75, child: _TodayCardLine(dot: KaalColors.q2,
+        Opacity(opacity: 0.75, child: _TodayCardLine(dot: TaskEraColors.q2,
             text: 'Study for exam — Chapter 4',
             badge: 'Q2', badgeBg: const Color(0x247FBA00), badgeFg: const Color(0xFF9FCD44))),
         const SizedBox(height: 6),
@@ -1050,7 +1050,7 @@ class _TodayCardLarge extends StatelessWidget {
             text: 'Reply to Priya re: launch',
             badge: 'Q3', badgeBg: Colors.transparent, badgeFg: const Color(0x4DFFFFFF))),
         const Spacer(),
-        const Text('+8 more · Kaal',
+        const Text('+8 more · TaskEra',
             style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                 color: Color(0x33FFFFFF), height: 1)),
       ]),
@@ -1112,7 +1112,7 @@ class _TodayCardLock extends StatelessWidget {
             Text('Today · 3 of 11 done',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                     fontWeight: FontWeight.w700, color: Colors.white, height: 1.2)),
-            Text('Next: Submit assignment · Q1 · Kaal',
+            Text('Next: Submit assignment · Q1 · TaskEra',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                     color: Color(0x73FFFFFF), height: 1.3)),
           ]),
@@ -1141,12 +1141,12 @@ class _DoThisNowLarge extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const Icon(Icons.play_arrow_rounded, color: KaalColors.q1, size: 13),
+          const Icon(Icons.play_arrow_rounded, color: TaskEraColors.q1, size: 13),
           const SizedBox(width: 6),
           const Text('DO THIS NOW',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   fontWeight: FontWeight.w800, letterSpacing: 0.6,
-                  color: KaalColors.q1, height: 1)),
+                  color: TaskEraColors.q1, height: 1)),
           const Spacer(),
           Container(
             padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
@@ -1156,7 +1156,7 @@ class _DoThisNowLarge extends StatelessWidget {
             ),
             child: const Text('Q1 · URGENT',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 9,
-                    fontWeight: FontWeight.w700, color: KaalColors.q1, height: 1)),
+                    fontWeight: FontWeight.w700, color: TaskEraColors.q1, height: 1)),
           ),
         ]),
         const Spacer(),
@@ -1179,7 +1179,7 @@ class _DoThisNowLarge extends StatelessWidget {
           child: const LinearProgressIndicator(
             value: 0, minHeight: 4,
             backgroundColor: Color(0x1AFFFFFF),
-            valueColor: AlwaysStoppedAnimation(KaalColors.q1),
+            valueColor: AlwaysStoppedAnimation(TaskEraColors.q1),
           ),
         ),
         const SizedBox(height: 8),
@@ -1188,7 +1188,7 @@ class _DoThisNowLarge extends StatelessWidget {
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   color: Color(0x59FFFFFF), height: 1)),
           const Spacer(),
-          const Text('Kaal',
+          const Text('TaskEra',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   fontWeight: FontWeight.w700, color: Color(0x4DFFFFFF), height: 1)),
         ]),
@@ -1215,7 +1215,7 @@ class _DoThisNowLock extends StatelessWidget {
             border: Border.fromBorderSide(BorderSide(
                 color: Color(0x66F25022), width: 0.5)),
           ),
-          child: const Icon(Icons.play_arrow_rounded, color: KaalColors.q1, size: 12),
+          child: const Icon(Icons.play_arrow_rounded, color: TaskEraColors.q1, size: 12),
         ),
         const SizedBox(width: 9),
         const Expanded(
@@ -1224,7 +1224,7 @@ class _DoThisNowLock extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                     fontWeight: FontWeight.w700, color: Colors.white, height: 1.2)),
-            Text('Q1 · Urgent · Score 9.2 · Kaal',
+            Text('Q1 · Urgent · Score 9.2 · TaskEra',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                     color: Color(0x73FFFFFF), height: 1.3)),
           ]),
@@ -1251,11 +1251,11 @@ class _NextEventSmall extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Container(width: 7, height: 7,
-              decoration: const BoxDecoration(color: KaalColors.q3, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q3, shape: BoxShape.circle)),
           const SizedBox(width: 4),
           const Text('Calendar',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-                  fontWeight: FontWeight.w600, color: KaalColors.q3, height: 1)),
+                  fontWeight: FontWeight.w600, color: TaskEraColors.q3, height: 1)),
         ]),
         const Spacer(),
         const Text('Next · 11:00 AM',
@@ -1299,7 +1299,7 @@ class _TodaysScheduleMedium extends StatelessWidget {
         const SizedBox(height: 8),
         _ScheduleLine(time: '9 AM', label: 'Team standup',
             bg: const Color(0x2600A4EF), border: const Color(0x4D00A4EF),
-            labelColor: KaalColors.q3),
+            labelColor: TaskEraColors.q3),
         const SizedBox(height: 5),
         _ScheduleLine(time: '11 AM', label: 'Q2 planning review · Invite',
             bg: const Color(0x1A7FBA00), border: const Color(0x407FBA00),
@@ -1496,11 +1496,11 @@ class _LastNoteSmall extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Container(width: 7, height: 7,
-              decoration: const BoxDecoration(color: KaalColors.q4, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q4, shape: BoxShape.circle)),
           const SizedBox(width: 4),
           const Text('Notes',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-                  fontWeight: FontWeight.w600, color: KaalColors.q4, height: 1)),
+                  fontWeight: FontWeight.w600, color: TaskEraColors.q4, height: 1)),
         ]),
         const SizedBox(height: 8),
         const Expanded(
@@ -1534,7 +1534,7 @@ class _RecentNotesMedium extends StatelessWidget {
           const Expanded(child: Text('Notes · 3 recent',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   fontWeight: FontWeight.w600, color: Colors.white, height: 1))),
-          const Text('Kaal',
+          const Text('TaskEra',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                   color: Color(0x99FFB900), height: 1)),
         ]),
@@ -1605,11 +1605,11 @@ class _InboxSmall extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Container(width: 7, height: 7,
-              decoration: const BoxDecoration(color: KaalColors.acc, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.acc, shape: BoxShape.circle)),
           const SizedBox(width: 4),
           const Text('Inbox',
               style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-                  fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1)),
+                  fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
         ]),
         const SizedBox(height: 6),
         const Text('3',
@@ -1622,7 +1622,7 @@ class _InboxSmall extends StatelessWidget {
         const Spacer(),
         const Text('Review →',
             style: TextStyle(fontFamily: 'Inter', fontSize: 10,
-                fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1)),
+                fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
       ]),
     );
   }
@@ -1654,14 +1654,14 @@ class _InboxMedium extends StatelessWidget {
             ),
             child: const Text('New',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 9,
-                    fontWeight: FontWeight.w700, color: KaalColors.acc, height: 1)),
+                    fontWeight: FontWeight.w700, color: TaskEraColors.acc, height: 1)),
           ),
         ]),
         const SizedBox(height: 8),
-        _InboxItem(dot: KaalColors.q1, title: 'Assignment deadline email', sub: 'Add as Q1 task?'),
+        _InboxItem(dot: TaskEraColors.q1, title: 'Assignment deadline email', sub: 'Add as Q1 task?'),
         const SizedBox(height: 5),
         Opacity(opacity: 0.8,
-            child: _InboxItem(dot: KaalColors.q2, title: 'Team standup moved', sub: 'Reschedule?')),
+            child: _InboxItem(dot: TaskEraColors.q2, title: 'Team standup moved', sub: 'Reschedule?')),
         const SizedBox(height: 5),
         Opacity(opacity: 0.8,
             child: _InboxItem(dot: const Color(0xFFBF5AF2),
@@ -1709,13 +1709,13 @@ class _LockScreenInline extends StatelessWidget {
       child: Row(children: [
         Row(children: [
           Container(width: 6, height: 6,
-              decoration: const BoxDecoration(color: KaalColors.q1, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q1, shape: BoxShape.circle)),
           const SizedBox(width: 3),
           Container(width: 6, height: 6,
-              decoration: const BoxDecoration(color: KaalColors.q2, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q2, shape: BoxShape.circle)),
           const SizedBox(width: 3),
           Container(width: 6, height: 6,
-              decoration: const BoxDecoration(color: KaalColors.q3, shape: BoxShape.circle)),
+              decoration: const BoxDecoration(color: TaskEraColors.q3, shape: BoxShape.circle)),
           const SizedBox(width: 3),
           Container(width: 6, height: 6,
               decoration: const BoxDecoration(
@@ -1727,7 +1727,7 @@ class _LockScreenInline extends StatelessWidget {
             Text('2 Q1 · 4 Q2 active',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                     fontWeight: FontWeight.w500, color: Colors.white, height: 1.2)),
-            Text('Kaal · 14🔥 streak',
+            Text('TaskEra · 14🔥 streak',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 10,
                     color: Color(0x73FFFFFF), height: 1.3)),
           ]),

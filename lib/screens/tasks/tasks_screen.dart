@@ -12,10 +12,10 @@ import '../../data/providers/database_provider.dart';
 import '../../data/providers/lists_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../routing/routes.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
-import '../../widgets/kaal_sheet.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
+import '../../widgets/taskera_sheet.dart';
 import '../../services/activity_log_service.dart';
 import '../../l10n/app_l10n.dart';
 import '../../l10n/app_strings.dart';
@@ -83,7 +83,7 @@ _Task _rowToTask(Task r) => _Task(
     );
 
 _DoneTask _rowToDone(Task r, Map<int, String> names, AppStrings l10n) {
-  const cols = {1: KaalColors.q1, 2: KaalColors.q2, 3: KaalColors.q3, 4: KaalColors.q4};
+  const cols = {1: TaskEraColors.q1, 2: TaskEraColors.q2, 3: TaskEraColors.q3, 4: TaskEraColors.q4};
   final at = r.doneAt;
   final diff = at == null ? -1 : DateTime.now().difference(at).inDays;
   final label = diff < 0
@@ -93,7 +93,7 @@ _DoneTask _rowToDone(Task r, Map<int, String> names, AppStrings l10n) {
           : diff == 1
               ? l10n.doneYesterday
               : 'Done ${diff}d ago';
-  return _DoneTask(r.id, r.title, label, names[r.quadrant] ?? '', cols[r.quadrant] ?? KaalColors.q2);
+  return _DoneTask(r.id, r.title, label, names[r.quadrant] ?? '', cols[r.quadrant] ?? TaskEraColors.q2);
 }
 
 String _localizeDue(String raw, AppStrings l) => raw
@@ -127,9 +127,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final l10n = AppL10n.of(context);
-    final settings = ref.watch(kaalSettingsProvider);
+    final settings = ref.watch(taskeraSettingsProvider);
     final useCovey = settings.qnames == 0;
     final showLists = settings.sw('listsGrid');
     final lists = ref.watch(listsProvider).valueOrNull ?? [];
@@ -172,7 +172,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  Widget _listView(BuildContext context, KaalColors colors,
+  Widget _listView(BuildContext context, TaskEraColors colors,
       List<_Task> q1, List<_Task> q2, List<_Task> q3, List<_Task> q4,
       List<_DoneTask> done, Map<int, String> qn, double Function(int, int) frac,
       bool showLists, List<CustomList> lists) {
@@ -187,7 +187,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _QuadSection(
-            quadColor: KaalColors.q1,
+            quadColor: TaskEraColors.q1,
             bgColor: Colors.transparent,
             name: qn[1]!,
             quadKey: 'q1',
@@ -200,7 +200,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           ),
           const SizedBox(height: 4),
           _QuadSection(
-            quadColor: KaalColors.q2,
+            quadColor: TaskEraColors.q2,
             bgColor: Colors.transparent,
             name: qn[2]!,
             quadKey: 'q2',
@@ -213,7 +213,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           ),
           const SizedBox(height: 4),
           _QuadSection(
-            quadColor: KaalColors.q3,
+            quadColor: TaskEraColors.q3,
             bgColor: Colors.transparent,
             name: qn[3]!,
             quadKey: 'q3',
@@ -226,7 +226,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           ),
           const SizedBox(height: 4),
           _QuadSection(
-            quadColor: KaalColors.q4,
+            quadColor: TaskEraColors.q4,
             bgColor: Colors.transparent,
             name: qn[4]!,
             quadKey: 'q4',
@@ -261,7 +261,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  Widget _gridView(BuildContext context, KaalColors colors,
+  Widget _gridView(BuildContext context, TaskEraColors colors,
       List<_Task> q1, List<_Task> q2, List<_Task> q3, List<_Task> q4,
       List<_DoneTask> done, Map<int, String> qn, double Function(int, int) frac,
       bool showLists, List<CustomList> lists) {
@@ -294,9 +294,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(child: _QuadCard(quadColor: KaalColors.q1, name: qn[1]!, quadKey: 'q1', count: q1.length, fraction: frac(1, q1.length), tasks: q1, colors: colors)),
+                            Expanded(child: _QuadCard(quadColor: TaskEraColors.q1, name: qn[1]!, quadKey: 'q1', count: q1.length, fraction: frac(1, q1.length), tasks: q1, colors: colors)),
                             const SizedBox(width: 6),
-                            Expanded(child: _QuadCard(quadColor: KaalColors.q2, name: qn[2]!, quadKey: 'q2', count: q2.length, fraction: frac(2, q2.length), tasks: q2, colors: colors)),
+                            Expanded(child: _QuadCard(quadColor: TaskEraColors.q2, name: qn[2]!, quadKey: 'q2', count: q2.length, fraction: frac(2, q2.length), tasks: q2, colors: colors)),
                           ],
                         ),
                       ),
@@ -305,9 +305,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(child: _QuadCard(quadColor: KaalColors.q3, name: qn[3]!, quadKey: 'q3', count: q3.length, fraction: frac(3, q3.length), tasks: q3, colors: colors)),
+                            Expanded(child: _QuadCard(quadColor: TaskEraColors.q3, name: qn[3]!, quadKey: 'q3', count: q3.length, fraction: frac(3, q3.length), tasks: q3, colors: colors)),
                             const SizedBox(width: 6),
-                            Expanded(child: _QuadCard(quadColor: KaalColors.q4, name: qn[4]!, quadKey: 'q4', count: q4.length, fraction: frac(4, q4.length), tasks: q4, colors: colors)),
+                            Expanded(child: _QuadCard(quadColor: TaskEraColors.q4, name: qn[4]!, quadKey: 'q4', count: q4.length, fraction: frac(4, q4.length), tasks: q4, colors: colors)),
                           ],
                         ),
                       ),
@@ -340,7 +340,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
 
 class _ViewChip extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _ViewChip({required this.label, required this.colors, required this.onTap});
 
@@ -369,7 +369,7 @@ class _ViewChip extends StatelessWidget {
 // ── Filter chips ──────────────────────────────────────────────────────────────
 
 class _FilterChips extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool isListView;
   final void Function(bool) onToggle;
   const _FilterChips({required this.colors, required this.isListView, required this.onToggle});
@@ -407,10 +407,10 @@ class _FilterChips extends StatelessWidget {
                     children: [
                       _Chip(
                         label: '📥 ${AppL10n.of(context).inbox}',
-                        textColor: KaalColors.acc2,
-                        bg: KaalColors.accBg,
+                        textColor: TaskEraColors.acc2,
+                        bg: TaskEraColors.accBg,
                         border: const Color(0x330A84FF),
-                        onTap: () => context.push(KaalRoutes.tasksInbox),
+                        onTap: () => context.push(TaskEraRoutes.tasksInbox),
                       ),
                       const SizedBox(width: 4),
                       _Chip(
@@ -418,7 +418,7 @@ class _FilterChips extends StatelessWidget {
                         textColor: const Color(0xFF5856D6),
                         bg: const Color(0x145856D6),
                         border: const Color(0x335856D6),
-                        onTap: () => context.push(KaalRoutes.tasksBoard),
+                        onTap: () => context.push(TaskEraRoutes.tasksBoard),
                       ),
                       const SizedBox(width: 4),
                       _Chip(
@@ -426,7 +426,7 @@ class _FilterChips extends StatelessWidget {
                         textColor: const Color(0xFFFF375F),
                         bg: const Color(0x14FF375F),
                         border: const Color(0x33FF375F),
-                        onTap: () => context.push(KaalRoutes.tasksLabels),
+                        onTap: () => context.push(TaskEraRoutes.tasksLabels),
                       ),
                       const SizedBox(width: 4),
                       _Chip(
@@ -436,7 +436,7 @@ class _FilterChips extends StatelessWidget {
                         textColor: const Color(0xFF00BCD4),
                         bg: const Color(0x1400BCD4),
                         border: const Color(0x3300BCD4),
-                        onTap: () => context.push(KaalRoutes.tasksFilters),
+                        onTap: () => context.push(TaskEraRoutes.tasksFilters),
                       ),
                       const SizedBox(width: 8),
                     ],
@@ -456,7 +456,7 @@ class _FilterChips extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _Chip(label: '⚡ ${AppL10n.of(context).auto}', textColor: const Color(0xFFFFB900), bg: const Color(0x1AFFB900), border: const Color(0x33FFB900), onTap: () => context.push(KaalRoutes.tasksSchedule)),
+                _Chip(label: '⚡ ${AppL10n.of(context).auto}', textColor: const Color(0xFFFFB900), bg: const Color(0x1AFFB900), border: const Color(0x33FFB900), onTap: () => context.push(TaskEraRoutes.tasksSchedule)),
                 const SizedBox(width: 4),
                 _Chip(
                   icon: SvgPicture.string(_goalsIconSvg, width: 10, height: 10),
@@ -464,7 +464,7 @@ class _FilterChips extends StatelessWidget {
                   textColor: colors.successFg,
                   bg: const Color(0x1A7FBA00),
                   border: const Color(0x337FBA00),
-                  onTap: () => context.push(KaalRoutes.goals),
+                  onTap: () => context.push(TaskEraRoutes.goals),
                 ),
                 const SizedBox(width: 4),
                 _Chip(
@@ -472,10 +472,10 @@ class _FilterChips extends StatelessWidget {
                   textColor: const Color(0xFFBF5AF2),
                   bg: const Color(0x14BF5AF2),
                   border: const Color(0x33BF5AF2),
-                  onTap: () => context.push(KaalRoutes.tasksLists),
+                  onTap: () => context.push(TaskEraRoutes.tasksLists),
                 ),
                 const SizedBox(width: 4),
-                _Chip(label: '▶ ${AppL10n.of(context).timer}', textColor: const Color(0xFFFF6B35), bg: const Color(0x14FF6B35), border: const Color(0x33FF6B35), onTap: () => context.push(KaalRoutes.tasksPomodoro)),
+                _Chip(label: '▶ ${AppL10n.of(context).timer}', textColor: const Color(0xFFFF6B35), bg: const Color(0x14FF6B35), border: const Color(0x33FF6B35), onTap: () => context.push(TaskEraRoutes.tasksPomodoro)),
                 const SizedBox(width: 4),
                 _Chip(
                   icon: SvgPicture.string(_clockSvg, width: 10, height: 10,
@@ -552,7 +552,7 @@ class _QuadSection extends StatelessWidget {
   final List<_Task> tasks;
   final bool isOpen;
   final VoidCallback onToggle;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _QuadSection({
     required this.quadColor,
@@ -668,7 +668,7 @@ class _HeaderBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final bg  = isRed ? const Color(0x2EF25022) : const Color(0x2E7FBA00);
     final col = isRed ? const Color(0xFFF87058) : colors.successFg;
     return Container(
@@ -681,7 +681,7 @@ class _HeaderBadge extends StatelessWidget {
 
 // ── Long-press context menu ───────────────────────────────────────────────────
 
-Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color quadColor, KaalColors colors) {
+Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color quadColor, TaskEraColors colors) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: ctx,
@@ -690,7 +690,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
     builder: (sheetCtx) => SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-        child: KaalSheetSurface(
+        child: TaskEraSheetSurface(
           borderRadius: BorderRadius.circular(16),
           child: Container(
         decoration: BoxDecoration(
@@ -721,14 +721,14 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
                 ref.logActivity('Task "${task.title}" marked as completed');
               }, colors: colors),
             _ContextItem(icon: Icons.timer_outlined, label: AppL10n.of(ctx).startPomodoro, color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.tasksPomodoro); }, colors: colors),
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.tasksPomodoro); }, colors: colors),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
               child: Row(
                 children: [
                   Text(AppL10n.of(ctx).moveTo, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1)),
                   const SizedBox(width: 10),
-                  for (final (lbl, quad, clr) in [('Q1', 1, KaalColors.q1), ('Q2', 2, KaalColors.q2), ('Q3', 3, KaalColors.q3), ('Q4', 4, KaalColors.q4)])
+                  for (final (lbl, quad, clr) in [('Q1', 1, TaskEraColors.q1), ('Q2', 2, TaskEraColors.q2), ('Q3', 3, TaskEraColors.q3), ('Q4', 4, TaskEraColors.q4)])
                     GestureDetector(
                       onTap: () {
                         Navigator.of(sheetCtx).pop();
@@ -750,7 +750,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
               ),
             ),
             Container(height: 0.5, color: colors.bdr),
-            _ContextItem(icon: Icons.delete_outline, label: AppL10n.of(ctx).deleteTask, color: KaalColors.warn,
+            _ContextItem(icon: Icons.delete_outline, label: AppL10n.of(ctx).deleteTask, color: TaskEraColors.warn,
               onTap: () {
                 Navigator.of(sheetCtx).pop();
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
@@ -771,7 +771,7 @@ class _ContextItem extends StatelessWidget {
   final String label;
   final Color color;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ContextItem({required this.icon, required this.label, required this.color, required this.onTap, required this.colors});
 
   @override
@@ -798,7 +798,7 @@ class _ContextItem extends StatelessWidget {
 class _TaskRow extends ConsumerStatefulWidget {
   final _Task task;
   final Color quadColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool showDivider;
   final int index;
 
@@ -861,7 +861,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
       duration: const Duration(milliseconds: 2000),
       action: SnackBarAction(
         label: AppL10n.of(context).undo,
-        textColor: KaalColors.acc2,
+        textColor: TaskEraColors.acc2,
         onPressed: () {
           db.tasksDao.toggleDone(taskId, false);
           if (mounted) {
@@ -949,7 +949,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                             ),
                           if (task.hasPomo)
                             GestureDetector(
-                              onTap: () => context.push(KaalRoutes.tasksPomodoro),
+                              onTap: () => context.push(TaskEraRoutes.tasksPomodoro),
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                                 decoration: BoxDecoration(
@@ -1017,7 +1017,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
 class _SubItemRow extends StatelessWidget {
   final _Sub sub;
   final Color quadColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SubItemRow({required this.sub, required this.quadColor, required this.colors});
 
   @override
@@ -1058,7 +1058,7 @@ class _SubItemRow extends StatelessWidget {
 
 // ── Completed long-press menu ─────────────────────────────────────────────────
 
-Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task, KaalColors colors) {
+Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task, TaskEraColors colors) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: ctx,
@@ -1067,7 +1067,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
     builder: (sheetCtx) => SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-        child: KaalSheetSurface(
+        child: TaskEraSheetSurface(
           borderRadius: BorderRadius.circular(16),
           child: Container(
         decoration: BoxDecoration(
@@ -1093,7 +1093,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
                 ref.logActivity('Task "${task.title}" restored from completed');
               }, colors: colors),
             Container(height: 0.5, color: colors.bdr),
-            _ContextItem(icon: Icons.delete_forever_outlined, label: AppL10n.of(ctx).deletePermanently, color: KaalColors.warn,
+            _ContextItem(icon: Icons.delete_forever_outlined, label: AppL10n.of(ctx).deletePermanently, color: TaskEraColors.warn,
               onTap: () {
                 Navigator.of(sheetCtx).pop();
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
@@ -1115,7 +1115,7 @@ class _CompletedSection extends ConsumerWidget {
   final bool isOpen;
   final VoidCallback onToggle;
   final List<_DoneTask> tasks;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _CompletedSection({required this.isOpen, required this.onToggle, required this.tasks, required this.colors});
 
@@ -1262,7 +1262,7 @@ class _CompletedSection extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
                       child: GestureDetector(
-                        onTap: () => context.push(KaalRoutes.tasksPanelComp),
+                        onTap: () => context.push(TaskEraRoutes.tasksPanelComp),
                         child: Container(
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1271,7 +1271,7 @@ class _CompletedSection extends ConsumerWidget {
                           ),
                           child: Text(
                             'View all completed →',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1),
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1),
                           ),
                         ),
                       ),
@@ -1290,7 +1290,7 @@ class _CompletedSection extends ConsumerWidget {
 
 class _PruneCard extends StatefulWidget {
   final VoidCallback onDismiss;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _PruneCard({required this.onDismiss, required this.colors});
 
   @override
@@ -1354,7 +1354,7 @@ class _PruneCardState extends State<_PruneCard> {
 
 class _PruneItemRow extends StatelessWidget {
   final _PruneItem item;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onDel;
   const _PruneItemRow({required this.item, required this.colors, required this.onDel});
 
@@ -1375,8 +1375,8 @@ class _PruneItemRow extends StatelessWidget {
                 SnackBar(content: Text('${item.moveLabel} — coming soon'))),
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-              decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(6)),
-              child: Text(item.moveLabel, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+              decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(6)),
+              child: Text(item.moveLabel, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
             ),
           ),
           const SizedBox(width: 5),
@@ -1385,7 +1385,7 @@ class _PruneItemRow extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: const Color(0x14FF453A), borderRadius: BorderRadius.circular(6)),
-              child: Text(AppL10n.of(context).delete, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.warn, height: 1)),
+              child: Text(AppL10n.of(context).delete, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.warn, height: 1)),
             ),
           ),
         ],
@@ -1403,7 +1403,7 @@ class _QuadCard extends StatelessWidget {
   final int count;
   final double fraction;
   final List<_Task> tasks;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _QuadCard({
     required this.quadColor,
@@ -1510,7 +1510,7 @@ class _QuadCard extends StatelessWidget {
 
 class _ListsInTasksSection extends ConsumerWidget {
   final List<CustomList> lists;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ListsInTasksSection({required this.lists, required this.colors});
 
   @override
@@ -1528,10 +1528,10 @@ class _ListsInTasksSection extends ConsumerWidget {
                       color: colors.ink3, letterSpacing: 0.5, height: 1)),
             ),
             GestureDetector(
-              onTap: () => context.push(KaalRoutes.tasksLists),
+              onTap: () => context.push(TaskEraRoutes.tasksLists),
               child: Text('${AppL10n.of(context).seeAll} ›',
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1)),
+                      fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1)),
             ),
           ]),
         ),
@@ -1544,7 +1544,7 @@ class _ListsInTasksSection extends ConsumerWidget {
 
 class _ListCardInTasks extends ConsumerWidget {
   final CustomList list;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ListCardInTasks({required this.list, required this.colors});
 
   @override
@@ -1565,7 +1565,7 @@ class _ListCardInTasks extends ConsumerWidget {
         children: [
           // Header row — opens the full checklist screen scrolled to this list.
           GestureDetector(
-            onTap: () => context.push('${KaalRoutes.tasksLists}/${list.id}'),
+            onTap: () => context.push('${TaskEraRoutes.tasksLists}/${list.id}'),
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
@@ -1645,7 +1645,7 @@ class _ListCardInTasks extends ConsumerWidget {
 
 class _ListItemChip extends StatelessWidget {
   final CustomListItem item;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final WidgetRef ref;
   const _ListItemChip({required this.item, required this.colors, required this.ref});
 
@@ -1694,7 +1694,7 @@ class _Fab extends StatelessWidget {
         width: 42,
         height: 42,
         decoration: const BoxDecoration(
-          color: KaalColors.acc,
+          color: TaskEraColors.acc,
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
         ),
@@ -1706,7 +1706,7 @@ class _Fab extends StatelessWidget {
 }
 
 void _showFabChooser(BuildContext ctx) {
-  final colors = KaalTheme.of(ctx).colors;
+  final colors = TaskEraTheme.of(ctx).colors;
   showModalBottomSheet(
     isScrollControlled: true,
     context: ctx,
@@ -1733,28 +1733,28 @@ void _showFabChooser(BuildContext ctx) {
               icon: Icons.check_box_outline_blank_rounded,
               label: 'Task',
               color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.tasksQuickAdd); },
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.tasksQuickAdd); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.repeat_rounded,
               label: 'Habit',
               color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.habitsAddHabit); },
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.habitsAddHabit); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.sticky_note_2_outlined,
               label: 'Note',
               color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.notesEditor); },
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.notesEditor); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.checklist_rounded,
               label: 'Checklist',
               color: colors.ink,
-              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(KaalRoutes.tasksLists); },
+              onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.tasksLists); },
               colors: colors,
             ),
             _ContextItem(

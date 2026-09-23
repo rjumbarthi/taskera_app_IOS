@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../routing/routes.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
-import 'kaal_sheet.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
+import 'taskera_sheet.dart';
 
 /// Which Google permission the user is about to grant.
 enum GoogleAccess { gmail, calendar }
@@ -66,9 +66,9 @@ class _GoogleAccessSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final bottom = MediaQuery.of(context).padding.bottom;
-    return KaalSheetSurface(
+    return TaskEraSheetSurface(
       child: Container(
         decoration: BoxDecoration(
           color: colors.surf,
@@ -84,7 +84,7 @@ class _GoogleAccessSheet extends StatelessWidget {
               Text(info.title,
                   style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 21, color: colors.ink)),
               const SizedBox(height: 4),
-              Text('Kaal is asking Google for one read-only permission.',
+              Text('TaskEra is asking Google for one read-only permission.',
                   style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
               const SizedBox(height: 14),
               // Permission Google will display
@@ -110,12 +110,12 @@ class _GoogleAccessSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              _Block(label: 'WHAT KAAL DOES WITH IT', items: info.does, icon: Icons.check_rounded, color: colors.successFg, colors: colors),
+              _Block(label: 'WHAT TASKERA DOES WITH IT', items: info.does, icon: Icons.check_rounded, color: colors.successFg, colors: colors),
               const SizedBox(height: 12),
-              _Block(label: 'WHAT KAAL NEVER DOES', items: info.never, icon: Icons.close_rounded, color: const Color(0xFFFF6B6B), colors: colors),
+              _Block(label: 'WHAT TASKERA NEVER DOES', items: info.never, icon: Icons.close_rounded, color: const Color(0xFFFF6B6B), colors: colors),
               const SizedBox(height: 12),
               Text(
-                'Kaal\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. '
+                'TaskEra\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. '
                 'You can disconnect at any time in Settings → Integrations.',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
               ),
@@ -124,12 +124,12 @@ class _GoogleAccessSheet extends StatelessWidget {
                 onTap: () {
                   final router = GoRouter.of(context);
                   Navigator.of(context).pop(false);
-                  router.push(KaalRoutes.legal);
+                  router.push(TaskEraRoutes.legal);
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 6),
                   child: Text('Read the Privacy Policy',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc)),
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
                 ),
               ),
               const SizedBox(height: 10),
@@ -158,7 +158,7 @@ class _GoogleAccessSheet extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(10)),
                         child: const Text('Continue to Google',
                             style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                       ),
@@ -179,7 +179,7 @@ class _Block extends StatelessWidget {
   final List<String> items;
   final IconData icon;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Block({required this.label, required this.items, required this.icon, required this.color, required this.colors});
 
   @override

@@ -5,15 +5,15 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 Color _qColor(int quad) => switch (quad) {
-      1 => KaalColors.q1,
-      2 => KaalColors.q2,
-      3 => KaalColors.q3,
-      _ => KaalColors.q4,
+      1 => TaskEraColors.q1,
+      2 => TaskEraColors.q2,
+      3 => TaskEraColors.q3,
+      _ => TaskEraColors.q4,
     };
 
 class _DayData {
@@ -66,7 +66,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final all = ref.watch(allTasksProvider).valueOrNull ?? [];
     final allActive = all.where((t) => !t.isDone).toList();
     final days = _buildDays(allActive);
@@ -133,11 +133,11 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                   width: 44,
                   margin: const EdgeInsets.only(right: 4),
                   decoration: BoxDecoration(
-                    color: sel ? KaalColors.acc : Colors.transparent,
+                    color: sel ? TaskEraColors.acc : Colors.transparent,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       width: 0.5,
-                      color: sel ? KaalColors.acc : colors.bdr,
+                      color: sel ? TaskEraColors.acc : colors.bdr,
                     ),
                   ),
                   child: Column(
@@ -171,7 +171,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                             fontSize: 9,
                             color: sel
                                 ? Colors.white.withAlpha(0xCC)
-                                : KaalColors.acc2,
+                                : TaskEraColors.acc2,
                             height: 1.1,
                           ),
                         ),
@@ -215,7 +215,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
 
 class _UpTaskRow extends ConsumerWidget {
   final Task task;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback? onTap;
   const _UpTaskRow({required this.task, required this.colors, this.onTap});
 

@@ -1,12 +1,12 @@
-# Kaal — Google Play submission pack
+# TaskEra — Google Play submission pack
 
 Single source of truth for every Play Console field. Copy/paste each value into the
 matching console screen. Generated assets live in `/playstore`.
 
-- **Package:** `com.port443.kaal`
+- **Package:** `com.port443.taskera`
 - **Developer:** Port443 LLC
 - **Supabase ref:** `dutlcoxtxmnqektttffg`
-- **Subscription IDs:** `kaal_pro_monthly`, `kaal_pro_annual`
+- **Subscription IDs:** `taskera_pro_monthly`, `taskera_pro_annual`
 
 ---
 
@@ -15,13 +15,13 @@ matching console screen. Generated assets live in `/playstore`.
 ### Identity (Main store listing)
 | Field | Value |
 |---|---|
-| App name | `Kaal — Focus & Task Planner` |
+| App name | `TaskEra — Focus & Task Planner` |
 | Developer name | `Port443 LLC` |
 | Category | Productivity |
 | Email | `r@jumbarthi.com` |
-| Privacy policy | `https://jumbarthi.com/kaal/privacy` |
-| Support URL | `https://jumbarthi.com/kaal/support` |
-| Delete-account URL | `https://jumbarthi.com/kaal/delete` |
+| Privacy policy | `https://jumbarthi.com/taskera/privacy` |
+| Support URL | `https://jumbarthi.com/taskera/support` |
+| Delete-account URL | `https://jumbarthi.com/taskera/delete` |
 
 ### Short description (≤80 chars)
 ```
@@ -30,7 +30,7 @@ Plan, focus & execute with Covey's 4 quadrants — tasks, habits, goals & AI.
 
 ### Full description
 ```
-Kaal is an Execution OS for high performers. It organizes everything you do into Covey's
+TaskEra is an Execution OS for high performers. It organizes everything you do into Covey's
 four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes to what matters.
 
 • Tasks with smart quadrant sorting & Eisenhower prioritization
@@ -43,7 +43,7 @@ four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes t
 • Home-screen widgets, glass themes, 18 languages
 
 Bring your own OpenAI or Claude key, or go Pro for unlimited AI. Your data syncs securely
-across devices. Kaal is a product of Port443 LLC.
+across devices. TaskEra is a product of Port443 LLC.
 ```
 
 ### Graphic assets
@@ -56,7 +56,7 @@ across devices. Kaal is a product of Port443 LLC.
 **Generate screenshots:**
 ```bash
 flutter test integration_test/screenshots_test.dart -d windows \
-  --dart-define=SHOT_DIR=C:/Users/imrj0/Projects/kaal_app/playstore/screenshots
+  --dart-define=SHOT_DIR=C:/Users/imrj0/Projects/taskera_app/playstore/screenshots
 ```
 Pick & upload: `10_focus`, `2g_tasks_quad_q1`, `30_habits`, `40_calendar`, `60_notes`, `a0_paywall`.
 (Play requires ≥1080px on the shortest side; crop to a 9:16 phone frame.)
@@ -68,11 +68,11 @@ Pick & upload: `10_focus`, `2g_tasks_quad_q1`, `30_habits`, `40_calendar`, `60_n
 Create **two** subscriptions. Play bills in local currency; set the per-country prices to the
 USD tiers below (Play converts, then you fine-tune). Tiers come from `lib/config/pricing.dart`.
 
-### Product A — `kaal_pro_monthly`
+### Product A — `taskera_pro_monthly`
 - Base plan id: `monthly` · Billing period **P1M** · Auto-renewing
 - Intro offer (new subscribers): **first month** at intro price, then standard monthly
 
-### Product B — `kaal_pro_annual`
+### Product B — `taskera_pro_annual`
 - Base plan id: `annual` · Billing period **P1Y** · Auto-renewing (≈40% off monthly)
 - Optional intro/free-trial offer
 
@@ -89,7 +89,7 @@ USD tiers below (Play converts, then you fine-tune). Tiers come from `lib/config
 
 ### India / UPI note
 Play's checkout already offers UPI in India inside the in-app purchase — no separate SDK.
-The Razorpay link (`razorpay.me/@Kaal_App`) is the *web* fallback only; it can't auto-grant Pro
+The Razorpay link (`razorpay.me/@TaskEra_App`) is the *web* fallback only; it can't auto-grant Pro
 yet (generic link has no `user_id`), so keep Play IAP as the primary path on Android.
 
 ---
@@ -99,7 +99,7 @@ yet (generic link has no `user_id`), so keep Play IAP as the primary path on And
 ### a. Permission declarations (App content → Sensitive permissions)
 | Permission | Console section | Justification (paste) |
 |---|---|---|
-| `SCHEDULE_EXACT_ALARM` | Alarms & reminders | `Kaal schedules user-created task & habit reminders/alarms that must trigger at the exact set time.` |
+| `SCHEDULE_EXACT_ALARM` | Alarms & reminders | `TaskEra schedules user-created task & habit reminders/alarms that must trigger at the exact set time.` |
 | `USE_FULL_SCREEN_INTENT` | Full-screen intent | `Used for time-critical task/habit alarm notifications the user explicitly sets.` |
 | `RECEIVE_BOOT_COMPLETED` | — | Standard, no form (re-arms reminders after reboot) |
 | `POST_NOTIFICATIONS` | — | Runtime-requested, no form |
@@ -116,7 +116,7 @@ yet (generic link has no `user_id`), so keep Play IAP as the primary path on And
 
 - **Data sold:** No
 - **Encrypted in transit:** Yes
-- **Account deletion available:** Yes → `https://jumbarthi.com/kaal/delete`
+- **Account deletion available:** Yes → `https://jumbarthi.com/taskera/delete`
 - ⚠️ **Disclose:** note/task text is sent to the AI provider (Anthropic/OpenAI, or the user's
   own key) when AI features are used.
 
@@ -134,7 +134,7 @@ If sign-in is required to review: provide a test email, OR point reviewers to
 
 ### f. Ads
 Contains ads: **Yes** — Google AdMob (interstitial + rewarded), shown to **free-plan users only**;
-Kaal Pro is ad-free. Before release: set real AdMob app ID + ad unit IDs (see `lib/config/ads_config.dart`
+TaskEra Pro is ad-free. Before release: set real AdMob app ID + ad unit IDs (see `lib/config/ads_config.dart`
 and AndroidManifest `APPLICATION_ID`), flip `useTestAds = false`, and add a UMP consent flow for EU users.
 
 ### g. Government / financial / health: **No** to all.

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-/// Notion-style block types supported by the Kaal block editor (v1).
+/// Notion-style block types supported by the TaskEra block editor (v1).
 enum BlockType {
   paragraph,
   heading1,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
 class HeatmapCell {
   final double intensity; // 0.0 = none, 1.0 = full
@@ -9,13 +9,13 @@ class HeatmapCell {
   const HeatmapCell({required this.intensity, this.tooltip});
 }
 
-class KaalHeatmap extends StatelessWidget {
+class TaskEraHeatmap extends StatelessWidget {
   final List<HeatmapCell> cells; // expects 28–31 entries for a month
   final Color? color;
   final double cellSize;
   final double gap;
 
-  const KaalHeatmap({
+  const TaskEraHeatmap({
     super.key,
     required this.cells,
     this.color,
@@ -25,8 +25,8 @@ class KaalHeatmap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
-    final baseColor = color ?? KaalColors.acc;
+    final colors = TaskEraTheme.of(context).colors;
+    final baseColor = color ?? TaskEraColors.acc;
     return Wrap(
       spacing: gap,
       runSpacing: gap,

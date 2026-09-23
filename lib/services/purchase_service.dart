@@ -29,7 +29,7 @@ final purchaseUiStateProvider = StateProvider<PurchaseUiState>((ref) => Purchase
 /// UPI/cards/wallets are additionally offered inside Google Play's own
 /// checkout in India — there's no separate in-app UPI SDK for that (a
 /// standalone one would breach store policy for digital goods on either
-/// platform). On iOS, Kaal Pro must be purchased through the App Store only.
+/// platform). On iOS, TaskEra Pro must be purchased through the App Store only.
 ///
 /// A successful purchase does NOT grant Pro by itself — it triggers server
 /// receipt validation, and only that (or the realtime `pro_entitlements`

@@ -9,10 +9,10 @@ import '../../data/database.dart';
 import '../../data/providers/database_provider.dart';
 import '../../routing/routes.dart';
 import '../../settings/app_launch_prefs.dart';
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 import '../../settings/prefs_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/wallpaper_background.dart';
 
 // Single-screen onboarding — every persona option (language, who, focus style,
@@ -68,10 +68,10 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     ('🌙', 'Night owl · 6 PM–midnight', null),
   ];
   static const _quads = [
-    (label: 'Q1 · Do Now',   sub: 'Urgent',    bg: Color(0x1AF25022), border: Color(0x40F25022), color: KaalColors.q1),
-    (label: 'Q2 · Schedule', sub: 'Important',  bg: Color(0x1A7FBA00), border: Color(0x407FBA00), color: KaalColors.q2),
-    (label: 'Q3 · Delegate', sub: 'Do Later',   bg: Color(0x1400A4EF), border: Color(0x3300A4EF), color: KaalColors.q3),
-    (label: 'Q4 · Eliminate',sub: 'Remove',     bg: Color(0x14FFB900), border: Color(0x33FFB900), color: KaalColors.q4),
+    (label: 'Q1 · Do Now',   sub: 'Urgent',    bg: Color(0x1AF25022), border: Color(0x40F25022), color: TaskEraColors.q1),
+    (label: 'Q2 · Schedule', sub: 'Important',  bg: Color(0x1A7FBA00), border: Color(0x407FBA00), color: TaskEraColors.q2),
+    (label: 'Q3 · Delegate', sub: 'Do Later',   bg: Color(0x1400A4EF), border: Color(0x3300A4EF), color: TaskEraColors.q3),
+    (label: 'Q4 · Eliminate',sub: 'Remove',     bg: Color(0x14FFB900), border: Color(0x33FFB900), color: TaskEraColors.q4),
   ];
 
   @override
@@ -88,10 +88,10 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     final prefs = ref.read(sharedPreferencesProvider);
 
     if (savePrefs) {
-      if (_role != null)     await prefs.setInt('kaal.onboard.role',       _role!);
-      if (_focus != null)    await prefs.setInt('kaal.onboard.focusStyle', _focus!);
-      if (_peak != null)     await prefs.setInt('kaal.onboard.peakHours',  _peak!);
-      if (_quadrant != null) await prefs.setInt('kaal.onboard.quadrant',   _quadrant!);
+      if (_role != null)     await prefs.setInt('taskera.onboard.role',       _role!);
+      if (_focus != null)    await prefs.setInt('taskera.onboard.focusStyle', _focus!);
+      if (_peak != null)     await prefs.setInt('taskera.onboard.peakHours',  _peak!);
+      if (_quadrant != null) await prefs.setInt('taskera.onboard.quadrant',   _quadrant!);
       final taskText = _taskCtrl.text.trim();
       if (taskText.isNotEmpty) {
         final quad = (_quadrant ?? 1) + 1; // picker 0–3 → Q1–Q4; default Q2
@@ -104,12 +104,12 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     await AppLaunchPrefs.completeOnboarding(prefs);
     // Hand off to the relocated Pro upsell. The paywall reads the skipAuth flag
     // to decide mandatory (local-storage users) vs optional (signed-up users).
-    if (mounted) context.go('${KaalRoutes.paywall}?from=onboard');
+    if (mounted) context.go('${TaskEraRoutes.paywall}?from=onboard');
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final safeTop = MediaQuery.of(context).padding.top;
     final safeBottom = MediaQuery.viewPaddingOf(context).bottom;
 
@@ -151,13 +151,13 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     );
   }
 
-  Widget _content(KaalColors colors) {
+  Widget _content(TaskEraColors colors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // ── Header ────────────────────────────────────────────────────────
         Text(
-          'Welcome to Kaal',
+          'Welcome to TaskEra',
           style: TextStyle(
             fontFamily: 'Fraunces',
             fontVariations: const [FontVariation('wght', 700)],
@@ -180,7 +180,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         const SizedBox(height: 22),
 
         // ── Who are you ───────────────────────────────────────────────────
-        _SectionHeader('Who are you?', colors, sub: 'Kaal adapts to your workflow'),
+        _SectionHeader('Who are you?', colors, sub: 'TaskEra adapts to your workflow'),
         const SizedBox(height: 10),
         for (var i = 0; i < _roleOpts.length; i++) ...[
           if (i > 0) const SizedBox(height: 6),
@@ -227,7 +227,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(11),
                 borderSide: BorderSide(width: 1.5, color: colors.bdr2)),
             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(11),
-                borderSide: const BorderSide(width: 1.5, color: KaalColors.acc)),
+                borderSide: const BorderSide(width: 1.5, color: TaskEraColors.acc)),
           ),
         ),
         const SizedBox(height: 8),
@@ -253,9 +253,9 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1.6),
             children: [
               const TextSpan(text: 'By continuing you confirm you are 13 or older and agree to our '),
-              const TextSpan(text: 'Terms', style: TextStyle(color: KaalColors.acc2)),
+              const TextSpan(text: 'Terms', style: TextStyle(color: TaskEraColors.acc2)),
               const TextSpan(text: ' and '),
-              const TextSpan(text: 'Privacy Policy', style: TextStyle(color: KaalColors.acc2)),
+              const TextSpan(text: 'Privacy Policy', style: TextStyle(color: TaskEraColors.acc2)),
               const TextSpan(text: '.'),
             ],
           ),
@@ -266,7 +266,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
   }
 
   // ── Language chips (world + collapsible Indian group) ─────────────────────
-  Widget _languageBlock(KaalColors colors) {
+  Widget _languageBlock(TaskEraColors colors) {
     final indiaSelected = _langIdx >= _indiaOffset;
     if (indiaSelected && !_indiaOpen) _indiaOpen = true;
     return Column(
@@ -281,7 +281,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
             decoration: BoxDecoration(
-              color: indiaSelected ? KaalColors.accBg : colors.surf2,
+              color: indiaSelected ? TaskEraColors.accBg : colors.surf2,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5,
                   color: indiaSelected ? const Color(0x4D0A84FF) : colors.bdr0),
@@ -289,10 +289,10 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             child: Row(children: [
               Text('🇮🇳  Indian Languages', style: TextStyle(
                 fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
-                color: indiaSelected ? KaalColors.acc2 : colors.ink2, height: 1)),
+                color: indiaSelected ? TaskEraColors.acc2 : colors.ink2, height: 1)),
               const Spacer(),
               Icon(_indiaOpen ? Icons.expand_less : Icons.expand_more, size: 16,
-                  color: indiaSelected ? KaalColors.acc2 : colors.ink3),
+                  color: indiaSelected ? TaskEraColors.acc2 : colors.ink3),
             ]),
           ),
         ),
@@ -307,23 +307,23 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     );
   }
 
-  Widget _langChip(int idx, String label, KaalColors colors) {
+  Widget _langChip(int idx, String label, TaskEraColors colors) {
     final sel = _langIdx == idx;
     return GestureDetector(
       onTap: () {
         setState(() => _langIdx = idx);
-        ref.read(kaalSettingsProvider.notifier).setLang(idx);
+        ref.read(taskeraSettingsProvider.notifier).setLang(idx);
       },
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
         decoration: BoxDecoration(
-          color: sel ? KaalColors.accBg : colors.surf2,
+          color: sel ? TaskEraColors.accBg : colors.surf2,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(width: 0.5, color: sel ? const Color(0x4D0A84FF) : colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
           fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
-          color: sel ? KaalColors.acc2 : colors.ink2, height: 1)),
+          color: sel ? TaskEraColors.acc2 : colors.ink2, height: 1)),
       ),
     );
   }
@@ -334,7 +334,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
 class _SectionHeader extends StatelessWidget {
   final String title;
   final String? sub;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionHeader(this.title, this.colors, {this.sub});
 
   @override
@@ -361,7 +361,7 @@ class _ActionBar extends StatelessWidget {
   final VoidCallback onStart;
   final VoidCallback onSkip;
   final double safeBottom;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ActionBar({
     required this.saving,
     required this.onStart,
@@ -383,14 +383,14 @@ class _ActionBar extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [BoxShadow(color: Color(0x4D0A84FF), blurRadius: 14, offset: Offset(0, 3))],
               ),
               child: saving
                   ? const SizedBox(width: 18, height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Start using Kaal →', style: TextStyle(
+                  : const Text('Start using TaskEra →', style: TextStyle(
                       fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
             ),
           ),
@@ -417,7 +417,7 @@ class _ObOpt extends StatelessWidget {
   final String? subtitle;
   final bool selected;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ObOpt({
     required this.emoji,
     required this.title,
@@ -434,9 +434,9 @@ class _ObOpt extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? KaalColors.accBg : Colors.transparent,
+          color: selected ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(width: 1, color: selected ? KaalColors.acc : colors.bdr),
+          border: Border.all(width: 1, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Row(children: [
           Text(emoji, style: const TextStyle(fontSize: 15)),

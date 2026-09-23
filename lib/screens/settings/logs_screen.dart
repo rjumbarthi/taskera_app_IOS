@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../services/activity_log_service.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/wallpaper_background.dart';
 import '../../l10n/app_l10n.dart';
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 
 class LogsScreen extends ConsumerWidget {
   final bool standalone;
@@ -19,11 +19,11 @@ class LogsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final logsAsync = ref.watch(activityLogProvider);
 
     Widget logList = logsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: KaalColors.acc)),
+      loading: () => const Center(child: CircularProgressIndicator(color: TaskEraColors.acc)),
       error: (_, _) => Center(
         child: Text('Could not load logs', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
       ),
@@ -70,7 +70,7 @@ class LogsScreen extends ConsumerWidget {
 
     // Standalone: own WallpaperBackground + Scaffold + sub-header
     final safeTop   = MediaQuery.of(context).padding.top;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
     return Stack(
       children: [
         Positioned.fill(child: WallpaperBackground(wallpaper: wallpaper)),
@@ -109,7 +109,7 @@ class LogsScreen extends ConsumerWidget {
 
 class _LogRow extends StatelessWidget {
   final ActivityLog log;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool showDate;
   const _LogRow({required this.log, required this.colors, required this.showDate});
 
@@ -123,18 +123,18 @@ class _LogRow extends StatelessWidget {
   };
 
   static const _typeColor = {
-    'task':      KaalColors.acc,
+    'task':      TaskEraColors.acc,
     'checklist': Color(0xFF00BCD4),
     'goal':      Color(0xFF7FBA00),
     'note':      Color(0xFFBF5AF2),
-    'habit':     KaalColors.q4,
+    'habit':     TaskEraColors.q4,
     'calendar':  Color(0xFFFF6B00),
   };
 
   @override
   Widget build(BuildContext context) {
     final icon  = _typeIcon[log.type] ?? '·';
-    final color = _typeColor[log.type] ?? KaalColors.acc;
+    final color = _typeColor[log.type] ?? TaskEraColors.acc;
     final time  = _fmtTime(log.timestamp);
     final date  = _fmtDate(log.timestamp);
 
@@ -206,7 +206,7 @@ class _LogRow extends StatelessWidget {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EmptyState({required this.colors});
 
   @override

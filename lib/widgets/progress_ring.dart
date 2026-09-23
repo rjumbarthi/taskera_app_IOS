@@ -1,7 +1,7 @@
 import 'dart:math' show pi;
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
 class ProgressRing extends StatelessWidget {
   final double value; // 0.0 – 1.0
@@ -21,7 +21,7 @@ class ProgressRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return SizedBox(
       width: size,
       height: size,
@@ -30,7 +30,7 @@ class ProgressRing extends StatelessWidget {
           value: value.clamp(0.0, 1.0),
           strokeWidth: strokeWidth,
           trackColor: colors.surf3,
-          progressColor: color ?? KaalColors.acc,
+          progressColor: color ?? TaskEraColors.acc,
         ),
         child: center != null ? Center(child: center) : null,
       ),

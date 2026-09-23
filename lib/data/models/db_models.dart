@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../database.dart' show DbProperty, DbRow;
 
-/// Property (column) types supported by Kaal databases (v1).
+/// Property (column) types supported by TaskEra databases (v1).
 enum DbPropType { text, number, select, multiSelect, date, checkbox, url }
 
 extension DbPropTypeMeta on DbPropType {
@@ -54,7 +54,7 @@ extension DbPropTypeMeta on DbPropType {
 DbPropType propTypeOf(DbProperty p) => DbPropTypeMeta.fromId(p.type);
 
 /// Palette for select/status options. Kept as translucent tints so options read
-/// well over the wallpaper (matches Kaal's tint-not-fill rule).
+/// well over the wallpaper (matches TaskEra's tint-not-fill rule).
 const kOptionColors = <Color>[
   Color(0xFF8E8E93), // grey
   Color(0xFF0A84FF), // blue

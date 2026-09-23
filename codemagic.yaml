@@ -1,12 +1,12 @@
-# Codemagic CI/CD — builds & signs the Kaal iOS app on macOS build servers.
+# Codemagic CI/CD — builds & signs the TaskEra iOS app on macOS build servers.
 # You do NOT need a Mac. Everything below runs in Codemagic's cloud.
 #
 # ── ONE-TIME SETUP in the Codemagic web UI (see ios/IOS_BUILD.md for details) ──
 #   1. Sign up at codemagic.io and connect this Git repository.
 #   2. Team settings → Integrations → App Store Connect → add an API key
 #      (from App Store Connect → Users and Access → Integrations → App Store
-#      Connect API). Name it EXACTLY:  KaalAppStoreConnect
-#   3. In App Store Connect, register the bundle id `com.port443.kaal` and create
+#      Connect API). Name it EXACTLY:  TaskEraAppStoreConnect
+#   3. In App Store Connect, register the bundle id `com.port443.taskera` and create
 #      the app record (so TestFlight has somewhere to receive the build).
 #   4. Put the app's numeric Apple ID into APP_STORE_APP_ID below (App Store
 #      Connect → your app → App Information → "Apple ID").
@@ -15,22 +15,22 @@
 
 workflows:
   ios-testflight:
-    name: Kaal iOS — TestFlight
+    name: TaskEra iOS — TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 60
 
     integrations:
       # Must match the App Store Connect API key name you created in the UI.
-      app_store_connect: KaalAppStoreConnect
+      app_store_connect: TaskEraAppStoreConnect
 
     environment:
       ios_signing:
         distribution_type: app_store          # TestFlight / App Store signing
-        bundle_identifier: com.port443.kaal
+        bundle_identifier: com.port443.taskera
       vars:
         # App Store Connect numeric Apple ID of the app record (fill this in).
         APP_STORE_APP_ID: 0000000000
-        BUNDLE_ID: "com.port443.kaal"
+        BUNDLE_ID: "com.port443.taskera"
       flutter: stable
       xcode: latest
       cocoapods: default

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class KaalColors {
+class TaskEraColors {
   final Color bg;
   final Color appBg;
   final Color surf;
@@ -19,7 +19,7 @@ class KaalColors {
   final Color successFg;   // positive/green values & icons (text-safe)
   final Color labelMuted;  // small muted captions/labels (text-safe)
 
-  // Dynamic accent — defaults to blue; overridden via KaalThemeData.fromMode
+  // Dynamic accent — defaults to blue; overridden via TaskEraThemeData.fromMode
   final Color accent;
   final Color accent2;
   final Color accentBg;
@@ -35,7 +35,7 @@ class KaalColors {
   static const Color warn    = Color(0xFFFF6B6B);
   static const Color success = Color(0xFF9FCD44);
 
-  const KaalColors({
+  const TaskEraColors({
     required this.bg,
     required this.appBg,
     required this.surf,
@@ -56,7 +56,7 @@ class KaalColors {
   });
 
   // Glass theme — wallpaper shows through translucent surfaces
-  static const glass = KaalColors(
+  static const glass = TaskEraColors(
     bg:    Colors.transparent,
     appBg: Color(0xFF0D0D14),
     surf:  Color(0x17FFFFFF), // rgba(255,255,255,.09)
@@ -72,7 +72,7 @@ class KaalColors {
   // Dark theme — wallpaper shows through a strong dark scrim. Surfaces are
   // glass-like (translucent white) so the wallpaper colour bleeds through cards,
   // giving the same depth as glass but a darker, moodier mood.
-  static const dark = KaalColors(
+  static const dark = TaskEraColors(
     bg:    Colors.transparent, // wallpaper + dark scrim shows through
     appBg: Color(0xFF0A0A0C),  // fallback when wallpaper is off
     surf:  Color(0x17FFFFFF), // rgba(255,255,255,.09)
@@ -88,7 +88,7 @@ class KaalColors {
   // Light theme — wallpaper shows through a soft white wash. Surfaces are
   // translucent white (bright but layered) with dark ink, so cards stay airy
   // and legible while picking up a hint of wallpaper colour, matching glass depth.
-  static const light = KaalColors(
+  static const light = TaskEraColors(
     bg:    Colors.transparent, // wallpaper + white wash shows through
     appBg: Color(0xFFF2F2F7),  // fallback when wallpaper is off
     surf:  Color(0xE6FFFFFF), // rgba(255,255,255,.90)

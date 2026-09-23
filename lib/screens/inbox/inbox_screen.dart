@@ -12,8 +12,8 @@ import '../../data/providers/database_provider.dart';
 import '../../services/google_service.dart';
 import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -235,7 +235,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         lo.contains("you're invited") || lo.contains('you are invited')) {
       return _ActionItem(
         title: subject, source: 'From $sender', quadLabel: 'Invite',
-        dotColor: KaalColors.q4,
+        dotColor: TaskEraColors.q4,
         btnBg: const Color(0x1ABF5AF2), btnBorder: const Color(0x40BF5AF2),
         btnText: const Color(0xFFBF5AF2),
       );
@@ -245,9 +245,9 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         lo.contains('approval') || lo.contains('overdue')) {
       return _ActionItem(
         title: subject, source: 'From $sender', quadLabel: 'Q1 · Task',
-        dotColor: KaalColors.q1,
+        dotColor: TaskEraColors.q1,
         btnBg: const Color(0x1AFF453A), btnBorder: const Color(0x40FF453A),
-        btnText: KaalColors.q1,
+        btnText: TaskEraColors.q1,
       );
     }
     if (lo.contains('meeting') || lo.contains('schedule') ||
@@ -255,16 +255,16 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         lo.contains('follow up') || lo.contains('follow-up')) {
       return _ActionItem(
         title: subject, source: 'From $sender', quadLabel: 'Q2 · Plan',
-        dotColor: KaalColors.q2,
+        dotColor: TaskEraColors.q2,
         btnBg: const Color(0x1A7FBA00), btnBorder: const Color(0x407FBA00),
-        btnText: KaalColors.q2,
+        btnText: TaskEraColors.q2,
       );
     }
     return null;
   }
 
   void _showAddItemSheet(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -299,7 +299,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   void _showEmailDetail(BuildContext context, int index) {
     final email = _fetchedEmails[index];
     setState(() => _readEmails.add(index));
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -343,7 +343,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final gmailEnabled = ref.watch(gmailEnabledProvider);
     final visibleEmails = [
       for (int i = 0; i < _fetchedEmails.length; i++)
@@ -351,7 +351,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     ];
     return RefreshIndicator(
       onRefresh: _loadEmails,
-      color: KaalColors.acc2,
+      color: TaskEraColors.acc2,
       backgroundColor: const Color(0xFF1C1C1E),
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -411,14 +411,14 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                   style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1))
               : (_loading
                   ? Text('↻ Syncing…',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: KaalColors.acc2, height: 1))
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2, height: 1))
                   : null),
         ),
         const SizedBox(height: 4),
         if (_loading)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 28),
-            child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: KaalColors.acc)),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: TaskEraColors.acc)),
           )
         else if (visibleEmails.isEmpty)
           Padding(
@@ -430,7 +430,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                     : (_gmailConnected ? AppL10n.of(context).inboxEmptyHint : AppL10n.of(context).connectGmailSeeEmails)),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'Inter', fontSize: 13, height: 1.4,
-                    color: _error != null ? KaalColors.warn : colors.ink3)),
+                    color: _error != null ? TaskEraColors.warn : colors.ink3)),
             ),
           )
         else
@@ -473,7 +473,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
 // ── Source pills ──────────────────────────────────────────────────────────────
 
 class _SourcePills extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool gmailEnabled;
   final bool gmailConnected;
   final VoidCallback onGmail;
@@ -518,7 +518,7 @@ class _SourceChip extends StatelessWidget {
   final Color accent;
   final bool connected;
   final bool soon;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _SourceChip({
     required this.emoji,
@@ -553,7 +553,7 @@ class _SourceChip extends StatelessWidget {
                 color: active ? colors.ink : colors.ink2, height: 1)),
             if (connected) ...[
               const SizedBox(width: 5),
-              Container(width: 5, height: 5, decoration: const BoxDecoration(color: KaalColors.q2, shape: BoxShape.circle)),
+              Container(width: 5, height: 5, decoration: const BoxDecoration(color: TaskEraColors.q2, shape: BoxShape.circle)),
             ] else if (soon) ...[
               const SizedBox(width: 5),
               Text('Soon', style: TextStyle(fontFamily: 'Inter', fontSize: 8,
@@ -569,7 +569,7 @@ class _SourceChip extends StatelessWidget {
 // ── Add manually button ───────────────────────────────────────────────────────
 
 class _AddManuallyButton extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _AddManuallyButton({required this.colors, required this.onTap});
 
@@ -588,7 +588,7 @@ class _AddManuallyButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.add_rounded, size: 15, color: KaalColors.acc2),
+            const Icon(Icons.add_rounded, size: 15, color: TaskEraColors.acc2),
             const SizedBox(width: 5),
             Text('Add task manually', style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                 fontWeight: FontWeight.w600, color: colors.ink2, height: 1)),
@@ -602,7 +602,7 @@ class _AddManuallyButton extends StatelessWidget {
 // ── Add item sheet ────────────────────────────────────────────────────────────
 
 class _AddItemSheet extends StatefulWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Future<void> Function(String title, int quadrant) onAdd;
   const _AddItemSheet({required this.colors, required this.onAdd});
 
@@ -616,10 +616,10 @@ class _AddItemSheetState extends State<_AddItemSheet> {
   bool _saving = false;
 
   static const _quads = [
-    (n: 'Q1', color: KaalColors.q1, bg: Color(0x1AF25022), border: Color(0x40F25022)),
-    (n: 'Q2', color: KaalColors.q2, bg: Color(0x1A7FBA00), border: Color(0x407FBA00)),
-    (n: 'Q3', color: KaalColors.q3, bg: Color(0x1A00A4EF), border: Color(0x4000A4EF)),
-    (n: 'Q4', color: KaalColors.q4, bg: Color(0x1AFFB900), border: Color(0x40FFB900)),
+    (n: 'Q1', color: TaskEraColors.q1, bg: Color(0x1AF25022), border: Color(0x40F25022)),
+    (n: 'Q2', color: TaskEraColors.q2, bg: Color(0x1A7FBA00), border: Color(0x407FBA00)),
+    (n: 'Q3', color: TaskEraColors.q3, bg: Color(0x1A00A4EF), border: Color(0x4000A4EF)),
+    (n: 'Q4', color: TaskEraColors.q4, bg: Color(0x1AFFB900), border: Color(0x40FFB900)),
   ];
 
   @override
@@ -711,7 +711,7 @@ class _AddItemSheetState extends State<_AddItemSheet> {
             onTap: _submit,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(10)),
               alignment: Alignment.center,
               child: _saving
                   ? const SizedBox(width: 18, height: 18,
@@ -729,7 +729,7 @@ class _AddItemSheetState extends State<_AddItemSheet> {
 // ── Connect Gmail prompt ──────────────────────────────────────────────────────
 
 class _ConnectGmailPrompt extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onConnect;
   const _ConnectGmailPrompt({required this.colors, required this.onConnect});
 
@@ -755,7 +755,7 @@ class _ConnectGmailPrompt extends StatelessWidget {
             onTap: onConnect,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 9),
-              decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
               alignment: Alignment.center,
               child: Text('${AppL10n.of(context).connect} Gmail',
                   style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
@@ -771,7 +771,7 @@ class _ConnectGmailPrompt extends StatelessWidget {
 
 class _StatsGrid extends StatelessWidget {
   final int total, unread, added, actions;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatsGrid({required this.total, required this.unread, required this.added,
       required this.actions, required this.colors});
 
@@ -779,11 +779,11 @@ class _StatsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _StatCell(value: '$actions', label: AppL10n.of(context).aiItems, valueColor: KaalColors.acc2,         colors: colors),
+        _StatCell(value: '$actions', label: AppL10n.of(context).aiItems, valueColor: TaskEraColors.acc2,         colors: colors),
         const SizedBox(width: 4),
         _StatCell(value: '$unread',  label: AppL10n.of(context).unread, valueColor: const Color(0xFFFF8080), colors: colors),
         const SizedBox(width: 4),
-        _StatCell(value: '$added',   label: AppL10n.of(context).added,  valueColor: KaalColors.q2,           colors: colors),
+        _StatCell(value: '$added',   label: AppL10n.of(context).added,  valueColor: TaskEraColors.q2,           colors: colors),
         const SizedBox(width: 4),
         _StatCell(value: '$total',   label: AppL10n.of(context).total,  valueColor: null,                    colors: colors),
       ],
@@ -795,7 +795,7 @@ class _StatCell extends StatelessWidget {
   final String value;
   final String label;
   final Color? valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatCell({required this.value, required this.label, required this.valueColor, required this.colors});
 
   @override
@@ -844,7 +844,7 @@ class _SectionRow extends StatelessWidget {
 class _EmailItem extends StatelessWidget {
   final _Email email;
   final bool   isRead;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
@@ -879,7 +879,7 @@ class _EmailItem extends StatelessWidget {
                 width: 5, height: 5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: showUnread ? KaalColors.acc : Colors.transparent,
+                  color: showUnread ? TaskEraColors.acc : Colors.transparent,
                 ),
               ),
             ),
@@ -952,9 +952,9 @@ String? _firstTimeSlot(String text) {
   return min != null ? '${m.group(1)}:$min $ap' : '${m.group(1)} $ap';
 }
 
-// On-device keyword heuristics: turn an email into add-to-Kaal suggestions.
+// On-device keyword heuristics: turn an email into add-to-TaskEra suggestions.
 // No AI/LLM and no network — email text never leaves the device.
-List<_Suggestion> _kaalSuggest(String subject, String sender, String body) {
+List<_Suggestion> _taskeraSuggest(String subject, String sender, String body) {
   final text  = '$subject\n$body'.toLowerCase();
   final clean = _cleanSubject(subject);
   final out   = <_Suggestion>[];
@@ -989,7 +989,7 @@ List<_Suggestion> _kaalSuggest(String subject, String sender, String body) {
 
 class _EmailDetailSheet extends ConsumerStatefulWidget {
   final _Email email;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onArchive;
   final VoidCallback onSnooze;
 
@@ -1040,7 +1040,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
           frequencyLabel: const Value('Daily'),
           streakLabel: const Value('0 days'),
           streakColorValue: Value(const Color(0xFF8E8E93).toARGB32()),
-          accentColorValue: Value(KaalColors.acc.toARGB32()),
+          accentColorValue: Value(TaskEraColors.acc.toARGB32()),
         ));
         where = 'Habits';
       case _SugType.note:
@@ -1076,7 +1076,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
   Widget build(BuildContext context) {
     final colors = widget.colors;
     final email  = widget.email;
-    final suggestions = _kaalSuggest(email.subject, email.sender, _body ?? email.preview);
+    final suggestions = _taskeraSuggest(email.subject, email.sender, _body ?? email.preview);
 
     return Container(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 20 + MediaQuery.of(context).padding.bottom),
@@ -1114,7 +1114,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                   ? const Padding(
                       padding: EdgeInsets.symmetric(vertical: 18),
                       child: Center(child: SizedBox(width: 18, height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: KaalColors.acc))),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: TaskEraColors.acc))),
                     )
                   : SingleChildScrollView(
                       child: Text(_body!.isEmpty ? '(no preview available)' : _body!,
@@ -1127,12 +1127,12 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
               children: [
                 Container(
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
-                  decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
                   child: const Text('SUGGESTED', style: TextStyle(fontFamily: 'Inter', fontSize: 9,
-                      fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                      fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                 ),
                 const SizedBox(width: 6),
-                Text('Suggested — add to Kaal', style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                Text('Suggested — add to TaskEra', style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                     fontWeight: FontWeight.w600, color: colors.ink3)),
               ],
             ),
@@ -1197,15 +1197,15 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
 class _SuggestionCard extends StatelessWidget {
   final _Suggestion s;
   final bool added;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onAdd;
   const _SuggestionCard({required this.s, required this.added, required this.colors, required this.onAdd});
 
   ({String label, String emoji, Color color}) get _meta => switch (s.type) {
-        _SugType.task   => (label: 'Task',   emoji: '✓',  color: KaalColors.acc2),
+        _SugType.task   => (label: 'Task',   emoji: '✓',  color: TaskEraColors.acc2),
         _SugType.habit  => (label: 'Habit',  emoji: '🔁', color: const Color(0xFFBF5AF2)),
         _SugType.invite => (label: 'Invite', emoji: '📅', color: const Color(0xFFBF5AF2)),
-        _SugType.note   => (label: 'Note',   emoji: '📝', color: KaalColors.q4),
+        _SugType.note   => (label: 'Note',   emoji: '📝', color: TaskEraColors.q4),
       };
 
   @override
@@ -1265,7 +1265,7 @@ class _SuggestionCard extends StatelessWidget {
 
 class _ActionCard extends StatelessWidget {
   final _ActionItem item;
-  final KaalColors  colors;
+  final TaskEraColors  colors;
   final bool        isConverted;
   final VoidCallback onConvert;
 

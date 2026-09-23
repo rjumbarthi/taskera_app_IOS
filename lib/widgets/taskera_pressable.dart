@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Wraps any widget with a scale-press animation (97% on press, 100% on release).
 /// Use for buttons, icon buttons, and any tappable element that needs tactile feedback.
-/// For rows that also need a 480ms long-press context menu, use [KaalLongPressMenu] instead.
-class KaalPressable extends StatefulWidget {
+/// For rows that also need a 480ms long-press context menu, use [TaskEraLongPressMenu] instead.
+class TaskEraPressable extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
   final double scaleDown;
   final bool enabled;
 
-  const KaalPressable({
+  const TaskEraPressable({
     super.key,
     required this.child,
     this.onTap,
@@ -18,10 +18,10 @@ class KaalPressable extends StatefulWidget {
   });
 
   @override
-  State<KaalPressable> createState() => _KaalPressableState();
+  State<TaskEraPressable> createState() => _TaskEraPressableState();
 }
 
-class _KaalPressableState extends State<KaalPressable> {
+class _TaskEraPressableState extends State<TaskEraPressable> {
   bool _pressed = false;
 
   @override

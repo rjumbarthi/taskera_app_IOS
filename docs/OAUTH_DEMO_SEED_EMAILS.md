@@ -1,24 +1,24 @@
 # OAuth Demo — Seed Emails for the Reviewer Inbox
 
-Send these **to** `kaal_support@jumbarthi.com` **from any other address** (e.g.
+Send these **to** `taskera_support@jumbarthi.com` **from any other address** (e.g.
 `r@jumbarthi.com` or a Gmail account). Leave them **unread**.
 
 ## Why it must be done this way
 
-1. Kaal only processes **new incoming** mail — the app tells the user *"Only new
+1. TaskEra only processes **new incoming** mail — the app tells the user *"Only new
    incoming emails are processed into tasks & habits — your existing inbox
    history isn't scanned"* (`inbox_screen.dart:387`). So these have to actually
    **arrive** in the inbox as new unread messages. Sending from another account
    is the only way.
 2. Every **subject line is deliberately bland** and the actionable content lives
-   in the **body**. This is the entire point: it forces Kaal to read the message
+   in the **body**. This is the entire point: it forces TaskEra to read the message
    body, which proves `gmail.metadata` (headers only) cannot power the feature.
    In the video, open one of these and show the subject says nothing useful while
    the body drives the task/habit.
 
 ## How the on-device parser reacts (so you know what to expect)
 
-From `_kaalSuggest()` in `inbox_screen.dart` — pure keyword matching, no AI, no
+From `_taskeraSuggest()` in `inbox_screen.dart` — pure keyword matching, no AI, no
 network:
 
 - **Every** email → a **Task** suggestion + a **Note** suggestion.
@@ -132,7 +132,7 @@ suggestion with time slot 3 PM.*
 
 1. Open **Email 1 ("Quick note")** — point out the subject says nothing.
 2. Hold on the visible **body** for ~5 seconds so the reviewer can read it.
-3. Show Kaal's extracted **Task** suggestion, add it, switch to Tasks tab, show it created.
+3. Show TaskEra's extracted **Task** suggestion, add it, switch to Tasks tab, show it created.
 4. Open **Email 4 ("checking in")** — show the extracted **Habit** suggestion, add it, switch to Habits tab, show it created.
 5. Say aloud: *"gmail.metadata returns only headers — subject, sender, date. None
    of these subjects contain the task or habit. The feature requires the message
@@ -141,6 +141,6 @@ suggestion with time slot 3 PM.*
 ## Also seed the Google **Calendar** (separate from these emails)
 
 The calendar demo reads real Google Calendar events, not email invites. In the
-`kaal_support@jumbarthi.com` Google Calendar, add **4–6 events over the next 7
-days, with two that overlap in time** so Kaal's conflict detection has something
+`taskera_support@jumbarthi.com` Google Calendar, add **4–6 events over the next 7
+days, with two that overlap in time** so TaskEra's conflict detection has something
 real to show.

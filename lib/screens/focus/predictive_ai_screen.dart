@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/providers/tasks_provider.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 /// "Peak insights" — derived entirely from the user's real task-completion
@@ -29,17 +29,17 @@ class PredictiveAiScreen extends ConsumerWidget {
   // (badge label, accent color) for a quadrant id.
   static (String, Color) _quadInfo(int q) {
     switch (q) {
-      case 1: return ('Q1', KaalColors.q1);
-      case 2: return ('Q2 🏆', KaalColors.q2);
-      case 3: return ('Q3', KaalColors.q3);
-      case 4: return ('Q4', KaalColors.q4);
-      default: return ('Focus', KaalColors.acc2);
+      case 1: return ('Q1', TaskEraColors.q1);
+      case 2: return ('Q2 🏆', TaskEraColors.q2);
+      case 3: return ('Q3', TaskEraColors.q3);
+      case 4: return ('Q4', TaskEraColors.q4);
+      default: return ('Focus', TaskEraColors.acc2);
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     final done = (ref.watch(doneTasksProvider).value ?? [])
         .where((t) => t.doneAt != null)
@@ -135,7 +135,7 @@ class PredictiveAiScreen extends ConsumerWidget {
   }
 
   List<Widget> _buildRecommendations({
-    required KaalColors colors,
+    required TaskEraColors colors,
     required List<dynamic> done,
     required int completions,
     required List<MapEntry<int, int>> windows,
@@ -165,7 +165,7 @@ class PredictiveAiScreen extends ConsumerWidget {
       recs.add(_RecommendCard(
         colors: colors,
         title: '${_weekdays[best.key]} is your best day',
-        titleColor: KaalColors.acc2,
+        titleColor: TaskEraColors.acc2,
         body: '${best.value} of $completions completions happen on '
             '${_weekdays[best.key]}s. Front-load important tasks then.',
         borderColor: const Color(0x260A84FF),
@@ -200,7 +200,7 @@ class PredictiveAiScreen extends ConsumerWidget {
 // ── Page header ───────────────────────────────────────────────────────────────
 
 class _PageHeader extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String subtitle;
   const _PageHeader({required this.colors, required this.subtitle});
 
@@ -209,7 +209,7 @@ class _PageHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        AddBackButton(onTap: () => context.go(KaalRoutes.focus)),
+        AddBackButton(onTap: () => context.go(TaskEraRoutes.focus)),
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +246,7 @@ class _PageHeader extends StatelessWidget {
 // ── Empty / not-enough-data state ─────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final int completions;
   const _EmptyState({required this.colors, required this.completions});
 
@@ -272,14 +272,14 @@ class _EmptyState extends StatelessWidget {
               fontFamily: 'Inter',
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: KaalColors.acc2,
+              color: TaskEraColors.acc2,
               height: 1.2,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             completions == 0
-                ? 'Complete a few tasks and Kaal will learn when you do your best work — your peak focus windows, best days and patterns appear here.'
+                ? 'Complete a few tasks and TaskEra will learn when you do your best work — your peak focus windows, best days and patterns appear here.'
                 : 'You\'ve logged $completions ${completions == 1 ? 'completion' : 'completions'}. A handful more and your peak focus windows will appear here.',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -299,7 +299,7 @@ class _EmptyState extends StatelessWidget {
 typedef _Window = ({String label, double fraction, int quad});
 
 class _PeakWindowsCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final List<_Window> windows;
   const _PeakWindowsCard({required this.colors, required this.windows});
 
@@ -326,7 +326,7 @@ class _PeakWindowsCard extends StatelessWidget {
               fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.4,
-              color: KaalColors.acc2,
+              color: TaskEraColors.acc2,
               height: 1,
             ),
           ),
@@ -362,7 +362,7 @@ class _TimeRow extends StatelessWidget {
   final Color barColor;
   final String badge;
   final Color badgeColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _TimeRow({
     required this.label,
@@ -433,7 +433,7 @@ class _TimeRow extends StatelessWidget {
 // ── Insight card (data-derived) ───────────────────────────────────────────────
 
 class _RecommendCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String title;
   final Color titleColor;
   final String body;
@@ -488,7 +488,7 @@ class _RecommendCard extends StatelessWidget {
 // ── Footer info card ──────────────────────────────────────────────────────────
 
 class _FooterCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final int activeDays;
   final int completions;
   const _FooterCard({

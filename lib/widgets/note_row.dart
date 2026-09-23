@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 import 'glass_card.dart';
 
 class NoteRow extends StatelessWidget {
@@ -20,7 +20,7 @@ class NoteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: onTap,
       child: GlassCard(

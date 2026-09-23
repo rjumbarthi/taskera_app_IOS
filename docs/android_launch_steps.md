@@ -1,10 +1,10 @@
 # Android launch — step by step
 
 Project specifics used below:
-- **Package:** `com.port443.kaal`
+- **Package:** `com.port443.taskera`
 - **Supabase project ref:** `dutlcoxtxmnqektttffg`
-- **Subscription IDs:** `kaal_pro_monthly`, `kaal_pro_annual`
-- **Deep-link scheme:** `io.supabase.kaalapp`
+- **Subscription IDs:** `taskera_pro_monthly`, `taskera_pro_annual`
+- **Deep-link scheme:** `io.supabase.taskeraapp`
 - **Edge functions:** `ai-proxy`, `razorpay-webhook`, `validate-purchase`
 
 **Do them in this order** (later steps depend on earlier ones):
@@ -24,7 +24,7 @@ Project specifics used below:
 | `OPENAI_API_KEY` | platform.openai.com → API Keys (fallback / users w/o own key) |
 | `RAZORPAY_WEBHOOK_SECRET` | you choose it when creating the webhook (step 4d) |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT` | created in step 2f |
-| `ANDROID_PACKAGE` | `com.port443.kaal` |
+| `ANDROID_PACKAGE` | `com.port443.taskera` |
 | `APPLE_SHARED_SECRET` | iOS only — **skip for Android** |
 
 **Run**
@@ -44,8 +44,8 @@ This deploys the 3 functions and sets secrets. (You can re-run `supabase secrets
 ## 4. Config + keys (do early — needed for a working build)
 **a. Supabase → Authentication → URL Configuration → Redirect URLs** — add:
 ```
-io.supabase.kaalapp://login-callback
-io.supabase.kaalapp://reset-callback
+io.supabase.taskeraapp://login-callback
+io.supabase.taskeraapp://reset-callback
 ```
 **b. Email-OTP templates** — Authentication → Emails → Templates → paste the bodies from
 `supabase/templates/magic_link.html` **and** `confirm_signup.html` (both use `{{ .Token }}` so users get a 6-digit code, not a link).
@@ -62,17 +62,17 @@ io.supabase.kaalapp://reset-callback
 
 ## 2. Google Play Console
 **a.** Create a Google Play Developer account ($25 one-time) → play.google.com/console.
-**b.** Create app: name **Kaal**, default language, type **App**, **Free** (with in-app purchases), accept declarations.
+**b.** Create app: name **TaskEra**, default language, type **App**, **Free** (with in-app purchases), accept declarations.
 **c.** Build the bundle:
 ```bash
 flutter build appbundle --release
 ```
 Upload `build/app/outputs/bundle/release/app-release.aab` to **Testing → Internal testing** first (faster review, lets you test IAP).
 **d.** **Store listing** — use the copy in `go_live.md §5` (name, short/full description). Add: app icon (512×512), feature graphic (1024×500), ≥2 phone screenshots (≥1080×1920 — regenerate with the screenshot harness, see `go_live.md §5`).
-**e.** **Content rating** questionnaire → results in **13+** (you have an age gate). **Target audience** → 13+. **Data Safety** form → fill from the table in `go_live.md §5`. **Privacy policy** URL: `https://jumbarthi.com/kaal/privacy`. **App access:** if review needs to log in, provide a test account or note the "Skip — use local storage" option.
+**e.** **Content rating** questionnaire → results in **13+** (you have an age gate). **Target audience** → 13+. **Data Safety** form → fill from the table in `go_live.md §5`. **Privacy policy** URL: `https://jumbarthi.com/taskera/privacy`. **App access:** if review needs to log in, provide a test account or note the "Skip — use local storage" option.
 **f.** **Subscriptions** — Monetize → Products → Subscriptions:
-   - Create **`kaal_pro_monthly`** → base plan "monthly" (auto-renewing, P1M). Set prices per country to match the tiers (US $2.99, … India $0.99). Add an **intro offer** = first month $1.99 (tier 1) etc.
-   - Create **`kaal_pro_annual`** → base plan "annual" (P1Y) at the 40%-off yearly price; add the free-trial/intro offer.
+   - Create **`taskera_pro_monthly`** → base plan "monthly" (auto-renewing, P1M). Set prices per country to match the tiers (US $2.99, … India $0.99). Add an **intro offer** = first month $1.99 (tier 1) etc.
+   - Create **`taskera_pro_annual`** → base plan "annual" (P1Y) at the 40%-off yearly price; add the free-trial/intro offer.
    - Activate both.
 **g.** **Service account for receipt validation** — Google Cloud Console → create a service account → enable **Google Play Android Developer API**. In Play Console → Users & permissions → invite the service-account email → grant **View financial data, orders, and cancellation survey responses**. Download the JSON key → `supabase secrets set GOOGLE_PLAY_SERVICE_ACCOUNT='{...}'`.
 
@@ -82,7 +82,7 @@ Upload `build/app/outputs/bundle/release/app-release.aab` to **Testing → Inter
 Your manifest uses two sensitive permissions — declare each with the justification:
 | Permission | Console section | Justification |
 |---|---|---|
-| `SCHEDULE_EXACT_ALARM` | "Alarms & reminders" | "Kaal schedules user-created task & habit reminders/alarms that must trigger at the exact set time." |
+| `SCHEDULE_EXACT_ALARM` | "Alarms & reminders" | "TaskEra schedules user-created task & habit reminders/alarms that must trigger at the exact set time." |
 | `USE_FULL_SCREEN_INTENT` | "Full-screen intent" | "Used for time-critical task/habit alarm notifications the user explicitly sets." |
 
 (If review pushes back, the fallback is switching to inexact alarms — ask and I'll change the code.)

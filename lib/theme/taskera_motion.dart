@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class KaalMotion {
+class TaskEraMotion {
   // Duration constants — directly from tokens.json transitions
   static const Duration fastPress           = Duration(milliseconds: 120);
   static const Duration defaultDuration     = Duration(milliseconds: 200);
@@ -21,5 +21,5 @@ class KaalMotion {
   // cubic-bezier(.34,1.56,.64,1) — spring bounce
   static const Curve spring = Cubic(0.34, 1.56, 0.64, 1);
 
-  const KaalMotion();
+  const TaskEraMotion();
 }

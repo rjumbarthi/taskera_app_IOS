@@ -7,13 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../routing/routes.dart';
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 import '../../settings/prefs_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_motion.dart';
-import '../../theme/kaal_shape.dart';
-import '../../theme/kaal_theme.dart';
-import '../../theme/kaal_type.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_motion.dart';
+import '../../theme/taskera_shape.dart';
+import '../../theme/taskera_theme.dart';
+import '../../theme/taskera_type.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/goals_provider.dart';
@@ -57,19 +57,19 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
   void _maybeNudgeBrainDump() {
     if (!mounted) return;
     final prefs = ref.read(sharedPreferencesProvider);
-    if (prefs.getBool('kaal.brainDumpUsed') ?? false) return;
-    if (!ref.read(kaalSettingsProvider).sw('focusBrain')) return; // card hidden
+    if (prefs.getBool('taskera.brainDumpUsed') ?? false) return;
+    if (!ref.read(taskeraSettingsProvider).sw('focusBrain')) return; // card hidden
     final now = DateTime.now();
     final today = '${now.year}-${now.month}-${now.day}';
-    if (prefs.getString('kaal.brainDumpNudgeDate') == today) return; // already today
-    prefs.setString('kaal.brainDumpNudgeDate', today);
+    if (prefs.getString('taskera.brainDumpNudgeDate') == today) return; // already today
+    prefs.setString('taskera.brainDumpNudgeDate', today);
 
     final navBottom = MediaQuery.viewPaddingOf(context).bottom + 50 + 8;
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
     final controller = messenger.showSnackBar(SnackBar(
       content: const Text(
-        '🧠 Brain Dump ↓  empty your head — Kaal AI sorts it into tasks & goals',
+        '🧠 Brain Dump ↓  empty your head — TaskEra AI sorts it into tasks & goals',
         style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
       ),
       backgroundColor: const Color(0xFF1C1C1E),
@@ -80,7 +80,7 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
       action: SnackBarAction(
         label: 'Open',
         textColor: const Color(0xFFCF7BFF),
-        onPressed: () => context.go(KaalRoutes.brainDump),
+        onPressed: () => context.go(TaskEraRoutes.brainDump),
       ),
     ));
     // Safety net: the Focus screen rebuilds every second (focus timer), which
@@ -93,7 +93,7 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final s = ref.watch(kaalSettingsProvider);
+    final s = ref.watch(taskeraSettingsProvider);
     final utilGrid = _UtilGrid(
       showPeak:  s.sw('focusPeak'),
       showBrain: s.sw('focusBrain'),
@@ -127,7 +127,7 @@ class _GoalsStrip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final goals = ref.watch(goalsProvider).valueOrNull ?? [];
     final shown = goals.take(4).toList();
 
@@ -142,7 +142,7 @@ class _GoalsStrip extends ConsumerWidget {
         children: [
           // Header — taps to goals list
           GestureDetector(
-            onTap: () => context.go(KaalRoutes.goals),
+            onTap: () => context.go(TaskEraRoutes.goals),
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
@@ -168,7 +168,7 @@ class _GoalsStrip extends ConsumerWidget {
           // Goal columns — each taps to that goal's detail
           if (shown.isEmpty)
             GestureDetector(
-              onTap: () => context.go(KaalRoutes.goals),
+              onTap: () => context.go(TaskEraRoutes.goals),
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
@@ -211,7 +211,7 @@ class _GoalCol extends StatelessWidget {
   final String pct;
   final Color color;
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _GoalCol({required this.pct, required this.color, required this.label, required this.colors});
 
   @override
@@ -333,7 +333,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
       duration: const Duration(milliseconds: 2000),
       action: SnackBarAction(
         label: AppL10n.of(context).undo,
-        textColor: KaalColors.acc2,
+        textColor: TaskEraColors.acc2,
         onPressed: () {
           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
         },
@@ -350,21 +350,21 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
   static ({Color color, Color bg, Color border, Color iconBg, String label})
       _themeFor(int q) => switch (q) {
             1 => (
-                color: KaalColors.q1,
+                color: TaskEraColors.q1,
                 bg: const Color(0x12F25022),
                 border: const Color(0x4DF25022),
                 iconBg: const Color(0x1FF25022),
                 label: 'Q1 · Urgent'
               ),
             2 => (
-                color: KaalColors.q2,
+                color: TaskEraColors.q2,
                 bg: const Color(0x127FBA00),
                 border: const Color(0x4D7FBA00),
                 iconBg: const Color(0x1F7FBA00),
                 label: 'Q2 · Important'
               ),
             _ => (
-                color: KaalColors.q3,
+                color: TaskEraColors.q3,
                 bg: const Color(0x1200A4EF),
                 border: const Color(0x4D00A4EF),
                 iconBg: const Color(0x1F00A4EF),
@@ -387,11 +387,11 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final q1 = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? [];
     final q2 = ref.watch(quadrantTasksProvider(2)).valueOrNull ?? [];
     final q3 = ref.watch(quadrantTasksProvider(3)).valueOrNull ?? [];
-    final scoreRec = ref.watch(kaalSettingsProvider.select((s) => s.sw('scoreRec')));
+    final scoreRec = ref.watch(taskeraSettingsProvider.select((s) => s.sw('scoreRec')));
 
     final tasks = _filteredSorted(q1, q2, q3, useScore: scoreRec);
     if (tasks.isEmpty) return const _DtnEmpty();
@@ -443,7 +443,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: KaalType.xl,
+                        fontSize: TaskEraType.xl,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.45,
                         color: th.color,
@@ -452,7 +452,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.go('${KaalRoutes.focusList}?f=today'),
+                    onTap: () => context.go('${TaskEraRoutes.focusList}?f=today'),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       width: 32, height: 32,
@@ -485,7 +485,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: KaalType.lg,
+                        fontSize: TaskEraType.lg,
                         fontWeight: FontWeight.w600,
                         color: colors.ink,
                         height: 1.28,
@@ -516,7 +516,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                           )
                         : TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: KaalType.sm,
+                            fontSize: TaskEraType.sm,
                             fontWeight: FontWeight.w500,
                             color: th.color,
                             height: 1,
@@ -569,7 +569,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                           alignment: Alignment.center,
                                           child: Text(
                                             _paused ? AppL10n.of(context).resume : AppL10n.of(context).pauseLabel,
-                                            style: TextStyle(fontFamily: 'Inter', fontSize: KaalType.sm, fontWeight: FontWeight.w600, color: colors.ink2, height: 1),
+                                            style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w600, color: colors.ink2, height: 1),
                                           ),
                                         ),
                                       ),
@@ -585,13 +585,13 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(vertical: 7),
                                           decoration: BoxDecoration(
-                                            color: KaalColors.success.withAlpha(0x1A),
-                                            border: Border.all(width: 0.5, color: KaalColors.success),
+                                            color: TaskEraColors.success.withAlpha(0x1A),
+                                            border: Border.all(width: 0.5, color: TaskEraColors.success),
                                             borderRadius: BorderRadius.circular(11),
                                           ),
                                           alignment: Alignment.center,
                                           child: Text(AppL10n.of(context).done,
-                                              style: TextStyle(fontFamily: 'Inter', fontSize: KaalType.sm, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
+                                              style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
                                         ),
                                       ),
                                     ),
@@ -610,7 +610,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       AppL10n.of(context).startNow,
-                                      style: TextStyle(fontFamily: 'Inter', fontSize: KaalType.sm, fontWeight: FontWeight.w700, color: th.color, height: 1),
+                                      style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: th.color, height: 1),
                                     ),
                                   ),
                                 ),
@@ -622,7 +622,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                         child: _DtnSideBtn(
                           label: AppL10n.of(context).viewAll,
                           colors: colors,
-                          onTap: () => context.go('${KaalRoutes.focusList}?f=today'),
+                          onTap: () => context.go('${TaskEraRoutes.focusList}?f=today'),
                         ),
                       ),
                     ],
@@ -640,7 +640,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
 // dtn-side-action: min-width 52, padding 7 8, radius 11, bdr border, ink2 text
 class _DtnSideBtn extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback? onTap;
   const _DtnSideBtn({required this.label, required this.colors, this.onTap});
 
@@ -677,7 +677,7 @@ class _DtnEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 14),
       decoration: BoxDecoration(
@@ -748,7 +748,7 @@ class _QuadGrid extends ConsumerWidget {
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(child: _FocusQuadCard(
-              quadrant: KaalQuadrant.q1, action: AppL10n.of(context).doNow, emoji: '⚡',
+              quadrant: TaskEraQuadrant.q1, action: AppL10n.of(context).doNow, emoji: '⚡',
               count: q1.length, overdue: q1Overdue, today: dueToday(q1),
               progressFraction: prog(q1, 1),
               minHeight: 96,
@@ -756,7 +756,7 @@ class _QuadGrid extends ConsumerWidget {
             )),
             const SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
-              quadrant: KaalQuadrant.q2, action: AppL10n.of(context).scheduleLabel, emoji: '🎯',
+              quadrant: TaskEraQuadrant.q2, action: AppL10n.of(context).scheduleLabel, emoji: '🎯',
               count: q2.length, today: dueToday(q2),
               progressFraction: prog(q2, 2),
               minHeight: 96,
@@ -768,14 +768,14 @@ class _QuadGrid extends ConsumerWidget {
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(child: _FocusQuadCard(
-              quadrant: KaalQuadrant.q3, action: AppL10n.of(context).delegate, emoji: '🤝',
+              quadrant: TaskEraQuadrant.q3, action: AppL10n.of(context).delegate, emoji: '🤝',
               count: q3.length, today: dueToday(q3),
               progressFraction: prog(q3, 3),
               onTap: () => context.push('/tasks/quad/q3'),
             )),
             const SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
-              quadrant: KaalQuadrant.q4, action: AppL10n.of(context).eliminate, emoji: '🗑',
+              quadrant: TaskEraQuadrant.q4, action: AppL10n.of(context).eliminate, emoji: '🗑',
               count: q4.length,
               progressFraction: prog(q4, 4),
               onTap: () => context.push('/tasks/quad/q4'),
@@ -795,7 +795,7 @@ class _QuadGrid extends ConsumerWidget {
 //   Row 3 — [progress bar]
 
 class _FocusQuadCard extends StatefulWidget {
-  final KaalQuadrant quadrant;
+  final TaskEraQuadrant quadrant;
   final String action;
   final String emoji;
   final int count;
@@ -829,29 +829,29 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
     final q = widget.quadrant;
 
     final gradientColors = switch (q) {
-      KaalQuadrant.q1 => const [Color(0xB89B1600), Color(0xFFF25022)],
-      KaalQuadrant.q2 => const [Color(0xB8326E00), Color(0xFF7FBA00)],
-      KaalQuadrant.q3 => const [Color(0xB8004080), Color(0xFF00A4EF)],
-      KaalQuadrant.q4 => const [Color(0xB8784C00), Color(0xFFFFB900)],
+      TaskEraQuadrant.q1 => const [Color(0xB89B1600), Color(0xFFF25022)],
+      TaskEraQuadrant.q2 => const [Color(0xB8326E00), Color(0xFF7FBA00)],
+      TaskEraQuadrant.q3 => const [Color(0xB8004080), Color(0xFF00A4EF)],
+      TaskEraQuadrant.q4 => const [Color(0xB8784C00), Color(0xFFFFB900)],
     };
 
     final qNum = switch (q) {
-      KaalQuadrant.q1 => 'Q1',
-      KaalQuadrant.q2 => 'Q2',
-      KaalQuadrant.q3 => 'Q3',
-      KaalQuadrant.q4 => 'Q4',
+      TaskEraQuadrant.q1 => 'Q1',
+      TaskEraQuadrant.q2 => 'Q2',
+      TaskEraQuadrant.q3 => 'Q3',
+      TaskEraQuadrant.q4 => 'Q4',
     };
 
     final l = AppL10n.of(context);
     final metaText = switch (q) {
-      KaalQuadrant.q1 => '${widget.overdue} ${l.overdue.toLowerCase()} · ${widget.count} ${l.tasks.toLowerCase()}',
-      KaalQuadrant.q2 => '${widget.count} ${l.tasks.toLowerCase()} · ${l.onTrack}',
+      TaskEraQuadrant.q1 => '${widget.overdue} ${l.overdue.toLowerCase()} · ${widget.count} ${l.tasks.toLowerCase()}',
+      TaskEraQuadrant.q2 => '${widget.count} ${l.tasks.toLowerCase()} · ${l.onTrack}',
       _               => '${widget.count} ${l.tasks.toLowerCase()}',
     };
 
     final chipLabel = switch (q) {
-      KaalQuadrant.q1 => widget.overdue > 0 ? l.overdue : null,
-      KaalQuadrant.q2 => widget.today  > 0 ? l.focusToday : null,
+      TaskEraQuadrant.q1 => widget.overdue > 0 ? l.overdue : null,
+      TaskEraQuadrant.q2 => widget.today  > 0 ? l.focusToday : null,
       _               => null,
     };
 
@@ -862,8 +862,8 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
       onTapCancel: () => setState(() => _pressed = false),
       behavior: HitTestBehavior.opaque,
       child: AnimatedScale(
-        scale: _pressed ? KaalMotion.scalePressed : 1.0,
-        duration: KaalMotion.fastPress,
+        scale: _pressed ? TaskEraMotion.scalePressed : 1.0,
+        duration: TaskEraMotion.fastPress,
         child: Container(
           clipBehavior: Clip.antiAlias,
           constraints: BoxConstraints(minHeight: widget.minHeight),
@@ -901,7 +901,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                             '$qNum · ${widget.action}',
                             style: const TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: KaalType.md,
+                              fontSize: TaskEraType.md,
                               fontWeight: FontWeight.w800,
                               color: Color(0xE6000000),
                               height: 1,
@@ -912,7 +912,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                             metaText,
                             style: const TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: KaalType.sm,
+                              fontSize: TaskEraType.sm,
                               fontWeight: FontWeight.w700,
                               color: Color(0xCC000000),
                               height: 1.2,
@@ -936,7 +936,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                         chipLabel,
                         style: const TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: KaalType.sm,
+                          fontSize: TaskEraType.sm,
                           fontWeight: FontWeight.w700,
                           color: Color(0xCC000000),
                           height: 1,
@@ -948,7 +948,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                       style: const TextStyle(
                         fontFamily: 'Fraunces',
                         fontVariations: [FontVariation('wght', 700)],
-                        fontSize: KaalType.md,
+                        fontSize: TaskEraType.md,
                         color: Color(0xD9000000),
                         height: 1,
                       ),
@@ -1012,7 +1012,7 @@ class _UtilGrid extends StatelessWidget {
           iconBg: const Color(0x245856D6),
           borderColor: const Color(0x665856D6),
           compact: true,
-          onTap: () => context.go(KaalRoutes.predictive),
+          onTap: () => context.go(TaskEraRoutes.predictive),
         ))),
         if (showPeak && showBrain) const SizedBox(width: 6),
         if (showBrain) Expanded(child: Builder(builder: (context) => _UtilCard(
@@ -1021,7 +1021,7 @@ class _UtilGrid extends StatelessWidget {
           iconBg: const Color(0x24BF5AF2),
           borderColor: const Color(0x4DBF5AF2),
           compact: true,
-          onTap: () => context.go(KaalRoutes.brainDump),
+          onTap: () => context.go(TaskEraRoutes.brainDump),
         ))),
       ],
     );
@@ -1059,7 +1059,7 @@ class _UtilCardState extends State<_UtilCard> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -1068,14 +1068,14 @@ class _UtilCardState extends State<_UtilCard> {
       onTapCancel: () => setState(() => _pressed = false),
       behavior: HitTestBehavior.opaque,
       child: AnimatedScale(
-        scale: _pressed ? KaalMotion.scalePressed : 1.0,
-        duration: KaalMotion.fastPress,
+        scale: _pressed ? TaskEraMotion.scalePressed : 1.0,
+        duration: TaskEraMotion.fastPress,
         child: Container(
           clipBehavior: Clip.antiAlias,
           constraints: BoxConstraints(minHeight: widget.compact ? 52 : 72),
           decoration: BoxDecoration(
             color: Colors.transparent,
-            borderRadius: KaalShape.card,
+            borderRadius: TaskEraShape.card,
             border: Border.all(width: 0.5, color: widget.borderColor),
           ),
           child: Stack(
@@ -1096,7 +1096,7 @@ class _UtilCardState extends State<_UtilCard> {
                           height: 28,
                           decoration: BoxDecoration(
                             color: widget.iconBg,
-                            borderRadius: KaalShape.sgrpIcon,
+                            borderRadius: TaskEraShape.sgrpIcon,
                           ),
                           alignment: Alignment.center,
                           child: Text(widget.emoji, style: const TextStyle(fontSize: 14)),
@@ -1151,7 +1151,7 @@ class _ProgressCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final l     = AppL10n.of(context);
 
     final q1 = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? [];
@@ -1234,7 +1234,7 @@ class _ProgressCard extends ConsumerWidget {
                       child: Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [KaalColors.q2, KaalColors.success],
+                            colors: [TaskEraColors.q2, TaskEraColors.success],
                           ),
                         ),
                       ),

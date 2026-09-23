@@ -8,8 +8,8 @@ import '../data/models/note_block.dart';
 import '../data/providers/database_provider.dart';
 import '../routing/routes.dart';
 import '../util/input_limits.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
 /// Notion-style "capture anything" bar. Type a thought, choose Note or Task,
 /// and it's filed instantly — the "Capture" half of Capture / Find / Execute.
@@ -47,7 +47,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
         notes: Value(bodyLines.join('\n')),
       ));
       kind = 'Task';
-      route = KaalRoutes.tasks; // opens Tasks tab (no per-task deep link)
+      route = TaskEraRoutes.tasks; // opens Tasks tab (no per-task deep link)
     } else {
       final blocks = bodyLines.isEmpty
           ? [NoteBlock(id: newBlockId())]
@@ -58,7 +58,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
         timeLabel: const Value('Just now'),
       ));
       kind = 'Note';
-      route = '${KaalRoutes.notesEditor}/$id';
+      route = '${TaskEraRoutes.notesEditor}/$id';
     }
 
     _ctrl.clear();
@@ -70,7 +70,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
       behavior: SnackBarBehavior.floating,
       action: SnackBarAction(
         label: 'Open',
-        textColor: KaalColors.acc2,
+        textColor: TaskEraColors.acc2,
         onPressed: () => context.push(route),
       ),
     ));
@@ -78,7 +78,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
@@ -124,7 +124,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
                 onTap: _capture,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: const Text('Capture',
                       style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
@@ -136,15 +136,15 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
     );
   }
 
-  Widget _typeToggle(KaalColors colors, String label, bool active, VoidCallback onTap) {
+  Widget _typeToggle(TaskEraColors colors, String label, bool active, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
         decoration: BoxDecoration(
-          color: active ? KaalColors.acc : Colors.transparent,
+          color: active ? TaskEraColors.acc : Colors.transparent,
           borderRadius: BorderRadius.circular(7),
-          border: Border.all(width: 0.5, color: active ? KaalColors.acc : colors.bdr),
+          border: Border.all(width: 0.5, color: active ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label,
             style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: active ? Colors.white : colors.ink2, height: 1)),

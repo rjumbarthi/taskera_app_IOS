@@ -508,26 +508,26 @@ class ListsDao extends DatabaseAccessor<AppDatabase> with _$ListsDaoMixin {
   }
 }
 
-@DriftAccessor(tables: [KaalDatabases, DbProperties, DbRows])
+@DriftAccessor(tables: [TaskEraDatabases, DbProperties, DbRows])
 class DatabasesDao extends DatabaseAccessor<AppDatabase> with _$DatabasesDaoMixin {
   DatabasesDao(super.db);
 
   // ── Databases ─────────────────────────────────────────────────────────────
-  Stream<List<KaalDatabase>> watchDatabases() => (select(kaalDatabases)
+  Stream<List<TaskEraDatabase>> watchDatabases() => (select(taskEraDatabases)
         ..orderBy([(d) => OrderingTerm(expression: d.createdAt, mode: OrderingMode.desc)]))
       .watch();
 
-  Stream<KaalDatabase?> watchDatabase(int id) =>
-      (select(kaalDatabases)..where((d) => d.id.equals(id))).watchSingleOrNull();
+  Stream<TaskEraDatabase?> watchDatabase(int id) =>
+      (select(taskEraDatabases)..where((d) => d.id.equals(id))).watchSingleOrNull();
 
-  Future<int> createDatabase(KaalDatabasesCompanion entry) =>
-      into(kaalDatabases).insert(entry);
+  Future<int> createDatabase(TaskEraDatabasesCompanion entry) =>
+      into(taskEraDatabases).insert(entry);
 
-  Future<void> updateDatabase(int id, KaalDatabasesCompanion data) =>
-      (update(kaalDatabases)..where((d) => d.id.equals(id))).write(data);
+  Future<void> updateDatabase(int id, TaskEraDatabasesCompanion data) =>
+      (update(taskEraDatabases)..where((d) => d.id.equals(id))).write(data);
 
   Future<void> deleteDatabase(int id) =>
-      (delete(kaalDatabases)..where((d) => d.id.equals(id))).go();
+      (delete(taskEraDatabases)..where((d) => d.id.equals(id))).go();
 
   // ── Properties ────────────────────────────────────────────────────────────
   Stream<List<DbProperty>> watchProperties(int dbId) => (select(dbProperties)
@@ -581,7 +581,7 @@ class DatabasesDao extends DatabaseAccessor<AppDatabase> with _$DatabasesDaoMixi
     CustomLists,
     CustomListItems,
     FocusSessions,
-    KaalDatabases,
+    TaskEraDatabases,
     DbProperties,
     DbRows,
   ],
@@ -697,7 +697,7 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(goals, goals.notes);
       }
       if (from < 16) {
-        await m.createTable(kaalDatabases);
+        await m.createTable(taskEraDatabases);
         await m.createTable(dbProperties);
         await m.createTable(dbRows);
       }

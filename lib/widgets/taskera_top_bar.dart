@@ -1,13 +1,13 @@
 import 'dart:math' show max;
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
-import '../theme/kaal_type.dart';
+import '../theme/taskera_theme.dart';
+import '../theme/taskera_type.dart';
 
 // Primary top bar. NO BackdropFilter — wallpaper shows through directly.
 // Padding: left=16, top=max(12,safeArea), right=4, bottom=4.
 // Row1: title (Fraunces 600 23sp) + right-side action icons.
 // Row2 (optional): subtitle (Inter 400 11sp). Gap between rows = 2px.
-class KaalTopBar extends StatelessWidget {
+class TaskEraTopBar extends StatelessWidget {
   final String title;
   final String? subtitle;
 
@@ -21,7 +21,7 @@ class KaalTopBar extends StatelessWidget {
   // shrinks from 16 → 4 so the widget sits flush with the screen edge.
   final Widget? leading;
 
-  const KaalTopBar({
+  const TaskEraTopBar({
     super.key,
     required this.title,
     this.subtitle,
@@ -34,11 +34,11 @@ class KaalTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final safeTop = MediaQuery.of(context).padding.top;
     final topPad = max(12.0, safeTop);
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     final titleStyle = isSubScreen
-        ? KaalType.section.copyWith(color: colors.ink)
-        : KaalType.topBarTitle.copyWith(color: colors.ink);
+        ? TaskEraType.section.copyWith(color: colors.ink)
+        : TaskEraType.topBarTitle.copyWith(color: colors.ink);
 
     // When a leading widget is present shift left padding to 4 so the 38px
     // hit-area sits flush with the edge (mirrors edit_profile_screen pattern).
@@ -69,7 +69,7 @@ class KaalTopBar extends StatelessWidget {
               padding: EdgeInsets.only(left: leading != null ? 42.0 : 0),
               child: Text(
                 subtitle!,
-                style: KaalType.topBarSubtitle.copyWith(color: colors.ink2),
+                style: TaskEraType.topBarSubtitle.copyWith(color: colors.ink2),
               ),
             ),
           ],

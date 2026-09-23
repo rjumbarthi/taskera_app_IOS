@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../settings/kaal_settings.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../settings/taskera_settings.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 import '../widgets/add_back_button.dart';
-import '../widgets/kaal_top_bar.dart';
+import '../widgets/taskera_top_bar.dart';
 import '../widgets/wallpaper_background.dart';
 
 enum LegalTab { terms, privacy, copyright, support, deletion, dataInfo }
@@ -22,9 +22,9 @@ class LegalScreen extends ConsumerStatefulWidget {
 class _LegalScreenState extends ConsumerState<LegalScreen> {
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
     final tab = widget.tab;
 
     return Stack(children: [
@@ -32,7 +32,7 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          KaalTopBar(
+          TaskEraTopBar(
             title: switch (tab) {
               LegalTab.terms     => 'Terms of Service',
               LegalTab.privacy   => 'Privacy Policy',
@@ -67,7 +67,7 @@ class _LegalScreenState extends ConsumerState<LegalScreen> {
 class _Section extends StatelessWidget {
   final String title;
   final String body;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Section({required this.title, required this.body, required this.colors});
 
   @override
@@ -89,7 +89,7 @@ class _Section extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Header({required this.text, required this.colors});
 
   @override
@@ -110,13 +110,13 @@ class _Header extends StatelessWidget {
 // ── Terms of Service ──────────────────────────────────────────────────────────
 
 class _TermsContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _TermsContent({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _Header(text: 'Kaal — Terms of Service', colors: colors),
+      _Header(text: 'TaskEra — Terms of Service', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
           style: TextStyle(fontFamily: 'Inter', fontSize: 11,
               color: colors.ink3, height: 1.5)),
@@ -124,7 +124,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '1. Acceptance of Terms',
-        body: 'By downloading, installing, or using the Kaal application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App. These Terms constitute a legally binding agreement between you and Port443 LLC, the operator of the Kaal application ("Company", "we", "us", or "our").',
+        body: 'By downloading, installing, or using the TaskEra application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App. These Terms constitute a legally binding agreement between you and Port443 LLC, the operator of the TaskEra application ("Company", "we", "us", or "our").',
         colors: colors,
       ),
 
@@ -136,13 +136,13 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '3. Account Registration',
-        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at kaal_support@jumbarthi.com.',
+        body: 'You may create an account using your email address or third-party sign-in (Google, Apple, Microsoft). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at taskera_support@jumbarthi.com.',
         colors: colors,
       ),
 
       _Section(
         title: '4. Subscriptions & In-App Purchases',
-        body: 'Kaal offers a free tier and a premium subscription ("Kaal Pro"). Kaal Pro subscriptions are billed through the Apple App Store or Google Play Store.\n\n'
+        body: 'TaskEra offers a free tier and a premium subscription ("TaskEra Pro"). TaskEra Pro subscriptions are billed through the Apple App Store or Google Play Store.\n\n'
             '• Monthly plan: prices displayed at checkout, billed monthly.\n'
             '• Annual plan: prices displayed at checkout, billed once per year.\n\n'
             'Subscriptions automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours prior to the end of the current period. You can manage or cancel your subscription anytime in your device\'s App Store or Play Store account settings. No refunds are issued for unused portions of a subscription period unless required by applicable law.',
@@ -151,13 +151,13 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '5. Free Trial',
-        body: 'Where offered, a free trial of Kaal Pro will automatically convert to a paid subscription at the end of the trial period unless cancelled before the trial ends. You will not be charged during the free trial period.',
+        body: 'Where offered, a free trial of TaskEra Pro will automatically convert to a paid subscription at the end of the trial period unless cancelled before the trial ends. You will not be charged during the free trial period.',
         colors: colors,
       ),
 
       _Section(
         title: '6. Restore Purchase',
-        body: 'If you previously purchased Kaal Pro and need to restore access on a new device, go to Profile → Edit profile → Restore purchase. Restore Purchase is only available for purchases made through the same App Store or Play Store account.',
+        body: 'If you previously purchased TaskEra Pro and need to restore access on a new device, go to Profile → Edit profile → Restore purchase. Restore Purchase is only available for purchases made through the same App Store or Play Store account.',
         colors: colors,
       ),
 
@@ -199,7 +199,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '12. Limitation of Liability',
-        body: 'TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL KAAL, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE APP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR TOTAL LIABILITY TO YOU SHALL NOT EXCEED THE AMOUNT YOU PAID US IN THE 12 MONTHS PRECEDING THE CLAIM.',
+        body: 'TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL TASKERA, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE APP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR TOTAL LIABILITY TO YOU SHALL NOT EXCEED THE AMOUNT YOU PAID US IN THE 12 MONTHS PRECEDING THE CLAIM.',
         colors: colors,
       ),
 
@@ -217,7 +217,7 @@ class _TermsContent extends StatelessWidget {
 
       _Section(
         title: '15. Contact',
-        body: 'If you have questions about these Terms, please contact us at:\nkaal_support@jumbarthi.com',
+        body: 'If you have questions about these Terms, please contact us at:\ntaskera_support@jumbarthi.com',
         colors: colors,
       ),
     ]);
@@ -227,13 +227,13 @@ class _TermsContent extends StatelessWidget {
 // ── Privacy Policy ────────────────────────────────────────────────────────────
 
 class _PrivacyContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _PrivacyContent({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _Header(text: 'Kaal — Privacy Policy', colors: colors),
+      _Header(text: 'TaskEra — Privacy Policy', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
           style: TextStyle(fontFamily: 'Inter', fontSize: 11,
               color: colors.ink3, height: 1.5)),
@@ -241,7 +241,7 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '1. Introduction',
-        body: 'Kaal, operated by Port443 LLC ("we", "us", or "our"), is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use the Kaal application. Please read this policy carefully. If you disagree with its terms, please discontinue use of the App.',
+        body: 'TaskEra, operated by Port443 LLC ("we", "us", or "our"), is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use the TaskEra application. Please read this policy carefully. If you disagree with its terms, please discontinue use of the App.',
         colors: colors,
       ),
 
@@ -291,11 +291,11 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: 'Google User Data & Gmail (Limited Use)',
-        body: 'Kaal offers an optional feature that connects your Google account so you can review your unread emails inside Kaal and turn them into tasks, notes, or calendar items. If you enable it, Kaal uses read-only Gmail access (gmail.readonly) to (a) list your unread messages\' sender, subject and date, and (b) read a message\'s contents only when you open it, so you can convert it into a task or note.\n\n'
+        body: 'TaskEra offers an optional feature that connects your Google account so you can review your unread emails inside TaskEra and turn them into tasks, notes, or calendar items. If you enable it, TaskEra uses read-only Gmail access (gmail.readonly) to (a) list your unread messages\' sender, subject and date, and (b) read a message\'s contents only when you open it, so you can convert it into a task or note.\n\n'
             'Your Gmail data is processed on your device to provide this feature and is shown only to you. We do not store your email content on our servers; only the tasks or notes you choose to create are saved. We never send, modify, label, or delete your email.\n\n'
-            'Kaal\'s AI features never access your Gmail or Google Calendar. Email and calendar data are processed only on your device using simple keyword rules — they are never sent to any AI or machine-learning service.\n\n'
-            'Kaal\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. We do not sell Gmail data, use it for advertising, use it to train AI or machine-learning models, or transfer it to others except as needed to provide this feature, to comply with applicable law, or in a merger or acquisition with equivalent protections. No human reads your email except with your explicit consent, for security or abuse investigations, or where required by law.\n\n'
-            'You can disconnect Google access at any time in Settings → Integrations, which revokes Kaal\'s access to your Gmail.',
+            'TaskEra\'s AI features never access your Gmail or Google Calendar. Email and calendar data are processed only on your device using simple keyword rules — they are never sent to any AI or machine-learning service.\n\n'
+            'TaskEra\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. We do not sell Gmail data, use it for advertising, use it to train AI or machine-learning models, or transfer it to others except as needed to provide this feature, to comply with applicable law, or in a merger or acquisition with equivalent protections. No human reads your email except with your explicit consent, for security or abuse investigations, or where required by law.\n\n'
+            'You can disconnect Google access at any time in Settings → Integrations, which revokes TaskEra\'s access to your Gmail.',
         colors: colors,
       ),
 
@@ -316,7 +316,7 @@ class _PrivacyContent extends StatelessWidget {
             '• Deletion: Request deletion of your account and associated data. Go to Profile → Edit profile → Delete account. Data is deleted within 30 days.\n'
             '• Portability: Request an export of your data in a machine-readable format.\n'
             '• Opt-out: You can disable optional analytics in Settings → Privacy.\n\n'
-            'To exercise these rights, contact us at kaal_support@jumbarthi.com.',
+            'To exercise these rights, contact us at taskera_support@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -332,13 +332,13 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '9. CCPA (California Users)',
-        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact kaal_support@jumbarthi.com.',
+        body: 'If you are a California resident, the California Consumer Privacy Act (CCPA) grants you the right to know what personal information we collect, the right to delete your personal information, and the right to opt out of the sale of your personal information. We do not sell personal information. To submit a request, contact taskera_support@jumbarthi.com.',
         colors: colors,
       ),
 
       _Section(
         title: '10. Children\'s Privacy',
-        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at kaal_support@jumbarthi.com.',
+        body: 'The App is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information without parental consent, we will delete it. If you believe a child under 13 has provided us with personal information, contact us at taskera_support@jumbarthi.com.',
         colors: colors,
       ),
 
@@ -356,20 +356,20 @@ class _PrivacyContent extends StatelessWidget {
 
       _Section(
         title: '13. Advertising',
-        body: 'The free plan of Kaal displays advertisements provided by Google AdMob. To serve '
+        body: 'The free plan of TaskEra displays advertisements provided by Google AdMob. To serve '
             'ads, AdMob may collect and use a device advertising identifier and limited device '
             'information. Where required by law, we will request your consent before showing '
             'personalized ads; you may also reset or limit the advertising identifier in your '
             'device settings.\n\n'
             'We do not share your tasks, notes, or other personal content with advertisers. '
-            'Kaal Pro is entirely ad-free — upgrading removes all advertising. For more, see '
+            'TaskEra Pro is entirely ad-free — upgrading removes all advertising. For more, see '
             'Google\'s policies at policies.google.com/technologies/ads.',
         colors: colors,
       ),
 
       _Section(
         title: '14. Contact Us',
-        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\nkaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC\nMaryland, USA',
+        body: 'If you have questions, concerns, or requests regarding this Privacy Policy, please contact our Data Protection contact at:\n\ntaskera_support@jumbarthi.com\n\nTaskEra — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -379,13 +379,13 @@ class _PrivacyContent extends StatelessWidget {
 // ── Copyright & Licenses ──────────────────────────────────────────────────────
 
 class _CopyrightContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _CopyrightContent({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _Header(text: 'Kaal — Copyright & Licenses', colors: colors),
+      _Header(text: 'TaskEra — Copyright & Licenses', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
           style: TextStyle(fontFamily: 'Inter', fontSize: 11,
               color: colors.ink3, height: 1.5)),
@@ -394,7 +394,7 @@ class _CopyrightContent extends StatelessWidget {
       _Section(
         title: '1. Copyright',
         body: '© 2026 Port443 LLC. All rights reserved.\n\n'
-            'The Kaal application, including its source code, design, user interface, graphics, '
+            'The TaskEra application, including its source code, design, user interface, graphics, '
             'layout, text, and all other content (collectively, the "Materials"), is the '
             'exclusive property of Port443 LLC and is protected by copyright, trade dress, and '
             'other intellectual property laws of India and other jurisdictions.',
@@ -403,7 +403,7 @@ class _CopyrightContent extends StatelessWidget {
 
       _Section(
         title: '2. Trademarks',
-        body: 'Kaal™, the Kaal logo, and "Execution OS for high performers" are trademarks of '
+        body: 'TaskEra™, the TaskEra logo, and "Execution OS for high performers" are trademarks of '
             'Port443 LLC. You may not use these marks without our prior written permission. All '
             'other product and company names mentioned in the App may be trademarks of their '
             'respective owners.',
@@ -421,7 +421,7 @@ class _CopyrightContent extends StatelessWidget {
 
       _Section(
         title: '4. Open-Source Software',
-        body: 'Kaal is built with the Flutter framework and incorporates open-source software '
+        body: 'TaskEra is built with the Flutter framework and incorporates open-source software '
             'components, each provided under its own license. We gratefully acknowledge their '
             'authors. Key components include:\n\n'
             '• Flutter & Dart SDK — © Google LLC, BSD-3-Clause License.\n'
@@ -438,7 +438,7 @@ class _CopyrightContent extends StatelessWidget {
 
       _Section(
         title: '5. Fonts',
-        body: 'Kaal uses the following typefaces under the SIL Open Font License, Version 1.1:\n\n'
+        body: 'TaskEra uses the following typefaces under the SIL Open Font License, Version 1.1:\n\n'
             '• Inter — © The Inter Project Authors (Rasmus Andersson).\n'
             '• Fraunces — © The Fraunces Project Authors (Undercase Type).\n\n'
             'The SIL Open Font License permits use, study, modification, and redistribution of '
@@ -460,15 +460,15 @@ class _CopyrightContent extends StatelessWidget {
         body: 'We respect the intellectual property rights of others. If you believe that '
             'material available in the App infringes your copyright, please send a notice with '
             'sufficient detail to identify the work and the alleged infringement to '
-            'kaal_support@jumbarthi.com, and we will respond promptly.',
+            'taskera_support@jumbarthi.com, and we will respond promptly.',
         colors: colors,
       ),
 
       _Section(
         title: '8. Contact',
         body: 'For copyright, licensing, or permission requests, contact:\n\n'
-            'kaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nMaryland, USA',
+            'taskera_support@jumbarthi.com\n\n'
+            'TaskEra — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -478,21 +478,21 @@ class _CopyrightContent extends StatelessWidget {
 // ── Support & Help ────────────────────────────────────────────────────────────
 
 class _SupportContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SupportContent({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'Support & Help', colors: colors),
-      Text('We\'re here to help you get the most out of Kaal.',
+      Text('We\'re here to help you get the most out of TaskEra.',
           style: TextStyle(fontFamily: 'Inter', fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
       _Section(
         title: 'Contact us',
-        body: 'Email our team at kaal_support@jumbarthi.com. We typically respond within 1–2 '
+        body: 'Email our team at taskera_support@jumbarthi.com. We typically respond within 1–2 '
             'business days. Please include your account email and a description of the issue '
             '(and screenshots if relevant) so we can help faster.',
         colors: colors,
@@ -515,7 +515,7 @@ class _SupportContent extends StatelessWidget {
             'Restore a purchase — Go to Profile → Edit profile → Restore purchase. This works for '
             'purchases made with the same App Store / Play Store account.\n\n'
             'Set up AI — Add your own OpenAI or Claude key in Settings → Integrations, or upgrade '
-            'to Kaal Pro for built-in AI.\n\n'
+            'to TaskEra Pro for built-in AI.\n\n'
             'Reminders not firing — Allow notifications and, on Android, enable exact alarms when '
             'prompted. Reminders re-arm automatically after a reboot.',
         colors: colors,
@@ -523,7 +523,7 @@ class _SupportContent extends StatelessWidget {
 
       _Section(
         title: 'Subscriptions & billing',
-        body: 'Manage or cancel Kaal Pro anytime in your device\'s App Store or Play Store '
+        body: 'Manage or cancel TaskEra Pro anytime in your device\'s App Store or Play Store '
             'subscription settings. Billing questions about a charge are handled by Apple or '
             'Google; for everything else, email us and we\'ll do our best to help.',
         colors: colors,
@@ -538,8 +538,8 @@ class _SupportContent extends StatelessWidget {
 
       _Section(
         title: 'Still need help?',
-        body: 'Reach us directly:\n\nkaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nMaryland, USA',
+        body: 'Reach us directly:\n\ntaskera_support@jumbarthi.com\n\n'
+            'TaskEra — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -549,7 +549,7 @@ class _SupportContent extends StatelessWidget {
 // ── Account & Data Deletion ───────────────────────────────────────────────────
 
 class _DeletionContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _DeletionContent({required this.colors});
 
   @override
@@ -571,7 +571,7 @@ class _DeletionContent extends StatelessWidget {
 
       _Section(
         title: 'Request deletion by email',
-        body: 'If you can\'t access the app, email kaal_support@jumbarthi.com from the address '
+        body: 'If you can\'t access the app, email taskera_support@jumbarthi.com from the address '
             'associated with your account and ask us to delete it. We may ask you to verify '
             'ownership of the account before processing the request.',
         colors: colors,
@@ -599,7 +599,7 @@ class _DeletionContent extends StatelessWidget {
 
       _Section(
         title: 'Clearing local data',
-        body: 'If you use Kaal without an account ("Skip — use local storage"), your data lives '
+        body: 'If you use TaskEra without an account ("Skip — use local storage"), your data lives '
             'only on your device. Deleting the app, or clearing its storage in your device '
             'settings, removes that local data. Local data is not recoverable once removed.',
         colors: colors,
@@ -607,8 +607,8 @@ class _DeletionContent extends StatelessWidget {
 
       _Section(
         title: 'Questions',
-        body: 'For any data or deletion request, contact:\n\nkaal_support@jumbarthi.com\n\n'
-            'Kaal — a product of Port443 LLC\nMaryland, USA',
+        body: 'For any data or deletion request, contact:\n\ntaskera_support@jumbarthi.com\n\n'
+            'TaskEra — a product of Port443 LLC\nMaryland, USA',
         colors: colors,
       ),
     ]);
@@ -618,7 +618,7 @@ class _DeletionContent extends StatelessWidget {
 // ── Data, Permissions & Ads (plain-language summary) ──────────────────────────
 
 class _DataInfoContent extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _DataInfoContent({required this.colors});
 
   @override
@@ -635,7 +635,7 @@ class _DataInfoContent extends StatelessWidget {
         body: '• Email address — to create and secure your account.\n'
             '• Your content — tasks, habits, goals, notes, and calendar events you create '
             '(synced to your account when you\'re signed in).\n'
-            '• Purchase status — whether you have Kaal Pro, to unlock paid features.\n'
+            '• Purchase status — whether you have TaskEra Pro, to unlock paid features.\n'
             '• Anonymous usage analytics — which screens/features are used, to improve the app. '
             'This is not linked to your identity and can be turned off in '
             'Settings → About & Legal → "Share anonymous usage analytics".\n\n'
@@ -671,7 +671,7 @@ class _DataInfoContent extends StatelessWidget {
             'advertising identifier to limit repetition and, where you allow it, to show more '
             'relevant ads. You can reset or limit this identifier in your device settings, and '
             'where required we ask for your consent first.\n\n'
-            'Kaal Pro is completely ad-free. Upgrading removes all ads.',
+            'TaskEra Pro is completely ad-free. Upgrading removes all ads.',
         colors: colors,
       ),
 
@@ -679,7 +679,7 @@ class _DataInfoContent extends StatelessWidget {
         title: 'Your choices',
         body: '• Turn off anonymous analytics in Settings → About & Legal.\n'
             '• Limit ad personalization in your device privacy settings.\n'
-            '• Upgrade to Kaal Pro to remove ads entirely.\n'
+            '• Upgrade to TaskEra Pro to remove ads entirely.\n'
             '• Delete your account and data anytime (see "Account & Data Deletion").',
         colors: colors,
       ),
@@ -687,7 +687,7 @@ class _DataInfoContent extends StatelessWidget {
       _Section(
         title: 'Learn more',
         body: 'Full details are in the Privacy Policy. Questions? '
-            'kaal_support@jumbarthi.com\n\nKaal — a product of Port443 LLC',
+            'taskera_support@jumbarthi.com\n\nTaskEra — a product of Port443 LLC',
         colors: colors,
       ),
     ]);

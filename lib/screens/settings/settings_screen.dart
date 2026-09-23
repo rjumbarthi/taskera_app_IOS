@@ -18,12 +18,12 @@ import '../../data/providers/ai_access_provider.dart';
 import '../../services/purchase_service.dart';
 import '../../routing/routes.dart';
 import '../../settings/app_launch_prefs.dart';
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 import '../../settings/prefs_provider.dart';
 import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 
 // ── SVG icon strings ──────────────────────────────────────────────────────────
 
@@ -135,12 +135,12 @@ final _intProductivity = [
       const Color(0xFF1A1A1A), _icoNotion, _IntStatus.connect),
   _IntService('Todoist', 'Import existing tasks · two-way sync',
       const Color(0xFFDB4035), _icoTodoist, _IntStatus.connect),
-  _IntService('Apple Reminders', 'Sync iOS reminders as Kaal tasks',
+  _IntService('Apple Reminders', 'Sync iOS reminders as TaskEra tasks',
       const Color(0xE6FF453A), _icoApple, _IntStatus.connect),
 ];
 
 final _intWork = [
-  _IntService('Slack', 'Capture tasks from messages · /kaal command',
+  _IntService('Slack', 'Capture tasks from messages · /taskera command',
       const Color(0xFF4A154B), _icoSlack, _IntStatus.connect),
   _IntService('Jira', 'Sync issues assigned to you → Q1/Q2 auto-sort',
       const Color(0xFF0052CC), _icoJira, _IntStatus.connect),
@@ -157,7 +157,7 @@ final _intWork = [
 final _intCalEmail = [
   _IntService('Google Calendar', 'Events → tasks · read-only',
       const Color(0xFF4285F4), _icoGCal, _IntStatus.connected),
-  _IntService('Gmail', 'Emails parsed on-device · Kaal suggestions',
+  _IntService('Gmail', 'Emails parsed on-device · TaskEra suggestions',
       const Color(0xFFEA4335), _icoGmail, _IntStatus.active),
   _IntService('Outlook / Hotmail', 'Calendar & email · corporate SSO',
       const Color(0xFF0078D4), _icoOutlook, _IntStatus.comingSoon),
@@ -238,7 +238,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
       final dir  = await getApplicationDocumentsDirectory();
       final ts   = DateTime.now().toIso8601String().replaceAll(':', '-').substring(0, 19);
-      final file = File('${dir.path}/kaal_export_$ts.json');
+      final file = File('${dir.path}/taskera_export_$ts.json');
       await file.writeAsString(payload);
 
       messenger.showSnackBar(SnackBar(
@@ -262,7 +262,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _rescheduleAfterToggle() async {
     if (!NotificationService.instance.isReady) return;
     final db = ref.read(appDatabaseProvider);
-    final s  = ref.read(kaalSettingsProvider);
+    final s  = ref.read(taskeraSettingsProvider);
     try {
       final tasks  = await db.tasksDao.watchAll().first;
       final habits = await db.habitsDao.watchAll().first;
@@ -304,15 +304,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors       = KaalTheme.of(context).colors;
-    final settings     = ref.watch(kaalSettingsProvider);
-    final notifier     = ref.read(kaalSettingsProvider.notifier);
+    final colors       = TaskEraTheme.of(context).colors;
+    final settings     = ref.watch(taskeraSettingsProvider);
+    final notifier     = ref.read(taskeraSettingsProvider.notifier);
     final integrations = ref.watch(integrationsProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(0, 4, 0, 32),
       children: [
-        _sgrpKaalPro(colors),
+        _sgrpTaskEraPro(colors),
         _sgrpDisplay(colors, settings, notifier),
         _sgrpTabs(colors, settings, notifier),
         _sgrpTasks(colors, settings, notifier),
@@ -324,7 +324,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _sgrpAboutLegal(colors),
         const SizedBox(height: 12),
         Center(
-          child: Text('Kaal · v1.0.0',
+          child: Text('TaskEra · v1.0.0',
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
         ),
       ],
@@ -333,7 +333,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // About & Legal — fully inlined here (no separate subscreen).
 
-  Widget _sgrpAboutLegal(KaalColors colors) {
+  Widget _sgrpAboutLegal(TaskEraColors colors) {
     // Only surface the Messages row when there's actually something to show —
     // no empty "no messages" entry.
     final hasMsgs = (ref.watch(announcementsProvider).valueOrNull ?? const []).isNotEmpty;
@@ -348,16 +348,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          _SetSec('About Kaal', colors),
+          _SetSec('About TaskEra', colors),
           _SetCard(colors: colors, children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 _AboutPara('Execution OS for high performers.', colors, strong: true),
-                _AboutPara('Kaal organises everything you do into Covey’s four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes to what truly matters. Tasks, habits, goals, calendar and notes, in one focused place.', colors),
-                _AboutPara('VERSION  ·  Kaal v1.0.0', colors, strong: true),
-                _AboutPara('CONTACT  ·  kaal_support@jumbarthi.com', colors),
-                _AboutPara('Kaal is a product of Port443 LLC.', colors),
+                _AboutPara('TaskEra organises everything you do into Covey’s four quadrants — Do Now, Schedule, Delegate, Eliminate — so your time goes to what truly matters. Tasks, habits, goals, calendar and notes, in one focused place.', colors),
+                _AboutPara('VERSION  ·  TaskEra v1.0.0', colors, strong: true),
+                _AboutPara('CONTACT  ·  taskera_support@jumbarthi.com', colors),
+                _AboutPara('TaskEra is a product of Port443 LLC.', colors),
                 _AboutPara('© 2026 Port443 LLC. All rights reserved.', colors),
               ]),
             ),
@@ -372,7 +372,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _AboutPara('GETTING AROUND', colors, strong: true),
                 _AboutPara('• Long-press (or right-click) any row for quick actions.\n• Pull down on Inbox or Calendar to refresh.\n• Tap a task for its score, time, subtasks and to start a focus session.', colors),
                 _AboutPara('INBOX', colors, strong: true),
-                _AboutPara('• Open an email — Kaal reads it on your device and suggests tasks, habits, invites and notes to add in one tap. No AI or server is involved; your email content never leaves your device. (Gmail sync is coming in a later release.)', colors),
+                _AboutPara('• Open an email — TaskEra reads it on your device and suggests tasks, habits, invites and notes to add in one tap. No AI or server is involved; your email content never leaves your device. (Gmail sync is coming in a later release.)', colors),
                 _AboutPara('YOUR PROFILE', colors, strong: true),
                 _AboutPara('• Stats, streaks, achievements and the weekly review update live as you work.', colors),
               ]),
@@ -383,32 +383,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             if (hasMsgs) ...[
               _NavRow(label: 'Message from Founder to you',
                   right: unreadMsgs > 0 ? '$unreadMsgs new' : '›',
-                  rightColor: unreadMsgs > 0 ? KaalColors.acc2 : colors.ink3,
-                  colors: colors, onTap: () => context.push(KaalRoutes.messages)),
+                  rightColor: unreadMsgs > 0 ? TaskEraColors.acc2 : colors.ink3,
+                  colors: colors, onTap: () => context.push(TaskEraRoutes.messages)),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             ],
-            _NavRow(label: 'Report a bug · Request a feature', right: '›', rightColor: KaalColors.acc2,
-                colors: colors, onTap: () => context.push(KaalRoutes.report)),
+            _NavRow(label: 'Report a bug · Request a feature', right: '›', rightColor: TaskEraColors.acc2,
+                colors: colors, onTap: () => context.push(TaskEraRoutes.report)),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Terms of Service', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push(KaalRoutes.legal)),
+                colors: colors, onTap: () => context.push(TaskEraRoutes.legal)),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Privacy Policy', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=privacy')),
+                colors: colors, onTap: () => context.push('${TaskEraRoutes.legal}?tab=privacy')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Copyright & Licenses', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=copyright')),
+                colors: colors, onTap: () => context.push('${TaskEraRoutes.legal}?tab=copyright')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Data, Permissions & Ads', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=datainfo')),
+                colors: colors, onTap: () => context.push('${TaskEraRoutes.legal}?tab=datainfo')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _SwRow(settingKey: 'analytics', label: 'Share anonymous usage analytics', colors: colors),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Support & Help', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=support')),
+                colors: colors, onTap: () => context.push('${TaskEraRoutes.legal}?tab=support')),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _NavRow(label: 'Account & data deletion', right: '›', rightColor: colors.ink3,
-                colors: colors, onTap: () => context.push('${KaalRoutes.legal}?tab=deletion')),
+                colors: colors, onTap: () => context.push('${TaskEraRoutes.legal}?tab=deletion')),
           ]),
         ]),
       ),
@@ -417,7 +417,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // ── Section builders ──────────────────────────────────────────────────────
 
-  Widget _sgrpKaalPro(KaalColors colors) {
+  Widget _sgrpTaskEraPro(TaskEraColors colors) {
     final isPro = ref.watch(isProProvider);
     return _Sgrp(
       isOpen: _open == 0,
@@ -426,20 +426,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       iconWidget: Container(
         width: 24, height: 24,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+          gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Center(child: SvgPicture.string(_svgStarFill, width: 12, height: 12)),
       ),
-      titleWidget: const Text('Kaal Pro',
+      titleWidget: const Text('TaskEra Pro',
           style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
-              color: KaalColors.acc2, height: 1)),
+              color: TaskEraColors.acc2, height: 1)),
       // "✦ PRO" badge only for actual subscribers; free users see "Upgrade".
       badge: isPro
           ? Container(
               padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+                gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: const Text('✦ PRO',
@@ -450,11 +450,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                border: Border.all(width: 0.5, color: KaalColors.acc2),
+                border: Border.all(width: 0.5, color: TaskEraColors.acc2),
               ),
               child: const Text('Upgrade',
                   style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
-                      color: KaalColors.acc2, height: 1)),
+                      color: TaskEraColors.acc2, height: 1)),
             ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -482,9 +482,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Text('✦ Kaal Pro',
+                    const Text('✦ TaskEra Pro',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
-                            color: KaalColors.acc2, height: 1)),
+                            color: TaskEraColors.acc2, height: 1)),
                     const Spacer(),
                     Text('Monthly or annual',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
@@ -502,11 +502,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => context.push(KaalRoutes.paywall),
+                  onTap: () => context.push(TaskEraRoutes.paywall),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+                      gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
                       borderRadius: BorderRadius.circular(11),
                     ),
                     alignment: Alignment.center,
@@ -517,7 +517,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 6),
                 GestureDetector(
-                  onTap: () => context.push(KaalRoutes.referral),
+                  onTap: () => context.push(TaskEraRoutes.referral),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
@@ -527,7 +527,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     alignment: Alignment.center,
                     child: const Text('🎁 Invite → both get 1 month free',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600,
-                            color: KaalColors.acc2, height: 1)),
+                            color: TaskEraColors.acc2, height: 1)),
                   ),
                 ),
               ],
@@ -540,16 +540,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Shown in place of the upsell once the user is Pro — no paywall, just status
   // + manage/restore. Reacts live: isProProvider flips on purchase/entitlement.
-  List<Widget> _proActiveChildren(BuildContext context, KaalColors colors) {
+  List<Widget> _proActiveChildren(BuildContext context, TaskEraColors colors) {
     Widget feature(String s) => Padding(
           padding: const EdgeInsets.only(bottom: 3),
           child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.4)),
         );
     return [
       Row(children: [
-        const Text('✦ Kaal Pro — active',
+        const Text('✦ TaskEra Pro — active',
             style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
-                color: KaalColors.acc2, height: 1.3)),
+                color: TaskEraColors.acc2, height: 1.3)),
         const Spacer(),
         Text('Thanks for your support',
             style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
@@ -565,7 +565,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 11),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+            gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
             borderRadius: BorderRadius.circular(11),
           ),
           alignment: Alignment.center,
@@ -586,19 +586,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           alignment: Alignment.center,
           child: const Text('Restore purchase',
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600,
-                  color: KaalColors.acc2, height: 1)),
+                  color: TaskEraColors.acc2, height: 1)),
         ),
       ),
     ];
   }
 
   // Deep-links to the platform's own subscription management, per Guideline
-  // 3.1.1 — Kaal must not offer a custom cancellation/payment mechanism.
+  // 3.1.1 — TaskEra must not offer a custom cancellation/payment mechanism.
   Future<void> _managePlaySubscription() async {
     final uri = Platform.isIOS
         ? Uri.parse('https://apps.apple.com/account/subscriptions')
         : Uri.parse('https://play.google.com/store/account/subscriptions'
-            '?package=com.port443.kaal');
+            '?package=com.port443.taskera');
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {
@@ -624,14 +624,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  Widget _sgrpDisplay(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
+  Widget _sgrpDisplay(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     const themes      = ['🌙 Dark', '☀️ Light', '🪟 Glass', '📱 System'];
     const fonts       = ['System', 'Serif', 'Rounded', 'Mono'];
     const fontSizes   = ['Sm', 'Md', 'Lg', 'XL'];
     const lineSpacings = ['Compact', 'Normal', 'Relaxed'];
     const accents     = [Color(0xFF0A84FF), Color(0xFF7FBA00), Color(0xFFFF6B00),
       Color(0xFFBF5AF2), Color(0xFFFF2D55), Color(0xFF00BCD4)];
-    // Labels match KaalSettingsState._wallpapers order exactly (6 entries)
+    // Labels match TaskEraSettingsState._wallpapers order exactly (6 entries)
     const wpLabels = ['Ocean', 'Aurora', 'Beach', 'Night Sky', 'Tree'];
 
     return _Sgrp(
@@ -639,7 +639,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       onToggle: () => _toggle(1),
       iconBg: const Color(0x1F0A84FF),
       iconSvg: _svgMonitor,
-      iconColor: KaalColors.acc2,
+      iconColor: TaskEraColors.acc2,
       title: AppL10n.of(context).display,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -756,7 +756,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _sgrpTasks(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
+  Widget _sgrpTasks(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     const layouts = ['≡ List view', '⊞ 2×2 Quad'];
     const qnames  = ['Covey', 'Eisenhower'];
 
@@ -765,7 +765,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       onToggle: () => _toggle(2),
       iconBg: const Color(0x1FF25022),
       iconSvg: _svgCheck,
-      iconColor: KaalColors.q1,
+      iconColor: TaskEraColors.q1,
       title: AppL10n.of(context).tasks,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -785,7 +785,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _sgrpTabs(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
+  Widget _sgrpTabs(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     final l = AppL10n.of(context);
     final rows = <(String, String)>[
       ('habits',   l.habitsTracker),
@@ -813,7 +813,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _sgrpFeatures(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
+  Widget _sgrpFeatures(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     final l = AppL10n.of(context);
     final rows = <(String, String)>[
       ('scoreRec',   l.scoreRec),
@@ -829,7 +829,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       iconWidget: Container(
         width: 24, height: 24,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+          gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Center(child: SvgPicture.string(_svgStar.replaceAll('var(--c)', 'white'), width: 12, height: 12)),
@@ -863,7 +863,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _sgrpCalInbox(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n, IntegrationsState integrations) {
+  Widget _sgrpCalInbox(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n, IntegrationsState integrations) {
     final gmailEnabled = ref.watch(gmailEnabledProvider);
     final calendarEnabled = ref.watch(calendarEnabledProvider);
     final inboxCount = ref.watch(inboxTasksProvider).value?.length ?? 0;
@@ -872,7 +872,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       onToggle: () => _toggle(5),
       iconBg: const Color(0x1F0A84FF),
       iconSvg: _svgCal,
-      iconColor: KaalColors.acc2,
+      iconColor: TaskEraColors.acc2,
       title: AppL10n.of(context).calendarAndInbox,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -882,19 +882,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               right: !calendarEnabled
                   ? 'Soon'
                   : (integrations.googleCalendarConnected ? AppL10n.of(context).connected : ''),
-              rightColor: calendarEnabled ? colors.successFg : KaalColors.acc2,
-              colors: colors, onTap: () => context.go(KaalRoutes.calSync)),
+              rightColor: calendarEnabled ? colors.successFg : TaskEraColors.acc2,
+              colors: colors, onTap: () => context.go(TaskEraRoutes.calSync)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).inboxLabel,
               right: inboxCount > 0 ? '$inboxCount new' : '',
-              rightColor: KaalColors.warn,
+              rightColor: TaskEraColors.warn,
               colors: colors, onTap: () {
                 final router = GoRouter.of(context);
-                WidgetsBinding.instance.addPostFrameCallback((_) => router.go(KaalRoutes.inbox));
+                WidgetsBinding.instance.addPostFrameCallback((_) => router.go(TaskEraRoutes.inbox));
               }),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-          _NavRow(label: AppL10n.of(context).gmailSync, right: gmailEnabled ? '' : 'Soon', rightColor: KaalColors.acc2,
-              colors: colors, onTap: () => context.go(KaalRoutes.calGmail)),
+          _NavRow(label: AppL10n.of(context).gmailSync, right: gmailEnabled ? '' : 'Soon', rightColor: TaskEraColors.acc2,
+              colors: colors, onTap: () => context.go(TaskEraRoutes.calGmail)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _SwRow(settingKey: 'suggestTasks', label: AppL10n.of(context).suggestTasksInbox, colors: colors),
         ]),
@@ -904,7 +904,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Shows an API-key entry dialog for OpenAI and triggers connect.
   Future<void> _connectOpenAi() async {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     String key = '';
     final confirmed = await showDialog<bool>(
       context: context,
@@ -915,7 +915,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             style: TextStyle(fontFamily: 'Inter', fontSize: 15,
                 fontWeight: FontWeight.w600, color: Colors.white)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('Enter your secret API key (sk-…). It powers all of Kaal’s AI.',
+          Text('Enter your secret API key (sk-…). It powers all of TaskEra’s AI.',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   color: colors.labelMuted)),
           const SizedBox(height: 12),
@@ -948,7 +948,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
                 style: TextStyle(fontFamily: 'Inter',
-                    color: KaalColors.acc2, fontWeight: FontWeight.w600)),
+                    color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -967,7 +967,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Shows an API-key entry dialog for Claude (Anthropic) and triggers connect.
   Future<void> _connectAnthropic() async {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     String key = '';
     final confirmed = await showDialog<bool>(
       context: context,
@@ -978,7 +978,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             style: TextStyle(fontFamily: 'Inter', fontSize: 15,
                 fontWeight: FontWeight.w600, color: Colors.white)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('Enter your secret API key (sk-ant-…). It powers all of Kaal’s AI.',
+          Text('Enter your secret API key (sk-ant-…). It powers all of TaskEra’s AI.',
               style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                   color: colors.labelMuted)),
           const SizedBox(height: 12),
@@ -1009,7 +1009,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
                 style: TextStyle(fontFamily: 'Inter',
-                    color: KaalColors.acc2, fontWeight: FontWeight.w600)),
+                    color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -1026,7 +1026,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  Widget _sgrpIntegrations(KaalColors colors) {
+  Widget _sgrpIntegrations(TaskEraColors colors) {
     final integrations = ref.watch(integrationsProvider);
     final notifier     = ref.read(integrationsProvider.notifier);
     final disabled     = integrations.loading;
@@ -1153,7 +1153,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       iconWidget: Container(
         width: 24, height: 24,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+          gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Center(child: SvgPicture.string(_svgLink, width: 12, height: 12)),
@@ -1182,7 +1182,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _sgrpSyncData(KaalColors colors) {
+  Widget _sgrpSyncData(TaskEraColors colors) {
     return _Sgrp(
       isOpen: _open == 7,
       onToggle: () => _toggle(7),
@@ -1208,16 +1208,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               colors: colors, onTap: () => _exportJson(context)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).activityLog, right: '›', rightColor: colors.ink3,
-              colors: colors, onTap: () => context.push(KaalRoutes.activityLogs)),
+              colors: colors, onTap: () => context.push(TaskEraRoutes.activityLogs)),
           Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
           _NavRow(label: AppL10n.of(context).studentMode, right: '›', rightColor: colors.ink3,
-              colors: colors, onTap: () => context.push(KaalRoutes.studentMode)),
+              colors: colors, onTap: () => context.push(TaskEraRoutes.studentMode)),
         ]),
       ),
     );
   }
 
-  Widget _sgrpNotifications(KaalColors colors, KaalSettingsState s, KaalSettingsNotifier n) {
+  Widget _sgrpNotifications(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     final l = AppL10n.of(context);
 
     final categories = <(String, String, String)>[
@@ -1242,7 +1242,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       onToggle: () => _toggle(8),
       iconBg: const Color(0x1FFF6B6B),
       iconSvg: _svgBell,
-      iconColor: KaalColors.warn,
+      iconColor: TaskEraColors.warn,
       title: AppL10n.of(context).notificationsLabel,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -1310,7 +1310,7 @@ class _Sgrp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     Widget ico = iconWidget ?? Container(
       width: 24, height: 24,
       decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(6)),
@@ -1364,7 +1364,7 @@ class _Sgrp extends StatelessWidget {
 
 class _SetSec extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SetSec(this.label, this.colors);
 
   @override
@@ -1379,7 +1379,7 @@ class _SetSec extends StatelessWidget {
 }
 
 class _SetCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final List<Widget> children;
   const _SetCard({required this.colors, required this.children});
 
@@ -1403,7 +1403,7 @@ class _SetCard extends StatelessWidget {
 // Paragraph text for the About & Legal group (mirrors the old subscreen style).
 class _AboutPara extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool strong;
   const _AboutPara(this.text, this.colors, {this.strong = false});
 
@@ -1421,12 +1421,12 @@ class _AboutPara extends StatelessWidget {
 class _SwRow extends ConsumerWidget {
   final String settingKey;
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SwRow({required this.settingKey, required this.label, required this.colors});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final value = ref.watch(kaalSettingsProvider.select((s) => s.sw(settingKey)));
+    final value = ref.watch(taskeraSettingsProvider.select((s) => s.sw(settingKey)));
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       child: Row(children: [
@@ -1434,7 +1434,7 @@ class _SwRow extends ConsumerWidget {
             style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
         _Sw(
           value: value,
-          onChanged: (v) => ref.read(kaalSettingsProvider.notifier).toggle(settingKey, v),
+          onChanged: (v) => ref.read(taskeraSettingsProvider.notifier).toggle(settingKey, v),
         ),
       ]),
     );
@@ -1445,7 +1445,7 @@ class _NotifSwRow extends ConsumerWidget {
   final String settingKey;
   final String label;
   final String sub;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Future<void> Function()? afterChange;
   const _NotifSwRow({
     required this.settingKey, required this.label, required this.sub,
@@ -1454,7 +1454,7 @@ class _NotifSwRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final value = ref.watch(kaalSettingsProvider.select((s) => s.sw(settingKey)));
+    final value = ref.watch(taskeraSettingsProvider.select((s) => s.sw(settingKey)));
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       child: Row(children: [
@@ -1473,7 +1473,7 @@ class _NotifSwRow extends ConsumerWidget {
         _Sw(
           value: value,
           onChanged: (v) {
-            ref.read(kaalSettingsProvider.notifier).toggle(settingKey, v);
+            ref.read(taskeraSettingsProvider.notifier).toggle(settingKey, v);
             afterChange?.call();
           },
         ),
@@ -1486,7 +1486,7 @@ class _NavRow extends StatelessWidget {
   final String label;
   final String right;
   final Color rightColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _NavRow({required this.label, required this.right, required this.rightColor,
     required this.colors, required this.onTap});
@@ -1517,7 +1517,7 @@ class _VtRow extends StatelessWidget {
   final String label;
   final List<String> options;
   final int selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onTap;
   const _VtRow({required this.label, required this.options, required this.selected,
     required this.colors, required this.onTap});
@@ -1544,7 +1544,7 @@ class _VtRow extends StatelessWidget {
                       margin: EdgeInsets.only(right: i < options.length - 1 ? 3 : 0),
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
-                        color: selected == i ? KaalColors.accBg : colors.surf2,
+                        color: selected == i ? TaskEraColors.accBg : colors.surf2,
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
                           width: 0.5,
@@ -1555,7 +1555,7 @@ class _VtRow extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w500,
-                            color: selected == i ? KaalColors.acc2 : colors.ink3,
+                            color: selected == i ? TaskEraColors.acc2 : colors.ink3,
                             height: 1,
                           )),
                     ),
@@ -1570,7 +1570,7 @@ class _VtRow extends StatelessWidget {
 }
 
 class _LangRow extends StatefulWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final int selected;
   final ValueChanged<int> onTap;
   const _LangRow({required this.colors, required this.selected, required this.onTap});
@@ -1599,14 +1599,14 @@ class _LangRowState extends State<_LangRow> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
         decoration: BoxDecoration(
-          color: sel ? KaalColors.accBg : widget.colors.surf2,
+          color: sel ? TaskEraColors.accBg : widget.colors.surf2,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(width: 0.5,
               color: sel ? const Color(0x4D0A84FF) : widget.colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
           fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
-          color: sel ? KaalColors.acc2 : widget.colors.ink3,
+          color: sel ? TaskEraColors.acc2 : widget.colors.ink3,
           height: 1,
         )),
       ),
@@ -1636,7 +1636,7 @@ class _LangRowState extends State<_LangRow> {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
                 decoration: BoxDecoration(
-                  color: indiaSelected ? KaalColors.accBg : widget.colors.surf2,
+                  color: indiaSelected ? TaskEraColors.accBg : widget.colors.surf2,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(width: 0.5,
                       color: indiaSelected ? const Color(0x4D0A84FF) : widget.colors.bdr0),
@@ -1646,13 +1646,13 @@ class _LangRowState extends State<_LangRow> {
                   children: [
                     Text('🇮🇳  Indian Languages', style: TextStyle(
                       fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
-                      color: indiaSelected ? KaalColors.acc2 : widget.colors.ink3,
+                      color: indiaSelected ? TaskEraColors.acc2 : widget.colors.ink3,
                       height: 1,
                     )),
                     const SizedBox(width: 4),
                     Icon(_indiaOpen ? Icons.expand_less : Icons.expand_more,
                         size: 13,
-                        color: indiaSelected ? KaalColors.acc2 : widget.colors.ink3),
+                        color: indiaSelected ? TaskEraColors.acc2 : widget.colors.ink3),
                   ],
                 ),
               ),
@@ -1674,13 +1674,13 @@ class _LangRowState extends State<_LangRow> {
   }
 }
 
-// ── Wallpaper thumbnail — index matches KaalSettingsState._wallpapers ────────
+// ── Wallpaper thumbnail — index matches TaskEraSettingsState._wallpapers ────────
 
 class _WpThumb extends StatelessWidget {
   final int index;
   const _WpThumb({required this.index});
 
-  // Order matches KaalSettingsState._wallpapers exactly
+  // Order matches TaskEraSettingsState._wallpapers exactly
   static const _paths = [
     'assets/wallpapers/OCEAN.jpg',          // 0 ocean
     'assets/wallpapers/AURORA3 - Copy.JPG', // 1 aurora3
@@ -1704,7 +1704,7 @@ class _WpThumb extends StatelessWidget {
 
 class _DimSliderRow extends StatelessWidget {
   final double value;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<double> onChanged;
   const _DimSliderRow({required this.value, required this.colors, required this.onChanged});
 
@@ -1728,10 +1728,10 @@ class _DimSliderRow extends StatelessWidget {
                     trackHeight: 2,
                     thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
                     overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
-                    activeTrackColor: KaalColors.acc,
+                    activeTrackColor: TaskEraColors.acc,
                     inactiveTrackColor: const Color(0x33FFFFFF),
-                    thumbColor: KaalColors.acc,
-                    overlayColor: KaalColors.accBg,
+                    thumbColor: TaskEraColors.acc,
+                    overlayColor: TaskEraColors.accBg,
                   ),
                   child: Slider(
                     value: value,
@@ -1753,7 +1753,7 @@ class _DimSliderRow extends StatelessWidget {
 // ── Integration section widgets ───────────────────────────────────────────────
 
 class _IntStatusPill extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _IntStatusPill({required this.colors});
 
   @override
@@ -1800,7 +1800,7 @@ class _IntStatusPill extends ConsumerWidget {
 class _IntSection extends StatelessWidget {
   final String label;
   final List<_IntService> services;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final List<VoidCallback?>? onTaps;
   final List<_IntStatus?>? liveStatuses;
   const _IntSection({required this.label, required this.services, required this.colors,
@@ -1845,7 +1845,7 @@ class _IntSection extends StatelessWidget {
 
 class _IntServiceRow extends StatelessWidget {
   final _IntService service;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool isFirst;
   final bool isLast;
   final VoidCallback? onTap;
@@ -1862,7 +1862,7 @@ class _IntServiceRow extends StatelessWidget {
       onTap: onTap ?? () {},
       child: Container(
         decoration: BoxDecoration(
-          color: isHighlighted ? KaalColors.accBg : Colors.transparent,
+          color: isHighlighted ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.vertical(
             top: isFirst ? const Radius.circular(9) : Radius.zero,
             bottom: isLast ? const Radius.circular(9) : Radius.zero,
@@ -1888,7 +1888,7 @@ class _IntServiceRow extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(service.name,
                   style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                      color: isHighlighted ? KaalColors.acc2 : colors.ink, height: 1)),
+                      color: isHighlighted ? TaskEraColors.acc2 : colors.ink, height: 1)),
               const SizedBox(height: 3),
               Text(service.sub,
                   style: TextStyle(fontFamily: 'Inter', fontSize: 11,
@@ -1905,7 +1905,7 @@ class _IntServiceRow extends StatelessWidget {
 
 class _IntStatusBadge extends StatelessWidget {
   final _IntStatus status;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _IntStatusBadge({required this.status, required this.colors});
 
   @override
@@ -1939,13 +1939,13 @@ class _IntStatusBadge extends StatelessWidget {
 }
 
 class _IntHowCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _IntHowCard({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     const steps = [
-      'Connect your work tool — Kaal reads tasks/issues assigned to you',
+      'Connect your work tool — TaskEra reads tasks/issues assigned to you',
       'AI scores each item and suggests Q1/Q2/Q3/Q4 based on deadline + importance',
       'You confirm — task lands in the right quadrant with full context from source',
     ];
@@ -1953,7 +1953,7 @@ class _IntHowCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 11, 12, 12),
       decoration: BoxDecoration(
-        color: KaalColors.accBg,
+        color: TaskEraColors.accBg,
         borderRadius: BorderRadius.circular(11),
         border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
       ),
@@ -1961,14 +1961,14 @@ class _IntHowCard extends StatelessWidget {
         const Text('✦ How integrations work',
             style: TextStyle(fontFamily: 'Inter', fontSize: 11,
                 fontWeight: FontWeight.w700, letterSpacing: 0.4,
-                color: KaalColors.acc2, height: 1)),
+                color: TaskEraColors.acc2, height: 1)),
         const SizedBox(height: 10),
         for (int i = 0; i < steps.length; i++) ...[
           if (i > 0) const SizedBox(height: 8),
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               width: 16, height: 16,
-              decoration: const BoxDecoration(color: KaalColors.acc, shape: BoxShape.circle),
+              decoration: const BoxDecoration(color: TaskEraColors.acc, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text('${i + 1}',
                   style: const TextStyle(fontFamily: 'Inter', fontSize: 9,
@@ -2002,7 +2002,7 @@ class _Sw extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: 32, height: 17,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: value ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(999),
         ),
         child: AnimatedAlign(

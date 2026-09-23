@@ -1,6 +1,6 @@
 # Supabase backend
 
-Cloud backend for Kaal — the shared source of truth that syncs tasks, habits,
+Cloud backend for TaskEra — the shared source of truth that syncs tasks, habits,
 goals, notes and calendar events across Android, iOS, Windows and Web.
 
 ```
@@ -52,8 +52,8 @@ honours origins in this allow-list. (See `docs/supabase_sync_setup.sql`.)
 ## Verifying cross-device sync
 1. Apply `002` (above).
 2. `flutter run` on two devices signed into the **same** account.
-3. Console should log `[Kaal sync] realtime SUBSCRIBED` on both (debug builds).
-4. Create/edit/delete a task on one → `[Kaal sync] tasks …` fires on the other
+3. Console should log `[TaskEra sync] realtime SUBSCRIBED` on both (debug builds).
+4. Create/edit/delete a task on one → `[TaskEra sync] tasks …` fires on the other
    within ~1 s and the UI updates live.
 5. `CHANNEL_ERROR` instead → the realtime publication or RLS isn't set up;
    re-check that `002` ran.

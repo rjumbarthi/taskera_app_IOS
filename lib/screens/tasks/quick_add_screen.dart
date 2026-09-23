@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show TasksCompanion, SubtasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
       builder: (context, child) => Theme(
         data: ThemeData.dark().copyWith(
           colorScheme: const ColorScheme.dark(
-            primary: KaalColors.acc,
+            primary: TaskEraColors.acc,
             onPrimary: Colors.white,
             surface: Color(0xFF1C1C1E),
           ),
@@ -89,7 +89,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
       builder: (context, child) => Theme(
         data: ThemeData.dark().copyWith(
           colorScheme: const ColorScheme.dark(
-            primary: KaalColors.acc,
+            primary: TaskEraColors.acc,
             onPrimary: Colors.white,
             surface: Color(0xFF1C1C1E),
           ),
@@ -179,16 +179,16 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
   final List<_Subtask> _subtasks = [];
 
   static const _quads = [
-    ('q1', 'Q1 Do Now',    KaalColors.q1),
-    ('q2', 'Q2 Schedule',  KaalColors.q2),
-    ('q3', 'Q3 Delegate',  KaalColors.q3),
-    ('q4', 'Q4 Eliminate', KaalColors.q4),
+    ('q1', 'Q1 Do Now',    TaskEraColors.q1),
+    ('q2', 'Q2 Schedule',  TaskEraColors.q2),
+    ('q3', 'Q3 Delegate',  TaskEraColors.q3),
+    ('q4', 'Q4 Eliminate', TaskEraColors.q4),
   ];
 
   static const _priorities = [
     ('P1', 'P1 Urgent', Color(0xFFFF6B6B)),
     ('P2', 'P2 High',   Color(0xFFFF9500)),
-    ('P3', 'P3 Medium', KaalColors.acc2),
+    ('P3', 'P3 Medium', TaskEraColors.acc2),
     ('P4', 'P4 Low',    Color(0xFF8E8E93)),
   ];
 
@@ -210,7 +210,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -228,7 +228,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                 onTap: _addTask,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
@@ -286,8 +286,8 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                           children: [
                             Container(
                               padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
-                              decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(3)),
-                              child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                              decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
+                              child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                             ),
                             const SizedBox(width: 6),
                             Expanded(
@@ -297,7 +297,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                                     : '✦ $_parseResult',
                                 style: TextStyle(
                                   fontFamily: 'Inter', fontSize: 9,
-                                  color: _parseResult.isEmpty ? colors.ink3 : KaalColors.acc2,
+                                  color: _parseResult.isEmpty ? colors.ink3 : TaskEraColors.acc2,
                                   fontWeight: _parseResult.isEmpty ? FontWeight.w400 : FontWeight.w600,
                                 ),
                               ),
@@ -347,7 +347,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                         child: _HfChip(label: '#$l', on: on),
                       );
                     }),
-                    const _HfChip(label: '+ New', on: false, overrideColor: KaalColors.acc2),
+                    const _HfChip(label: '+ New', on: false, overrideColor: TaskEraColors.acc2),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -431,7 +431,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                   spacing: 4, runSpacing: 4,
                   children: _repeats.map((r) => GestureDetector(
                     onTap: () => setState(() => _repeat = _repeat == r.$1 ? null : r.$1),
-                    child: _HfChip(label: r.$2, on: _repeat == r.$1, onColor: KaalColors.acc2),
+                    child: _HfChip(label: r.$2, on: _repeat == r.$1, onColor: TaskEraColors.acc2),
                   )).toList(),
                 ),
                 const SizedBox(height: 10),
@@ -473,7 +473,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                         onTap: _confirmSubtask,
                         child: Container(
                           padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(6)),
+                          decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
                           child: const Icon(Icons.check, size: 14, color: Colors.white),
                         ),
                       ),
@@ -498,7 +498,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     onTap: () => setState(() => _addingSubtask = true),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc)),
+                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
                     ),
                   ),
                 const SizedBox(height: 80),
@@ -521,7 +521,7 @@ class _Subtask {
 
 class _SubtaskRow extends StatelessWidget {
   final _Subtask sub;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onToggle;
   const _SubtaskRow({required this.sub, required this.colors, required this.onToggle});
 
@@ -536,9 +536,9 @@ class _SubtaskRow extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: sub.done ? const Color(0x337FBA00) : Colors.transparent,
-              border: Border.all(width: 1.5, color: sub.done ? KaalColors.q2 : colors.bdr2),
+              border: Border.all(width: 1.5, color: sub.done ? TaskEraColors.q2 : colors.bdr2),
             ),
-            child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: KaalColors.q2)) : null,
+            child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
           ),
         ),
         const SizedBox(width: 9),
@@ -558,7 +558,7 @@ class _SubtaskRow extends StatelessWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel({required this.label, required this.colors});
 
   @override
@@ -576,8 +576,8 @@ class _HfChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
-    final textColor = overrideColor ?? (on ? (onColor ?? KaalColors.acc2) : colors.ink3);
+    final colors = TaskEraTheme.of(context).colors;
+    final textColor = overrideColor ?? (on ? (onColor ?? TaskEraColors.acc2) : colors.ink3);
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
       decoration: BoxDecoration(

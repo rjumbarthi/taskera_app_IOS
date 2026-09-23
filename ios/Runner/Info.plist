@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Kaal</string>
+	<string>TaskEra</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,29 +17,33 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Port443 LLC. All rights reserved.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Kaal uses the microphone for voice capture of notes and tasks.</string>
+	<string>TaskEra uses the microphone for voice capture of notes and tasks.</string>
 	<!-- Required by AdMob / Google Mobile Ads (IDFA + App Tracking Transparency).
 	     Apple rejects ad-supported apps that link ATT without this string. -->
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Allow tracking so Kaal can show you more relevant ads. Kaal works fully either way, and your data is never sold.</string>
-	<!-- Export-compliance: Kaal only uses standard, exempt encryption (HTTPS/TLS).
+	<string>Allow tracking so TaskEra can show you more relevant ads. TaskEra works fully either way, and your data is never sold.</string>
+	<!-- Export-compliance: TaskEra only uses standard, exempt encryption (HTTPS/TLS).
 	     Declaring this here skips the App Store Connect encryption question on every
 	     upload. Set to true only if you add non-exempt/custom cryptography. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<!-- AdMob application id. Required by the Google Mobile Ads SDK or the app
-	     crashes on launch. Real Kaal iOS AdMob app id. Ad units still use
-	     Google's test unit ids (AdsConfig.useTestAds) until the 4 real ad
-	     unit ids + Android app id are ready. -->
+	     crashes on launch. PLACEHOLDER: this is Google's official TEST app id,
+	     not a real one — TaskEra needs its own AdMob app (separate registration
+	     from Kaal's, tied to com.port443.taskera) before shipping ads. -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-9013964076288950~7410101558</string>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<!-- Native Google Sign-In (google_sign_in package) — required for
-	     GoogleSignIn() to work on iOS. Matches AppConfig.googleClientIdIos. -->
+	     GoogleSignIn() to work on iOS. PLACEHOLDER: needs a real iOS OAuth
+	     client id registered for com.port443.taskera (Kaal's client id won't
+	     work — it's tied to a different bundle id). Must match
+	     AppConfig.googleClientIdIos once set. -->
 	<key>GIDClientID</key>
-	<string>657874499735-v5ocrfin2as18hgu3lv3ba726vdggsmp.apps.googleusercontent.com</string>
-	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network.
-	     Add other ad networks' ids here if you enable mediation. Missing this loses
-	     ad attribution but is not a rejection blocker. -->
+	<string>YOUR_IOS_CLIENT_ID.apps.googleusercontent.com</string>
+	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network
+	     (not app-specific — safe to keep as-is). Add other ad networks' ids here
+	     if you enable mediation. Missing this loses ad attribution but is not a
+	     rejection blocker. -->
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -48,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleName</key>
-	<string>kaal_app</string>
+	<string>taskera_app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -100,27 +104,30 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<!-- Deep-link scheme so Supabase OAuth (Google/Microsoft) returns to the app.
-	     Matches AppConfig.deepLinkScheme = 'io.supabase.kaalapp'. -->
+	     Matches AppConfig.deepLinkScheme = 'io.supabase.taskeraapp'. -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>io.supabase.kaalapp</string>
+			<string>io.supabase.taskeraapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>io.supabase.kaalapp</string>
+				<string>io.supabase.taskeraapp</string>
 			</array>
 		</dict>
 		<!-- Reversed GIDClientID — required callback scheme for native Google
-		     Sign-In on iOS. Matches AppConfig.googleClientIdIos. -->
+		     Sign-In on iOS. PLACEHOLDER: update once a real iOS Google OAuth
+		     client id is registered (see GIDClientID above); the scheme is the
+		     client id with the numeric prefix reversed, e.g.
+		     com.googleusercontent.apps.<numeric-id>-<random> -->
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.657874499735-v5ocrfin2as18hgu3lv3ba726vdggsmp</string>
+				<string>com.googleusercontent.apps.YOUR_IOS_CLIENT_ID</string>
 			</array>
 		</dict>
 	</array>

@@ -8,10 +8,10 @@ import '../../data/database.dart' show Task, TasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/time_tracker_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_sheet.dart';
+import '../../widgets/taskera_sheet.dart';
 import '../tasks/time_track_screen.dart' show TimeTrackContent;
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ const _kEmptyTask = _QTask(
   title: 'No tasks — add one to get started',
   meta:  '',
   mins:  25,
-  color: KaalColors.acc2,
+  color: TaskEraColors.acc2,
 );
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -92,10 +92,10 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
   static List<_QTask> _buildQueue(List<Task> rawTasks) {
     const qColors = {
-      1: KaalColors.q1,
-      2: KaalColors.q2,
-      3: KaalColors.q3,
-      4: KaalColors.q4,
+      1: TaskEraColors.q1,
+      2: TaskEraColors.q2,
+      3: TaskEraColors.q3,
+      4: TaskEraColors.q4,
     };
     final sorted = rawTasks.where((t) => !t.isDone).toList()
       ..sort((a, b) {
@@ -108,7 +108,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
       title: t.title,
       meta: 'Q${t.quadrant}${t.priority != null ? " · ${t.priority}" : ""}',
       mins: t.timeAllocatedMin ?? 25, // saved custom duration per task
-      color: qColors[t.quadrant] ?? KaalColors.acc2,
+      color: qColors[t.quadrant] ?? TaskEraColors.acc2,
     )).toList();
   }
 
@@ -172,7 +172,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final rawTasks = ref.watch(allTasksProvider).valueOrNull ?? [];
     final queue = _buildQueue(rawTasks);
     // Default the active task to the one currently being tracked (e.g. started
@@ -278,7 +278,7 @@ class _TimerSubHeader extends StatelessWidget {
 class _ActiveCard extends StatelessWidget {
   final _QTask activeTask;
   final int mins;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String timerLabel;
   final double progress;
   final bool running;
@@ -319,7 +319,7 @@ class _ActiveCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 3),
                 child: Icon(Icons.access_time_outlined,
-                    size: 14, color: KaalColors.acc2),
+                    size: 14, color: TaskEraColors.acc2),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -392,7 +392,7 @@ class _ActiveCard extends StatelessWidget {
               child: FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: progress.clamp(0.0, 1.0),
-                child: const ColoredBox(color: KaalColors.acc),
+                child: const ColoredBox(color: TaskEraColors.acc),
               ),
             ),
           ),
@@ -424,7 +424,7 @@ class _ActiveCard extends StatelessWidget {
                   child: Container(
                     height: 44,
                     decoration: BoxDecoration(
-                      color: running ? const Color(0xFF636366) : KaalColors.acc,
+                      color: running ? const Color(0xFF636366) : TaskEraColors.acc,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     alignment: Alignment.center,
@@ -444,7 +444,7 @@ class _ActiveCard extends StatelessWidget {
               const SizedBox(width: 8),
               _IconCircleBtn(icon: Icons.check_rounded, color: colors.successFg, onTap: onComplete),
               const SizedBox(width: 6),
-              _IconCircleBtn(icon: Icons.close_rounded, color: KaalColors.warn, onTap: onReset),
+              _IconCircleBtn(icon: Icons.close_rounded, color: TaskEraColors.warn, onTap: onReset),
             ],
           ),
         ],
@@ -471,13 +471,13 @@ class _DurationPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: () => onTap(value),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
         decoration: BoxDecoration(
-          color: _active ? KaalColors.accBg : Colors.transparent,
+          color: _active ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             width: 0.5,
@@ -492,7 +492,7 @@ class _DurationPill extends StatelessWidget {
             fontFamily: 'Inter',
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: _active ? KaalColors.acc2 : colors.ink3,
+            color: _active ? TaskEraColors.acc2 : colors.ink3,
           ),
         ),
       ),
@@ -514,7 +514,7 @@ class _CustomDurationPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: () async {
         final result = await showModalBottomSheet<int>(
@@ -529,7 +529,7 @@ class _CustomDurationPill extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: _active ? KaalColors.accBg : Colors.transparent,
+          color: _active ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             width: 0.5,
@@ -542,7 +542,7 @@ class _CustomDurationPill extends StatelessWidget {
             fontFamily: 'Inter',
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: _active ? KaalColors.acc2 : colors.ink3,
+            color: _active ? TaskEraColors.acc2 : colors.ink3,
           ),
         ),
       ),
@@ -604,11 +604,11 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final safeBottom = MediaQuery.of(context).padding.bottom;
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-      child: KaalSheetSurface(
+      child: TaskEraSheetSurface(
         borderRadius: BorderRadius.circular(20),
         child: Container(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 16 + safeBottom),
@@ -696,7 +696,7 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
             child: Container(
               height: 44,
               decoration: BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
@@ -728,7 +728,7 @@ class _StepBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: Container(
@@ -781,7 +781,7 @@ class _IconCircleBtn extends StatelessWidget {
 class _QueueSection extends StatelessWidget {
   final List<_QTask> items;
   final int activeIndex;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onSelect;
   const _QueueSection({
     required this.items,
@@ -859,7 +859,7 @@ class _QueueSection extends StatelessWidget {
 class _QueueRow extends StatelessWidget {
   final _QTask task;
   final bool isActive;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _QueueRow({
     required this.task,
@@ -919,7 +919,7 @@ class _QueueRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: isActive ? KaalColors.accBg : Colors.transparent,
+                color: isActive ? TaskEraColors.accBg : Colors.transparent,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   width: 0.5,

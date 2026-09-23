@@ -16,14 +16,14 @@ import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:kaal_app/config/app_config.dart';
-import 'package:kaal_app/data/database.dart';
-import 'package:kaal_app/data/seed_data.dart';
-import 'package:kaal_app/data/providers/database_provider.dart';
-import 'package:kaal_app/settings/prefs_provider.dart';
-import 'package:kaal_app/routing/app_router.dart';
-import 'package:kaal_app/routing/routes.dart';
-import 'package:kaal_app/main.dart' show KaalApp;
+import 'package:taskera_app/config/app_config.dart';
+import 'package:taskera_app/data/database.dart';
+import 'package:taskera_app/data/seed_data.dart';
+import 'package:taskera_app/data/providers/database_provider.dart';
+import 'package:taskera_app/settings/prefs_provider.dart';
+import 'package:taskera_app/routing/app_router.dart';
+import 'package:taskera_app/routing/routes.dart';
+import 'package:taskera_app/main.dart' show KaalApp;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

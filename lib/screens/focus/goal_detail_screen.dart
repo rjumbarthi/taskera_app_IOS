@@ -9,8 +9,8 @@ import '../../data/providers/goals_provider.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/database_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/goal_link_pickers.dart';
 import '../../l10n/app_l10n.dart';
@@ -23,7 +23,7 @@ class GoalDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final goalAsync = ref.watch(singleGoalProvider(_id));
 
     return goalAsync.when(
@@ -43,7 +43,7 @@ class GoalDetailScreen extends ConsumerWidget {
 
 class _Body extends StatelessWidget {
   final Goal goal;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String goalId;
   const _Body({required this.goal, required this.colors, required this.goalId});
 
@@ -212,7 +212,7 @@ class _Body extends StatelessWidget {
                 _SupportingHabitsCard(goalId: int.tryParse(goalId) ?? 0, colors: colors),
                 const SizedBox(height: 10),
 
-                // Real on-demand Kaal AI — reasons over this goal.
+                // Real on-demand TaskEra AI — reasons over this goal.
                 AiInsightCard(
                   input: 'Goal: ${goal.title}\n'
                       'Why it matters: ${goal.subtitle}\n'
@@ -236,7 +236,7 @@ class _Body extends StatelessWidget {
 class _SectionCard extends StatelessWidget {
   final String label;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionCard({required this.label, required this.child, required this.colors});
 
   @override
@@ -264,7 +264,7 @@ class _SectionCard extends StatelessWidget {
 
 class _MilestonesCard extends ConsumerStatefulWidget {
   final Goal goal;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _MilestonesCard({required this.goal, required this.colors});
 
   @override
@@ -289,7 +289,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
             hintText: AppL10n.of(context).milestoneTitle,
             hintStyle: TextStyle(color: widget.colors.ink3),
             enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.colors.bdr2)),
-            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: KaalColors.acc)),
+            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: TaskEraColors.acc)),
           ),
         ),
         actions: [
@@ -299,7 +299,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, ctrl.text.trim()),
-            child: Text(AppL10n.of(context).add, style: const TextStyle(fontFamily: 'Inter', color: KaalColors.acc2, fontWeight: FontWeight.w700)),
+            child: Text(AppL10n.of(context).add, style: const TextStyle(fontFamily: 'Inter', color: TaskEraColors.acc2, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -359,7 +359,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
             GestureDetector(
               onTap: _addMilestone,
               child: Text('+ ${AppL10n.of(context).addMilestone}',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: KaalColors.acc2)),
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: TaskEraColors.acc2)),
             ),
         ],
       ),
@@ -369,7 +369,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
 
 class _LinkedTasksCard extends ConsumerWidget {
   final int goalId;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LinkedTasksCard({required this.goalId, required this.colors});
 
   void _showLinkPicker(BuildContext context, WidgetRef ref) {
@@ -416,7 +416,7 @@ class _LinkedTasksCard extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _showLinkPicker(context, ref),
                 child: Text('+ ${AppL10n.of(context).linkTask}', style: const TextStyle(fontFamily: 'Inter',
-                    fontSize: 11, color: KaalColors.acc2)),
+                    fontSize: 11, color: TaskEraColors.acc2)),
               ),
             ],
           ),
@@ -434,9 +434,9 @@ class _LinkedTasksCard extends ConsumerWidget {
                     Container(
                       width: 14, height: 14,
                       decoration: BoxDecoration(
-                        color: task.isDone ? KaalColors.q2 : Colors.transparent,
+                        color: task.isDone ? TaskEraColors.q2 : Colors.transparent,
                         shape: BoxShape.circle,
-                        border: task.isDone ? null : Border.all(width: 1.5, color: KaalColors.q2),
+                        border: task.isDone ? null : Border.all(width: 1.5, color: TaskEraColors.q2),
                       ),
                       alignment: Alignment.center,
                       child: task.isDone
@@ -474,7 +474,7 @@ class _LinkedTasksCard extends ConsumerWidget {
 
 class _SupportingHabitsCard extends ConsumerWidget {
   final int goalId;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SupportingHabitsCard({required this.goalId, required this.colors});
 
   void _showHabitPicker(BuildContext context, WidgetRef ref) {
@@ -520,7 +520,7 @@ class _SupportingHabitsCard extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _showHabitPicker(context, ref),
                 child: Text('+ ${AppL10n.of(context).linkHabit}', style: const TextStyle(fontFamily: 'Inter',
-                    fontSize: 11, color: KaalColors.acc2)),
+                    fontSize: 11, color: TaskEraColors.acc2)),
               ),
             ],
           ),

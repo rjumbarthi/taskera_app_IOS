@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
-class KaalSegmentedControl extends StatelessWidget {
+class TaskEraSegmentedControl extends StatelessWidget {
   final List<String> options;
   final int selectedIndex;
   final ValueChanged<int>? onChanged;
 
-  const KaalSegmentedControl({
+  const TaskEraSegmentedControl({
     super.key,
     required this.options,
     required this.selectedIndex,
@@ -17,12 +17,12 @@ class KaalSegmentedControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: colors.surf,
-        borderRadius: KaalShape.roundChip,
+        borderRadius: TaskEraShape.roundChip,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Row(
@@ -35,8 +35,8 @@ class KaalSegmentedControl extends StatelessWidget {
                 duration: const Duration(milliseconds: 150),
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
-                  color: i == selectedIndex ? KaalColors.acc : Colors.transparent,
-                  borderRadius: KaalShape.roundChip,
+                  color: i == selectedIndex ? TaskEraColors.acc : Colors.transparent,
+                  borderRadius: TaskEraShape.roundChip,
                 ),
                 child: Text(
                   options[i],

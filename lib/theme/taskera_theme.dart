@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'kaal_colors.dart';
-import 'kaal_motion.dart';
-import 'kaal_shape.dart';
-import 'kaal_type.dart';
+import 'taskera_colors.dart';
+import 'taskera_motion.dart';
+import 'taskera_shape.dart';
+import 'taskera_type.dart';
 
-enum KaalThemeMode { glass, dark, light }
+enum TaskEraThemeMode { glass, dark, light }
 
-final kaalThemeModeProvider = StateProvider<KaalThemeMode>(
-  (ref) => KaalThemeMode.glass,
+final taskeraThemeModeProvider = StateProvider<TaskEraThemeMode>(
+  (ref) => TaskEraThemeMode.glass,
 );
 
-class KaalThemeData {
-  final KaalColors colors;
-  final KaalType type;
-  final KaalShape shape;
-  final KaalMotion motion;
-  final KaalThemeMode mode;
+class TaskEraThemeData {
+  final TaskEraColors colors;
+  final TaskEraType type;
+  final TaskEraShape shape;
+  final TaskEraMotion motion;
+  final TaskEraThemeMode mode;
   final String fontFamily;
   final double fontSizeScale;
 
-  const KaalThemeData({
+  const TaskEraThemeData({
     required this.colors,
     required this.type,
     required this.shape,
@@ -31,8 +31,8 @@ class KaalThemeData {
     this.fontSizeScale = 1.0,
   });
 
-  factory KaalThemeData.fromMode(
-    KaalThemeMode mode, {
+  factory TaskEraThemeData.fromMode(
+    TaskEraThemeMode mode, {
     Color  accent        = const Color(0xFF0A84FF),
     Color  accent2       = const Color(0xFF409CFF),
     Color  accentBg      = const Color(0x1F0A84FF),
@@ -40,11 +40,11 @@ class KaalThemeData {
     double fontSizeScale = 1.0,
   }) {
     final base = switch (mode) {
-      KaalThemeMode.glass => KaalColors.glass,
-      KaalThemeMode.dark  => KaalColors.dark,
-      KaalThemeMode.light => KaalColors.light,
+      TaskEraThemeMode.glass => TaskEraColors.glass,
+      TaskEraThemeMode.dark  => TaskEraColors.dark,
+      TaskEraThemeMode.light => TaskEraColors.light,
     };
-    final colors = KaalColors(
+    final colors = TaskEraColors(
       bg: base.bg, appBg: base.appBg,
       surf: base.surf, surf3: base.surf3,
       ink: base.ink, ink2: base.ink2, ink3: base.ink3, ink4: base.ink4,
@@ -52,11 +52,11 @@ class KaalThemeData {
       successFg: base.successFg, labelMuted: base.labelMuted,
       accent: accent, accent2: accent2, accentBg: accentBg,
     );
-    return KaalThemeData(
+    return TaskEraThemeData(
       colors: colors,
-      type:   const KaalType(),
-      shape:  const KaalShape(),
-      motion: const KaalMotion(),
+      type:   const TaskEraType(),
+      shape:  const TaskEraShape(),
+      motion: const TaskEraMotion(),
       mode:   mode,
       fontFamily:    fontFamily,
       fontSizeScale: fontSizeScale,
@@ -64,23 +64,23 @@ class KaalThemeData {
   }
 }
 
-class KaalTheme extends InheritedWidget {
-  final KaalThemeData data;
+class TaskEraTheme extends InheritedWidget {
+  final TaskEraThemeData data;
 
-  const KaalTheme({
+  const TaskEraTheme({
     super.key,
     required this.data,
     required super.child,
   });
 
-  static KaalThemeData of(BuildContext context) {
-    final widget = context.dependOnInheritedWidgetOfExactType<KaalTheme>();
-    assert(widget != null, 'No KaalTheme found in widget tree');
+  static TaskEraThemeData of(BuildContext context) {
+    final widget = context.dependOnInheritedWidgetOfExactType<TaskEraTheme>();
+    assert(widget != null, 'No TaskEraTheme found in widget tree');
     return widget!.data;
   }
 
   @override
-  bool updateShouldNotify(KaalTheme oldWidget) =>
+  bool updateShouldNotify(TaskEraTheme oldWidget) =>
       data.mode           != oldWidget.data.mode ||
       data.colors.accent  != oldWidget.data.colors.accent ||
       data.fontFamily     != oldWidget.data.fontFamily ||

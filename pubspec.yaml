@@ -1,5 +1,5 @@
-name: kaal_app
-description: "Kaal — Execution OS for high performers"
+name: taskera_app
+description: "TaskEra — Execution OS for high performers"
 publish_to: 'none'
 
 # Play Store release. Format: semantic+versionCode.

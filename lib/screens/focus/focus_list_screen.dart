@@ -7,8 +7,8 @@ import '../../data/providers/calendar_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 enum FocusFilter { today, active, done, overdue }
@@ -32,7 +32,7 @@ class _FocusListScreenState extends ConsumerState<FocusListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     // Merge all active quadrant tasks
     final q1 = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? [];
@@ -192,7 +192,7 @@ class _Pill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: () => onTap(value),
       child: Container(
@@ -210,7 +210,7 @@ class _Pill extends StatelessWidget {
             fontFamily: 'Inter',
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: _active ? KaalColors.acc2 : colors.ink3,
+            color: _active ? TaskEraColors.acc2 : colors.ink3,
             height: 1,
           ),
         ),
@@ -253,7 +253,7 @@ class _TodayList extends StatelessWidget {
   final List<Habit> habits;
   final List<CalendarEvent> todayInvites;
   final List<CalendarEvent> tomorrowInvites;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _TodayList({
     required this.todayTasks,
     required this.tomorrowTasks,
@@ -323,7 +323,7 @@ class _DayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
       child: Text(
@@ -347,7 +347,7 @@ class _HabitRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -419,7 +419,7 @@ class _InviteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final accent = Color(event.colorValue);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -503,7 +503,7 @@ class _InviteRow extends StatelessWidget {
 class _TaskList extends StatelessWidget {
   final List<Task> tasks;
   final FocusFilter filter;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _TaskList({required this.tasks, required this.filter, required this.colors});
 
   @override
@@ -531,14 +531,14 @@ class _TaskList extends StatelessWidget {
 
 class _TaskRow extends ConsumerWidget {
   final Task task;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _TaskRow({required this.task, required this.colors});
 
   Color get _quadColor => switch (task.quadrant) {
-        1 => KaalColors.q1,
-        2 => KaalColors.q2,
-        3 => KaalColors.q3,
-        _ => KaalColors.q4,
+        1 => TaskEraColors.q1,
+        2 => TaskEraColors.q2,
+        3 => TaskEraColors.q3,
+        _ => TaskEraColors.q4,
       };
 
   String get _quadLabel => switch (task.quadrant) {
@@ -624,7 +624,7 @@ class _TaskRow extends ConsumerWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
-                      color: task.isOverdue ? KaalColors.warn : colors.ink3,
+                      color: task.isOverdue ? TaskEraColors.warn : colors.ink3,
                       height: 1.3,
                     ),
                   ),
@@ -653,7 +653,7 @@ class _TaskRow extends ConsumerWidget {
                       duration: const Duration(milliseconds: 2000),
                       action: SnackBarAction(
                         label: 'Undo',
-                        textColor: KaalColors.acc2,
+                        textColor: TaskEraColors.acc2,
                         onPressed: () {
                           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
                         },

@@ -22,9 +22,9 @@ import 'data/providers/database_provider.dart';
 import 'routing/app_router.dart';
 import 'routing/routes.dart';
 import 'settings/app_launch_prefs.dart';
-import 'settings/kaal_settings.dart';
+import 'settings/taskera_settings.dart';
 import 'settings/prefs_provider.dart';
-import 'theme/kaal_theme.dart';
+import 'theme/taskera_theme.dart';
 import 'util/platform_layout.dart';
 import 'data/providers/auth_provider.dart';
 import 'data/providers/ai_access_provider.dart';
@@ -44,7 +44,7 @@ void main() async {
     try {
       await windowManager.ensureInitialized();
       await windowManager.setMinimumSize(const Size(400, 700));
-      await windowManager.setTitle('Kaal - Focus & Task Planner');
+      await windowManager.setTitle('TaskEra - Focus & Task Planner');
     } catch (_) {
       // hot restart — window_manager channel not re-registered on Windows
     }
@@ -101,16 +101,16 @@ void main() async {
   // upgrading from a seeded build would still show demo data. Wipe it ONCE here.
   // Detected via the old seeding flags; fresh installs never set these, so a
   // brand-new user's (empty) database is never touched.
-  if (!kSeedDemoData && !(prefs.getBool('kaal.demoWiped') ?? false)) {
-    final hadSeededData = (prefs.getBool('kaal.dataSeeded') ?? false) ||
-        (prefs.getBool('kaal.listsSeeded') ?? false);
+  if (!kSeedDemoData && !(prefs.getBool('taskera.demoWiped') ?? false)) {
+    final hadSeededData = (prefs.getBool('taskera.dataSeeded') ?? false) ||
+        (prefs.getBool('taskera.listsSeeded') ?? false);
     if (hadSeededData) {
       await deleteDatabaseFile();
-      await prefs.remove('kaal.dataSeeded');
-      await prefs.remove('kaal.realData');
-      await prefs.remove('kaal.listsSeeded');
+      await prefs.remove('taskera.dataSeeded');
+      await prefs.remove('taskera.realData');
+      await prefs.remove('taskera.listsSeeded');
     }
-    await prefs.setBool('kaal.demoWiped', true);
+    await prefs.setBool('taskera.demoWiped', true);
   }
 
   final db = await _openDatabase();
@@ -120,35 +120,35 @@ void main() async {
   // flag in lib/config/feature_flags.dart to pre-populate for dev/screenshots.
   if (kSeedDemoData) {
     // Seed default lists once on first launch
-    if (!(prefs.getBool('kaal.listsSeeded') ?? false)) {
+    if (!(prefs.getBool('taskera.listsSeeded') ?? false)) {
       if (await db.listsDao.isEmpty()) {
         await db.listsDao.seedDefaults();
       }
-      await prefs.setBool('kaal.listsSeeded', true);
+      await prefs.setBool('taskera.listsSeeded', true);
     }
 
     // Inject starter tasks, habits, goals, notes, calendar ONCE as permanent real
     // data. It is never auto-reseeded afterwards — switching language only changes
     // the UI, not your data.
-    final currentLang   = prefs.getInt('kaal.lang') ?? 0;
-    final alreadySeeded = prefs.getBool('kaal.dataSeeded') ?? false;
-    final realDataReady = prefs.getBool('kaal.realData') ?? false;
+    final currentLang   = prefs.getInt('taskera.lang') ?? 0;
+    final alreadySeeded = prefs.getBool('taskera.dataSeeded') ?? false;
+    final realDataReady = prefs.getBool('taskera.realData') ?? false;
     if (!alreadySeeded) {
       await seedDatabase(db, langIdx: currentLang);
-      await prefs.setBool('kaal.dataSeeded', true);
-      await prefs.setBool('kaal.realData', true);
+      await prefs.setBool('taskera.dataSeeded', true);
+      await prefs.setBool('taskera.realData', true);
     } else if (!realDataReady) {
       // One-time migration off the old auto-reseeding "demo data" model: refresh
       // once in the current language to clear stale/wrong-language rows, then keep
       // everything as permanent real data from here on.
       await reseedDatabase(db, langIdx: currentLang);
-      await prefs.setBool('kaal.realData', true);
+      await prefs.setBool('taskera.realData', true);
     }
   }
 
   // ── Product analytics ─────────────────────────────────────────────────────
   // Mint/load the anonymous id, then bind to the signed-in user if there is one.
-  // The launch event + screen tracking start from KaalApp (after the opt-out is
+  // The launch event + screen tracking start from TaskEraApp (after the opt-out is
   // applied). No-op until a PostHog key is set in AppConfig.
   await AnalyticsService.instance.init(prefs);
   final analyticsUid = Supabase.instance.client.auth.currentUser?.id;
@@ -175,7 +175,7 @@ void main() async {
       sharedPreferencesProvider.overrideWithValue(prefs),
       appDatabaseProvider.overrideWithValue(db),
     ],
-    child: KaalApp(router: router),
+    child: TaskEraApp(router: router),
   ));
 }
 
@@ -190,7 +190,7 @@ Future<AppDatabase> _openDatabase() async {
     await db.customSelect('PRAGMA user_version').get();
     return db;
   } catch (e) {
-    debugPrint('[Kaal] DB open failed ($e) — wiping dev database and recreating');
+    debugPrint('[TaskEra] DB open failed ($e) — wiping dev database and recreating');
     await deleteDatabaseFile();
     return AppDatabase();
   }
@@ -203,7 +203,7 @@ void _applyTabUnlocks(SharedPreferences prefs) {
   final days = AppLaunchPrefs.daysSinceInstall(prefs);
   const thresholds = {'habits': 7, 'calendar': 10, 'notes': 14, 'inbox': 14};
   for (final entry in thresholds.entries) {
-    final key = 'kaal.toggle.${entry.key}';
+    final key = 'taskera.toggle.${entry.key}';
     if (prefs.getBool(key) == null && days >= entry.value) {
       prefs.setBool(key, true);
     }
@@ -212,7 +212,7 @@ void _applyTabUnlocks(SharedPreferences prefs) {
 
 Future<void> _rescheduleReminders(SharedPreferences prefs) async {
   try {
-    final raw = prefs.getStringList('kaal.reminders') ?? const [];
+    final raw = prefs.getStringList('taskera.reminders') ?? const [];
     final reminders = <Reminder>[];
     for (final s in raw) {
       try {
@@ -230,12 +230,12 @@ Future<void> _rescheduleNotifications(AppDatabase db, SharedPreferences prefs) a
     final goals  = await db.goalsDao.watchAll().first;
     final events = await db.calendarDao.watchAll().first;
     final toggles = {
-      'notifTasks':    prefs.getBool('kaal.toggle.notifTasks')    ?? true,
-      'notifHabits':   prefs.getBool('kaal.toggle.notifHabits')   ?? true,
-      'notifGoals':    prefs.getBool('kaal.toggle.notifGoals')    ?? true,
-      'notifCalendar': prefs.getBool('kaal.toggle.notifCalendar') ?? true,
-      'notifInbox':    prefs.getBool('kaal.toggle.notifInbox')    ?? true,
-      'notifFocus':    prefs.getBool('kaal.toggle.notifFocus')    ?? true,
+      'notifTasks':    prefs.getBool('taskera.toggle.notifTasks')    ?? true,
+      'notifHabits':   prefs.getBool('taskera.toggle.notifHabits')   ?? true,
+      'notifGoals':    prefs.getBool('taskera.toggle.notifGoals')    ?? true,
+      'notifCalendar': prefs.getBool('taskera.toggle.notifCalendar') ?? true,
+      'notifInbox':    prefs.getBool('taskera.toggle.notifInbox')    ?? true,
+      'notifFocus':    prefs.getBool('taskera.toggle.notifFocus')    ?? true,
     };
     await NotificationService.instance.rescheduleAll(
       tasks: tasks, habits: habits, goals: goals, events: events,
@@ -263,11 +263,11 @@ String _computeInitialLocation(SharedPreferences prefs) {
   // calendar day within 8 hours — i.e. Android killed us while backgrounded.
   if (onboarded && authed &&
       AppLaunchPrefs.wasActiveSameDayWithin(prefs, const Duration(hours: 8))) {
-    return KaalRoutes.focus;
+    return TaskEraRoutes.focus;
   }
 
   // Otherwise start at the quote splash — it routes forward based on auth state.
-  return KaalRoutes.quote;
+  return TaskEraRoutes.quote;
 }
 
 // Matches AppStrings index order (0-18)
@@ -293,22 +293,22 @@ const _kAccents = [
 const _kFontFamilies  = ['Inter', 'Fraunces', 'Inter', 'Inter'];
 const _kFontSizeScales = [0.85, 1.0, 1.15, 1.3];
 
-class KaalApp extends ConsumerStatefulWidget {
+class TaskEraApp extends ConsumerStatefulWidget {
   final GoRouter router;
-  const KaalApp({super.key, required this.router});
+  const TaskEraApp({super.key, required this.router});
 
   @override
-  ConsumerState<KaalApp> createState() => _KaalAppState();
+  ConsumerState<TaskEraApp> createState() => _TaskEraAppState();
 }
 
-class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
+class _TaskEraAppState extends ConsumerState<TaskEraApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // Product analytics — honor the opt-out, log the launch, then auto-track
     // every screen view + back-navigation through the router.
-    AnalyticsService.instance.setEnabled(ref.read(kaalSettingsProvider).sw('analytics'));
+    AnalyticsService.instance.setEnabled(ref.read(taskeraSettingsProvider).sw('analytics'));
     AnalyticsService.instance.capture('app_open');
     AnalyticsService.instance.attachToRouter(widget.router);
     // Pull the server Pro entitlement (Razorpay webhook / store validators) when
@@ -332,7 +332,7 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final router = widget.router;
     // Keep analytics in step with the Settings → Privacy opt-out toggle.
-    ref.listen(kaalSettingsProvider.select((s) => s.sw('analytics')),
+    ref.listen(taskeraSettingsProvider.select((s) => s.sw('analytics')),
         (_, on) => AnalyticsService.instance.setEnabled(on));
     // Realtime Pro entitlement — unlock/lock the moment the store validator or
     // webhook changes the row (re-fetches into the local cache via the same
@@ -354,10 +354,10 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
           // from the auth screens — never yank the user out of onboarding or an
           // in-app flow (e.g. linking a calendar from Settings).
           final path = router.routerDelegate.currentConfiguration.uri.path;
-          if (path == KaalRoutes.quote ||
-              path == KaalRoutes.signin ||
-              path == KaalRoutes.signup) {
-            router.go(KaalRoutes.focus);
+          if (path == TaskEraRoutes.quote ||
+              path == TaskEraRoutes.signin ||
+              path == TaskEraRoutes.signup) {
+            router.go(TaskEraRoutes.focus);
           }
         }
         if (state.event == AuthChangeEvent.signedOut) {
@@ -368,7 +368,7 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
           // Drop the previous user's Google API tokens so the next account can't
           // reach their Gmail/Calendar.
           ref.read(googleServiceProvider).disconnect();
-          router.go(KaalRoutes.signin);
+          router.go(TaskEraRoutes.signin);
         }
       });
     });
@@ -376,33 +376,33 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
     // Note: seeded content is permanent real data — switching language only
     // re-localizes the UI, it does not wipe or re-seed your data.
 
-    final s = ref.watch(kaalSettingsProvider);
+    final s = ref.watch(taskeraSettingsProvider);
 
     final systemDark = WidgetsBinding.instance.platformDispatcher
             .platformBrightness ==
         Brightness.dark;
     final themeMode = switch (s.theme) {
-      0 => KaalThemeMode.dark,
-      1 => KaalThemeMode.light,
-      2 => KaalThemeMode.glass,
+      0 => TaskEraThemeMode.dark,
+      1 => TaskEraThemeMode.light,
+      2 => TaskEraThemeMode.glass,
       // 3 = System → follow the OS: glass for dark, light for light.
-      _ => systemDark ? KaalThemeMode.glass : KaalThemeMode.light,
+      _ => systemDark ? TaskEraThemeMode.glass : TaskEraThemeMode.light,
     };
     final ac  = _kAccents[s.accent.clamp(0, _kAccents.length - 1)];
     final fam = _kFontFamilies[s.font.clamp(0, _kFontFamilies.length - 1)];
     final scale = _kFontSizeScales[s.fontSize.clamp(0, _kFontSizeScales.length - 1)];
 
-    final themeData = KaalThemeData.fromMode(
+    final themeData = TaskEraThemeData.fromMode(
       themeMode,
       accent: ac.$1, accent2: ac.$2, accentBg: ac.$3,
       fontFamily: fam,
       fontSizeScale: scale,
     );
 
-    return KaalTheme(
+    return TaskEraTheme(
       data: themeData,
       child: MaterialApp.router(
-        title: 'Kaal - Focus & Task Planner',
+        title: 'TaskEra - Focus & Task Planner',
         debugShowCheckedModeBanner: false,
         locale: _kLocales[s.lang.clamp(0, _kLocales.length - 1)],
         supportedLocales: _kLocales,
@@ -411,7 +411,7 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        scrollBehavior: const _KaalScrollBehavior(),
+        scrollBehavior: const _TaskEraScrollBehavior(),
         routerConfig: router,
         theme: ThemeData(
           useMaterial3: true,
@@ -446,8 +446,8 @@ class _KaalAppState extends ConsumerState<KaalApp> with WidgetsBindingObserver {
 }
 
 // Removes overscroll glow and scrollbar indicators app-wide.
-class _KaalScrollBehavior extends ScrollBehavior {
-  const _KaalScrollBehavior();
+class _TaskEraScrollBehavior extends ScrollBehavior {
+  const _TaskEraScrollBehavior();
 
   @override
   Widget buildOverscrollIndicator(

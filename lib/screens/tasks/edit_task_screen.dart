@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show TasksCompanion, SubtasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../util/taskera_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/reminders_section.dart';
 
@@ -33,16 +33,16 @@ class _PChip {
 }
 
 const _quads = [
-  _QChip(1, 'Q1 · Do Now',    KaalColors.q1),
-  _QChip(2, 'Q2 · Schedule',  KaalColors.q2),
-  _QChip(3, 'Q3 · Delegate',  KaalColors.q3),
-  _QChip(4, 'Q4 · Eliminate', KaalColors.q4),
+  _QChip(1, 'Q1 · Do Now',    TaskEraColors.q1),
+  _QChip(2, 'Q2 · Schedule',  TaskEraColors.q2),
+  _QChip(3, 'Q3 · Delegate',  TaskEraColors.q3),
+  _QChip(4, 'Q4 · Eliminate', TaskEraColors.q4),
 ];
 
 const _priorities = [
   _PChip('P1', 'P1 Urgent', Color(0xFFFF6B6B)),
   _PChip('P2', 'P2 High',   Color(0xFFFF9500)),
-  _PChip('P3', 'P3 Medium', KaalColors.acc2),
+  _PChip('P3', 'P3 Medium', TaskEraColors.acc2),
   _PChip('P4', 'P4 Low',    Color(0xFF8E8E93)),
 ];
 
@@ -253,7 +253,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
           colorScheme: const ColorScheme.dark(
-            primary: KaalColors.acc,
+            primary: TaskEraColors.acc,
             onPrimary: Colors.white,
             surface: Color(0xFF1C1C1E),
             onSurface: Colors.white,
@@ -276,7 +276,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
 
   Future<void> _pickTimeAlloc() async {
     const presets = [15, 25, 30, 45, 60, 90, 120];
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -319,18 +319,18 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                         child: Container(
                           padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
                           decoration: BoxDecoration(
-                            color: selected ? KaalColors.acc.withAlpha(0x22) : Colors.transparent,
+                            color: selected ? TaskEraColors.acc.withAlpha(0x22) : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               width: 0.5,
-                              color: selected ? KaalColors.acc : colors.bdr,
+                              color: selected ? TaskEraColors.acc : colors.bdr,
                             ),
                           ),
                           child: Text(label,
                               style: TextStyle(
                                 fontFamily: 'Inter', fontSize: 13,
                                 fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                                color: selected ? KaalColors.acc2 : colors.ink2,
+                                color: selected ? TaskEraColors.acc2 : colors.ink2,
                               )),
                         ),
                       );
@@ -408,7 +408,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 0.5, color: KaalColors.acc),
+              borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc),
             ),
             isDense: true,
             contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -422,7 +422,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
             child: const Text('Set', style: TextStyle(fontFamily: 'Inter',
-                fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -442,7 +442,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
           colorScheme: const ColorScheme.dark(
-            primary: KaalColors.acc,
+            primary: TaskEraColors.acc,
             onPrimary: Colors.white,
             surface: Color(0xFF1C1C1E),
             onSurface: Colors.white,
@@ -519,7 +519,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final dueText = _selectedDueDate != null ? _formatDate(_selectedDueDate!) : '';
 
     return Column(
@@ -550,7 +550,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 5, 14, 5),
                   decoration: BoxDecoration(
-                    color: _loading ? colors.surf2 : KaalColors.acc,
+                    color: _loading ? colors.surf2 : TaskEraColors.acc,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: _loading
@@ -612,8 +612,8 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
-                                decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(3)),
-                                child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                                decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
+                                child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                               ),
                               const SizedBox(width: 6),
                               Expanded(
@@ -621,7 +621,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                                   _parseResult.isEmpty ? 'Type to detect quad, priority, date…' : '✦ $_parseResult',
                                   style: TextStyle(
                                     fontFamily: 'Inter', fontSize: 9,
-                                    color: _parseResult.isEmpty ? colors.ink3 : KaalColors.acc2,
+                                    color: _parseResult.isEmpty ? colors.ink3 : TaskEraColors.acc2,
                                     fontWeight: _parseResult.isEmpty ? FontWeight.w400 : FontWeight.w600,
                                   ),
                                 ),
@@ -680,7 +680,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                       GestureDetector(
                         onTap: () => ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Custom labels coming soon'))),
-                        child: _HfChip(label: '+ New', on: false, overrideColor: KaalColors.acc2),
+                        child: _HfChip(label: '+ New', on: false, overrideColor: TaskEraColors.acc2),
                       ),
                     ],
                   ),
@@ -914,7 +914,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
-                      final confirmed = await kaalConfirmDelete(context);
+                      final confirmed = await taskeraConfirmDelete(context);
                       if (confirmed && context.mounted) {
                         await ref.read(appDatabaseProvider).tasksDao.deleteTask(_taskId!);
                         if (context.mounted) context.pop();
@@ -941,7 +941,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
   }
 
 
-  Widget _notesField(TextEditingController ctrl, String hint, KaalColors colors) {
+  Widget _notesField(TextEditingController ctrl, String hint, TaskEraColors colors) {
     return TextField(
       controller: ctrl,
       minLines: 4,
@@ -965,7 +965,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
 
 class _SubtaskEditRow extends StatelessWidget {
   final _EditSubtask sub;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
   const _SubtaskEditRow({required this.sub, required this.colors, required this.onToggle, required this.onDelete});
@@ -988,9 +988,9 @@ class _SubtaskEditRow extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: sub.done ? const Color(0x337FBA00) : Colors.transparent,
-                border: Border.all(width: 1.5, color: sub.done ? KaalColors.q2 : colors.bdr2),
+                border: Border.all(width: 1.5, color: sub.done ? TaskEraColors.q2 : colors.bdr2),
               ),
-              child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: KaalColors.q2)) : null,
+              child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
             ),
           ),
           const SizedBox(width: 8),
@@ -1020,7 +1020,7 @@ class _SubtaskEditRow extends StatelessWidget {
 class _FormRow extends StatelessWidget {
   final String label;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FormRow({required this.label, required this.child, required this.colors});
 
   @override
@@ -1047,8 +1047,8 @@ class _HfChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
-    final textColor = overrideColor ?? (on ? (onColor ?? KaalColors.acc2) : colors.ink3);
+    final colors    = TaskEraTheme.of(context).colors;
+    final textColor = overrideColor ?? (on ? (onColor ?? TaskEraColors.acc2) : colors.ink3);
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
       decoration: BoxDecoration(

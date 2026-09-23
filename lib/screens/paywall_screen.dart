@@ -5,12 +5,12 @@ import 'package:go_router/go_router.dart';
 import '../l10n/app_l10n.dart';
 
 import '../settings/app_launch_prefs.dart';
-import '../settings/kaal_settings.dart';
+import '../settings/taskera_settings.dart';
 import '../settings/prefs_provider.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 import '../widgets/add_back_button.dart';
-import '../widgets/kaal_top_bar.dart';
+import '../widgets/taskera_top_bar.dart';
 import '../widgets/wallpaper_background.dart';
 import '../routing/routes.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -96,7 +96,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     await svc.buy(product);
   }
 
-  // UPI via an external Razorpay link — Android only. On iOS, Kaal Pro digital
+  // UPI via an external Razorpay link — Android only. On iOS, TaskEra Pro digital
   // functionality must go through the App Store; an external payment link for
   // it would violate Guideline 3.1.1.
   Future<void> _payWithUpi() async {
@@ -115,9 +115,9 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
 
     // Mode: optional upsell after sign-up (from==onboard, has account) vs the
     // mandatory gate for skip-auth/local-storage users vs normal (Settings).
@@ -131,9 +131,9 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         // No free pass for local-only — steer them to a (free) account instead,
         // and drop the skipAuth flag so they don't loop back into this gate.
         AppLaunchPrefs.clearSkipAuth(ref.read(sharedPreferencesProvider));
-        context.go(KaalRoutes.signup);
+        context.go(TaskEraRoutes.signup);
       } else if (postOnboard) {
-        context.go(KaalRoutes.focus);
+        context.go(TaskEraRoutes.focus);
       } else {
         context.pop();
       }
@@ -171,10 +171,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [
-          KaalTopBar(
-            title: 'Kaal Pro',
+          TaskEraTopBar(
+            title: 'TaskEra Pro',
             leading: AddBackButton(
-                onTap: mandatory ? () => context.go(KaalRoutes.signin) : leave),
+                onTap: mandatory ? () => context.go(TaskEraRoutes.signin) : leave),
           ),
           Expanded(
             child: ListView(
@@ -202,7 +202,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 ),
                 // UPI is Android-only — Play Billing already offers UPI to
                 // Indian users inside its own checkout. On iOS this must not
-                // exist: Kaal Pro digital content is App Store IAP only.
+                // exist: TaskEra Pro digital content is App Store IAP only.
                 if (defaultTargetPlatform == TargetPlatform.android) ...[
                   const SizedBox(height: 8),
                   _UpiButton(colors: colors, onTap: _payWithUpi),
@@ -231,7 +231,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                                 ? 'Continue with free plan'
                                 : AppL10n.of(context).maybeLater),
                         style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
-                            color: KaalColors.acc2, height: 1))),
+                            color: TaskEraColors.acc2, height: 1))),
                   ),
                 ),
                 GestureDetector(
@@ -240,7 +240,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(child: Text(AppL10n.of(context).restorePurchase,
                         style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                            color: KaalColors.acc2, height: 1))),
+                            color: TaskEraColors.acc2, height: 1))),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -271,7 +271,7 @@ void _toast(BuildContext context, String message) {
 // ── Hero section ──────────────────────────────────────────────────────────────
 
 class _HeroSection extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _HeroSection({required this.colors});
 
   @override
@@ -281,7 +281,7 @@ class _HeroSection extends StatelessWidget {
           style: TextStyle(fontFamily: 'Inter', fontSize: 28,
               color: colors.ink, height: 1.2)),
       const SizedBox(height: 8),
-      Text('Kaal Pro',
+      Text('TaskEra Pro',
           style: TextStyle(fontFamily: 'Fraunces', fontSize: 24,
               fontVariations: const [FontVariation('wght', 700)],
               color: colors.ink, height: 1.2)),
@@ -297,7 +297,7 @@ class _HeroSection extends StatelessWidget {
 // ── Features list ─────────────────────────────────────────────────────────────
 
 class _FeaturesList extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FeaturesList({required this.colors});
 
   @override
@@ -311,44 +311,44 @@ class _FeaturesList extends StatelessWidget {
       ),
       child: Column(children: [
         _FeatureRow(
-          iconBg: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc],
+          iconBg: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc],
               begin: Alignment.topLeft, end: Alignment.bottomRight),
           iconSvgPath: Icons.star_rounded,
           iconColor: Colors.white,
           title: 'Unlimited AI features',
           sub: 'Brain Dump, auto-schedule, AI scoring',
           trailLabel: '∞',
-          trailColor: KaalColors.q2,
+          trailColor: TaskEraColors.q2,
         ),
         const SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x240A84FF), Color(0x240A84FF)]),
           iconSvgPath: Icons.grid_view_rounded,
-          iconColor: KaalColors.acc2,
+          iconColor: TaskEraColors.acc2,
           title: 'Home screen widget',
           sub: 'Q1 tasks at a glance, streak counter',
           trailLabel: '✓',
-          trailColor: KaalColors.q2,
+          trailColor: TaskEraColors.q2,
         ),
         const SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x1F7FBA00), Color(0x1F7FBA00)]),
           iconSvgPath: Icons.upload_rounded,
-          iconColor: KaalColors.q2,
+          iconColor: TaskEraColors.q2,
           title: 'Export & share',
           sub: 'Task lists, weekly review, EOD report',
           trailLabel: '✓',
-          trailColor: KaalColors.q2,
+          trailColor: TaskEraColors.q2,
         ),
         const SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x1FFFB900), Color(0x1FFFB900)]),
           iconSvgPath: Icons.email_rounded,
-          iconColor: KaalColors.q4,
+          iconColor: TaskEraColors.q4,
           title: 'Gmail & Cal deep sync',
           sub: 'Unlimited accounts, real-time AI triage',
           trailLabel: '✓',
-          trailColor: KaalColors.q2,
+          trailColor: TaskEraColors.q2,
         ),
         const SizedBox(height: 9),
         _FeatureRow(
@@ -358,7 +358,7 @@ class _FeaturesList extends StatelessWidget {
           title: 'Pro badge + identity',
           sub: 'Custom themes, priority support',
           trailLabel: '✓',
-          trailColor: KaalColors.q2,
+          trailColor: TaskEraColors.q2,
         ),
       ]),
     );
@@ -379,7 +379,7 @@ class _FeatureRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Row(children: [
       Container(
         width: 26, height: 26,
@@ -411,7 +411,7 @@ class _FeatureRow extends StatelessWidget {
 
 class _PlanToggle extends StatelessWidget {
   final bool annual;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<bool> onChanged;
   const _PlanToggle({required this.annual, required this.colors, required this.onChanged});
 
@@ -439,7 +439,7 @@ class _PlanTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -447,7 +447,7 @@ class _PlanTab extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
-            color: selected ? KaalColors.acc : Colors.transparent,
+            color: selected ? TaskEraColors.acc : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
@@ -467,7 +467,7 @@ class _PlanTab extends StatelessWidget {
 // calculated monthly-equivalent. ─────────────────────────────────────────────
 
 class _PriceHero extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final _LoadState loadState;
   final bool annual;
   final ProductDetails? product;
@@ -497,7 +497,7 @@ class _PriceHero extends StatelessWidget {
       final message = switch (loadState) {
         _LoadState.notFound => 'This plan isn’t available in your store region right now.',
         _LoadState.storeUnavailable => 'The App Store / Play Store isn’t reachable right now.',
-        _LoadState.unsupported => 'Subscribe from the Kaal mobile app to see pricing.',
+        _LoadState.unsupported => 'Subscribe from the TaskEra mobile app to see pricing.',
         _LoadState.error => errorMessage ?? 'Couldn’t load pricing.',
         _ => 'Couldn’t load pricing.',
       };
@@ -510,7 +510,7 @@ class _PriceHero extends StatelessWidget {
             onTap: onRetry,
             child: Text('Retry',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                    fontWeight: FontWeight.w600, color: KaalColors.acc2)),
+                    fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
           ),
         ],
       ]));
@@ -562,7 +562,7 @@ class _PriceHero extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Widget child;
   const _Card({required this.colors, required this.child});
 
@@ -690,8 +690,8 @@ class _SubscribeButton extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: enabled
-                ? const [Color(0xFF5856D6), KaalColors.acc]
-                : [KaalColors.acc.withValues(alpha: 0.35), KaalColors.acc.withValues(alpha: 0.35)],
+                ? const [Color(0xFF5856D6), TaskEraColors.acc]
+                : [TaskEraColors.acc.withValues(alpha: 0.35), TaskEraColors.acc.withValues(alpha: 0.35)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -715,7 +715,7 @@ class _SubscribeButton extends StatelessWidget {
 // ── UPI button (Android only) ─────────────────────────────────────────────────
 
 class _UpiButton extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _UpiButton({required this.colors, required this.onTap});
 
@@ -756,7 +756,7 @@ class _UpiButton extends StatelessWidget {
 // ── Legal links ────────────────────────────────────────────────────────────────
 
 class _LegalLinksRow extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LegalLinksRow({required this.colors});
 
   @override
@@ -769,10 +769,10 @@ class _LegalLinksRow extends StatelessWidget {
                   decorationColor: colors.ink3, height: 1)),
         );
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      link('Terms of Use', () => context.push(KaalRoutes.legal)),
+      link('Terms of Use', () => context.push(TaskEraRoutes.legal)),
       Padding(padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text('·', style: TextStyle(color: colors.ink3, fontSize: 11))),
-      link('Privacy Policy', () => context.push('${KaalRoutes.legal}?tab=privacy')),
+      link('Privacy Policy', () => context.push('${TaskEraRoutes.legal}?tab=privacy')),
     ]);
   }
 }
@@ -780,7 +780,7 @@ class _LegalLinksRow extends StatelessWidget {
 // ── Referral nudge ────────────────────────────────────────────────────────────
 
 class _ReferralNudge extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ReferralNudge({required this.colors});
 
   @override
@@ -793,13 +793,13 @@ class _ReferralNudge extends StatelessWidget {
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Column(children: [
-        Text("Know someone who'd love Kaal?",
+        Text("Know someone who'd love TaskEra?",
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                 color: colors.ink3, height: 1.4)),
         const SizedBox(height: 4),
         GestureDetector(
-          onTap: () => context.push(KaalRoutes.referral),
+          onTap: () => context.push(TaskEraRoutes.referral),
           child: Container(
             padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
             decoration: BoxDecoration(
@@ -808,7 +808,7 @@ class _ReferralNudge extends StatelessWidget {
             ),
             child: const Text('🎁 Invite → both get 1 month free',
                 style: TextStyle(fontFamily: 'Inter', fontSize: 12,
-                    fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+                    fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
           ),
         ),
       ]),

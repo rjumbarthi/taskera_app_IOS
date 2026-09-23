@@ -11,8 +11,8 @@ import '../../data/providers/habits_provider.dart';
 import '../../services/activity_log_service.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../util/platform_layout.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Stack(
       children: [
         Column(
@@ -145,7 +145,7 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
                       ],
                     ];
                   }(),
-                  _AddHabitRow(colors: colors, onTap: () => context.push(KaalRoutes.habitsAddHabit)),
+                  _AddHabitRow(colors: colors, onTap: () => context.push(TaskEraRoutes.habitsAddHabit)),
                 ],
               ),
             ),
@@ -155,12 +155,12 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
           right: 16,
           bottom: 16 + MediaQuery.paddingOf(context).bottom,
           child: GestureDetector(
-            onTap: () => context.push(KaalRoutes.habitsAddHabit),
+            onTap: () => context.push(TaskEraRoutes.habitsAddHabit),
             child: Container(
               width: 42,
               height: 42,
               decoration: const BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
               ),
@@ -176,7 +176,7 @@ class _HabitsScreenState extends ConsumerState<HabitsScreen> {
 // ── Week strip ────────────────────────────────────────────────────────────────
 
 class _WeekStrip extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _WeekStrip({required this.colors});
 
   static const _labels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -232,7 +232,7 @@ class _DayCell extends StatelessWidget {
   final bool isDone;
   final bool isToday;
   final bool isFuture;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String checkSvg;
   final String plusSvg;
   const _DayCell({
@@ -262,7 +262,7 @@ class _DayCell extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Inter', fontSize: 9,
-              color: isToday ? KaalColors.acc : colors.ink3, height: 1,
+              color: isToday ? TaskEraColors.acc : colors.ink3, height: 1,
             ),
           ),
           const SizedBox(height: 2),
@@ -292,7 +292,7 @@ class _DayCell extends StatelessWidget {
 // ── Stats 4-grid ──────────────────────────────────────────────────────────────
 
 class _StatsGrid extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatsGrid({required this.colors});
 
   @override
@@ -313,11 +313,11 @@ class _StatsGrid extends ConsumerWidget {
         children: [
           _StatCell(value: '$maxStreak🔥', label: AppL10n.of(context).streak,   valueColor: colors.successFg,      colors: colors),
           const SizedBox(width: 5),
-          _StatCell(value: '$doneToday/$activeCount', label: AppL10n.of(context).today, valueColor: KaalColors.acc2, colors: colors),
+          _StatCell(value: '$doneToday/$activeCount', label: AppL10n.of(context).today, valueColor: TaskEraColors.acc2, colors: colors),
           const SizedBox(width: 5),
           _StatCell(value: '$weekPct%',  label: AppL10n.of(context).thisWeek, valueColor: const Color(0xFFBF5AF2), colors: colors),
           const SizedBox(width: 5),
-          _StatCell(value: '$activeCount', label: AppL10n.of(context).active,  valueColor: KaalColors.q4,           colors: colors),
+          _StatCell(value: '$activeCount', label: AppL10n.of(context).active,  valueColor: TaskEraColors.q4,           colors: colors),
         ],
       ),
     );
@@ -328,7 +328,7 @@ class _StatCell extends StatelessWidget {
   final String value;
   final String label;
   final Color valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatCell({required this.value, required this.label, required this.valueColor, required this.colors});
 
   @override
@@ -368,7 +368,7 @@ class _StreakBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final habits = ref.watch(habitsProvider).valueOrNull ?? [];
     final maxFill = habits.isEmpty ? 0 : habits.map((h) => h.weeklyFilledCount).reduce(max);
     if (habits.isEmpty) return const SizedBox.shrink();
@@ -434,7 +434,7 @@ class _HabitCard extends StatelessWidget {
   final VoidCallback onCheck;
   final VoidCallback? onLongPress;
   final VoidCallback? onSecondaryTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _HabitCard({
     required this.habit,
@@ -647,7 +647,7 @@ class _HabitCard extends StatelessWidget {
 
 // ── Long-press context menu ───────────────────────────────────────────────────
 
-Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, KaalColors colors) {
+Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, TaskEraColors colors) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: ctx,
@@ -721,7 +721,7 @@ Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, KaalCo
   );
 }
 
-void _showStreakProtectDialog(BuildContext ctx, KaalColors colors) {
+void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
   showDialog(
     context: ctx,
     builder: (dialogCtx) => Dialog(
@@ -784,7 +784,7 @@ class _HabitMenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _HabitMenuItem({required this.icon, required this.label, required this.color, required this.colors, required this.onTap});
 
@@ -810,7 +810,7 @@ class _HabitMenuItem extends StatelessWidget {
 // ── Add new habit row ─────────────────────────────────────────────────────────
 
 class _AddHabitRow extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _AddHabitRow({required this.colors, required this.onTap});
 

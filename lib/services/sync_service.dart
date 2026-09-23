@@ -100,7 +100,7 @@ class SyncService {
   void startRealtime() {
     if (!_can || _channel != null) return;
     final uid = _uid!;
-    final ch = _client.channel('kaal_sync_$uid');
+    final ch = _client.channel('taskera_sync_$uid');
     for (final table in _tables) {
       ch.onPostgresChanges(
         event: PostgresChangeEvent.all,
@@ -113,7 +113,7 @@ class SyncService {
     }
     ch.subscribe((status, [error]) {
       if (kDebugMode) {
-        debugPrint('[Kaal sync] realtime $status'
+        debugPrint('[TaskEra sync] realtime $status'
             '${error != null ? ' · error=$error' : ''}');
       }
     });
@@ -130,7 +130,7 @@ class SyncService {
     try {
       if (kDebugMode) {
         final id = payload.newRecord['id'] ?? payload.oldRecord['id'];
-        debugPrint('[Kaal sync] $table ${payload.eventType.name} id=$id');
+        debugPrint('[TaskEra sync] $table ${payload.eventType.name} id=$id');
       }
       if (payload.eventType == PostgresChangeEvent.delete) {
         final id = payload.oldRecord['id'];

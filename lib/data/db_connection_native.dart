@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 LazyDatabase openDatabaseConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/kaal.db');
+    final file = File('${dir.path}/taskera.db');
     return NativeDatabase.createInBackground(file);
   });
 }
@@ -15,7 +15,7 @@ LazyDatabase openDatabaseConnection() {
 Future<void> deleteDatabaseFile() async {
   try {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/kaal.db');
+    final file = File('${dir.path}/taskera.db');
     if (await file.exists()) await file.delete();
   } catch (_) {}
 }

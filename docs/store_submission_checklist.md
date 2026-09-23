@@ -1,12 +1,12 @@
-# Kaal — App Store & Play Store submission checklist
+# TaskEra — App Store & Play Store submission checklist
 
 App facts (reuse everywhere):
-- **App name:** Kaal — Focus & Task Planner
-- **Android package:** `com.kaal.kaal_app` · **min SDK 28**
-- **Support email:** kaal_support@jumbarthi.com · **Address:** Hyderabad, India
-- **URLs:** Privacy `https://jumbarthi.com/kaal/privacy` · Terms `…/terms` · Support `…/support` · Account/Data deletion `…/delete`
+- **App name:** TaskEra — Focus & Task Planner
+- **Android package:** `com.taskera.taskera_app` · **min SDK 28**
+- **Support email:** taskera_support@jumbarthi.com · **Address:** Hyderabad, India
+- **URLs:** Privacy `https://jumbarthi.com/taskera/privacy` · Terms `…/terms` · Support `…/support` · Account/Data deletion `…/delete`
 - **Auth:** email/OTP + Google, Apple, Microsoft (or skip → local-only) · backend Supabase
-- **Sensitive bits:** notifications, exact alarms + full-screen alarm, Google Calendar (read-only), Kaal Pro subscription. Gmail sync & photo upload are **disabled ("coming soon")**.
+- **Sensitive bits:** notifications, exact alarms + full-screen alarm, Google Calendar (read-only), TaskEra Pro subscription. Gmail sync & photo upload are **disabled ("coming soon")**.
 
 ---
 
@@ -26,8 +26,8 @@ App facts (reuse everywhere):
 
 **Store listing & setup**
 - [ ] Store listing (name, descriptions, graphics, category Productivity)
-- [ ] Contact details: email kaal_support@jumbarthi.com, website jumbarthi.com/kaal
-- [ ] **Privacy policy URL** → `https://jumbarthi.com/kaal/privacy`
+- [ ] Contact details: email taskera_support@jumbarthi.com, website jumbarthi.com/taskera
+- [ ] **Privacy policy URL** → `https://jumbarthi.com/taskera/privacy`
 
 **App content (Policy → App content)**
 - [ ] **App access:** app is usable without an account (Skip → local storage). Provide reviewers a test account anyway, or note "no login required — tap Skip on sign-in."
@@ -39,7 +39,7 @@ App facts (reuse everywhere):
 - [ ] **News app:** No. **COVID/contact-tracing:** No.
 
 **Sensitive / declared permissions** ⚠️ (these can trigger review)
-- [ ] **Account deletion URL** (App content → Data deletion) → `https://jumbarthi.com/kaal/delete` *(required — Play Data Deletion policy)*
+- [ ] **Account deletion URL** (App content → Data deletion) → `https://jumbarthi.com/taskera/delete` *(required — Play Data Deletion policy)*
 - [ ] **Exact alarm** (`SCHEDULE_EXACT_ALARM`): used for reminders/alarms. Be ready to justify in the alarm/permissions declaration; it's user-grantable so usually OK.
 - [ ] **Full-screen intent** (`USE_FULL_SCREEN_INTENT`, Android 14+): justify in the declaration as "user-set full-screen alarms." ⚠️ A task planner *may* get pushback — if so, fall back to non-full-screen alarms (heads-up + sound).
 - [ ] **`RECEIVE_BOOT_COMPLETED`** — declared for re-arming alarms after reboot (fine).
@@ -50,7 +50,7 @@ App facts (reuse everywhere):
 - [ ] OAuth consent links must point to the live privacy/terms URLs (now live ✅).
 
 **Monetization**
-- [ ] Create **Kaal Pro** subscription(s) (monthly/annual) in Play Console → Subscriptions; wire base plans/offers; matches in-app paywall.
+- [ ] Create **TaskEra Pro** subscription(s) (monthly/annual) in Play Console → Subscriptions; wire base plans/offers; matches in-app paywall.
 
 **Release**
 - [ ] Upload signed **AAB**, set release notes.
@@ -61,12 +61,12 @@ App facts (reuse everywhere):
 ## Apple App Store Connect
 
 **App information**
-- [ ] Privacy Policy URL → `https://jumbarthi.com/kaal/privacy`
-- [ ] Support URL → `https://jumbarthi.com/kaal/support`
+- [ ] Privacy Policy URL → `https://jumbarthi.com/taskera/privacy`
+- [ ] Support URL → `https://jumbarthi.com/taskera/support`
 - [ ] Category: Productivity · Age rating questionnaire
 
 **App Privacy (nutrition labels)** — see data section below
-- [ ] Fill "Data Types" collected + linkage + tracking (Kaal does **no tracking**, **no ads**)
+- [ ] Fill "Data Types" collected + linkage + tracking (TaskEra does **no tracking**, **no ads**)
 
 **Guideline gotchas** ⚠️
 - [ ] **Account deletion (4.8 / 5.1.1(v)):** in-app deletion is **required** and must be easy to find → confirm **Profile → Edit profile → Delete account** works. (Web page `…/delete` is a bonus, not a substitute.)
@@ -85,9 +85,9 @@ App facts (reuse everywhere):
 
 ---
 
-## Data Safety (Play) / App Privacy (Apple) — answers for Kaal
+## Data Safety (Play) / App Privacy (Apple) — answers for TaskEra
 
-Kaal works **fully offline with no account**; the below applies **only when the user signs in** (sync).
+TaskEra works **fully offline with no account**; the below applies **only when the user signs in** (sync).
 
 | Data type | Collected? | Purpose | Shared? | Notes |
 |---|---|---|---|---|
@@ -103,7 +103,7 @@ Kaal works **fully offline with no account**; the below applies **only when the 
 Cross-cutting answers:
 - [ ] **Data encrypted in transit:** Yes (TLS).
 - [ ] **Data encrypted at rest:** Yes (Supabase / device).
-- [ ] **Users can request deletion:** Yes → `https://jumbarthi.com/kaal/delete` and in-app.
+- [ ] **Users can request deletion:** Yes → `https://jumbarthi.com/taskera/delete` and in-app.
 - [ ] **Selling data:** No. **Sharing with third parties:** Only processors (cloud hosting/auth) under contract.
 - [ ] **Tracking (Apple ATT):** No tracking → no ATT prompt required.
 - [ ] **Ads:** None.

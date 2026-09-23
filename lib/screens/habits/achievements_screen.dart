@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class AchievementsScreen extends ConsumerWidget {
@@ -28,7 +28,7 @@ class AchievementsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     final habits = ref.watch(habitsProvider).valueOrNull ?? [];
     final logs = ref
@@ -161,7 +161,7 @@ class _UnlockedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -188,7 +188,7 @@ class _UnlockedCard extends StatelessWidget {
 class _LockedCard extends StatelessWidget {
   final String emoji, title, desc;
   final double pct;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LockedCard({required this.emoji, required this.title, required this.desc, required this.pct, required this.colors});
 
   @override
@@ -227,7 +227,7 @@ class _LockedCard extends StatelessWidget {
                 decoration: BoxDecoration(color: const Color(0x20FFFFFF), borderRadius: BorderRadius.circular(2)),
                 child: FractionallySizedBox(
                   widthFactor: pct, alignment: Alignment.centerLeft,
-                  child: Container(decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(2))),
+                  child: Container(decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(2))),
                 ),
               ),
               const SizedBox(height: 3),

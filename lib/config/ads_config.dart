@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-/// AdMob configuration for Kaal's free-plan ads.
+/// AdMob configuration for TaskEra's free-plan ads.
 ///
 /// Ads are shown to free users only (Pro is ad-free) and only on Android/iOS —
 /// google_mobile_ads has no desktop/web support, so the ad layer no-ops there.
@@ -25,10 +25,10 @@ abstract final class AdsConfig {
   static const _testRewardedIos         = 'ca-app-pub-3940256099942544/1712485313';
 
   // ── Production IDs — REPLACE before going live ──────────────────────────────
-  static const _prodInterstitialAndroid = 'ca-app-pub-9013964076288950/1324943461'; // kaal_ad_Interstitial
-  static const _prodInterstitialIos     = 'ca-app-pub-9013964076288950/7049993571'; // kaal_ad_Interstitial
-  static const _prodRewardedAndroid     = 'ca-app-pub-9013964076288950/3839426160'; // kaal_ad_rewarded
-  static const _prodRewardedIos         = 'ca-app-pub-9013964076288950/5899643566'; // kaal_ad_rewarded
+  static const _prodInterstitialAndroid = 'ca-app-pub-9013964076288950/1324943461'; // taskera_ad_Interstitial
+  static const _prodInterstitialIos     = 'ca-app-pub-9013964076288950/7049993571'; // taskera_ad_Interstitial
+  static const _prodRewardedAndroid     = 'ca-app-pub-9013964076288950/3839426160'; // taskera_ad_rewarded
+  static const _prodRewardedIos         = 'ca-app-pub-9013964076288950/5899643566'; // taskera_ad_rewarded
 
   static bool get _ios => Platform.isIOS;
 

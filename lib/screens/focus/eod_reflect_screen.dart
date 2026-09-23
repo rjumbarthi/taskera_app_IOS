@@ -6,8 +6,8 @@ import '../../data/providers/habits_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class EodReflectScreen extends ConsumerStatefulWidget {
@@ -28,7 +28,7 @@ class _EodReflectScreenState extends ConsumerState<EodReflectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day);
@@ -75,7 +75,7 @@ class _EodReflectScreenState extends ConsumerState<EodReflectScreen> {
           padding: const EdgeInsets.fromLTRB(4, 4, 12, 4),
           child: Row(
             children: [
-              AddBackButton(onTap: () => context.go(KaalRoutes.focus)),
+              AddBackButton(onTap: () => context.go(TaskEraRoutes.focus)),
               const SizedBox(width: 8),
               Text(
                 'EOD Reflect',
@@ -118,7 +118,7 @@ class _EodReflectScreenState extends ConsumerState<EodReflectScreen> {
 // ── Reflect card ──────────────────────────────────────────────────────────────
 
 class _ReflectCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final TextEditingController controller;
   final String dateLabel;
   final int doneCount;
@@ -151,7 +151,7 @@ class _ReflectCard extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: GestureDetector(
-              onTap: () => context.go(KaalRoutes.focus),
+              onTap: () => context.go(TaskEraRoutes.focus),
               behavior: HitTestBehavior.opaque,
               child: const SizedBox(
                 width: 28,
@@ -192,9 +192,9 @@ class _ReflectCard extends StatelessWidget {
               children: [
                 _StatItem(value: '$doneCount',  label: 'done',    valueColor: colors.successFg),
                 _VertDivider(color: colors.bdr),
-                _StatItem(value: '$habitCount',  label: 'habits',  valueColor: KaalColors.q4),
+                _StatItem(value: '$habitCount',  label: 'habits',  valueColor: TaskEraColors.q4),
                 _VertDivider(color: colors.bdr),
-                _StatItem(value: focusedLabel, label: 'focused', valueColor: KaalColors.acc2),
+                _StatItem(value: focusedLabel, label: 'focused', valueColor: TaskEraColors.acc2),
               ],
             ),
           ),
@@ -268,11 +268,11 @@ class _ReflectCard extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context.go(KaalRoutes.focus),
+                  onTap: () => context.go(TaskEraRoutes.focus),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
-                      color: KaalColors.q2,
+                      color: TaskEraColors.q2,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
@@ -292,7 +292,7 @@ class _ReflectCard extends StatelessWidget {
               const SizedBox(width: 7),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => context.go(KaalRoutes.focus),
+                  onTap: () => context.go(TaskEraRoutes.focus),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
@@ -337,7 +337,7 @@ class _ReflectCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           GestureDetector(
-            onTap: () => context.go(KaalRoutes.focus),
+            onTap: () => context.go(TaskEraRoutes.focus),
             child: Text(
               'Skip for tonight',
               textAlign: TextAlign.center,

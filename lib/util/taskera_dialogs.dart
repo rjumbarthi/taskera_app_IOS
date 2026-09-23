@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_l10n.dart';
 
-Future<bool> kaalConfirmDelete(BuildContext context, {String? message}) async {
+Future<bool> taskeraConfirmDelete(BuildContext context, {String? message}) async {
   final str = AppL10n.of(context);
   final ok = await showDialog<bool>(
     context: context,

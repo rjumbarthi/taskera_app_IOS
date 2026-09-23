@@ -1,4 +1,4 @@
-# kaal_app
+# taskera_app
 
 A new Flutter project.
 

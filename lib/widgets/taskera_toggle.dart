@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
-class KaalToggle extends StatelessWidget {
+class TaskEraToggle extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
 
-  const KaalToggle({super.key, required this.value, this.onChanged});
+  const TaskEraToggle({super.key, required this.value, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: () => onChanged?.call(!value),
       child: AnimatedContainer(
@@ -19,8 +19,8 @@ class KaalToggle extends StatelessWidget {
         width: 32,
         height: 17,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : colors.surf3,
-          borderRadius: KaalShape.switchTrack,
+          color: value ? TaskEraColors.acc : colors.surf3,
+          borderRadius: TaskEraShape.switchTrack,
         ),
         child: AnimatedAlign(
           duration: const Duration(milliseconds: 200),

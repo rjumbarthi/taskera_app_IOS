@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../theme/kaal_motion.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_motion.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class TaskRow extends StatefulWidget {
   final String title;
@@ -41,7 +41,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 55),
       vsync: this,
     );
-    _pulseAnim = Tween<double>(begin: 1.0, end: KaalMotion.scalePressed)
+    _pulseAnim = Tween<double>(begin: 1.0, end: TaskEraMotion.scalePressed)
         .animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
   }
 
@@ -61,7 +61,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     return Listener(
       // Right-click on Windows/desktop = secondary button → same action as long press.
@@ -76,7 +76,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
           // 480 ms long press — overrides Flutter's platform default of 500 ms.
           LongPressGestureRecognizer:
               GestureRecognizerFactoryWithHandlers<LongPressGestureRecognizer>(
-            () => LongPressGestureRecognizer(duration: KaalMotion.longPress),
+            () => LongPressGestureRecognizer(duration: TaskEraMotion.longPress),
             (instance) {
               instance.onLongPressStart =
                   (details) => _fireLongPress(details.globalPosition);
@@ -99,7 +99,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
           builder: (_, child) => Transform.scale(
             // Tap press and LP pulse are combined: whichever is smaller wins.
             scale: _pressed
-                ? KaalMotion.scalePressed
+                ? TaskEraMotion.scalePressed
                 : _pulseAnim.value,
             child: child,
           ),
@@ -107,7 +107,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
             decoration: BoxDecoration(
               color: const Color(0x0AFFFFFF),
-              borderRadius: KaalShape.card,
+              borderRadius: TaskEraShape.card,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

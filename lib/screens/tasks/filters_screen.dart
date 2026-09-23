@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/database.dart' show Task;
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -18,11 +18,11 @@ class _PresetData {
 }
 
 Color _qColor(int q) => switch (q) {
-      1 => KaalColors.q1,
-      2 => KaalColors.q2,
-      3 => KaalColors.q3,
-      4 => KaalColors.q4,
-      _ => KaalColors.acc2,
+      1 => TaskEraColors.q1,
+      2 => TaskEraColors.q2,
+      3 => TaskEraColors.q3,
+      4 => TaskEraColors.q4,
+      _ => TaskEraColors.acc2,
     };
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final tasks = ref.watch(allTasksProvider).value ?? [];
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -52,11 +52,11 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
         d != null && DateTime(d.year, d.month, d.day).isBefore(today);
 
     final presets = <_PresetData>[
-      _PresetData('Overdue tasks', 'Past due · All quads', KaalColors.q1,
+      _PresetData('Overdue tasks', 'Past due · All quads', TaskEraColors.q1,
           tasks.where((t) => !t.isDone && isOverdue(t.dueDate)).toList()),
-      _PresetData('High score Q2', 'Q2 · Score > 7', KaalColors.q2,
+      _PresetData('High score Q2', 'Q2 · Score > 7', TaskEraColors.q2,
           tasks.where((t) => !t.isDone && t.quadrant == 2 && (t.urgencyScore ?? 0) > 7).toList()),
-      _PresetData('Today\'s Q2 focus', 'Q2 · Due today', KaalColors.q2,
+      _PresetData('Today\'s Q2 focus', 'Q2 · Due today', TaskEraColors.q2,
           tasks.where((t) => !t.isDone && t.quadrant == 2 && isToday(t.dueDate)).toList()),
     ];
 
@@ -166,7 +166,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                 GestureDetector(
                   onTap: () => _snack('Custom conditions coming soon'),
                   child: const Text('+ Add condition',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc)),
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
                 ),
                 const SizedBox(height: 12),
 
@@ -179,7 +179,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 9),
                           decoration: BoxDecoration(
-                              color: KaalColors.acc, borderRadius: BorderRadius.circular(9)),
+                              color: TaskEraColors.acc, borderRadius: BorderRadius.circular(9)),
                           alignment: Alignment.center,
                           child: const Text('Run',
                               style: TextStyle(
@@ -199,7 +199,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(9),
-                            border: Border.all(width: 0.5, color: KaalColors.acc),
+                            border: Border.all(width: 0.5, color: TaskEraColors.acc),
                           ),
                           alignment: Alignment.center,
                           child: const Text('Focus',
@@ -207,7 +207,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                                   fontFamily: 'Inter',
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: KaalColors.acc2)),
+                                  color: TaskEraColors.acc2)),
                         ),
                       ),
                     ),
@@ -226,7 +226,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                     ),
                     alignment: Alignment.center,
                     child: const Text('+ Save as Filter',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: KaalColors.acc)),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: TaskEraColors.acc)),
                   ),
                 ),
               ],
@@ -242,7 +242,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
 
 class _PresetRow extends StatelessWidget {
   final _PresetData preset;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool active;
   final VoidCallback onTap;
   const _PresetRow({
@@ -260,7 +260,7 @@ class _PresetRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         decoration: BoxDecoration(
-          color: active ? KaalColors.accBg : Colors.transparent,
+          color: active ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
               width: 0.5, color: active ? const Color(0x660A84FF) : colors.bdr),
@@ -287,20 +287,20 @@ class _PresetRow extends StatelessWidget {
               width: 22,
               height: 22,
               decoration:
-                  const BoxDecoration(color: KaalColors.accBg, shape: BoxShape.circle),
+                  const BoxDecoration(color: TaskEraColors.accBg, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text('$count',
                   style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
-                      color: KaalColors.acc2)),
+                      color: TaskEraColors.acc2)),
             ),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
               decoration: BoxDecoration(
-                  color: KaalColors.acc, borderRadius: BorderRadius.circular(6)),
+                  color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
               child: Text(active ? 'Hide' : 'View',
                   style: const TextStyle(
                       fontFamily: 'Inter',
@@ -319,7 +319,7 @@ class _PresetRow extends StatelessWidget {
 
 class _ResultRow extends StatelessWidget {
   final Task task;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ResultRow({required this.task, required this.colors});
 
   @override
@@ -368,7 +368,7 @@ class _ResultRow extends StatelessWidget {
 
 class _ConditionRow extends StatelessWidget {
   final String prefix, field, op, value;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ConditionRow(
       {required this.prefix,
       required this.field,
@@ -410,7 +410,7 @@ class _ConditionRow extends StatelessWidget {
 
 class _Pill extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool active;
   const _Pill({required this.label, required this.colors, this.active = false});
 
@@ -419,7 +419,7 @@ class _Pill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
       decoration: BoxDecoration(
-        color: active ? KaalColors.accBg : Colors.transparent,
+        color: active ? TaskEraColors.accBg : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
             width: 0.5, color: active ? const Color(0x660A84FF) : colors.bdr),
@@ -429,7 +429,7 @@ class _Pill extends StatelessWidget {
               fontFamily: 'Inter',
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: active ? KaalColors.acc2 : colors.ink2)),
+              color: active ? TaskEraColors.acc2 : colors.ink2)),
     );
   }
 }

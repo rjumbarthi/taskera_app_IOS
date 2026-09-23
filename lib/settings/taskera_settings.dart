@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/wallpaper_background.dart';
 import 'prefs_provider.dart';
 
-class KaalSettingsState {
+class TaskEraSettingsState {
   final int wallpaperIndex;
   // Per-theme wallpaper brightness (dim). Each theme remembers its own value so
   // switching theme immediately restores that theme's brightness. Read the
@@ -28,7 +28,7 @@ class KaalSettingsState {
   static const defaultDimGlass = 0.70;
   static const defaultDimLight = 0.30;
 
-  const KaalSettingsState({
+  const TaskEraSettingsState({
     this.wallpaperIndex = 0,
     this.dimDark  = defaultDimDark,
     this.dimLight = defaultDimLight,
@@ -60,14 +60,14 @@ class KaalSettingsState {
   bool sw(String key) => toggles[key] ?? true;
 
   static const _wallpapers = [
-    KaalWallpaper.ocean,
-    KaalWallpaper.aurora3,
-    KaalWallpaper.beach,
-    KaalWallpaper.nightSky,
-    KaalWallpaper.tree,
+    TaskEraWallpaper.ocean,
+    TaskEraWallpaper.aurora3,
+    TaskEraWallpaper.beach,
+    TaskEraWallpaper.nightSky,
+    TaskEraWallpaper.tree,
   ];
 
-  KaalWallpaper get wallpaper =>
+  TaskEraWallpaper get wallpaper =>
       _wallpapers[wallpaperIndex.clamp(0, _wallpapers.length - 1)];
 
   // Brightness for the currently-active theme (theme: 0=dark, 1=light,
@@ -78,7 +78,7 @@ class KaalSettingsState {
         _ => dimGlass,
       };
 
-  KaalSettingsState withToggle(String key, bool value) => KaalSettingsState(
+  TaskEraSettingsState withToggle(String key, bool value) => TaskEraSettingsState(
     wallpaperIndex: wallpaperIndex,
     dimDark: dimDark, dimLight: dimLight, dimGlass: dimGlass,
     toggles: {...toggles, key: value},
@@ -87,11 +87,11 @@ class KaalSettingsState {
     layout: layout, qnames: qnames, lang: lang,
   );
 
-  KaalSettingsState copyWith({
+  TaskEraSettingsState copyWith({
     int? wallpaperIndex, double? dimDark, double? dimLight, double? dimGlass,
     int? theme, int? accent, int? font,
     int? fontSize, int? lineSpacing, int? layout, int? qnames, int? lang,
-  }) => KaalSettingsState(
+  }) => TaskEraSettingsState(
     wallpaperIndex: wallpaperIndex ?? this.wallpaperIndex,
     dimDark:  dimDark  ?? this.dimDark,
     dimLight: dimLight ?? this.dimLight,
@@ -111,31 +111,31 @@ class KaalSettingsState {
 // ── Persistence keys ──────────────────────────────────────────────────────────
 
 class _K {
-  static const wallpaper    = 'kaal.wallpaper';
-  static const wallpaperDim = 'kaal.wallpaperDim'; // legacy single value (migrated)
-  static const dimDark      = 'kaal.wallpaperDim.dark';
-  static const dimLight     = 'kaal.wallpaperDim.light';
-  static const dimGlass     = 'kaal.wallpaperDim.glass';
-  static const theme        = 'kaal.theme';
-  static const accent      = 'kaal.accent';
-  static const font        = 'kaal.font';
-  static const fontSize    = 'kaal.fontSize';
-  static const lineSpacing = 'kaal.lineSpacing';
-  static const layout      = 'kaal.layout';
-  static const qnames      = 'kaal.qnames';
-  static const lang        = 'kaal.lang';
-  static String toggle(String k) => 'kaal.toggle.$k';
+  static const wallpaper    = 'taskera.wallpaper';
+  static const wallpaperDim = 'taskera.wallpaperDim'; // legacy single value (migrated)
+  static const dimDark      = 'taskera.wallpaperDim.dark';
+  static const dimLight     = 'taskera.wallpaperDim.light';
+  static const dimGlass     = 'taskera.wallpaperDim.glass';
+  static const theme        = 'taskera.theme';
+  static const accent      = 'taskera.accent';
+  static const font        = 'taskera.font';
+  static const fontSize    = 'taskera.fontSize';
+  static const lineSpacing = 'taskera.lineSpacing';
+  static const layout      = 'taskera.layout';
+  static const qnames      = 'taskera.qnames';
+  static const lang        = 'taskera.lang';
+  static String toggle(String k) => 'taskera.toggle.$k';
 }
 
 // ── Notifier ──────────────────────────────────────────────────────────────────
 
-class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
+class TaskEraSettingsNotifier extends Notifier<TaskEraSettingsState> {
   SharedPreferences get _p => ref.read(sharedPreferencesProvider);
 
   @override
-  KaalSettingsState build() {
+  TaskEraSettingsState build() {
     final p = ref.read(sharedPreferencesProvider);
-    const d = KaalSettingsState();
+    const d = TaskEraSettingsState();
 
     final Map<String, bool> loadedToggles = {
       for (final e in d.toggles.entries)
@@ -145,7 +145,7 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
     // Migrate the old single brightness value: if a user had set it before the
     // per-theme split, seed every theme bucket from it as a baseline.
     final legacyDim = p.getDouble(_K.wallpaperDim);
-    return KaalSettingsState(
+    return TaskEraSettingsState(
       wallpaperIndex: p.getInt(_K.wallpaper)       ?? d.wallpaperIndex,
       dimDark:  p.getDouble(_K.dimDark)  ?? legacyDim ?? d.dimDark,
       // Light always starts at its airy default — the old shared value produced
@@ -164,7 +164,7 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
     );
   }
 
-  void _persist(KaalSettingsState s) {
+  void _persist(TaskEraSettingsState s) {
     _p
       ..setInt(_K.wallpaper,       s.wallpaperIndex)
       ..setDouble(_K.dimDark,      s.dimDark)
@@ -245,7 +245,7 @@ class KaalSettingsNotifier extends Notifier<KaalSettingsState> {
   }
 }
 
-final kaalSettingsProvider =
-    NotifierProvider<KaalSettingsNotifier, KaalSettingsState>(
-  KaalSettingsNotifier.new,
+final taskeraSettingsProvider =
+    NotifierProvider<TaskEraSettingsNotifier, TaskEraSettingsState>(
+  TaskEraSettingsNotifier.new,
 );

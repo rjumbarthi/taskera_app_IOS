@@ -8,7 +8,7 @@ import '../../settings/prefs_provider.dart';
 /// Prefs-backed list of standalone reminders/alarms, kept sorted by fire time.
 /// Adding/removing also schedules/cancels the matching notification.
 class RemindersNotifier extends Notifier<List<Reminder>> {
-  static const _key = 'kaal.reminders';
+  static const _key = 'taskera.reminders';
   SharedPreferences get _p => ref.read(sharedPreferencesProvider);
 
   @override

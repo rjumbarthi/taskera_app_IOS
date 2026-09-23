@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/ai_insight_card.dart';
 
@@ -39,7 +39,7 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final active = (ref.watch(allTasksProvider).valueOrNull ?? const [])
         .where((t) => !t.isDone)
         .toList();
@@ -71,7 +71,7 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
                     const SnackBar(content: Text('Auto-scheduling coming soon'))),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: const Text('Schedule all', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
                 ),
               ),
@@ -85,7 +85,7 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Real on-demand Kaal AI — reasons over your unscheduled tasks.
+                // Real on-demand TaskEra AI — reasons over your unscheduled tasks.
                 AiInsightCard(
                   input: aiInput,
                   hint: 'When should I tackle these today?',
@@ -154,7 +154,7 @@ class _SuggestionCard extends StatelessWidget {
   final _Suggestion suggestion;
   final bool confirmed;
   final VoidCallback onConfirm;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SuggestionCard({required this.suggestion, required this.confirmed, required this.onConfirm, required this.colors});
 
   @override
@@ -176,7 +176,7 @@ class _SuggestionCard extends StatelessWidget {
           // AI slot suggestion
           Row(
             children: [
-              const Text('✦ AI · ', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2)),
+              const Text('✦ AI · ', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2)),
               Expanded(
                 child: Text(suggestion.slot, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
               ),
@@ -200,7 +200,7 @@ class _SuggestionCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: confirmed ? const Color(0x1F7FBA00) : KaalColors.accBg,
+                      color: confirmed ? const Color(0x1F7FBA00) : TaskEraColors.accBg,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(width: 0.5, color: confirmed ? const Color(0x407FBA00) : const Color(0x660A84FF)),
                     ),
@@ -212,7 +212,7 @@ class _SuggestionCard extends StatelessWidget {
                         if (confirmed) const SizedBox(width: 4),
                         Text(
                           confirmed ? 'Confirmed' : '✓ Confirm',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: confirmed ? colors.successFg : KaalColors.acc2),
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: confirmed ? colors.successFg : TaskEraColors.acc2),
                         ),
                       ],
                     ),
@@ -246,7 +246,7 @@ class _SuggestionCard extends StatelessWidget {
 
 class _ScheduledRow extends StatelessWidget {
   final _Scheduled s;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ScheduledRow({required this.s, required this.colors});
 
   @override

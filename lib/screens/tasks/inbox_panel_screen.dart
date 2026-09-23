@@ -7,8 +7,8 @@ import '../../data/database.dart' show Task, TasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final items = ref.watch(inboxTasksProvider).valueOrNull ?? [];
 
     return Column(
@@ -124,7 +124,7 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
               Expanded(
                 child: Text(
                   '✦ AI suggests quadrant — tap to confirm',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2),
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2),
                 ),
               ),
               GestureDetector(
@@ -161,7 +161,7 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyInbox extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EmptyInbox({required this.colors});
 
   @override
@@ -191,17 +191,17 @@ class _EmptyInbox extends StatelessWidget {
 
 class _CaptureRow extends StatelessWidget {
   final Task task;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onAssign;
   final VoidCallback onDismiss;
 
   const _CaptureRow({required this.task, required this.colors, required this.onAssign, required this.onDismiss});
 
   static const _qDots = [
-    (1, 'Q1', KaalColors.q1),
-    (2, 'Q2', KaalColors.q2),
-    (3, 'Q3', KaalColors.q3),
-    (4, 'Q4', KaalColors.q4),
+    (1, 'Q1', TaskEraColors.q1),
+    (2, 'Q2', TaskEraColors.q2),
+    (3, 'Q3', TaskEraColors.q3),
+    (4, 'Q4', TaskEraColors.q4),
   ];
 
   static String _timeAgo(DateTime dt) {

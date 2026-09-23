@@ -6,8 +6,8 @@ import '../../data/providers/goals_provider.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/database_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/goal_meta_label.dart';
 import '../../widgets/goal_link_pickers.dart';
@@ -67,7 +67,7 @@ class GoalsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final goals = ref.watch(goalsProvider).value ?? [];
 
     // Header subtitle from real goals: count + the most-referenced quadrant
@@ -192,7 +192,7 @@ class GoalsScreen extends ConsumerWidget {
             child: Container(
               width: 48, height: 48,
               decoration: const BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
@@ -213,7 +213,7 @@ class _SubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 6),
       child: Row(
@@ -256,7 +256,7 @@ class _SubHeader extends StatelessWidget {
 class _GoalCard extends ConsumerWidget {
   final _Goal goal;
   final int goalId;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _GoalCard({required this.goal, required this.goalId, required this.colors});
 
   // Cap rows per type so a card with both tasks and habits shows both.
@@ -427,8 +427,8 @@ class _GoalCard extends ConsumerWidget {
               Expanded(
                 child: _LinkBtn(
                   label: '+ ${AppL10n.of(context).linkTask}',
-                  bg: KaalColors.accBg,
-                  fg: KaalColors.acc2,
+                  bg: TaskEraColors.accBg,
+                  fg: TaskEraColors.acc2,
                   onTap: () => _linkTasks(context, ref),
                 ),
               ),
@@ -528,7 +528,7 @@ class _LinkBtn extends StatelessWidget {
 
 class _LinkedRow extends StatelessWidget {
   final _LinkedItem item;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LinkedRow({required this.item, required this.colors});
 
   @override

@@ -7,10 +7,10 @@ import SwiftUI
 //
 // SETUP (must be done in Xcode — see ios/DtnWidget/SETUP.md):
 //   • Add a Widget Extension target named "DtnWidget".
-//   • Add App Group "group.com.kaal.kaal_app" to BOTH the app and the extension.
+//   • Add App Group "group.com.taskera.taskera_app" to BOTH the app and the extension.
 //   • Set the App Group id below to match.
 
-private let appGroupId = "group.com.kaal.kaal_app"
+private let appGroupId = "group.com.taskera.taskera_app"
 
 struct DtnEntry: TimelineEntry {
     let date: Date
@@ -55,7 +55,7 @@ struct DtnWidgetEntryView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .widgetURL(URL(string: "kaalapp://focus"))
+        .widgetURL(URL(string: "taskeraapp://focus"))
     }
 }
 

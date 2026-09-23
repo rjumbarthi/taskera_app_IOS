@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show CalendarEventsCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../util/taskera_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class AddSlotScreen extends ConsumerStatefulWidget {
@@ -87,7 +87,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
           : (_endTime   ?? const TimeOfDay(hour: 16, minute: 0)),
       builder: (context, child) => Theme(
         data: ThemeData.dark().copyWith(
-          colorScheme: const ColorScheme.dark(primary: KaalColors.acc, onSurface: Colors.white),
+          colorScheme: const ColorScheme.dark(primary: TaskEraColors.acc, onSurface: Colors.white),
         ),
         child: child!,
       ),
@@ -109,7 +109,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) => Theme(
         data: ThemeData.dark().copyWith(
-          colorScheme: const ColorScheme.dark(primary: KaalColors.acc, onSurface: Colors.white),
+          colorScheme: const ColorScheme.dark(primary: TaskEraColors.acc, onSurface: Colors.white),
         ),
         child: child!,
       ),
@@ -137,7 +137,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
   }
 
   Future<void> _delete() async {
-    final confirmed = await kaalConfirmDelete(context);
+    final confirmed = await taskeraConfirmDelete(context);
     if (confirmed && mounted) {
       await ref.read(appDatabaseProvider).calendarDao.deleteEvent(_id!);
       if (mounted) context.pop();
@@ -146,7 +146,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final dateStr = '${_date.year}-${_date.month.toString().padLeft(2,'0')}-${_date.day.toString().padLeft(2,'0')}';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,7 +165,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                 onTap: _save,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
@@ -186,7 +186,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                   filled: false,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: KaalColors.acc)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc)),
                   contentPadding: const EdgeInsets.fromLTRB(10, 9, 10, 9), isDense: true,
                 ),
               )),
@@ -257,7 +257,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                   filled: false,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: KaalColors.acc)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc)),
                   contentPadding: const EdgeInsets.fromLTRB(10, 9, 10, 9), isDense: true,
                 ),
               )),
@@ -290,7 +290,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
 class _FormRow extends StatelessWidget {
   final String label;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FormRow({required this.label, required this.child, required this.colors});
 
   @override
@@ -314,7 +314,7 @@ class _Chip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Chip({required this.label, required this.selected, required this.onTap, required this.colors});
 
   @override
@@ -324,9 +324,9 @@ class _Chip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(9, 5, 9, 5),
         decoration: BoxDecoration(
-          color: selected ? KaalColors.acc : Colors.transparent,
+          color: selected ? TaskEraColors.acc : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(width: 0.5, color: selected ? KaalColors.acc : colors.bdr),
+          border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? Colors.white : colors.ink2, height: 1)),

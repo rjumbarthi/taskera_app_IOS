@@ -8,9 +8,9 @@ import '../../data/models/db_models.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/databases_provider.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
-import '../../util/kaal_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
+import '../../util/taskera_dialogs.dart';
 import '../../widgets/add_back_button.dart';
 
 /// Creates a fresh database with a sensible starter schema and one empty row,
@@ -21,7 +21,7 @@ Future<int> createStarterDatabase(AppDatabase db, {String name = 'Untitled'}) as
   final dateProp = genDbId('p');
   final nameProp = genDbId('p');
 
-  final id = await dao.createDatabase(KaalDatabasesCompanion(
+  final id = await dao.createDatabase(TaskEraDatabasesCompanion(
     name: Value(name),
     defaultView: const Value('table'),
     boardGroupProp: Value(statusProp),
@@ -58,12 +58,12 @@ class DatabasesListScreen extends ConsumerWidget {
   Future<void> _create(BuildContext context, WidgetRef ref) async {
     final db = ref.read(appDatabaseProvider);
     final id = await createStarterDatabase(db);
-    if (context.mounted) context.push('${KaalRoutes.databases}/$id');
+    if (context.mounted) context.push('${TaskEraRoutes.databases}/$id');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final dbs = ref.watch(databasesProvider);
 
     return Column(
@@ -83,7 +83,7 @@ class DatabasesListScreen extends ConsumerWidget {
                 onTap: () => _create(context, ref),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(12, 6, 14, 6),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: const Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.add_rounded, size: 16, color: Colors.white),
                     SizedBox(width: 3),
@@ -106,9 +106,9 @@ class DatabasesListScreen extends ConsumerWidget {
                 separatorBuilder: (_, _) => const SizedBox(height: 8),
                 itemBuilder: (context, i) => _DbCard(
                   db: list[i], colors: colors,
-                  onTap: () => context.push('${KaalRoutes.databases}/${list[i].id}'),
+                  onTap: () => context.push('${TaskEraRoutes.databases}/${list[i].id}'),
                   onDelete: () async {
-                    final ok = await kaalConfirmDelete(context);
+                    final ok = await taskeraConfirmDelete(context);
                     if (ok) ref.read(appDatabaseProvider).databasesDao.deleteDatabase(list[i].id);
                   },
                 ),
@@ -120,7 +120,7 @@ class DatabasesListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _empty(BuildContext context, WidgetRef ref, KaalColors colors) {
+  Widget _empty(BuildContext context, WidgetRef ref, TaskEraColors colors) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -143,7 +143,7 @@ class DatabasesListScreen extends ConsumerWidget {
                 border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
               ),
               child: const Text('+ New database',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: KaalColors.acc2)),
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ],
@@ -153,8 +153,8 @@ class DatabasesListScreen extends ConsumerWidget {
 }
 
 class _DbCard extends ConsumerWidget {
-  final KaalDatabase db;
-  final KaalColors colors;
+  final TaskEraDatabase db;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   final VoidCallback onDelete;
   const _DbCard({required this.db, required this.colors, required this.onTap, required this.onDelete});

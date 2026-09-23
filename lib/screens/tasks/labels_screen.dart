@@ -4,30 +4,30 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/database.dart' show Task;
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // Stable accent per label name (the editor's palette), with a fallback rotation.
 const _labelColors = {
-  'work': KaalColors.acc2,
-  'personal': KaalColors.q4,
-  'health': KaalColors.q2,
+  'work': TaskEraColors.acc2,
+  'personal': TaskEraColors.q4,
+  'health': TaskEraColors.q2,
   'finance': Color(0xFF9FCD44),
-  'learning': KaalColors.q3,
+  'learning': TaskEraColors.q3,
 };
 const _fallbackPalette = [
-  KaalColors.acc2, KaalColors.q2, KaalColors.q3, KaalColors.q4, Color(0xFF9FCD44),
+  TaskEraColors.acc2, TaskEraColors.q2, TaskEraColors.q3, TaskEraColors.q4, Color(0xFF9FCD44),
 ];
 
 Color _labelColor(String name, int idx) =>
     _labelColors[name] ?? _fallbackPalette[idx % _fallbackPalette.length];
 
 Color _quadColor(int q) => switch (q) {
-      1 => KaalColors.q1,
-      2 => KaalColors.q2,
-      3 => KaalColors.q3,
-      _ => KaalColors.q4,
+      1 => TaskEraColors.q1,
+      2 => TaskEraColors.q2,
+      3 => TaskEraColors.q3,
+      _ => TaskEraColors.q4,
     };
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ class LabelsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final tasks = ref.watch(allTasksProvider).value ?? [];
 
     // Build label → tasks map from real task label strings.
@@ -111,7 +111,7 @@ class LabelsScreen extends ConsumerWidget {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _Empty extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Empty({required this.colors});
 
   @override
@@ -147,7 +147,7 @@ class _LabelRow extends StatefulWidget {
   final String name;
   final Color color;
   final List<Task> tasks;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LabelRow({
     required this.name,
     required this.color,
@@ -232,7 +232,7 @@ class _LabelRowState extends State<_LabelRow> {
 
 class _LabelTaskRow extends StatelessWidget {
   final Task task;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LabelTaskRow({required this.task, required this.colors});
 
   @override

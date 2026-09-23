@@ -11,8 +11,8 @@ import '../../data/providers/ai_access_provider.dart';
 import '../../routing/routes.dart';
 import '../../services/ai_service.dart';
 import '../../settings/prefs_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class BrainDumpScreen extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class BrainDumpScreen extends ConsumerStatefulWidget {
 }
 
 class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
-  static const _kPrefKey = 'kaal.brainDump';
+  static const _kPrefKey = 'taskera.brainDump';
 
   final _controller = TextEditingController();
   bool _loading = false;
@@ -41,7 +41,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
     super.initState();
     final prefs = ref.read(sharedPreferencesProvider);
     // Opening Brain Dump counts as "used" — stops the Focus discovery nudge.
-    prefs.setBool('kaal.brainDumpUsed', true);
+    prefs.setBool('taskera.brainDumpUsed', true);
     final saved = prefs.getString(_kPrefKey) ?? '';
     if (saved.isNotEmpty) _controller.text = saved;
     _controller.addListener(_onTextChanged);
@@ -103,15 +103,15 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
   void _showAiUpgrade() {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text(
-          'AI is a Kaal Pro feature — upgrade, or add your own key in Settings',
+          'AI is a TaskEra Pro feature — upgrade, or add your own key in Settings',
           style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
       backgroundColor: const Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 4),
       action: SnackBarAction(
         label: 'Upgrade',
-        textColor: KaalColors.acc2,
-        onPressed: () => context.push(KaalRoutes.paywall),
+        textColor: TaskEraColors.acc2,
+        onPressed: () => context.push(TaskEraRoutes.paywall),
       ),
     ));
   }
@@ -158,7 +158,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -178,7 +178,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
                   ),
                   child: const Text(
-                    '✦ Type anything on your mind. Kaal AI will sort each item into the right quadrant — and suggest tasks, checklists & goals if it detects a plan.',
+                    '✦ Type anything on your mind. TaskEra AI will sort each item into the right quadrant — and suggest tasks, checklists & goals if it detects a plan.',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 13,
@@ -314,7 +314,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
 
 class _SuggestionsPanel extends StatelessWidget {
   final Map<String, dynamic> suggestions;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Set<int> taskAdded;
   final Set<int> goalAdded;
   final bool listCreated;
@@ -356,7 +356,7 @@ class _SuggestionsPanel extends StatelessWidget {
           child: Row(children: [
             const Text('✦ ', style: TextStyle(color: Color(0xFFBF5AF2), fontSize: 13)),
             Expanded(
-              child: Text('Kaal detected: $ctx',
+              child: Text('TaskEra detected: $ctx',
                   style: const TextStyle(
                       fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
                       color: Color(0xFFBF5AF2), height: 1.3)),
@@ -452,7 +452,7 @@ class _SuggestionsPanel extends StatelessWidget {
                         fontFamily: 'Inter',
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: listCreated ? const Color(0xFF30D158) : KaalColors.acc2,
+                        color: listCreated ? const Color(0xFF30D158) : TaskEraColors.acc2,
                         height: 1,
                       ),
                     ),
@@ -497,7 +497,7 @@ class _SuggestionsPanel extends StatelessWidget {
 
 class _SugLabel extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SugLabel({required this.label, required this.colors});
 
   @override
@@ -512,7 +512,7 @@ class _TaskSugRow extends StatefulWidget {
   final String title;
   final int quadrant;
   final bool added;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Future<void> Function(String, int) onAdd;
 
   const _TaskSugRow({
@@ -585,7 +585,7 @@ class _TaskSugRowState extends State<_TaskSugRow> {
             duration: const Duration(milliseconds: 200),
             width: 28, height: 28,
             decoration: BoxDecoration(
-              color: done ? const Color(0x1430D158) : KaalColors.accBg,
+              color: done ? const Color(0x1430D158) : TaskEraColors.accBg,
               borderRadius: BorderRadius.circular(7),
               border: Border.all(
                 width: 0.5,
@@ -595,11 +595,11 @@ class _TaskSugRowState extends State<_TaskSugRow> {
             alignment: Alignment.center,
             child: _busy
                 ? const SizedBox(width: 12, height: 12,
-                    child: CircularProgressIndicator(strokeWidth: 1.5, color: KaalColors.acc2))
+                    child: CircularProgressIndicator(strokeWidth: 1.5, color: TaskEraColors.acc2))
                 : Icon(
                     done ? Icons.check_rounded : Icons.add_rounded,
                     size: 16,
-                    color: done ? const Color(0xFF30D158) : KaalColors.acc2,
+                    color: done ? const Color(0xFF30D158) : TaskEraColors.acc2,
                   ),
           ),
         ),
@@ -612,7 +612,7 @@ class _GoalSugRow extends StatefulWidget {
   final int index;
   final String title;
   final bool added;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Future<void> Function(String) onAdd;
 
   const _GoalSugRow({
@@ -658,7 +658,7 @@ class _GoalSugRowState extends State<_GoalSugRow> {
             duration: const Duration(milliseconds: 200),
             width: 28, height: 28,
             decoration: BoxDecoration(
-              color: done ? const Color(0x1430D158) : KaalColors.accBg,
+              color: done ? const Color(0x1430D158) : TaskEraColors.accBg,
               borderRadius: BorderRadius.circular(7),
               border: Border.all(
                 width: 0.5,
@@ -668,11 +668,11 @@ class _GoalSugRowState extends State<_GoalSugRow> {
             alignment: Alignment.center,
             child: _busy
                 ? const SizedBox(width: 12, height: 12,
-                    child: CircularProgressIndicator(strokeWidth: 1.5, color: KaalColors.acc2))
+                    child: CircularProgressIndicator(strokeWidth: 1.5, color: TaskEraColors.acc2))
                 : Icon(
                     done ? Icons.check_rounded : Icons.add_rounded,
                     size: 16,
-                    color: done ? const Color(0xFF30D158) : KaalColors.acc2,
+                    color: done ? const Color(0xFF30D158) : TaskEraColors.acc2,
                   ),
           ),
         ),
@@ -685,7 +685,7 @@ class _GoalSugRowState extends State<_GoalSugRow> {
 
 class _ResultsSection extends StatelessWidget {
   final Map<String, dynamic> result;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ResultsSection({required this.result, required this.colors});
 
   @override
@@ -731,7 +731,7 @@ class _ResultsSection extends StatelessWidget {
 class _QuadCard extends StatelessWidget {
   final String quadKey;
   final List<String> items;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _QuadCard({required this.quadKey, required this.items, required this.colors});
 
   static const _meta = {

@@ -7,8 +7,8 @@ import '../../data/providers/habits_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
 import '../../settings/prefs_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/ai_insight_card.dart';
 
@@ -48,9 +48,9 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
       final p = ref.read(sharedPreferencesProvider);
       final k = _weekKey;
       setState(() {
-        _biggestWinCtrl.text = p.getString('kaal.wr.win.$k') ?? '';
-        _drainCtrl.text      = p.getString('kaal.wr.drain.$k') ?? '';
-        _priorityCtrl.text   = p.getString('kaal.wr.priority.$k') ?? '';
+        _biggestWinCtrl.text = p.getString('taskera.wr.win.$k') ?? '';
+        _drainCtrl.text      = p.getString('taskera.wr.drain.$k') ?? '';
+        _priorityCtrl.text   = p.getString('taskera.wr.priority.$k') ?? '';
       });
     });
   }
@@ -58,9 +58,9 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
   Future<void> _save() async {
     final p = ref.read(sharedPreferencesProvider);
     final k = _weekKey;
-    await p.setString('kaal.wr.win.$k',      _biggestWinCtrl.text.trim());
-    await p.setString('kaal.wr.drain.$k',    _drainCtrl.text.trim());
-    await p.setString('kaal.wr.priority.$k', _priorityCtrl.text.trim());
+    await p.setString('taskera.wr.win.$k',      _biggestWinCtrl.text.trim());
+    await p.setString('taskera.wr.drain.$k',    _drainCtrl.text.trim());
+    await p.setString('taskera.wr.priority.$k', _priorityCtrl.text.trim());
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Review saved ✓', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
@@ -80,7 +80,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final l = AppL10n.of(context);
 
     // ── Live week data ────────────────────────────────────────────────────────
@@ -225,23 +225,23 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                       const SizedBox(height: 9),
                       Row(
                         children: [
-                          Expanded(child: _StatBox(value: '$doneCount',   label: 'Done',   valueColor: KaalColors.q2,           colors: colors)),
+                          Expanded(child: _StatBox(value: '$doneCount',   label: 'Done',   valueColor: TaskEraColors.q2,           colors: colors)),
                           const SizedBox(width: 5),
-                          Expanded(child: _StatBox(value: '$missedCount', label: 'Missed', valueColor: KaalColors.q1,           colors: colors)),
+                          Expanded(child: _StatBox(value: '$missedCount', label: 'Missed', valueColor: TaskEraColors.q1,           colors: colors)),
                           const SizedBox(width: 5),
                           Expanded(child: _StatBox(value: '$habitsHit/$habitsTotal', label: 'Habits', valueColor: const Color(0xFFBF5AF2), colors: colors)),
                           const SizedBox(width: 5),
-                          Expanded(child: _StatBox(value: loggedStr, label: 'Logged', valueColor: KaalColors.acc2,         colors: colors)),
+                          Expanded(child: _StatBox(value: loggedStr, label: 'Logged', valueColor: TaskEraColors.acc2,         colors: colors)),
                         ],
                       ),
                       const SizedBox(height: 9),
-                      _QuadBar(label: 'Q1', color: KaalColors.q1, fraction: qs[0].frac, count: '${qs[0].count}', colors: colors),
+                      _QuadBar(label: 'Q1', color: TaskEraColors.q1, fraction: qs[0].frac, count: '${qs[0].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q2', color: KaalColors.q2, fraction: qs[1].frac, count: '${qs[1].count}', colors: colors),
+                      _QuadBar(label: 'Q2', color: TaskEraColors.q2, fraction: qs[1].frac, count: '${qs[1].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q3', color: KaalColors.q3, fraction: qs[2].frac, count: '${qs[2].count}', colors: colors),
+                      _QuadBar(label: 'Q3', color: TaskEraColors.q3, fraction: qs[2].frac, count: '${qs[2].count}', colors: colors),
                       const SizedBox(height: 5),
-                      _QuadBar(label: 'Q4', color: KaalColors.q4, fraction: qs[3].frac, count: '${qs[3].count}', colors: colors),
+                      _QuadBar(label: 'Q4', color: TaskEraColors.q4, fraction: qs[3].frac, count: '${qs[3].count}', colors: colors),
                     ],
                   ),
                 ),
@@ -278,7 +278,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
 
                 // Next week's #1 priority
                 _SectionCard(
-                  bgColor: KaalColors.accBg,
+                  bgColor: TaskEraColors.accBg,
                   borderColor: const Color(0x400A84FF),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +290,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
-                          color: KaalColors.acc2,
+                          color: TaskEraColors.acc2,
                           height: 1,
                         ),
                       ),
@@ -305,10 +305,10 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Kaal AI insight — on-demand, real LLM
+                // TaskEra AI insight — on-demand, real LLM
                 AiInsightCard(
                   input: aiInput,
-                  hint: 'Reflect on my week with Kaal AI',
+                  hint: 'Reflect on my week with TaskEra AI',
                   margin: EdgeInsets.zero,
                 ),
                 const SizedBox(height: 10),
@@ -377,7 +377,7 @@ class _SectionCard extends StatelessWidget {
 class _ExpandingField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _ExpandingField({
     required this.controller,
@@ -408,7 +408,7 @@ class _StatBox extends StatelessWidget {
   final String value;
   final String label;
   final Color valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _StatBox({
     required this.value,
@@ -457,7 +457,7 @@ class _QuadBar extends StatelessWidget {
   final Color color;
   final double fraction;
   final String count;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _QuadBar({
     required this.label,

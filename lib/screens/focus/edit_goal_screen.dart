@@ -6,9 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show GoalsCompanion, Habit;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/habits_provider.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../util/taskera_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/goal_link_pickers.dart';
 import '../../l10n/app_l10n.dart';
@@ -40,16 +40,16 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   static const _cats = [
     ('🚀 Launch',   Color(0xFFBF5AF2)),
     ('💪 Health',   Color(0xFFFF8080)),
-    ('📚 Learning', KaalColors.acc2),
-    ('💰 Finance',  KaalColors.success),
-    ('🎯 Career',   KaalColors.q4),
+    ('📚 Learning', TaskEraColors.acc2),
+    ('💰 Finance',  TaskEraColors.success),
+    ('🎯 Career',   TaskEraColors.q4),
     ('🌱 Other',    Color(0xFF8E8E93)),
   ];
 
   static const _quads = [
-    ('Q1 · Do Now',    KaalColors.q1),
-    ('Q2 · Schedule',  KaalColors.q2),
-    ('Q3 · Delegate',  KaalColors.q3),
+    ('Q1 · Do Now',    TaskEraColors.q1),
+    ('Q2 · Schedule',  TaskEraColors.q2),
+    ('Q3 · Delegate',  TaskEraColors.q3),
   ];
 
   static const _emojiOptions = [
@@ -90,7 +90,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
   }
 
   void _showEmojiPicker() {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -213,7 +213,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final allHabits = ref.watch(habitsProvider).value ?? const <Habit>[];
     final selectedHabits = allHabits.where((h) => _habitIds.contains(h.id)).toList();
     return Column(
@@ -244,7 +244,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                   decoration: BoxDecoration(
-                    color: _loading ? const Color(0xFF636366) : KaalColors.acc,
+                    color: _loading ? const Color(0xFF636366) : TaskEraColors.acc,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: _loading
@@ -404,12 +404,12 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(width: 0.5, color: _deadline != null ? KaalColors.acc : colors.bdr2),
+                            border: Border.all(width: 0.5, color: _deadline != null ? TaskEraColors.acc : colors.bdr2),
                           ),
                           child: Row(
                             children: [
                               Icon(Icons.calendar_today_outlined, size: 14,
-                                  color: _deadline != null ? KaalColors.acc2 : colors.ink3),
+                                  color: _deadline != null ? TaskEraColors.acc2 : colors.ink3),
                               const SizedBox(width: 8),
                               Text(
                                 _deadline != null
@@ -513,13 +513,13 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: KaalColors.accBg,
+                                  color: TaskEraColors.accBg,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                                 ),
                                 child: Text('＋ ${AppL10n.of(context).add}',
                                     style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
-                                        fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                                        fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                               ),
                             ),
                           ],
@@ -546,7 +546,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
                             decoration: BoxDecoration(
-                              color: KaalColors.accBg,
+                              color: TaskEraColors.accBg,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                             ),
@@ -556,7 +556,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                 fontFamily: 'Inter',
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
-                                color: KaalColors.acc2,
+                                color: TaskEraColors.acc2,
                               ),
                             ),
                           ),
@@ -568,7 +568,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 12,
-                          color: KaalColors.acc2,
+                          color: TaskEraColors.acc2,
                         ),
                       ),
                     ],
@@ -638,7 +638,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
-                      final confirmed = await kaalConfirmDelete(context);
+                      final confirmed = await taskeraConfirmDelete(context);
                       if (confirmed && context.mounted) {
                         await ref.read(appDatabaseProvider).goalsDao.deleteGoal(_id!);
                         if (context.mounted) context.pop();
@@ -676,7 +676,7 @@ class _DeadlineChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final target = DateTime.now().add(Duration(days: days));
     final isActive = deadline != null &&
         deadline!.year == target.year &&
@@ -695,7 +695,7 @@ class _DeadlineChip extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter', fontSize: 12,
             fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
-            color: isActive ? KaalColors.acc2 : colors.ink3,
+            color: isActive ? TaskEraColors.acc2 : colors.ink3,
           ),
         ),
       ),
@@ -710,7 +710,7 @@ class _FormRow extends StatelessWidget {
   final String? labelSuffix;
   final bool required;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FormRow({
     required this.label,
     required this.child,
@@ -738,7 +738,7 @@ class _FormRow extends StatelessWidget {
               if (required)
                 const TextSpan(
                   text: ' *',
-                  style: TextStyle(color: KaalColors.warn),
+                  style: TextStyle(color: TaskEraColors.warn),
                 ),
               if (labelSuffix != null)
                 TextSpan(
@@ -761,7 +761,7 @@ class _Input extends StatelessWidget {
   final bool centered;
   final bool small;
   final int maxLines;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Input({
     this.controller,
     required this.hint,
@@ -805,7 +805,7 @@ class _Input extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(width: 1, color: KaalColors.acc),
+          borderSide: const BorderSide(width: 1, color: TaskEraColors.acc),
         ),
       ),
     );
@@ -816,7 +816,7 @@ class _Chip extends StatelessWidget {
   final String label;
   final Color color;
   final bool active;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Chip({required this.label, required this.color, required this.active, required this.colors});
 
   @override

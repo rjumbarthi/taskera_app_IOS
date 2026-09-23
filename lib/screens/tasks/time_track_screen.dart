@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/time_tracker_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -25,10 +25,10 @@ class _EstRow {
 const _weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 Color _quadColor(int q) => switch (q) {
-      1 => KaalColors.q1,
-      2 => KaalColors.q2,
-      3 => KaalColors.q3,
-      _ => KaalColors.q4,
+      1 => TaskEraColors.q1,
+      2 => TaskEraColors.q2,
+      3 => TaskEraColors.q3,
+      _ => TaskEraColors.q4,
     };
 
 // ── Body (reusable — embedded in merged Timer screen) ─────────────────────────
@@ -50,7 +50,7 @@ class TimeTrackContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors   = KaalTheme.of(context).colors;
+    final colors   = TaskEraTheme.of(context).colors;
     final tracker  = ref.watch(timeTrackerProvider);
     final notifier = ref.read(timeTrackerProvider.notifier);
 
@@ -143,7 +143,7 @@ class TimeTrackContent extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: KaalColors.acc2)),
+                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
                 const SizedBox(height: 6),
                 Text(tracker.taskTitle ?? '—', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                 Text('Started $startLabel', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
@@ -250,11 +250,11 @@ class TimeTrackContent extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    _LegendDot(color: KaalColors.q1, label: 'Q1'),
+                    _LegendDot(color: TaskEraColors.q1, label: 'Q1'),
                     const SizedBox(width: 12),
-                    _LegendDot(color: KaalColors.q2, label: 'Q2'),
+                    _LegendDot(color: TaskEraColors.q2, label: 'Q2'),
                     const SizedBox(width: 12),
-                    _LegendDot(color: KaalColors.acc, label: 'Other'),
+                    _LegendDot(color: TaskEraColors.acc, label: 'Other'),
                   ],
                 ),
               ],
@@ -286,11 +286,11 @@ class TimeTrackContent extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Text('✦ ', style: TextStyle(color: KaalColors.acc2)),
+                        const Text('✦ ', style: TextStyle(color: TaskEraColors.acc2)),
                         Expanded(
                           child: Text(
                             estInsight,
-                            style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.4),
+                            style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1.4),
                           ),
                         ),
                       ],
@@ -311,7 +311,7 @@ class TimeTrackScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final tracker = ref.watch(timeTrackerProvider);
 
     return Column(
@@ -382,7 +382,7 @@ String _fmtMin(int minutes) {
 
 class _Placeholder extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Placeholder(this.text, this.colors);
 
   @override
@@ -405,7 +405,7 @@ class _Placeholder extends StatelessWidget {
 
 class _LogRow extends StatelessWidget {
   final _LogEntry entry;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LogRow({required this.entry, required this.colors});
 
   @override
@@ -434,9 +434,9 @@ class _LogRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(entry.duration, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: running ? KaalColors.acc : colors.ink)),
+              Text(entry.duration, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: running ? TaskEraColors.acc : colors.ink)),
               if (running)
-                const Text('Running', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: KaalColors.acc2)),
+                const Text('Running', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2)),
             ],
           ),
         ],
@@ -452,7 +452,7 @@ class _LegendDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Row(
       children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
@@ -465,7 +465,7 @@ class _LegendDot extends StatelessWidget {
 
 class _EstVsActualRow extends StatelessWidget {
   final _EstRow row;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EstVsActualRow({required this.row, required this.colors});
 
   @override
@@ -491,7 +491,7 @@ class _StackedBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const colors = [KaalColors.q1, KaalColors.q2, KaalColors.acc];
+    const colors = [TaskEraColors.q1, TaskEraColors.q2, TaskEraColors.acc];
     final barW = size.width / (bars.length * 2 - 1);
     final gap  = barW;
 
@@ -518,7 +518,7 @@ class _StackedBarPainter extends CustomPainter {
 // ── Idle state — shown in the Time Log when nothing is being tracked ──────────
 
 class _IdleTimerCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _IdleTimerCard({required this.colors});
 
   @override

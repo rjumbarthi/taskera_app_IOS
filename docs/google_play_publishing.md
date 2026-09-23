@@ -1,11 +1,11 @@
-# Kaal — Google Play publishing guide
+# TaskEra — Google Play publishing guide
 
 The end-to-end path from your machine to the Play Store. Field-by-field values
 (listing copy, prices, Data Safety answers) live in **`play_store_submission.md`** —
 this doc is the *process*. Do the steps in order.
 
-- **Package:** `com.port443.kaal`
-- **Subscriptions:** `kaal_pro_monthly`, `kaal_pro_annual`
+- **Package:** `com.port443.taskera`
+- **Subscriptions:** `taskera_pro_monthly`, `taskera_pro_annual`
 - **Supabase ref:** `dutlcoxtxmnqektttffg`
 
 ---
@@ -21,7 +21,7 @@ this doc is the *process*. Do the steps in order.
 - [ ] **Version.** Bump `version:` in `pubspec.yaml` for each upload — format
       `x.y.z+BUILD`. The `+BUILD` (versionCode) **must increase every upload**
       (e.g. `1.0.0+1` → `1.0.1+2`).
-- [ ] **Keystore present.** `android/key.properties` + `android/app/kaal-release.jks`
+- [ ] **Keystore present.** `android/key.properties` + `android/app/taskera-release.jks`
       exist (gitignored). Keep a secure backup — losing the keystore means you can
       never update the app.
 - [ ] **Backend live.** Functions deployed, secrets set, migrations run, OTP
@@ -52,7 +52,7 @@ flutter install --release      # app should open with NO tasks/habits/notes
 ## 2. Create the app in Play Console
 
 1. **play.google.com/console** → pay the one-time **$25** registration (if new).
-2. **Create app** → Name **Kaal**, language English, type **App**, **Free**,
+2. **Create app** → Name **TaskEra**, language English, type **App**, **Free**,
    accept the declarations.
 3. Note: you'll upload to **Internal testing** first (fast review, lets you test
    subscriptions + ads on a real device before public release).
@@ -69,15 +69,15 @@ flutter install --release      # app should open with NO tasks/habits/notes
     `10_focus`, `2g_tasks_quad_q1`, `30_habits`, `40_calendar`, `60_notes`, `a0_paywall`),
     crop to a 9:16 frame.
 - Category **Productivity**; contact email; privacy policy
-  `https://jumbarthi.com/kaal/privacy`.
+  `https://jumbarthi.com/taskera/privacy`.
 
 ---
 
 ## 4. Subscriptions  *(values: `play_store_submission.md §4`)*
 
 Monetize → Products → **Subscriptions** → create:
-- **`kaal_pro_monthly`** — base plan `monthly`, P1M, auto-renew; intro offer (1st month).
-- **`kaal_pro_annual`** — base plan `annual`, P1Y, auto-renew (~40% off); optional trial.
+- **`taskera_pro_monthly`** — base plan `monthly`, P1M, auto-renew; intro offer (1st month).
+- **`taskera_pro_annual`** — base plan `annual`, P1Y, auto-renew (~40% off); optional trial.
 - Set per-country prices to the **tier matrix** in the submission doc. **Activate both.**
 
 > Without active subscription products the paywall has nothing to sell.
@@ -96,7 +96,7 @@ Complete every section under **App content**:
 - [ ] **Permissions** — declare `SCHEDULE_EXACT_ALARM` + `USE_FULL_SCREEN_INTENT`
       with the justifications in the submission doc.
 - [ ] **Account deletion** — in-app (Profile → Edit profile → Delete account) **and**
-      web URL `https://jumbarthi.com/kaal/delete`.
+      web URL `https://jumbarthi.com/taskera/delete`.
 - [ ] **App access** — give a test login, or point reviewers to "Skip — use local storage".
 
 ---

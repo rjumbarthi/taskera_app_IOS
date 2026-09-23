@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/models/announcement.dart';
 import '../../data/providers/announcements_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 /// Settings → Messages: broadcast announcements from the developer
@@ -32,7 +32,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final async = ref.watch(announcementsProvider);
 
     // Mark all read the first time data is available.
@@ -87,7 +87,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     );
   }
 
-  Widget _card(KaalColors colors, Announcement a) {
+  Widget _card(TaskEraColors colors, Announcement a) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -110,7 +110,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
                   border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                 ),
                 child: Text(a.kindLabel,
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+                    style: const TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
               ),
               const Spacer(),
               Text(_ago(a.createdAt),
@@ -132,7 +132,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     );
   }
 
-  Widget _empty(KaalColors colors, String title, String sub) {
+  Widget _empty(TaskEraColors colors, String title, String sub) {
     return ListView(
       // ListView so pull-to-refresh still works in the empty state.
       children: [

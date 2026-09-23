@@ -21,7 +21,7 @@ final isSignedInProvider = Provider<bool>((ref) {
 
 // Profile image path — persisted in SharedPreferences.
 class ProfileImageNotifier extends Notifier<String?> {
-  static const _key = 'kaal.profileImagePath';
+  static const _key = 'taskera.profileImagePath';
 
   @override
   String? build() {
@@ -47,7 +47,7 @@ final profileImagePathProvider =
 
 // Profile avatar colour index (0–7, maps to _kAvatarColors in edit_profile_screen).
 class ProfileAvatarColorNotifier extends Notifier<int> {
-  static const _key = 'kaal.profileAvatarColor';
+  static const _key = 'taskera.profileAvatarColor';
 
   @override
   int build() {
@@ -67,7 +67,7 @@ final profileAvatarColorProvider =
 
 // Profile avatar logo index (null = show initials/image, 0–7 = logo from _kLogos).
 class ProfileAvatarLogoNotifier extends Notifier<int?> {
-  static const _key = 'kaal.profileAvatarLogo';
+  static const _key = 'taskera.profileAvatarLogo';
 
   @override
   int? build() {
@@ -88,7 +88,7 @@ final profileAvatarLogoProvider =
 
 // Locally-persisted display name (overrides Supabase metadata when set).
 class ProfileDisplayNameNotifier extends Notifier<String?> {
-  static const _key = 'kaal.profileDisplayName';
+  static const _key = 'taskera.profileDisplayName';
 
   @override
   String? build() {

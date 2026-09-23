@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class StatCard extends StatelessWidget {
   final String number;
@@ -23,7 +23,7 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors   = KaalTheme.of(context).colors;
+    final colors   = TaskEraTheme.of(context).colors;
     final bg       = bgColor     ?? colors.surf;
     final border   = borderColor ?? colors.bdr;
     final numColor = accentColor ?? colors.ink;
@@ -36,7 +36,7 @@ class StatCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: KaalShape.statCard,
+          borderRadius: TaskEraShape.statCard,
           border: Border.all(width: 0.5, color: border),
           boxShadow: const [
             BoxShadow(

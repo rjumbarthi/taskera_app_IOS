@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_motion.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_motion.dart';
 
-class KaalFab extends StatefulWidget {
+class TaskEraFab extends StatefulWidget {
   final VoidCallback? onTap;
 
-  const KaalFab({super.key, this.onTap});
+  const TaskEraFab({super.key, this.onTap});
 
   @override
-  State<KaalFab> createState() => _KaalFabState();
+  State<TaskEraFab> createState() => _TaskEraFabState();
 }
 
-class _KaalFabState extends State<KaalFab> {
+class _TaskEraFabState extends State<TaskEraFab> {
   bool _pressed = false;
 
   @override
@@ -22,13 +22,13 @@ class _KaalFabState extends State<KaalFab> {
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedScale(
-        scale: _pressed ? KaalMotion.scalePressed : 1.0,
-        duration: KaalMotion.fastPress,
+        scale: _pressed ? TaskEraMotion.scalePressed : 1.0,
+        duration: TaskEraMotion.fastPress,
         child: Container(
           width: 38,
           height: 38,
           decoration: const BoxDecoration(
-            color: KaalColors.acc,
+            color: TaskEraColors.acc,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(

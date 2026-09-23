@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../data/providers/feature_flags_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/google_access_sheet.dart';
 import '../../l10n/app_l10n.dart';
@@ -71,7 +71,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -88,7 +88,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(AppL10n.of(context).calendarSync, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('One-way · Google Calendar → Kaal (read-only)', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text('One-way · Google Calendar → TaskEra (read-only)', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -119,7 +119,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                           ),
-                          child: const Icon(Icons.calendar_month_rounded, size: 16, color: KaalColors.acc2),
+                          child: const Icon(Icons.calendar_month_rounded, size: 16, color: TaskEraColors.acc2),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -149,7 +149,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          _CountCell(value: '0',  label: 'Events → Tasks',   valueColor: KaalColors.acc2),
+                          _CountCell(value: '0',  label: 'Events → Tasks',   valueColor: TaskEraColors.acc2),
                         ],
                       ),
                     ] else ...[
@@ -158,7 +158,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                         onTap: _connecting ? null : _connect,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                          decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                           alignment: Alignment.center,
                           child: _connecting
                               ? const SizedBox(width: 14, height: 14,
@@ -226,7 +226,7 @@ class _CountCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -251,7 +251,7 @@ class _SettingRow extends StatelessWidget {
   final String label;
   final bool value;
   final ValueChanged<bool> onChanged;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool isLast;
   const _SettingRow({required this.label, required this.value, required this.onChanged, required this.colors, this.isLast = false});
 
@@ -286,7 +286,7 @@ class _Toggle extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: 36, height: 21,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: value ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(11),
         ),
         child: AnimatedAlign(

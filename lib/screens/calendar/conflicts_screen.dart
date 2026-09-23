@@ -7,8 +7,8 @@ import '../../data/database.dart' show TasksCompanion;
 import '../../data/providers/conflicts_provider.dart';
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class ConflictsScreen extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _ConflictsScreenState extends ConsumerState<ConflictsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     final all = ref.watch(conflictsProvider);
     final conflicts = all.where((c) => !_dismissed.contains(c.key)).toList();
@@ -124,7 +124,7 @@ class _ConflictsScreenState extends ConsumerState<ConflictsScreen> {
 // ── Conflict card ─────────────────────────────────────────────────────────────
 
 class _ConflictCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final TaskConflict conflict;
   final void Function(int taskId, DateTime newStart) onMove;
   final VoidCallback onDismiss;
@@ -222,7 +222,7 @@ class _ConflictCard extends StatelessWidget {
                   child: _ActionBtn(
                     label: moveLabel,
                     filled: true,
-                    accent: overlap ? KaalColors.acc : accent,
+                    accent: overlap ? TaskEraColors.acc : accent,
                     onTap: () => onMove(moveId!, newStart!),
                   ),
                 ),
@@ -245,7 +245,7 @@ class _ConflictCard extends StatelessWidget {
 }
 
 class _ItemRow extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ScheduledItem sched;
   const _ItemRow({required this.colors, required this.sched});
 
@@ -319,7 +319,7 @@ class _ActionBtn extends StatelessWidget {
 // ── All-clear / empty state ───────────────────────────────────────────────────
 
 class _AllClearCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final int scheduledCount;
   final bool footer;
   const _AllClearCard({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 const _kSizes = ['sm', 'md', 'lg', 'xl', '2xl'];
 
@@ -17,7 +17,7 @@ class SizeChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -30,10 +30,10 @@ class SizeChips extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.transparent,
-                borderRadius: KaalShape.filterChip,
+                borderRadius: TaskEraShape.filterChip,
                 border: Border.all(
                   width: i == selectedIndex ? 1.5 : 0.5,
-                  color: i == selectedIndex ? KaalColors.acc : colors.bdr,
+                  color: i == selectedIndex ? TaskEraColors.acc : colors.bdr,
                 ),
               ),
               child: Text(
@@ -42,7 +42,7 @@ class SizeChips extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
-                  color: i == selectedIndex ? KaalColors.acc : colors.ink3,
+                  color: i == selectedIndex ? TaskEraColors.acc : colors.ink3,
                 ),
               ),
             ),

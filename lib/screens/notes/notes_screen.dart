@@ -13,12 +13,12 @@ import '../../data/providers/habits_provider.dart';
 import '../../data/providers/goals_provider.dart';
 import '../../services/activity_log_service.dart';
 import '../../routing/routes.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 
 // Source chips for notes that live on a task / habit / goal rather than the
 // notes table. Tapping such a card opens the source item, not the note editor.
-const _kTaskTag  = _Tag('📋 Task',  bg: Color(0x1A0A84FF), fg: KaalColors.acc2);
+const _kTaskTag  = _Tag('📋 Task',  bg: Color(0x1A0A84FF), fg: TaskEraColors.acc2);
 const _kHabitTag = _Tag('🔁 Habit', bg: Color(0x1A7FBA00), fg: Color(0xFF9FCD44));
 const _kGoalTag  = _Tag('🎯 Goal',  bg: Color(0x1ABF5AF2), fg: Color(0xFFCF7BFF));
 
@@ -85,7 +85,7 @@ class NotesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final noteRows = ref.watch(notesProvider).value ?? [];
 
     final pinned = <_Note>[];
@@ -132,7 +132,7 @@ class NotesScreen extends ConsumerWidget {
     return Stack(
       children: [
         RefreshIndicator(
-          color: KaalColors.acc,
+          color: TaskEraColors.acc,
           backgroundColor: const Color(0xFF1C1C1E),
           onRefresh: () async {
             ref.invalidate(notesProvider);
@@ -148,11 +148,11 @@ class NotesScreen extends ConsumerWidget {
                       final t = BlockDocument.plainTextOf(n.body).replaceAll('\n', ' ');
                       return '- ${n.title}: ${t.length > 160 ? t.substring(0, 160) : t}';
                     }).join('\n')}',
-              hint: 'See what Kaal AI notices across your notes',
+              hint: 'See what TaskEra AI notices across your notes',
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => context.push(KaalRoutes.databases),
+              onTap: () => context.push(TaskEraRoutes.databases),
               child: Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(
@@ -211,12 +211,12 @@ class NotesScreen extends ConsumerWidget {
           right: 16,
           bottom: 16 + MediaQuery.paddingOf(context).bottom,
           child: GestureDetector(
-            onTap: () => context.push(KaalRoutes.notesEditor),
+            onTap: () => context.push(TaskEraRoutes.notesEditor),
             child: Container(
               width: 42,
               height: 42,
               decoration: const BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
               ),
@@ -233,7 +233,7 @@ class NotesScreen extends ConsumerWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel({required this.label, required this.colors});
 
   @override
@@ -257,7 +257,7 @@ class _SectionLabel extends StatelessWidget {
 class _NoteCard extends ConsumerWidget {
   final _Note note;
   final bool  prominent;
-  final KaalColors colors;
+  final TaskEraColors colors;
 
   const _NoteCard({required this.note, this.prominent = false, required this.colors});
 
@@ -269,7 +269,7 @@ class _NoteCard extends ConsumerWidget {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheetCtx) => _NoteMenuSheet(note: note, dao: dao, colors: colors,
-        onEdit: () { Navigator.pop(sheetCtx); context.push('${KaalRoutes.notesEditor}/${note.id}'); },
+        onEdit: () { Navigator.pop(sheetCtx); context.push('${TaskEraRoutes.notesEditor}/${note.id}'); },
         onLog: (msg) => logNotifier.add(msg, type: 'note'),
       ),
     );
@@ -279,7 +279,7 @@ class _NoteCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLinked = note.route != null;
     return GestureDetector(
-      onTap: () => context.push(note.route ?? '${KaalRoutes.notesEditor}/${note.id}'),
+      onTap: () => context.push(note.route ?? '${TaskEraRoutes.notesEditor}/${note.id}'),
       onLongPress: isLinked ? null : () => _showMenu(context, ref),
       onSecondaryTap: isLinked ? null : () => _showMenu(context, ref),
       child: Container(
@@ -310,8 +310,8 @@ class _NoteCard extends ConsumerWidget {
                   const SizedBox(width: 6),
                   Container(
                     padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
-                    decoration: BoxDecoration(color: KaalColors.accBg, borderRadius: BorderRadius.circular(4)),
-                    child: Text(note.aiLabel!, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: KaalColors.acc2, height: 1)),
+                    decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
+                    child: Text(note.aiLabel!, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2, height: 1)),
                   ),
                 ],
                 const SizedBox(width: 6),
@@ -350,7 +350,7 @@ class _NoteCard extends ConsumerWidget {
 class _NoteMenuSheet extends StatelessWidget {
   final _Note note;
   final dynamic dao;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onEdit;
   final void Function(String msg) onLog;
 
@@ -405,7 +405,7 @@ class _NoteMenuSheet extends StatelessWidget {
 class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Color? textColor;
   final VoidCallback onTap;
 

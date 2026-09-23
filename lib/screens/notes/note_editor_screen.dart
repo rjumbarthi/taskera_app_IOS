@@ -11,9 +11,9 @@ import '../../util/input_limits.dart';
 import '../../widgets/block_editor/block_editor.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../util/taskera_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../services/activity_log_service.dart';
 import '../../services/ai_service.dart';
 import '../../data/providers/ai_access_provider.dart';
@@ -83,15 +83,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     if (!(await ref.read(aiUnlockedProvider.future))) {
       messenger.showSnackBar(SnackBar(
         content: const Text(
-            'AI is a Kaal Pro feature — upgrade, or add your own key in Settings',
+            'AI is a TaskEra Pro feature — upgrade, or add your own key in Settings',
             style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),
         action: SnackBarAction(
           label: 'Upgrade',
-          textColor: KaalColors.acc2,
-          onPressed: () => context.push(KaalRoutes.paywall),
+          textColor: TaskEraColors.acc2,
+          onPressed: () => context.push(TaskEraRoutes.paywall),
         ),
       ));
       return;
@@ -115,7 +115,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
   }
 
-  void _openTaskPicker(KaalColors colors) {
+  void _openTaskPicker(TaskEraColors colors) {
     final all = ref.read(allTasksProvider).value ?? const <Task>[];
     showTaskLinkPicker(
       context: context,
@@ -168,7 +168,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   final Set<int> _selLabels  = {0}; // #idea
 
   static const _quads  = ['Q1 · Do Now', 'Q2 · Schedule', 'Q3 · Delegate', 'Q4 · Eliminate', 'None'];
-  static const _quadColors = [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4, Color(0xFF8E8E93)];
+  static const _quadColors = [TaskEraColors.q1, TaskEraColors.q2, TaskEraColors.q3, TaskEraColors.q4, Color(0xFF8E8E93)];
   static const _labels = ['#idea', '#meeting', '#research', '#journal', '#braindump', '+ New'];
 
   @override
@@ -179,7 +179,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final allTasks    = ref.watch(allTasksProvider).value ?? const <Task>[];
     // Real goals from the DB + a trailing "None" chip (selection is display-only
     // for now — note→goal linking persistence is a separate feature).
@@ -211,7 +211,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 onTap: _save,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-                  decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                   child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
@@ -239,7 +239,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           filled: false,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
-                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: KaalColors.acc)),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc)),
                           contentPadding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
                           isDense: true,
                         ),
@@ -361,7 +361,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                             ),
-                            child: const Text('✦ AI scan', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: KaalColors.acc2)),
+                            child: const Text('✦ AI scan', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: TaskEraColors.acc2)),
                           ),
                         ),
                       ],
@@ -426,7 +426,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         child: Text(
                           linkedTasks.isEmpty ? '+ Link tasks' : '+ Edit linked tasks',
                           style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
-                              fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1),
+                              fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1),
                         ),
                       ),
                     ),
@@ -449,7 +449,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () async {
-                    final confirmed = await kaalConfirmDelete(context);
+                    final confirmed = await taskeraConfirmDelete(context);
                     if (confirmed && context.mounted) {
                       await ref.read(appDatabaseProvider).notesDao.deleteNote(_parsedId!);
                       if (context.mounted) context.pop();
@@ -480,7 +480,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 class _FormRow extends StatelessWidget {
   final String label;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FormRow({required this.label, required this.child, required this.colors});
 
   @override
@@ -504,7 +504,7 @@ class _Chip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Chip({required this.label, required this.selected, required this.onTap, required this.colors});
 
   @override
@@ -514,9 +514,9 @@ class _Chip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(9, 5, 9, 5),
         decoration: BoxDecoration(
-          color: selected ? KaalColors.acc : Colors.transparent,
+          color: selected ? TaskEraColors.acc : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(width: 0.5, color: selected ? KaalColors.acc : colors.bdr),
+          border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? Colors.white : colors.ink2, height: 1)),
@@ -529,13 +529,13 @@ class _LinkedTaskChip extends StatelessWidget {
   final String label;
   final int quadrant;
   final VoidCallback onRemove;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LinkedTaskChip({required this.label, required this.quadrant, required this.onRemove, required this.colors});
 
   @override
   Widget build(BuildContext context) {
     final qColor = quadrant >= 1 && quadrant <= 4
-        ? [KaalColors.q1, KaalColors.q2, KaalColors.q3, KaalColors.q4][quadrant - 1]
+        ? [TaskEraColors.q1, TaskEraColors.q2, TaskEraColors.q3, TaskEraColors.q4][quadrant - 1]
         : const Color(0xFF8E8E93);
     return Container(
       padding: const EdgeInsets.fromLTRB(9, 5, 6, 5),
@@ -569,7 +569,7 @@ class _ColorChip extends StatelessWidget {
   final bool selected;
   final Color activeColor;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ColorChip({required this.label, required this.selected, required this.activeColor, required this.onTap, required this.colors});
 
   @override
@@ -603,7 +603,7 @@ class _Toggle extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: 36, height: 21,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: value ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(11),
         ),
         child: AnimatedAlign(

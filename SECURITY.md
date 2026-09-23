@@ -1,17 +1,17 @@
-# Kaal — Security Hardening
+# TaskEra — Security Hardening
 
 Status of the security pass across Android / iOS / Windows / Web.
 
 ## AI never accesses Gmail or Calendar
 
-Kaal's AI features (powered by Anthropic/OpenAI) **never** access your Gmail or
+TaskEra's AI features (powered by Anthropic/OpenAI) **never** access your Gmail or
 Google Calendar. Email and calendar data are processed **only on your device**
 using simple keyword heuristics (see `inbox_screen.dart` `_suggest*` and
 `calendar_screen.dart` `_WeekInsightBanner` — regex/local logic, no LLM, no
 network). Google user data is never sent to any AI/ML service, sold, or used for
 ads or model training — consistent with Google API Services **Limited Use**.
 This is disclosed in-app (`legal_screen.dart`) and on the public Privacy Policy +
-Terms (`jumbarthi.com/kaal/privacy/`, `/kaal/terms/`).
+Terms (`jumbarthi.com/taskera/privacy/`, `/taskera/terms/`).
 
 ## Gmail & Calendar are remote-flagged OFF by default
 

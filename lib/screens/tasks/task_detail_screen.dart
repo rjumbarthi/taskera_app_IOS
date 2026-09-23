@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Task, TasksDao, Subtask, SubtasksCompanion, TasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../focus/focus_session_modal.dart';
 
@@ -38,10 +38,10 @@ String _fmtAlloc(int min) {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const _kQuadNames  = {1: 'Q1 · Do Now', 2: 'Q2 · Schedule', 3: 'Q3 · Delegate', 4: 'Q4 · Eliminate'};
-const _kQuadColors = {1: KaalColors.q1, 2: KaalColors.q2, 3: KaalColors.q3, 4: KaalColors.q4};
+const _kQuadColors = {1: TaskEraColors.q1, 2: TaskEraColors.q2, 3: TaskEraColors.q3, 4: TaskEraColors.q4};
 
 String _quadName(int q)  => _kQuadNames[q]  ?? 'Q1 · Do Now';
-Color  _quadColor(int q) => _kQuadColors[q] ?? KaalColors.q1;
+Color  _quadColor(int q) => _kQuadColors[q] ?? TaskEraColors.q1;
 
 Color _quadBg(int q) => switch (q) {
   1 => const Color(0x12F25022),
@@ -59,13 +59,13 @@ Color _quadBorder(int q) => switch (q) {
 Color _prioColor(String? p) => switch (p) {
   'P1' => const Color(0xFFFF6B6B),
   'P2' => const Color(0xFFFF9500),
-  'P3' => KaalColors.acc2,
+  'P3' => TaskEraColors.acc2,
   _    => const Color(0xFF8E8E93),
 };
 Color _prioBg(String? p) => switch (p) {
   'P1' => const Color(0x24FF453A),
   'P2' => const Color(0x24FF9500),
-  'P3' => KaalColors.accBg,
+  'P3' => TaskEraColors.accBg,
   _    => const Color(0x248E8E93),
 };
 String _prioLabel(String? p) => switch (p) {
@@ -168,7 +168,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 0.5, color: KaalColors.acc),
+              borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc),
             ),
             isDense: true,
             contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -181,7 +181,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, int.tryParse(ctrl.text.trim())),
-            child: const Text('Save', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, color: KaalColors.acc2)),
+            child: const Text('Save', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -197,7 +197,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final taskAsync = ref.watch(singleTaskProvider(_id));
     final subsAsync = ref.watch(subtasksProvider(_id));
 
@@ -252,7 +252,7 @@ class _Body extends StatelessWidget {
   final TextEditingController noteCtrl;
   final TextEditingController subtaskCtrl;
   final FocusNode subtaskFocus;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final void Function(Subtask) onToggleSub;
   final Future<void> Function(String) onAddSub;
   final VoidCallback onDone;
@@ -371,7 +371,7 @@ class _Body extends StatelessWidget {
                               _Badge(label: '${prio ?? 'P4'} · ${_prioLabel(prio)}', bg: _prioBg(prio), fg: _prioColor(prio)),
                               _Badge(label: qName, bg: qBg, fg: qCol),
                               if (attentionScore > 0)
-                                _Badge(label: 'Score ${attentionScore.toStringAsFixed(1)}', bg: KaalColors.accBg, fg: KaalColors.acc2),
+                                _Badge(label: 'Score ${attentionScore.toStringAsFixed(1)}', bg: TaskEraColors.accBg, fg: TaskEraColors.acc2),
                             ],
                           ),
                         ],
@@ -382,7 +382,7 @@ class _Body extends StatelessWidget {
                       onTap: () => showFocusSession(context, taskId: task.id),
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
-                        decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(9)),
+                        decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(9)),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -407,7 +407,7 @@ class _Body extends StatelessWidget {
                           value: dateStr,
                           valueColor: task.isOverdue
                               ? const Color(0xFFFF6B6B)
-                              : (d == null ? KaalColors.acc2 : colors.ink2),
+                              : (d == null ? TaskEraColors.acc2 : colors.ink2),
                           colors: colors,
                           natural: true,
                         ),
@@ -420,7 +420,7 @@ class _Body extends StatelessWidget {
                         child: _StatCell(
                           label: 'Time  ✎',
                           value: timeStr,
-                          valueColor: hasTime ? colors.ink2 : KaalColors.acc2,
+                          valueColor: hasTime ? colors.ink2 : TaskEraColors.acc2,
                           colors: colors,
                           natural: true,
                         ),
@@ -433,7 +433,7 @@ class _Body extends StatelessWidget {
                         child: _StatCell(
                           label: 'Allotted  ✎',
                           value: allotStr,
-                          valueColor: timeAllocMin != null ? colors.ink2 : KaalColors.acc2,
+                          valueColor: timeAllocMin != null ? colors.ink2 : TaskEraColors.acc2,
                           colors: colors,
                           natural: true,
                         ),
@@ -470,7 +470,7 @@ class _Body extends StatelessWidget {
                       behavior: HitTestBehavior.opaque,
                       child: const Padding(
                         padding: EdgeInsets.all(4),
-                        child: Text('+', style: TextStyle(fontFamily: 'Inter', fontSize: 19, color: KaalColors.acc, height: 1)),
+                        child: Text('+', style: TextStyle(fontFamily: 'Inter', fontSize: 19, color: TaskEraColors.acc, height: 1)),
                       ),
                     ),
                   ],
@@ -598,7 +598,7 @@ class _Badge extends StatelessWidget {
 class _StatCell extends StatelessWidget {
   final String label, value;
   final Color valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool natural;
   const _StatCell({required this.label, required this.value, required this.valueColor, required this.colors, this.natural = false});
 
@@ -627,7 +627,7 @@ class _StatCell extends StatelessWidget {
 class _SubtaskRow extends StatelessWidget {
   final Subtask sub;
   final Color qCol;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onToggle;
   const _SubtaskRow({required this.sub, required this.qCol, required this.colors, required this.onToggle});
 
@@ -686,7 +686,7 @@ class _SubtaskRow extends StatelessWidget {
 class _AddSubtaskRow extends StatelessWidget {
   final TextEditingController ctrl;
   final FocusNode focus;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Future<void> Function(String) onSubmit;
   const _AddSubtaskRow({required this.ctrl, required this.focus, required this.colors, required this.onSubmit});
 
@@ -721,7 +721,7 @@ class _AddSubtaskRow extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 4, 0, 4),
-            child: Icon(Icons.add_circle_rounded, size: 22, color: KaalColors.acc),
+            child: Icon(Icons.add_circle_rounded, size: 22, color: TaskEraColors.acc),
           ),
         ),
       ],

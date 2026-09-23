@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' show Color;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../theme/kaal_colors.dart';
+import '../../theme/taskera_colors.dart';
 import '../database.dart';
 import 'calendar_provider.dart';
 import 'tasks_provider.dart';
@@ -44,11 +44,11 @@ String fmtTime(DateTime d) {
 
 Color _quadColor(int q) {
   switch (q) {
-    case 1: return KaalColors.q1;
-    case 2: return KaalColors.q2;
-    case 3: return KaalColors.q3;
-    case 4: return KaalColors.q4;
-    default: return KaalColors.acc2;
+    case 1: return TaskEraColors.q1;
+    case 2: return TaskEraColors.q2;
+    case 3: return TaskEraColors.q3;
+    case 4: return TaskEraColors.q4;
+    default: return TaskEraColors.acc2;
   }
 }
 

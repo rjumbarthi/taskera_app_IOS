@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // Quadrant → (group label, accent color). Order controls section order.
@@ -21,11 +21,11 @@ const _quadLabels = {
 };
 
 Color _qColor(int q) => switch (q) {
-      1 => KaalColors.q1,
-      2 => KaalColors.q2,
-      3 => KaalColors.q3,
-      4 => KaalColors.q4,
-      _ => KaalColors.acc2,
+      1 => TaskEraColors.q1,
+      2 => TaskEraColors.q2,
+      3 => TaskEraColors.q3,
+      4 => TaskEraColors.q4,
+      _ => TaskEraColors.acc2,
     };
 
 String _whenLabel(DateTime? d) {
@@ -79,7 +79,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final List<Task> done = [...(ref.watch(doneTasksProvider).value ?? const [])]
       ..sort((a, b) => (b.doneAt ?? DateTime(0)).compareTo(a.doneAt ?? DateTime(0)));
 
@@ -106,7 +106,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.check, size: 16, color: KaalColors.q2),
+                    Icon(Icons.check, size: 16, color: TaskEraColors.q2),
                     const SizedBox(width: 6),
                     Text('Completed',
                         style: TextStyle(
@@ -206,7 +206,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
 // ── Sub-widgets ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EmptyState({required this.colors});
 
   @override
@@ -240,7 +240,7 @@ class _EmptyState extends StatelessWidget {
 class _GroupLabel extends StatelessWidget {
   final String label;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _GroupLabel({required this.label, required this.color, required this.colors});
 
   @override
@@ -267,7 +267,7 @@ class _GroupLabel extends StatelessWidget {
 class _CompRow extends StatelessWidget {
   final Task task;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onRestore;
   const _CompRow({
     required this.task,

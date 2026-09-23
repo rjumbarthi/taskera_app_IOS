@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 import '../database.dart';
 import 'tasks_provider.dart';
 
@@ -27,7 +27,7 @@ final dtnTaskProvider = Provider<Task?>((ref) {
   final q1 = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? const [];
   final q2 = ref.watch(quadrantTasksProvider(2)).valueOrNull ?? const [];
   final q3 = ref.watch(quadrantTasksProvider(3)).valueOrNull ?? const [];
-  final useScore = ref.watch(kaalSettingsProvider.select((s) => s.sw('scoreRec')));
+  final useScore = ref.watch(taskeraSettingsProvider.select((s) => s.sw('scoreRec')));
   final skipped = ref.watch(dtnSkipProvider);
 
   final sorted = sortDtn([...q1, ...q2, ...q3], useScore: useScore)

@@ -7,8 +7,8 @@ import '../../data/database.dart';
 import '../../data/models/db_models.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/databases_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import 'db_editors.dart';
 
@@ -51,8 +51,8 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     ));
   }
 
-  Future<void> _renameDatabase(KaalDatabase db) async {
-    final colors = KaalTheme.of(context).colors;
+  Future<void> _renameDatabase(TaskEraDatabase db) async {
+    final colors = TaskEraTheme.of(context).colors;
     final ctrl = TextEditingController(text: db.name);
     final v = await showDialog<String>(
       context: context,
@@ -66,17 +66,17 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: KaalColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
         ],
       ),
     );
     if (v != null && v.trim().isNotEmpty) {
-      _dao.updateDatabase(_id, KaalDatabasesCompanion(name: Value(v.trim())));
+      _dao.updateDatabase(_id, TaskEraDatabasesCompanion(name: Value(v.trim())));
     }
   }
 
   Future<void> _propertyMenu(DbProperty prop, int propCount) async {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final action = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: colors.surf,
@@ -107,7 +107,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
   }
 
   Future<void> _renameProperty(DbProperty prop) async {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final ctrl = TextEditingController(text: prop.name);
     final v = await showDialog<String>(
       context: context,
@@ -117,7 +117,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         content: TextField(controller: ctrl, autofocus: true, style: TextStyle(color: colors.ink), onSubmitted: (x) => Navigator.pop(ctx, x)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: KaalColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
         ],
       ),
     );
@@ -130,7 +130,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
   }
 
   Future<void> _changeType(DbProperty prop) async {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final type = await showModalBottomSheet<DbPropType>(
       context: context,
       backgroundColor: colors.surf,
@@ -148,7 +148,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
                   const SizedBox(width: 14),
                   Text(t.label, style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink)),
                   const Spacer(),
-                  if (t == propTypeOf(prop)) const Icon(Icons.check_rounded, size: 18, color: KaalColors.acc),
+                  if (t == propTypeOf(prop)) const Icon(Icons.check_rounded, size: 18, color: TaskEraColors.acc),
                 ]),
               ),
             ),
@@ -165,7 +165,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     }
   }
 
-  Widget _menuRow(BuildContext ctx, KaalColors colors, IconData icon, String label, String value, {bool danger = false}) {
+  Widget _menuRow(BuildContext ctx, TaskEraColors colors, IconData icon, String label, String value, {bool danger = false}) {
     final color = danger ? const Color(0xFFFF453A) : colors.ink;
     return InkWell(
       onTap: () => Navigator.pop(ctx, value),
@@ -184,7 +184,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final dbAsync = ref.watch(databaseProvider(_id));
     final props = ref.watch(dbPropertiesProvider(_id)).value ?? const <DbProperty>[];
     final rows = ref.watch(dbRowsProvider(_id)).value ?? const <DbRow>[];
@@ -215,7 +215,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _topBar(KaalColors colors, KaalDatabase db) {
+  Widget _topBar(TaskEraColors colors, TaskEraDatabase db) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 12, 4),
       child: Row(children: [
@@ -235,7 +235,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
           onTap: () => _addRow(),
           child: Container(
             padding: const EdgeInsets.fromLTRB(11, 6, 13, 6),
-            decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
             child: const Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.add_rounded, size: 15, color: Colors.white),
               SizedBox(width: 2),
@@ -247,13 +247,13 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _viewSwitcher(KaalColors colors, String view, KaalDatabase db) {
+  Widget _viewSwitcher(TaskEraColors colors, String view, TaskEraDatabase db) {
     Widget seg(String id, IconData icon, String label) {
       final active = view == id;
       return GestureDetector(
         onTap: () {
           setState(() => _view = id);
-          _dao.updateDatabase(_id, KaalDatabasesCompanion(defaultView: Value(id)));
+          _dao.updateDatabase(_id, TaskEraDatabasesCompanion(defaultView: Value(id)));
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -263,9 +263,9 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             border: Border.all(width: 0.5, color: active ? const Color(0x330A84FF) : Colors.transparent),
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(icon, size: 14, color: active ? KaalColors.acc2 : colors.ink3),
+            Icon(icon, size: 14, color: active ? TaskEraColors.acc2 : colors.ink3),
             const SizedBox(width: 5),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? KaalColors.acc2 : colors.ink3)),
+            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? TaskEraColors.acc2 : colors.ink3)),
           ]),
         ),
       );
@@ -285,7 +285,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   // ── Table view ─────────────────────────────────────────────────────────────
 
-  Widget _tableView(KaalColors colors, List<DbProperty> props, List<DbRow> rows) {
+  Widget _tableView(TaskEraColors colors, List<DbProperty> props, List<DbRow> rows) {
     if (props.isEmpty) return _needProperty(colors);
     double widthFor(int i) => i == 0 ? 180 : 150;
 
@@ -348,7 +348,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _tableCell(KaalColors colors, DbProperty prop, DbRow row, double width, {bool isTitle = false}) {
+  Widget _tableCell(TaskEraColors colors, DbProperty prop, DbRow row, double width, {bool isTitle = false}) {
     final type = propTypeOf(prop);
     final value = decodeCells(row)[prop.id];
     return GestureDetector(
@@ -370,10 +370,10 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _cellContent(KaalColors colors, DbProperty prop, DbPropType type, dynamic value, {bool isTitle = false}) {
+  Widget _cellContent(TaskEraColors colors, DbProperty prop, DbPropType type, dynamic value, {bool isTitle = false}) {
     if (type == DbPropType.checkbox) {
       return Icon(value == true ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-          size: 18, color: value == true ? KaalColors.acc : colors.ink3);
+          size: 18, color: value == true ? TaskEraColors.acc : colors.ink3);
     }
     if (type == DbPropType.select && value is String && value.isNotEmpty) {
       final cfg = PropConfig.parse(prop);
@@ -393,12 +393,12 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     return Text(disp, maxLines: 2, overflow: TextOverflow.ellipsis,
         style: TextStyle(fontFamily: 'Inter', fontSize: 13,
             fontWeight: isTitle ? FontWeight.w600 : FontWeight.w400,
-            color: type == DbPropType.url ? KaalColors.acc2 : colors.ink));
+            color: type == DbPropType.url ? TaskEraColors.acc2 : colors.ink));
   }
 
   // ── Board view ───────────────────────────────────────────────────────────
 
-  Widget _boardView(KaalColors colors, KaalDatabase db, List<DbProperty> props, List<DbRow> rows) {
+  Widget _boardView(TaskEraColors colors, TaskEraDatabase db, List<DbProperty> props, List<DbRow> rows) {
     if (props.isEmpty) return _needProperty(colors);
     // Choose the grouping property: configured, else first select-like prop.
     DbProperty? group;
@@ -429,7 +429,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _boardColumn(KaalColors colors, DbProperty group, DbProperty titleProp,
+  Widget _boardColumn(TaskEraColors colors, DbProperty group, DbProperty titleProp,
       List<DbProperty> props,
       List<DbRow> rows,
       ({String? value, String label, Color color}) col) {
@@ -475,7 +475,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _boardCard(KaalColors colors, DbProperty titleProp, List<DbProperty> props, DbProperty group, DbRow row) {
+  Widget _boardCard(TaskEraColors colors, DbProperty titleProp, List<DbProperty> props, DbProperty group, DbRow row) {
     final cells = decodeCells(row);
     final title = cellDisplay(cells[titleProp.id], propTypeOf(titleProp));
     final chips = <Widget>[];
@@ -512,7 +512,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     );
   }
 
-  Widget _miniChip(KaalColors colors, DbProperty p, dynamic value) {
+  Widget _miniChip(TaskEraColors colors, DbProperty p, dynamic value) {
     final type = propTypeOf(p);
     if (type == DbPropType.select && value is String) {
       final cfg = PropConfig.parse(p);
@@ -534,7 +534,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   // ── List view ────────────────────────────────────────────────────────────
 
-  Widget _listView(KaalColors colors, List<DbProperty> props, List<DbRow> rows) {
+  Widget _listView(TaskEraColors colors, List<DbProperty> props, List<DbRow> rows) {
     if (props.isEmpty) return _needProperty(colors);
     if (rows.isEmpty) return _emptyRows(colors);
     final titleProp = props.first;
@@ -581,7 +581,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   // ── Empty / helper states ──────────────────────────────────────────────────
 
-  Widget _needProperty(KaalColors colors) => Center(
+  Widget _needProperty(TaskEraColors colors) => Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('No properties', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2)),
           const SizedBox(height: 10),
@@ -590,13 +590,13 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: const Text('+ Add property', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: KaalColors.acc2)),
+              child: const Text('+ Add property', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ]),
       );
 
-  Widget _emptyRows(KaalColors colors) => Center(
+  Widget _emptyRows(TaskEraColors colors) => Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('No rows yet', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2)),
           const SizedBox(height: 10),
@@ -605,7 +605,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: const Text('+ New row', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: KaalColors.acc2)),
+              child: const Text('+ New row', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ]),

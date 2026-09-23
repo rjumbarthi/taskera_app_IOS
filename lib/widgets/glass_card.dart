@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
-import '../theme/kaal_shape.dart';
+import '../theme/taskera_theme.dart';
+import '../theme/taskera_shape.dart';
 
 class GlassCard extends StatelessWidget {
   final Widget child;
@@ -16,11 +16,11 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       decoration: BoxDecoration(
         color: colors.surf,
-        borderRadius: borderRadius ?? KaalShape.card,
+        borderRadius: borderRadius ?? TaskEraShape.card,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

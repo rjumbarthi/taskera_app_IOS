@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 /// F4 — Reward modal. Solid dim scrim (rgba 0,0,0,0.55), no blur.
 Future<T?> showRewardModal<T>({
@@ -24,12 +24,12 @@ class _ModalContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: colors.surf2,
-        borderRadius: KaalShape.card,
+        borderRadius: TaskEraShape.card,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: child,

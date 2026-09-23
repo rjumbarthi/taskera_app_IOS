@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 
 // 38×38 back-chevron button. Transparent bg, no border.
 // SVG stroke color = ink2 by default; per-screen overrides applied by caller.
@@ -17,7 +17,7 @@ class AddBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final color = strokeColor ?? colors.ink2;
     return GestureDetector(
       onTap: onTap,

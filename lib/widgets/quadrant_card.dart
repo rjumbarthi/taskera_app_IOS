@@ -1,50 +1,50 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_motion.dart';
-import '../theme/kaal_shape.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_motion.dart';
+import '../theme/taskera_shape.dart';
 
-enum KaalQuadrant { q1, q2, q3, q4 }
+enum TaskEraQuadrant { q1, q2, q3, q4 }
 
-extension KaalQuadrantX on KaalQuadrant {
+extension TaskEraQuadrantX on TaskEraQuadrant {
   Color get color => switch (this) {
-        KaalQuadrant.q1 => KaalColors.q1,
-        KaalQuadrant.q2 => KaalColors.q2,
-        KaalQuadrant.q3 => KaalColors.q3,
-        KaalQuadrant.q4 => KaalColors.q4,
+        TaskEraQuadrant.q1 => TaskEraColors.q1,
+        TaskEraQuadrant.q2 => TaskEraColors.q2,
+        TaskEraQuadrant.q3 => TaskEraColors.q3,
+        TaskEraQuadrant.q4 => TaskEraColors.q4,
       };
 
   String get label => switch (this) {
-        KaalQuadrant.q1 => 'Q1',
-        KaalQuadrant.q2 => 'Q2',
-        KaalQuadrant.q3 => 'Q3',
-        KaalQuadrant.q4 => 'Q4',
+        TaskEraQuadrant.q1 => 'Q1',
+        TaskEraQuadrant.q2 => 'Q2',
+        TaskEraQuadrant.q3 => 'Q3',
+        TaskEraQuadrant.q4 => 'Q4',
       };
 
   // Glass theme: linear-gradient(145deg, start ~45%, end ~52%)
   List<Color> get gradient => switch (this) {
-        KaalQuadrant.q1 => const [Color(0x739B1600), Color(0x85F25022)],
-        KaalQuadrant.q2 => const [Color(0x73326E00), Color(0x857FBA00)],
-        KaalQuadrant.q3 => const [Color(0x73004080), Color(0x8500A4EF)],
-        KaalQuadrant.q4 => const [Color(0x73784C00), Color(0x85FFB900)],
+        TaskEraQuadrant.q1 => const [Color(0x739B1600), Color(0x85F25022)],
+        TaskEraQuadrant.q2 => const [Color(0x73326E00), Color(0x857FBA00)],
+        TaskEraQuadrant.q3 => const [Color(0x73004080), Color(0x8500A4EF)],
+        TaskEraQuadrant.q4 => const [Color(0x73784C00), Color(0x85FFB900)],
       };
 
   // .5px border at 40% alpha
   Color get borderColor => switch (this) {
-        KaalQuadrant.q1 => const Color(0x66F25022),
-        KaalQuadrant.q2 => const Color(0x667FBA00),
-        KaalQuadrant.q3 => const Color(0x6600A4EF),
-        KaalQuadrant.q4 => const Color(0x66FFB900),
+        TaskEraQuadrant.q1 => const Color(0x66F25022),
+        TaskEraQuadrant.q2 => const Color(0x667FBA00),
+        TaskEraQuadrant.q3 => const Color(0x6600A4EF),
+        TaskEraQuadrant.q4 => const Color(0x66FFB900),
       };
 
   // qc-ico bg: rgba(255,255,255,.22); Q4 uses rgba(0,0,0,.12)
   Color get iconBg => switch (this) {
-        KaalQuadrant.q4 => const Color(0x1F000000),
+        TaskEraQuadrant.q4 => const Color(0x1F000000),
         _ => const Color(0x38FFFFFF),
       };
 }
 
 class QuadrantCard extends StatefulWidget {
-  final KaalQuadrant quadrant;
+  final TaskEraQuadrant quadrant;
   final String title;
   final int count;
   final String icon;
@@ -74,15 +74,15 @@ class _QuadrantCardState extends State<QuadrantCard> {
   bool _pressed = false;
 
   // Badge colors from shared.css lines 213-239
-  Color _badgeBg(KaalQuadrant q) => switch (q) {
-        KaalQuadrant.q3 => const Color(0x2E00A4EF), // rgba(0,164,239,.18)
-        KaalQuadrant.q4 => const Color(0x2EFFB900), // rgba(255,185,0,.18)
+  Color _badgeBg(TaskEraQuadrant q) => switch (q) {
+        TaskEraQuadrant.q3 => const Color(0x2E00A4EF), // rgba(0,164,239,.18)
+        TaskEraQuadrant.q4 => const Color(0x2EFFB900), // rgba(255,185,0,.18)
         _               => const Color(0x2E000000), // rgba(0,0,0,.18)
       };
 
-  Color _badgeFg(KaalQuadrant q) => switch (q) {
-        KaalQuadrant.q3 => KaalColors.q3,
-        KaalQuadrant.q4 => KaalColors.q4,
+  Color _badgeFg(TaskEraQuadrant q) => switch (q) {
+        TaskEraQuadrant.q3 => TaskEraColors.q3,
+        TaskEraQuadrant.q4 => TaskEraColors.q4,
         _               => Colors.black,
       };
 
@@ -97,8 +97,8 @@ class _QuadrantCardState extends State<QuadrantCard> {
       onTapCancel: () => setState(() => _pressed = false),
       behavior: HitTestBehavior.opaque,
       child: AnimatedScale(
-        scale: _pressed ? KaalMotion.scalePressed : 1.0,
-        duration: KaalMotion.fastPress,
+        scale: _pressed ? TaskEraMotion.scalePressed : 1.0,
+        duration: TaskEraMotion.fastPress,
         child: Container(
           clipBehavior: Clip.antiAlias,
           constraints: const BoxConstraints(minHeight: 100),
@@ -108,7 +108,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
               end: Alignment.bottomRight,
               colors: q.gradient,
             ),
-            borderRadius: KaalShape.card,
+            borderRadius: TaskEraShape.card,
             border: Border.all(width: 0.5, color: q.borderColor),
           ),
           child: Stack(
@@ -128,7 +128,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                           height: 28,
                           decoration: BoxDecoration(
                             color: q.iconBg,
-                            borderRadius: KaalShape.sgrpIcon,
+                            borderRadius: TaskEraShape.sgrpIcon,
                           ),
                           alignment: Alignment.center,
                           child: Text(widget.icon, style: const TextStyle(fontSize: 14)),
@@ -162,7 +162,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                             fontFamily: 'Inter',
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: q == KaalQuadrant.q4
+                            color: q == TaskEraQuadrant.q4
                                 ? const Color(0x61000000)
                                 : const Color(0x99000000),
                             height: 1.2,
@@ -214,7 +214,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                                   alignment: Alignment.centerLeft,
                                   widthFactor: widget.progressFraction!.clamp(0.0, 1.0),
                                   child: Container(
-                                    color: q == KaalQuadrant.q4
+                                    color: q == TaskEraQuadrant.q4
                                         ? const Color(0x59000000)
                                         : const Color(0x73000000),
                                   ),

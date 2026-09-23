@@ -8,11 +8,11 @@ import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
 import '../../routing/routes.dart';
 import '../../services/activity_log_service.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_top_bar.dart';
+import '../../widgets/taskera_top_bar.dart';
 import '../../widgets/wallpaper_background.dart';
 
 // ── Model ─────────────────────────────────────────────────────────────────────
@@ -52,17 +52,17 @@ String _relTime(DateTime t) {
       'habit' => ('🔁', const Color(0x1AFFB900)),
       'note' => ('📝', const Color(0x1ABF5AF2)),
       'goal' => ('🎯', const Color(0x1A7FBA00)),
-      'calendar' => ('📅', KaalColors.accBg),
-      'checklist' => ('☑', KaalColors.accBg),
-      _ => ('📋', KaalColors.accBg),
+      'calendar' => ('📅', TaskEraColors.accBg),
+      'checklist' => ('☑', TaskEraColors.accBg),
+      _ => ('📋', TaskEraColors.accBg),
     };
 
 String _typeRoute(String type) => switch (type) {
-      'habit' => KaalRoutes.habits,
-      'note' => KaalRoutes.notes,
-      'goal' => KaalRoutes.focus,
-      'calendar' => KaalRoutes.cal,
-      _ => KaalRoutes.tasks,
+      'habit' => TaskEraRoutes.habits,
+      'note' => TaskEraRoutes.notes,
+      'goal' => TaskEraRoutes.focus,
+      'calendar' => TaskEraRoutes.cal,
+      _ => TaskEraRoutes.tasks,
     };
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ class _NotificationCenterScreenState
         title: '${overdue.length} task${overdue.length == 1 ? '' : 's'} overdue',
         sub: '$titles$extra',
         time: now,
-        deepRoute: KaalRoutes.tasks,
+        deepRoute: TaskEraRoutes.tasks,
         alert: true,
       ));
     }
@@ -120,7 +120,7 @@ class _NotificationCenterScreenState
         title: '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'}',
         sub: '${c.a.title} clashes with ${c.b.title}',
         time: now,
-        deepRoute: KaalRoutes.calConflicts,
+        deepRoute: TaskEraRoutes.calConflicts,
         alert: true,
       ));
     }
@@ -135,11 +135,11 @@ class _NotificationCenterScreenState
         out.add(_Notif(
           key: 'rem:${r.id}',
           emoji: r.isAlarm ? '⏰' : '🔔',
-          iconBg: r.isAlarm ? const Color(0x1AFF453A) : KaalColors.accBg,
+          iconBg: r.isAlarm ? const Color(0x1AFF453A) : TaskEraColors.accBg,
           title: r.label.isEmpty ? (r.isAlarm ? 'Alarm' : 'Reminder') : r.label,
           sub: 'Today · $h:${w.minute.toString().padLeft(2, '0')} $ampm',
           time: w,
-          deepRoute: KaalRoutes.cal,
+          deepRoute: TaskEraRoutes.cal,
         ));
       }
     }
@@ -165,9 +165,9 @@ class _NotificationCenterScreenState
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final safeBot = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
 
     final feed = _buildFeed().where((n) => !_dismissed.contains(n.key)).toList();
 
@@ -188,7 +188,7 @@ class _NotificationCenterScreenState
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          KaalTopBar(
+          TaskEraTopBar(
             title: AppL10n.of(context).notifications,
             leading: AddBackButton(onTap: () => context.pop()),
             actions: [
@@ -232,7 +232,7 @@ class _NotificationCenterScreenState
     ]);
   }
 
-  Widget _tile(_Notif n, KaalColors colors) => _NotifTile(
+  Widget _tile(_Notif n, TaskEraColors colors) => _NotifTile(
         notif: n,
         colors: colors,
         onTap: () => context.push(n.deepRoute),
@@ -244,7 +244,7 @@ class _NotificationCenterScreenState
 
 class _NotifTile extends StatelessWidget {
   final _Notif notif;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   final VoidCallback onDismiss;
   const _NotifTile({
@@ -316,7 +316,7 @@ class _NotifTile extends StatelessWidget {
 
 class _GroupLabel extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _GroupLabel(this.text, this.colors);
 
   @override
@@ -338,7 +338,7 @@ class _GroupLabel extends StatelessWidget {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EmptyState({required this.colors});
 
   @override

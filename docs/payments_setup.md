@@ -1,4 +1,4 @@
-# Payments setup (Kaal Pro)
+# Payments setup (TaskEra Pro)
 
 The app code is wired; these are the **external** steps you must do for real payments.
 None of this can be tested on Windows (`in_app_purchase` is Android/iOS only).
@@ -26,8 +26,8 @@ they're referenced in `lib/config/app_config.dart`:
 
 | Plan | Product ID | Price |
 |---|---|---|
-| Monthly | `kaal_pro_monthly` | ₹199 / month |
-| Annual | `kaal_pro_annual` | ₹1,188 / year (≈ ₹99/mo) |
+| Monthly | `taskera_pro_monthly` | ₹199 / month |
+| Annual | `taskera_pro_annual` | ₹1,188 / year (≈ ₹99/mo) |
 
 - **Google Play Console** → Monetize → Subscriptions → create both, add a 7-day free trial offer.
 - **App Store Connect** → your app → Subscriptions → create both in one subscription group.
@@ -44,7 +44,7 @@ policy**, so the "Pay with UPI" button opens an **external** Razorpay link in th
   **`razorpay-webhook`** edge function (§4) grants Pro on `payment.captured`.
 
 ## 3. Granting Pro (entitlement)
-On a successful store purchase, `PurchaseService` sets `kaal.isPro = true`, which unlocks
+On a successful store purchase, `PurchaseService` sets `taskera.isPro = true`, which unlocks
 AI and other Pro features via `isProProvider` / `aiUnlockedProvider`.
 
 On a store purchase, `PurchaseService` calls the **`validate-purchase`** edge function with
@@ -57,7 +57,7 @@ validator is unreachable.
 - `supabase secrets set GOOGLE_PLAY_SERVICE_ACCOUNT='{...}'` (Play service-account JSON)
 - **Android** verifies via the Play Developer API (`purchases.subscriptions.get`). Set
   `GOOGLE_PLAY_SERVICE_ACCOUNT` (service-account JSON with androidpublisher access) and
-  `ANDROID_PACKAGE=com.port443.kaal`. If the secret is missing it falls back to an
+  `ANDROID_PACKAGE=com.port443.taskera`. If the secret is missing it falls back to an
   unverified optimistic grant.
 
 ## 4. Razorpay webhook — `supabase/functions/razorpay-webhook`
@@ -75,7 +75,7 @@ The function verifies the HMAC signature, then upserts `pro_entitlements.is_pro`
 `cancelled`/`halted`/`completed`).
 
 ### App-side entitlement (wired)
-The app reads this server entitlement into `kaal.proServer` (`isProProvider = store purchase
+The app reads this server entitlement into `taskera.proServer` (`isProProvider = store purchase
 OR server entitlement`): a one-shot read on launch + sign-in/out, **plus a Supabase realtime
 subscription** (`serverProProvider`) on the user's row, so a just-paid user unlocks Pro
 mid-session without relaunching. The `004` migration adds `pro_entitlements` to the

@@ -5,9 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../routing/routes.dart';
 import '../../settings/app_launch_prefs.dart';
-import '../../settings/kaal_settings.dart';
+import '../../settings/taskera_settings.dart';
 import '../../settings/prefs_provider.dart';
-import '../../theme/kaal_colors.dart';
+import '../../theme/taskera_colors.dart';
 
 // Screen: p-quote — Quote Splash
 //
@@ -34,7 +34,7 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
       duration: const Duration(milliseconds: 3200),
     );
 
-    final showSplash = ref.read(kaalSettingsProvider).sw('quoteSplash');
+    final showSplash = ref.read(taskeraSettingsProvider).sw('quoteSplash');
     if (!showSplash) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _advance();
@@ -62,17 +62,17 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
     // Flow: splash → sign in → onboarding → focus. Unauthenticated users sign in
     // FIRST; onboarding runs only after they're authenticated (or chose skip).
     if (!(AppLaunchPrefs.skipAuth(prefs) || isSignedIn)) {
-      context.go(KaalRoutes.signin);
+      context.go(TaskEraRoutes.signin);
       return;
     }
     if (!AppLaunchPrefs.onboardingDone(prefs)) {
-      context.go(KaalRoutes.onboard);
+      context.go(TaskEraRoutes.onboard);
       return;
     }
     // End-of-day reflection is NEVER shown on app open — it appears only when
     // the user exits the app (double-back) after their chosen EOD time. See the
     // exit handler in app_router.dart (_RouterShell).
-    context.go(KaalRoutes.focus);
+    context.go(TaskEraRoutes.focus);
   }
 
   void _skip() => _advance();
@@ -101,14 +101,14 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                 decoration: const BoxDecoration(shape: BoxShape.circle),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
-                  'assets/logo/kaal_logo.png',
+                  'assets/logo/taskera_logo.png',
                   fit: BoxFit.cover,
                 ),
               ),
 
-              // ── "Kaal" wordmark ────────────────────────────────────────
+              // ── "TaskEra" wordmark ────────────────────────────────────────
               Text(
-                'Kaal',
+                'TaskEra',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Fraunces',
@@ -152,7 +152,7 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                 width: 22,
                 height: 2,
                 decoration: BoxDecoration(
-                  color: KaalColors.acc,
+                  color: TaskEraColors.acc,
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
@@ -212,7 +212,7 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                           alignment: Alignment.centerLeft,
                           child: child,
                         ),
-                        child: const ColoredBox(color: KaalColors.acc),
+                        child: const ColoredBox(color: TaskEraColors.acc),
                       ),
                     ],
                   ),

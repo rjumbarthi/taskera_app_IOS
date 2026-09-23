@@ -2,7 +2,7 @@
 
 For the re-submission after the "Third-Party Data Safety Team" rejection.
 
-**App:** Kaal — Focus & Task Planner
+**App:** TaskEra — Focus & Task Planner
 **Scopes requested:** `gmail.readonly`, `calendar.events.readonly`
 **Both scopes are READ-ONLY.** The app performs no writes or deletes to any
 Google account, so the reviewer's "Source Account Impact" requirement does not
@@ -63,7 +63,7 @@ content that only exists in the body. Without that, Google will conclude
 ## Recording setup
 
 - **Device:** real Android device (not an emulator), screen-recorded
-- **Account:** `kaal_support@jumbarthi.com`
+- **Account:** `taskera_support@jumbarthi.com`
 - **Seed the account first** — this matters:
   - **5–10 unread emails** in the Gmail inbox. At least two must contain a clear
     actionable request *in the body*, not in the subject. Example body text:
@@ -84,9 +84,9 @@ content that only exists in the body. Without that, Google will conclude
 
 ### Scene 1 — Identify the app (0:00–0:20)
 
-> "This is Kaal, Focus and Task Planner — a personal productivity app.
-> The package name is `com.jumbarthi.kaal` and the OAuth client is in the Google
-> Cloud project 'Kaal — Focus & Task Planner'.
+> "This is TaskEra, Focus and Task Planner — a personal productivity app.
+> The package name is `com.jumbarthi.taskera` and the OAuth client is in the Google
+> Cloud project 'TaskEra — Focus & Task Planner'.
 > I'm requesting two read-only scopes: `gmail.readonly` and
 > `calendar.events.readonly`. The app never writes to or deletes from the user's
 > Google account."
@@ -119,7 +119,7 @@ When the Google consent screen appears:
 - **Hold still for a full 5 seconds** on the expanded, readable scope list.
 - Slowly scroll so every line is legible.
 
-> "Here is the consent screen. It shows the app name Kaal, and the requested
+> "Here is the consent screen. It shows the app name TaskEra, and the requested
 > permission: see your Google Calendar events — `calendar.events.readonly`.
 > This is read-only. Note this is the events-only scope, not the broader
 > `calendar.readonly` — the app never reads calendar lists or settings."
@@ -132,16 +132,16 @@ Then grant access.
 
 Show, in this order:
 
-1. **Synced events list** — the events you seeded now appearing in Kaal.
+1. **Synced events list** — the events you seeded now appearing in TaskEra.
    > "These events came from `events.list` on the primary calendar."
 2. **Conflict detection** — open the conflicts view showing your two overlapping events.
-   > "Kaal reads event start and end times to detect scheduling conflicts and
+   > "TaskEra reads event start and end times to detect scheduling conflicts and
    > surface them here."
 3. **Prep-task suggestions** — show the "Suggest prep tasks from events" feature
    producing a task from an event.
    > "Event titles and times are used to suggest preparation tasks."
 4. **Say the read-only line explicitly:**
-   > "Every calendar operation is a read. Kaal never creates, edits, or deletes
+   > "Every calendar operation is a read. TaskEra never creates, edits, or deletes
    > calendar events. This is why the read-only events scope is sufficient — and
    > why nothing broader is requested."
 
@@ -160,31 +160,31 @@ Navigate to the Gmail connect entry → tap **Connect Gmail**.
 Grant access. Then:
 
 **5a. The list view (metadata level)**
-> "After connecting, Kaal lists unread messages — sender, subject, and date."
+> "After connecting, TaskEra lists unread messages — sender, subject, and date."
 
 **5b. Now prove metadata is NOT enough — this is the shot that matters**
 
 Tap the email whose subject is bland but whose body contains the real request.
 
 > "This is the critical part. Notice the subject line here says only 'Quick
-> note' — it contains no actionable information. When I open the message, Kaal
+> note' — it contains no actionable information. When I open the message, TaskEra
 > fetches the **full message body**."
 
 **Hold on the visible body text for 5 seconds.** The reviewer must be able to
 read the actual sentence.
 
 > "The body says: *'send the Q3 budget draft by Friday and book a 30-minute
-> review with the finance team.'* Kaal parses this body text on the device and
+> review with the finance team.'* TaskEra parses this body text on the device and
 > extracts these suggestions."
 
 **5c. Show the extracted suggestions and add one**
 
-> "Kaal has extracted two suggested tasks from the body content. I'll add this
+> "TaskEra has extracted two suggested tasks from the body content. I'll add this
 > one."
 
 Tap to add → **switch to the Tasks tab and show the created task.**
 
-> "The task now exists in Kaal, created from information that appeared **only in
+> "The task now exists in TaskEra, created from information that appeared **only in
 > the message body**."
 
 **5d. State the justification in one sentence**
@@ -193,21 +193,21 @@ Tap to add → **switch to the Tasks tab and show the created task.**
 > sufficient. `gmail.metadata` returns only headers — sender, subject, and date.
 > It does not return message bodies. The core feature of this screen is turning
 > the content of an email into a task, which is impossible without body access.
-> Kaal reads a body only when the user explicitly opens that message, and it
+> TaskEra reads a body only when the user explicitly opens that message, and it
 > never sends, modifies, deletes, or archives any email."
 
 ---
 
 ### Scene 6 — Read-only + data handling close (5:30–6:30)
 
-> "To summarize. Kaal requests two scopes, both read-only:
+> "To summarize. TaskEra requests two scopes, both read-only:
 > `calendar.events.readonly` and `gmail.readonly`.
 >
 > Because both are read-only, there are no write or delete operations to
 > demonstrate in the source Google account — the app cannot modify anything
 > there.
 >
-> All parsing happens on the device. Kaal does not use AI or machine learning on
+> All parsing happens on the device. TaskEra does not use AI or machine learning on
 > email or calendar content, and email and calendar data are never sent to any
 > AI or third-party service. Google user data is not used for advertising, is not
 > sold, and is not transferred except as required to provide these user-facing
@@ -257,14 +257,14 @@ Navigate to the sync screen → tap **Disconnect**.
 > The video shows both consent screens with all scopes expanded and readable,
 > and demonstrates the full operational functionality of each scope.
 >
-> **Justification for `gmail.readonly`:** Kaal's core inbox feature converts the
+> **Justification for `gmail.readonly`:** TaskEra's core inbox feature converts the
 > *content* of an email into tasks, habits, and notes. The video demonstrates
 > opening a message whose subject contains no actionable information and
 > extracting tasks from the message **body**. `gmail.metadata` returns only
 > headers and cannot support this feature. Bodies are read only when the user
 > explicitly opens a message.
 >
-> **Justification for `calendar.events.readonly`:** Kaal reads event times to
+> **Justification for `calendar.events.readonly`:** TaskEra reads event times to
 > detect scheduling conflicts and suggest preparation tasks. The app calls only
 > `events.list` on the primary calendar. I deliberately chose the events-only
 > scope over the broader `calendar.readonly` because the app never needs calendar

@@ -121,7 +121,8 @@ class ListsDaoManager {
 }
 
 mixin _$DatabasesDaoMixin on DatabaseAccessor<AppDatabase> {
-  $KaalDatabasesTable get kaalDatabases => attachedDatabase.kaalDatabases;
+  $TaskEraDatabasesTable get taskEraDatabases =>
+      attachedDatabase.taskEraDatabases;
   $DbPropertiesTable get dbProperties => attachedDatabase.dbProperties;
   $DbRowsTable get dbRows => attachedDatabase.dbRows;
   DatabasesDaoManager get managers => DatabasesDaoManager(this);
@@ -130,8 +131,11 @@ mixin _$DatabasesDaoMixin on DatabaseAccessor<AppDatabase> {
 class DatabasesDaoManager {
   final _$DatabasesDaoMixin _db;
   DatabasesDaoManager(this._db);
-  $$KaalDatabasesTableTableManager get kaalDatabases =>
-      $$KaalDatabasesTableTableManager(_db.attachedDatabase, _db.kaalDatabases);
+  $$TaskEraDatabasesTableTableManager get taskEraDatabases =>
+      $$TaskEraDatabasesTableTableManager(
+        _db.attachedDatabase,
+        _db.taskEraDatabases,
+      );
   $$DbPropertiesTableTableManager get dbProperties =>
       $$DbPropertiesTableTableManager(_db.attachedDatabase, _db.dbProperties);
   $$DbRowsTableTableManager get dbRows =>
@@ -7467,12 +7471,12 @@ class FocusSessionsCompanion extends UpdateCompanion<FocusSession> {
   }
 }
 
-class $KaalDatabasesTable extends KaalDatabases
-    with TableInfo<$KaalDatabasesTable, KaalDatabase> {
+class $TaskEraDatabasesTable extends TaskEraDatabases
+    with TableInfo<$TaskEraDatabasesTable, TaskEraDatabase> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $KaalDatabasesTable(this.attachedDatabase, [this._alias]);
+  $TaskEraDatabasesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -7554,10 +7558,10 @@ class $KaalDatabasesTable extends KaalDatabases
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'kaal_databases';
+  static const String $name = 'task_era_databases';
   @override
   VerificationContext validateIntegrity(
-    Insertable<KaalDatabase> instance, {
+    Insertable<TaskEraDatabase> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -7607,9 +7611,9 @@ class $KaalDatabasesTable extends KaalDatabases
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  KaalDatabase map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TaskEraDatabase map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return KaalDatabase(
+    return TaskEraDatabase(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -7638,12 +7642,12 @@ class $KaalDatabasesTable extends KaalDatabases
   }
 
   @override
-  $KaalDatabasesTable createAlias(String alias) {
-    return $KaalDatabasesTable(attachedDatabase, alias);
+  $TaskEraDatabasesTable createAlias(String alias) {
+    return $TaskEraDatabasesTable(attachedDatabase, alias);
   }
 }
 
-class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
+class TaskEraDatabase extends DataClass implements Insertable<TaskEraDatabase> {
   final int id;
   final String name;
   final String icon;
@@ -7654,7 +7658,7 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
   /// Property id used to group the board view (a select/status column).
   final String? boardGroupProp;
   final DateTime createdAt;
-  const KaalDatabase({
+  const TaskEraDatabase({
     required this.id,
     required this.name,
     required this.icon,
@@ -7676,8 +7680,8 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
     return map;
   }
 
-  KaalDatabasesCompanion toCompanion(bool nullToAbsent) {
-    return KaalDatabasesCompanion(
+  TaskEraDatabasesCompanion toCompanion(bool nullToAbsent) {
+    return TaskEraDatabasesCompanion(
       id: Value(id),
       name: Value(name),
       icon: Value(icon),
@@ -7689,12 +7693,12 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
     );
   }
 
-  factory KaalDatabase.fromJson(
+  factory TaskEraDatabase.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return KaalDatabase(
+    return TaskEraDatabase(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       icon: serializer.fromJson<String>(json['icon']),
@@ -7716,14 +7720,14 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
     };
   }
 
-  KaalDatabase copyWith({
+  TaskEraDatabase copyWith({
     int? id,
     String? name,
     String? icon,
     String? defaultView,
     Value<String?> boardGroupProp = const Value.absent(),
     DateTime? createdAt,
-  }) => KaalDatabase(
+  }) => TaskEraDatabase(
     id: id ?? this.id,
     name: name ?? this.name,
     icon: icon ?? this.icon,
@@ -7733,8 +7737,8 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
         : this.boardGroupProp,
     createdAt: createdAt ?? this.createdAt,
   );
-  KaalDatabase copyWithCompanion(KaalDatabasesCompanion data) {
-    return KaalDatabase(
+  TaskEraDatabase copyWithCompanion(TaskEraDatabasesCompanion data) {
+    return TaskEraDatabase(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       icon: data.icon.present ? data.icon.value : this.icon,
@@ -7750,7 +7754,7 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
 
   @override
   String toString() {
-    return (StringBuffer('KaalDatabase(')
+    return (StringBuffer('TaskEraDatabase(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
@@ -7767,7 +7771,7 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is KaalDatabase &&
+      (other is TaskEraDatabase &&
           other.id == this.id &&
           other.name == this.name &&
           other.icon == this.icon &&
@@ -7776,14 +7780,14 @@ class KaalDatabase extends DataClass implements Insertable<KaalDatabase> {
           other.createdAt == this.createdAt);
 }
 
-class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
+class TaskEraDatabasesCompanion extends UpdateCompanion<TaskEraDatabase> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> icon;
   final Value<String> defaultView;
   final Value<String?> boardGroupProp;
   final Value<DateTime> createdAt;
-  const KaalDatabasesCompanion({
+  const TaskEraDatabasesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
@@ -7791,7 +7795,7 @@ class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
     this.boardGroupProp = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-  KaalDatabasesCompanion.insert({
+  TaskEraDatabasesCompanion.insert({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
@@ -7799,7 +7803,7 @@ class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
     this.boardGroupProp = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-  static Insertable<KaalDatabase> custom({
+  static Insertable<TaskEraDatabase> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? icon,
@@ -7817,7 +7821,7 @@ class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
     });
   }
 
-  KaalDatabasesCompanion copyWith({
+  TaskEraDatabasesCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String>? icon,
@@ -7825,7 +7829,7 @@ class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
     Value<String?>? boardGroupProp,
     Value<DateTime>? createdAt,
   }) {
-    return KaalDatabasesCompanion(
+    return TaskEraDatabasesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,
@@ -7861,7 +7865,7 @@ class KaalDatabasesCompanion extends UpdateCompanion<KaalDatabase> {
 
   @override
   String toString() {
-    return (StringBuffer('KaalDatabasesCompanion(')
+    return (StringBuffer('TaskEraDatabasesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
@@ -7899,7 +7903,7 @@ class $DbPropertiesTable extends DbProperties
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES kaal_databases (id) ON DELETE CASCADE',
+      'REFERENCES task_era_databases (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -8305,7 +8309,7 @@ class $DbRowsTable extends DbRows with TableInfo<$DbRowsTable, DbRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES kaal_databases (id) ON DELETE CASCADE',
+      'REFERENCES task_era_databases (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _cellsMeta = const VerificationMeta('cells');
@@ -8658,7 +8662,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $FocusSessionsTable focusSessions = $FocusSessionsTable(this);
-  late final $KaalDatabasesTable kaalDatabases = $KaalDatabasesTable(this);
+  late final $TaskEraDatabasesTable taskEraDatabases = $TaskEraDatabasesTable(
+    this,
+  );
   late final $DbPropertiesTable dbProperties = $DbPropertiesTable(this);
   late final $DbRowsTable dbRows = $DbRowsTable(this);
   late final TasksDao tasksDao = TasksDao(this as AppDatabase);
@@ -8689,7 +8695,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     customLists,
     customListItems,
     focusSessions,
-    kaalDatabases,
+    taskEraDatabases,
     dbProperties,
     dbRows,
   ];
@@ -8760,14 +8766,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'kaal_databases',
+        'task_era_databases',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('db_properties', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'kaal_databases',
+        'task_era_databases',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('db_rows', kind: UpdateKind.delete)],
@@ -14362,8 +14368,8 @@ typedef $$FocusSessionsTableProcessedTableManager =
       FocusSession,
       PrefetchHooks Function()
     >;
-typedef $$KaalDatabasesTableCreateCompanionBuilder =
-    KaalDatabasesCompanion Function({
+typedef $$TaskEraDatabasesTableCreateCompanionBuilder =
+    TaskEraDatabasesCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String> icon,
@@ -14371,8 +14377,8 @@ typedef $$KaalDatabasesTableCreateCompanionBuilder =
       Value<String?> boardGroupProp,
       Value<DateTime> createdAt,
     });
-typedef $$KaalDatabasesTableUpdateCompanionBuilder =
-    KaalDatabasesCompanion Function({
+typedef $$TaskEraDatabasesTableUpdateCompanionBuilder =
+    TaskEraDatabasesCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String> icon,
@@ -14381,9 +14387,10 @@ typedef $$KaalDatabasesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
-final class $$KaalDatabasesTableReferences
-    extends BaseReferences<_$AppDatabase, $KaalDatabasesTable, KaalDatabase> {
-  $$KaalDatabasesTableReferences(
+final class $$TaskEraDatabasesTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $TaskEraDatabasesTable, TaskEraDatabase> {
+  $$TaskEraDatabasesTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -14392,7 +14399,7 @@ final class $$KaalDatabasesTableReferences
   static MultiTypedResultKey<$DbPropertiesTable, List<DbProperty>>
   _dbPropertiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.dbProperties,
-    aliasName: 'kaal_databases__id__db_properties__database_id',
+    aliasName: 'task_era_databases__id__db_properties__database_id',
   );
 
   $$DbPropertiesTableProcessedTableManager get dbPropertiesRefs {
@@ -14411,7 +14418,7 @@ final class $$KaalDatabasesTableReferences
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.dbRows,
-    aliasName: 'kaal_databases__id__db_rows__database_id',
+    aliasName: 'task_era_databases__id__db_rows__database_id',
   );
 
   $$DbRowsTableProcessedTableManager get dbRowsRefs {
@@ -14427,9 +14434,9 @@ final class $$KaalDatabasesTableReferences
   }
 }
 
-class $$KaalDatabasesTableFilterComposer
-    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
-  $$KaalDatabasesTableFilterComposer({
+class $$TaskEraDatabasesTableFilterComposer
+    extends Composer<_$AppDatabase, $TaskEraDatabasesTable> {
+  $$TaskEraDatabasesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -14517,9 +14524,9 @@ class $$KaalDatabasesTableFilterComposer
   }
 }
 
-class $$KaalDatabasesTableOrderingComposer
-    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
-  $$KaalDatabasesTableOrderingComposer({
+class $$TaskEraDatabasesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaskEraDatabasesTable> {
+  $$TaskEraDatabasesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -14557,9 +14564,9 @@ class $$KaalDatabasesTableOrderingComposer
   );
 }
 
-class $$KaalDatabasesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $KaalDatabasesTable> {
-  $$KaalDatabasesTableAnnotationComposer({
+class $$TaskEraDatabasesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaskEraDatabasesTable> {
+  $$TaskEraDatabasesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -14639,32 +14646,34 @@ class $$KaalDatabasesTableAnnotationComposer
   }
 }
 
-class $$KaalDatabasesTableTableManager
+class $$TaskEraDatabasesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $KaalDatabasesTable,
-          KaalDatabase,
-          $$KaalDatabasesTableFilterComposer,
-          $$KaalDatabasesTableOrderingComposer,
-          $$KaalDatabasesTableAnnotationComposer,
-          $$KaalDatabasesTableCreateCompanionBuilder,
-          $$KaalDatabasesTableUpdateCompanionBuilder,
-          (KaalDatabase, $$KaalDatabasesTableReferences),
-          KaalDatabase,
+          $TaskEraDatabasesTable,
+          TaskEraDatabase,
+          $$TaskEraDatabasesTableFilterComposer,
+          $$TaskEraDatabasesTableOrderingComposer,
+          $$TaskEraDatabasesTableAnnotationComposer,
+          $$TaskEraDatabasesTableCreateCompanionBuilder,
+          $$TaskEraDatabasesTableUpdateCompanionBuilder,
+          (TaskEraDatabase, $$TaskEraDatabasesTableReferences),
+          TaskEraDatabase,
           PrefetchHooks Function({bool dbPropertiesRefs, bool dbRowsRefs})
         > {
-  $$KaalDatabasesTableTableManager(_$AppDatabase db, $KaalDatabasesTable table)
-    : super(
+  $$TaskEraDatabasesTableTableManager(
+    _$AppDatabase db,
+    $TaskEraDatabasesTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$KaalDatabasesTableFilterComposer($db: db, $table: table),
+              $$TaskEraDatabasesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$KaalDatabasesTableOrderingComposer($db: db, $table: table),
+              $$TaskEraDatabasesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$KaalDatabasesTableAnnotationComposer($db: db, $table: table),
+              $$TaskEraDatabasesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -14673,7 +14682,7 @@ class $$KaalDatabasesTableTableManager
                 Value<String> defaultView = const Value.absent(),
                 Value<String?> boardGroupProp = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => KaalDatabasesCompanion(
+              }) => TaskEraDatabasesCompanion(
                 id: id,
                 name: name,
                 icon: icon,
@@ -14689,7 +14698,7 @@ class $$KaalDatabasesTableTableManager
                 Value<String> defaultView = const Value.absent(),
                 Value<String?> boardGroupProp = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => KaalDatabasesCompanion.insert(
+              }) => TaskEraDatabasesCompanion.insert(
                 id: id,
                 name: name,
                 icon: icon,
@@ -14701,7 +14710,7 @@ class $$KaalDatabasesTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$KaalDatabasesTableReferences(db, table, e),
+                  $$TaskEraDatabasesTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -14718,15 +14727,15 @@ class $$KaalDatabasesTableTableManager
                     return [
                       if (dbPropertiesRefs)
                         await $_getPrefetchedData<
-                          KaalDatabase,
-                          $KaalDatabasesTable,
+                          TaskEraDatabase,
+                          $TaskEraDatabasesTable,
                           DbProperty
                         >(
                           currentTable: table,
-                          referencedTable: $$KaalDatabasesTableReferences
+                          referencedTable: $$TaskEraDatabasesTableReferences
                               ._dbPropertiesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$KaalDatabasesTableReferences(
+                              $$TaskEraDatabasesTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -14739,15 +14748,15 @@ class $$KaalDatabasesTableTableManager
                         ),
                       if (dbRowsRefs)
                         await $_getPrefetchedData<
-                          KaalDatabase,
-                          $KaalDatabasesTable,
+                          TaskEraDatabase,
+                          $TaskEraDatabasesTable,
                           DbRow
                         >(
                           currentTable: table,
-                          referencedTable: $$KaalDatabasesTableReferences
+                          referencedTable: $$TaskEraDatabasesTableReferences
                               ._dbRowsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$KaalDatabasesTableReferences(
+                              $$TaskEraDatabasesTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -14766,18 +14775,18 @@ class $$KaalDatabasesTableTableManager
       );
 }
 
-typedef $$KaalDatabasesTableProcessedTableManager =
+typedef $$TaskEraDatabasesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $KaalDatabasesTable,
-      KaalDatabase,
-      $$KaalDatabasesTableFilterComposer,
-      $$KaalDatabasesTableOrderingComposer,
-      $$KaalDatabasesTableAnnotationComposer,
-      $$KaalDatabasesTableCreateCompanionBuilder,
-      $$KaalDatabasesTableUpdateCompanionBuilder,
-      (KaalDatabase, $$KaalDatabasesTableReferences),
-      KaalDatabase,
+      $TaskEraDatabasesTable,
+      TaskEraDatabase,
+      $$TaskEraDatabasesTableFilterComposer,
+      $$TaskEraDatabasesTableOrderingComposer,
+      $$TaskEraDatabasesTableAnnotationComposer,
+      $$TaskEraDatabasesTableCreateCompanionBuilder,
+      $$TaskEraDatabasesTableUpdateCompanionBuilder,
+      (TaskEraDatabase, $$TaskEraDatabasesTableReferences),
+      TaskEraDatabase,
       PrefetchHooks Function({bool dbPropertiesRefs, bool dbRowsRefs})
     >;
 typedef $$DbPropertiesTableCreateCompanionBuilder =
@@ -14805,16 +14814,16 @@ final class $$DbPropertiesTableReferences
     extends BaseReferences<_$AppDatabase, $DbPropertiesTable, DbProperty> {
   $$DbPropertiesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $KaalDatabasesTable _databaseIdTable(_$AppDatabase db) => db
-      .kaalDatabases
-      .createAlias('db_properties__database_id__kaal_databases__id');
+  static $TaskEraDatabasesTable _databaseIdTable(_$AppDatabase db) => db
+      .taskEraDatabases
+      .createAlias('db_properties__database_id__task_era_databases__id');
 
-  $$KaalDatabasesTableProcessedTableManager get databaseId {
+  $$TaskEraDatabasesTableProcessedTableManager get databaseId {
     final $_column = $_itemColumn<int>('database_id')!;
 
-    final manager = $$KaalDatabasesTableTableManager(
+    final manager = $$TaskEraDatabasesTableTableManager(
       $_db,
-      $_db.kaalDatabases,
+      $_db.taskEraDatabases,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_databaseIdTable($_db));
     if (item == null) return manager;
@@ -14858,20 +14867,20 @@ class $$DbPropertiesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$KaalDatabasesTableFilterComposer get databaseId {
-    final $$KaalDatabasesTableFilterComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableFilterComposer get databaseId {
+    final $$TaskEraDatabasesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableFilterComposer(
+          }) => $$TaskEraDatabasesTableFilterComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -14916,20 +14925,20 @@ class $$DbPropertiesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$KaalDatabasesTableOrderingComposer get databaseId {
-    final $$KaalDatabasesTableOrderingComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableOrderingComposer get databaseId {
+    final $$TaskEraDatabasesTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableOrderingComposer(
+          }) => $$TaskEraDatabasesTableOrderingComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -14964,20 +14973,20 @@ class $$DbPropertiesTableAnnotationComposer
   GeneratedColumn<int> get sortOrder =>
       $composableBuilder(column: $table.sortOrder, builder: (column) => column);
 
-  $$KaalDatabasesTableAnnotationComposer get databaseId {
-    final $$KaalDatabasesTableAnnotationComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableAnnotationComposer get databaseId {
+    final $$TaskEraDatabasesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableAnnotationComposer(
+          }) => $$TaskEraDatabasesTableAnnotationComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -15140,15 +15149,16 @@ final class $$DbRowsTableReferences
     extends BaseReferences<_$AppDatabase, $DbRowsTable, DbRow> {
   $$DbRowsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $KaalDatabasesTable _databaseIdTable(_$AppDatabase db) =>
-      db.kaalDatabases.createAlias('db_rows__database_id__kaal_databases__id');
+  static $TaskEraDatabasesTable _databaseIdTable(_$AppDatabase db) => db
+      .taskEraDatabases
+      .createAlias('db_rows__database_id__task_era_databases__id');
 
-  $$KaalDatabasesTableProcessedTableManager get databaseId {
+  $$TaskEraDatabasesTableProcessedTableManager get databaseId {
     final $_column = $_itemColumn<int>('database_id')!;
 
-    final manager = $$KaalDatabasesTableTableManager(
+    final manager = $$TaskEraDatabasesTableTableManager(
       $_db,
-      $_db.kaalDatabases,
+      $_db.taskEraDatabases,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_databaseIdTable($_db));
     if (item == null) return manager;
@@ -15187,20 +15197,20 @@ class $$DbRowsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$KaalDatabasesTableFilterComposer get databaseId {
-    final $$KaalDatabasesTableFilterComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableFilterComposer get databaseId {
+    final $$TaskEraDatabasesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableFilterComposer(
+          }) => $$TaskEraDatabasesTableFilterComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -15240,20 +15250,20 @@ class $$DbRowsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$KaalDatabasesTableOrderingComposer get databaseId {
-    final $$KaalDatabasesTableOrderingComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableOrderingComposer get databaseId {
+    final $$TaskEraDatabasesTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableOrderingComposer(
+          }) => $$TaskEraDatabasesTableOrderingComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -15285,20 +15295,20 @@ class $$DbRowsTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$KaalDatabasesTableAnnotationComposer get databaseId {
-    final $$KaalDatabasesTableAnnotationComposer composer = $composerBuilder(
+  $$TaskEraDatabasesTableAnnotationComposer get databaseId {
+    final $$TaskEraDatabasesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.databaseId,
-      referencedTable: $db.kaalDatabases,
+      referencedTable: $db.taskEraDatabases,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$KaalDatabasesTableAnnotationComposer(
+          }) => $$TaskEraDatabasesTableAnnotationComposer(
             $db: $db,
-            $table: $db.kaalDatabases,
+            $table: $db.taskEraDatabases,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -15466,8 +15476,8 @@ class $AppDatabaseManager {
       $$CustomListItemsTableTableManager(_db, _db.customListItems);
   $$FocusSessionsTableTableManager get focusSessions =>
       $$FocusSessionsTableTableManager(_db, _db.focusSessions);
-  $$KaalDatabasesTableTableManager get kaalDatabases =>
-      $$KaalDatabasesTableTableManager(_db, _db.kaalDatabases);
+  $$TaskEraDatabasesTableTableManager get taskEraDatabases =>
+      $$TaskEraDatabasesTableTableManager(_db, _db.taskEraDatabases);
   $$DbPropertiesTableTableManager get dbProperties =>
       $$DbPropertiesTableTableManager(_db, _db.dbProperties);
   $$DbRowsTableTableManager get dbRows =>

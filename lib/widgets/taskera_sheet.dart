@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../settings/kaal_settings.dart';
+import '../settings/taskera_settings.dart';
 import 'wallpaper_background.dart';
 
 /// Opaque themed backdrop for bottom sheets / modals. Renders the app wallpaper
@@ -13,16 +13,16 @@ import 'wallpaper_background.dart';
 /// ```dart
 /// Container(
 ///   margin: ...,
-///   child: KaalSheetSurface(
+///   child: TaskEraSheetSurface(
 ///     borderRadius: BorderRadius.circular(22),
 ///     child: Container(decoration: BoxDecoration(color: colors.surf, ...), child: ...),
 ///   ),
 /// )
 /// ```
-class KaalSheetSurface extends ConsumerWidget {
+class TaskEraSheetSurface extends ConsumerWidget {
   final Widget child;
   final BorderRadius borderRadius;
-  const KaalSheetSurface({
+  const TaskEraSheetSurface({
     super.key,
     required this.child,
     this.borderRadius = const BorderRadius.vertical(top: Radius.circular(20)),
@@ -30,7 +30,7 @@ class KaalSheetSurface extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(kaalSettingsProvider);
+    final settings = ref.watch(taskeraSettingsProvider);
     return ClipRRect(
       borderRadius: borderRadius,
       child: Stack(

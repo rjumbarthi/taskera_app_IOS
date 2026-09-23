@@ -6,7 +6,7 @@ import '../data/database.dart' show Task;
 import '../data/providers/database_provider.dart';
 import '../data/providers/dtn_provider.dart';
 import '../settings/app_launch_prefs.dart';
-import '../settings/kaal_settings.dart';
+import '../settings/taskera_settings.dart';
 import '../settings/prefs_provider.dart';
 import 'dtn_widget_bridge.dart';
 import 'notification_service.dart';
@@ -108,7 +108,7 @@ class _DtnControllerState extends ConsumerState<DtnController>
   // Show or cancel the ongoing card to match current state.
   Future<void> _sync() async {
     if (!mounted) return;
-    final enabled = ref.read(kaalSettingsProvider).sw('dtnNotif');
+    final enabled = ref.read(taskeraSettingsProvider).sw('dtnNotif');
     final task    = ref.read(dtnTaskProvider);
     final svc     = ref.read(notificationServiceProvider);
     if (enabled && task != null) {
@@ -116,7 +116,7 @@ class _DtnControllerState extends ConsumerState<DtnController>
         taskId: task.id,
         title: task.title,
         quadrant: task.quadrant,
-        lockScreen: ref.read(kaalSettingsProvider).sw('dtnLockScreen'),
+        lockScreen: ref.read(taskeraSettingsProvider).sw('dtnLockScreen'),
       );
       await DtnWidgetBridge.update(title: task.title, meta: 'Q${task.quadrant}');
     } else {
@@ -130,7 +130,7 @@ class _DtnControllerState extends ConsumerState<DtnController>
     // Refresh the card whenever the top task changes or the setting flips.
     ref.listen<Task?>(dtnTaskProvider, (_, _) => _sync());
     ref.listen<bool>(
-      kaalSettingsProvider.select((s) => s.sw('dtnNotif')),
+      taskeraSettingsProvider.select((s) => s.sw('dtnNotif')),
       (_, _) => _sync(),
     );
     return widget.child;

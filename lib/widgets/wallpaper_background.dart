@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 
-enum KaalWallpaper {
+enum TaskEraWallpaper {
   none,
   aurora3,
   beach,
@@ -11,27 +11,27 @@ enum KaalWallpaper {
 }
 
 class WallpaperBackground extends StatelessWidget {
-  final KaalWallpaper wallpaper;
+  final TaskEraWallpaper wallpaper;
   final double? dim;
 
   const WallpaperBackground({
     super.key,
-    this.wallpaper = KaalWallpaper.ocean,
+    this.wallpaper = TaskEraWallpaper.ocean,
     this.dim,
   });
 
   String? get _assetPath => switch (wallpaper) {
-        KaalWallpaper.none     => null,
-        KaalWallpaper.aurora3  => 'assets/wallpapers/AURORA3 - Copy.JPG',
-        KaalWallpaper.beach    => 'assets/wallpapers/BEACH.JPG',
-        KaalWallpaper.nightSky => 'assets/wallpapers/NightSky.JPG',
-        KaalWallpaper.ocean    => 'assets/wallpapers/OCEAN.jpg',
-        KaalWallpaper.tree     => 'assets/wallpapers/tree.jpg',
+        TaskEraWallpaper.none     => null,
+        TaskEraWallpaper.aurora3  => 'assets/wallpapers/AURORA3 - Copy.JPG',
+        TaskEraWallpaper.beach    => 'assets/wallpapers/BEACH.JPG',
+        TaskEraWallpaper.nightSky => 'assets/wallpapers/NightSky.JPG',
+        TaskEraWallpaper.ocean    => 'assets/wallpapers/OCEAN.jpg',
+        TaskEraWallpaper.tree     => 'assets/wallpapers/tree.jpg',
       };
 
   @override
   Widget build(BuildContext context) {
-    final theme = KaalTheme.of(context);
+    final theme = TaskEraTheme.of(context);
     final path = _assetPath;
     if (path == null) {
       return ColoredBox(color: theme.colors.appBg);
@@ -57,21 +57,21 @@ class WallpaperBackground extends StatelessWidget {
   //   glass → medium dark gradient (balanced depth)
   //   dark  → strong dark gradient (moody; wallpaper barely visible)
   //   light → soft white wash      (airy, bright, hint of wallpaper colour)
-  Widget _scrim(KaalThemeMode mode) {
+  Widget _scrim(TaskEraThemeMode mode) {
     // Caller-driven dim (blur / screen-enter overlays): wash white on light,
     // black everywhere else.
     if (dim != null) {
       final op = (0.15 + dim! * 0.80).clamp(0.0, 1.0);
-      final base = mode == KaalThemeMode.light
+      final base = mode == TaskEraThemeMode.light
           ? Color.fromRGBO(255, 255, 255, op)
           : Color.fromRGBO(0, 0, 0, op);
       return DecoratedBox(decoration: BoxDecoration(color: base));
     }
 
     final stops = switch (mode) {
-      KaalThemeMode.glass => const [Color(0xCC000000), Color(0xE6000000)],
-      KaalThemeMode.dark  => const [Color(0xDE000000), Color(0xF2000000)],
-      KaalThemeMode.light => const [Color(0xCCFFFFFF), Color(0xEDFFFFFF)],
+      TaskEraThemeMode.glass => const [Color(0xCC000000), Color(0xE6000000)],
+      TaskEraThemeMode.dark  => const [Color(0xDE000000), Color(0xF2000000)],
+      TaskEraThemeMode.light => const [Color(0xCCFFFFFF), Color(0xEDFFFFFF)],
     };
     return DecoratedBox(
       decoration: BoxDecoration(

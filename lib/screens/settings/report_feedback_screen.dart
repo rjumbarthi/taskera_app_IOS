@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/wallpaper_background.dart';
 
-const _supportEmail = 'kaal_support@jumbarthi.com';
+const _supportEmail = 'taskera_support@jumbarthi.com';
 const _appVersion = 'v1.0.0';
 
 // Prepopulated tab → screen / sub-screen map so reporting is one-tap easy.
@@ -49,7 +49,7 @@ const _areas = <String, List<String>>{
   ],
   'Inbox': [
     'Emails / Gmail',
-    'Kaal suggestions',
+    'TaskEra suggestions',
     'Integrations',
     'Add task',
   ],
@@ -140,9 +140,9 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
 
     // 2) Fallback: open the email app prefilled to the developers.
     if (!stored) {
-      final subject = Uri.encodeComponent('[Kaal $type] $_where');
+      final subject = Uri.encodeComponent('[TaskEra $type] $_where');
       final body = Uri.encodeComponent(
-        '$desc\n\n—\nWhere: $_where\nFrom: $email\nApp: Kaal $_appVersion',
+        '$desc\n\n—\nWhere: $_where\nFrom: $email\nApp: TaskEra $_appVersion',
       );
       final mailto = Uri.parse(
         'mailto:$_supportEmail?subject=$subject&body=$body',
@@ -155,7 +155,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
         // 3) Last resort: copy a ready-to-send report to the clipboard.
         await Clipboard.setData(
           ClipboardData(
-            text: '[Kaal $type] $_where\n\n$desc\n\nSend to: $_supportEmail',
+            text: '[TaskEra $type] $_where\n\n$desc\n\nSend to: $_supportEmail',
           ),
         );
         if (mounted) setState(() => _sending = false);
@@ -174,9 +174,9 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final screens = _areas[_tab] ?? const <String>[];
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
 
     return Stack(
       children: [
@@ -310,7 +310,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                         ),
                         const SizedBox(height: 7),
                         Text(
-                          'Sent to the Kaal team with “$_where” · your email · app $_appVersion',
+                          'Sent to the TaskEra team with “$_where” · your email · app $_appVersion',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 10,
@@ -325,7 +325,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 13),
                             decoration: BoxDecoration(
-                              color: KaalColors.acc,
+                              color: TaskEraColors.acc,
                               borderRadius: BorderRadius.circular(11),
                             ),
                             alignment: Alignment.center,
@@ -363,7 +363,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
     );
   }
 
-  Widget _label(String t, KaalColors colors) => Padding(
+  Widget _label(String t, TaskEraColors colors) => Padding(
     padding: const EdgeInsets.only(bottom: 7),
     child: Text(
       t,
@@ -381,13 +381,13 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
     String label,
     bool on,
     VoidCallback onTap,
-    KaalColors colors,
+    TaskEraColors colors,
   ) => GestureDetector(
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: on ? KaalColors.accBg : Colors.transparent,
+        color: on ? TaskEraColors.accBg : Colors.transparent,
         borderRadius: BorderRadius.circular(9),
         border: Border.all(
           width: 0.5,
@@ -401,19 +401,19 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
           fontFamily: 'Inter',
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: on ? KaalColors.acc2 : colors.ink2,
+          color: on ? TaskEraColors.acc2 : colors.ink2,
         ),
       ),
     ),
   );
 
-  Widget _chip(String label, bool on, VoidCallback onTap, KaalColors colors) =>
+  Widget _chip(String label, bool on, VoidCallback onTap, TaskEraColors colors) =>
       GestureDetector(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
           decoration: BoxDecoration(
-            color: on ? KaalColors.accBg : Colors.transparent,
+            color: on ? TaskEraColors.accBg : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               width: 0.5,
@@ -426,7 +426,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
               fontFamily: 'Inter',
               fontSize: 12,
               fontWeight: on ? FontWeight.w600 : FontWeight.w400,
-              color: on ? KaalColors.acc2 : colors.ink2,
+              color: on ? TaskEraColors.acc2 : colors.ink2,
               height: 1,
             ),
           ),

@@ -6,8 +6,8 @@ import '../../data/database.dart';
 import '../../data/models/db_models.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/databases_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../util/input_limits.dart';
 
 // ── Persistence helpers ──────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ Future<void> _addOptionToProperty(
 
 /// Edits a single cell in-place, persisting immediately. Checkbox toggles
 /// directly; everything else opens a type-appropriate editor.
-Future<void> editCell(BuildContext context, WidgetRef ref, KaalColors colors,
+Future<void> editCell(BuildContext context, WidgetRef ref, TaskEraColors colors,
     int dbId, DbProperty prop, String rowId) async {
   final type = propTypeOf(prop);
   final row = _latestRow(ref, dbId, rowId);
@@ -99,7 +99,7 @@ Future<void> editCell(BuildContext context, WidgetRef ref, KaalColors colors,
 }
 
 Future<String?> _editTextValue(
-    BuildContext context, KaalColors colors, DbProperty prop, String current,
+    BuildContext context, TaskEraColors colors, DbProperty prop, String current,
     {bool number = false}) {
   final ctrl = TextEditingController(text: current);
   return showDialog<String>(
@@ -117,19 +117,19 @@ Future<String?> _editTextValue(
           hintText: 'Enter ${prop.name.toLowerCase()}…',
           hintStyle: TextStyle(color: colors.ink3),
           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.bdr)),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: KaalColors.acc)),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: TaskEraColors.acc)),
         ),
         onSubmitted: (v) => Navigator.pop(ctx, v),
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-        TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: KaalColors.acc2))),
+        TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
       ],
     ),
   );
 }
 
-Future<void> _pickSelect(BuildContext context, WidgetRef ref, KaalColors colors,
+Future<void> _pickSelect(BuildContext context, WidgetRef ref, TaskEraColors colors,
     int dbId, DbProperty prop, String rowId, dynamic current) async {
   await showModalBottomSheet(
     context: context,
@@ -162,7 +162,7 @@ Future<void> _pickSelect(BuildContext context, WidgetRef ref, KaalColors colors,
   );
 }
 
-Future<void> _pickMultiSelect(BuildContext context, WidgetRef ref, KaalColors colors,
+Future<void> _pickMultiSelect(BuildContext context, WidgetRef ref, TaskEraColors colors,
     int dbId, DbProperty prop, String rowId, dynamic current) async {
   await showModalBottomSheet(
     context: context,
@@ -206,14 +206,14 @@ Future<void> _pickMultiSelect(BuildContext context, WidgetRef ref, KaalColors co
   );
 }
 
-Widget _sheetTitle(KaalColors colors, String title) => Padding(
+Widget _sheetTitle(TaskEraColors colors, String title) => Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
       child: Row(children: [
         Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink3)),
       ]),
     );
 
-Widget _addOptionRow(BuildContext context, WidgetRef ref, KaalColors colors,
+Widget _addOptionRow(BuildContext context, WidgetRef ref, TaskEraColors colors,
     DbProperty prop, ValueChanged<String> onAdd) {
   return InkWell(
     onTap: () async {
@@ -234,7 +234,7 @@ Widget _addOptionRow(BuildContext context, WidgetRef ref, KaalColors colors,
 class _OptionRow extends StatelessWidget {
   final SelectOption option;
   final bool selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _OptionRow({required this.option, required this.selected, required this.colors, required this.onTap});
 
@@ -247,7 +247,7 @@ class _OptionRow extends StatelessWidget {
         child: Row(children: [
           OptionChip(option: option),
           const Spacer(),
-          if (selected) const Icon(Icons.check_rounded, size: 18, color: KaalColors.acc),
+          if (selected) const Icon(Icons.check_rounded, size: 18, color: TaskEraColors.acc),
         ]),
       ),
     );
@@ -294,7 +294,7 @@ class _RowEditorSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final props = ref.watch(dbPropertiesProvider(dbId)).value ?? const <DbProperty>[];
     final rows = ref.watch(dbRowsProvider(dbId)).value ?? const <DbRow>[];
     DbRow? row;
@@ -348,7 +348,7 @@ class _RowEditorSheet extends ConsumerWidget {
     );
   }
 
-  Widget _fieldRow(BuildContext context, WidgetRef ref, KaalColors colors,
+  Widget _fieldRow(BuildContext context, WidgetRef ref, TaskEraColors colors,
       DbProperty p, dynamic value) {
     final type = propTypeOf(p);
     return Padding(
@@ -382,11 +382,11 @@ class _RowEditorSheet extends ConsumerWidget {
     );
   }
 
-  Widget _valuePreview(KaalColors colors, DbProperty p, DbPropType type, dynamic value) {
+  Widget _valuePreview(TaskEraColors colors, DbProperty p, DbPropType type, dynamic value) {
     if (type == DbPropType.checkbox) {
       return Row(children: [
         Icon(value == true ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-            size: 20, color: value == true ? KaalColors.acc : colors.ink3),
+            size: 20, color: value == true ? TaskEraColors.acc : colors.ink3),
         const SizedBox(width: 8),
         Text(value == true ? 'Checked' : 'Unchecked', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2)),
       ]);

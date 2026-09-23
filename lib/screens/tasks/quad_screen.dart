@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/tasks_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../focus/focus_session_modal.dart';
 
@@ -29,7 +29,7 @@ void _showTaskDoneSnack(BuildContext context, WidgetRef ref, int taskId, String 
     duration: const Duration(milliseconds: 2000),
     action: SnackBarAction(
       label: 'Undo',
-      textColor: KaalColors.acc2,
+      textColor: TaskEraColors.acc2,
       onPressed: () => ref.read(appDatabaseProvider).tasksDao.toggleDone(taskId, false),
     ),
   ));
@@ -50,10 +50,10 @@ String _quadLabel(String q) => switch (q) {
     };
 
 Color _quadColor(String q) => switch (q) {
-      'q1' => KaalColors.q1,
-      'q2' => KaalColors.q2,
-      'q3' => KaalColors.q3,
-      _ => KaalColors.q4,
+      'q1' => TaskEraColors.q1,
+      'q2' => TaskEraColors.q2,
+      'q3' => TaskEraColors.q3,
+      _ => TaskEraColors.q4,
     };
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ class QuadScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final qi = _quadInt(quad);
     final color = _quadColor(quad);
     final label = _quadLabel(quad);
@@ -98,14 +98,14 @@ class QuadScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
                 decoration: BoxDecoration(
-                    color: KaalColors.accBg,
+                    color: TaskEraColors.accBg,
                     borderRadius: BorderRadius.circular(6)),
-                child: const Text('✦ Kaal AI',
+                child: const Text('✦ TaskEra AI',
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
-                        color: KaalColors.acc2)),
+                        color: TaskEraColors.acc2)),
               ),
             ],
           ),
@@ -183,7 +183,7 @@ class QuadScreen extends ConsumerWidget {
 class _FeaturedCard extends StatelessWidget {
   final Task task;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FeaturedCard(
       {required this.task, required this.color, required this.colors});
 
@@ -217,7 +217,7 @@ class _FeaturedCard extends StatelessWidget {
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
-                color: KaalColors.acc2),
+                color: TaskEraColors.acc2),
           ),
           const SizedBox(height: 6),
           Text(
@@ -291,7 +291,7 @@ class _FeaturedCard extends StatelessWidget {
 
 class _EmptyFeaturedCard extends StatelessWidget {
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _EmptyFeaturedCard({required this.color, required this.colors});
 
   @override
@@ -317,7 +317,7 @@ class _EmptyFeaturedCard extends StatelessWidget {
 class _QuadTaskRow extends ConsumerWidget {
   final Task task;
   final Color qColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _QuadTaskRow(
       {required this.task, required this.qColor, required this.colors});
 
@@ -344,7 +344,7 @@ class _QuadTaskRow extends ConsumerWidget {
                   style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
-                      color: task.isOverdue ? KaalColors.warn : colors.ink3)),
+                      color: task.isOverdue ? TaskEraColors.warn : colors.ink3)),
             ],
             const SizedBox(width: 8),
             GestureDetector(

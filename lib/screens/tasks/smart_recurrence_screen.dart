@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Habit, HabitsCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/habits_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/ai_insight_card.dart';
 
@@ -23,10 +23,10 @@ extension _BadgeExt on _Badge {
         _Badge.watching => 'Watching',
       };
   Color get color => switch (this) {
-        _Badge.adapt => KaalColors.q4,
-        _Badge.stretch => KaalColors.acc2,
+        _Badge.adapt => TaskEraColors.q4,
+        _Badge.stretch => TaskEraColors.acc2,
         _Badge.onTrack => const Color(0xFF9FCD44),
-        _Badge.watching => KaalColors.q3,
+        _Badge.watching => TaskEraColors.q3,
       };
   Color get bg => color.withAlpha(0x22);
 }
@@ -116,7 +116,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final habits = ref.watch(habitsProvider).value ?? [];
 
     final now = DateTime.now();
@@ -207,7 +207,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
           ),
           const SizedBox(height: 10),
 
-          // Real on-demand Kaal AI — reasons over your habit completion data.
+          // Real on-demand TaskEra AI — reasons over your habit completion data.
           AiInsightCard(
             input: aiInput,
             hint: 'Suggest smarter habit frequencies',
@@ -271,7 +271,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
 
 class _SuggestionCard extends StatelessWidget {
   final _HabitStat stat;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final void Function(String newSpec) onApply;
   final VoidCallback onKeep;
   const _SuggestionCard({
@@ -320,7 +320,7 @@ class _SuggestionCard extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: KaalColors.acc2)),
+                  color: TaskEraColors.acc2)),
           const SizedBox(height: 6),
           Text(body,
               style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.5)),
@@ -333,7 +333,7 @@ class _SuggestionCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                        color: KaalColors.accBg,
+                        color: TaskEraColors.accBg,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(width: 0.5, color: const Color(0x660A84FF))),
                     alignment: Alignment.center,
@@ -342,7 +342,7 @@ class _SuggestionCard extends StatelessWidget {
                             fontFamily: 'Inter',
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: KaalColors.acc2)),
+                            color: TaskEraColors.acc2)),
                   ),
                 ),
               ),
@@ -374,7 +374,7 @@ class _SuggestionCard extends StatelessWidget {
 
 class _RecurRow extends StatelessWidget {
   final _HabitStat stat;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _RecurRow({required this.stat, required this.colors});
 
   @override
@@ -442,7 +442,7 @@ class _BadgePill extends StatelessWidget {
 }
 
 class _Empty extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Empty({required this.colors});
 
   @override
@@ -460,7 +460,7 @@ class _Empty extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: colors.ink2)),
           const SizedBox(height: 4),
-          Text('Create a few habits and Kaal will suggest smarter frequencies as you log them.',
+          Text('Create a few habits and TaskEra will suggest smarter frequencies as you log them.',
               textAlign: TextAlign.center,
               style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
         ],

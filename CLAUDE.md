@@ -1,10 +1,10 @@
-# Kaal — Project Context for Claude Code (Flutter)
+# TaskEra — Project Context for Claude Code (Flutter)
 
 This file is auto-loaded by Claude Code on every session. It tells you what this project is, what's in this folder, and where to look for what.
 
 ## What this project is
 
-Kaal is an "Execution OS for high performers" — a Covey 4-quadrant productivity app. The reference is an HTML/CSS/JS prototype (single file, ~14k lines). You're rebuilding it as a **cross-platform Flutter app (Android + iOS + Windows)** as a 1:1 visual + interaction mirror.
+TaskEra is an "Execution OS for high performers" — a Covey 4-quadrant productivity app. The reference is an HTML/CSS/JS prototype (single file, ~14k lines). You're rebuilding it as a **cross-platform Flutter app (Android + iOS + Windows)** as a 1:1 visual + interaction mirror.
 
 - **Framework:** Flutter 3.44+
 - **Language:** Dart 3.x
@@ -16,22 +16,22 @@ Kaal is an "Execution OS for high performers" — a Covey 4-quadrant productivit
 ## How to start a new session
 
 Read these in order:
-1. `kaal_pkg/CLAUDE_CODE_PROMPT.md` — the full build instructions
-2. `kaal_pkg/specs/SPEC.md` — build spec
-3. `kaal_pkg/tokens.json` — design tokens
-4. `kaal_pkg/components.md` — component inventory (Flutter targets)
-5. `kaal_pkg/specs/SCREEN_MAP.md` — build order
+1. `taskera_pkg/CLAUDE_CODE_PROMPT.md` — the full build instructions
+2. `taskera_pkg/specs/SPEC.md` — build spec
+3. `taskera_pkg/tokens.json` — design tokens
+4. `taskera_pkg/components.md` — component inventory (Flutter targets)
+5. `taskera_pkg/specs/SCREEN_MAP.md` — build order
 
 Don't write any code before reading all five.
 
 ## Source-of-truth priority
 
 When two sources disagree:
-1. `kaal_pkg/screens_png/*.png` — what the user sees (visual ground truth)
-2. `kaal_pkg/tokens.json` — verified numeric values
-3. `kaal_pkg/shared/shared.css` — class-level CSS
-4. `kaal_pkg/screens_html/*.html` — DOM structure
-5. `kaal_pkg/components.md` and `specs/SPEC.md` — guidance
+1. `taskera_pkg/screens_png/*.png` — what the user sees (visual ground truth)
+2. `taskera_pkg/tokens.json` — verified numeric values
+3. `taskera_pkg/shared/shared.css` — class-level CSS
+4. `taskera_pkg/screens_html/*.html` — DOM structure
+5. `taskera_pkg/components.md` and `specs/SPEC.md` — guidance
 
 Never invent. If a value isn't in the package, ask. If anything conflicts with the PNG, the PNG wins.
 
@@ -47,33 +47,33 @@ The full first-run flow is: **Quote Splash → Sign In → (new user) Sign Up �
 ### Route map
 | Route constant | Path | File | Notes |
 |---|---|---|---|
-| `KaalRoutes.quote` | `/quote` | `screens/onboarding/quote_splash_screen.dart` | Initial route; auto-advances to signin |
-| `KaalRoutes.signin` | `/signin` | `screens/onboarding/signin_screen.dart` | Password mode default; OTP toggle |
-| `KaalRoutes.signup` | `/signup` | `screens/onboarding/signup_screen.dart` | Flutter-only, no prototype PNG |
-| `KaalRoutes.onboard` | `/onboard` | `screens/onboarding/onboard_screen.dart` | 6-step flow (step 0–5) |
+| `TaskEraRoutes.quote` | `/quote` | `screens/onboarding/quote_splash_screen.dart` | Initial route; auto-advances to signin |
+| `TaskEraRoutes.signin` | `/signin` | `screens/onboarding/signin_screen.dart` | Password mode default; OTP toggle |
+| `TaskEraRoutes.signup` | `/signup` | `screens/onboarding/signup_screen.dart` | Flutter-only, no prototype PNG |
+| `TaskEraRoutes.onboard` | `/onboard` | `screens/onboarding/onboard_screen.dart` | 6-step flow (step 0–5) |
 
 ### SigninScreen (`lib/screens/onboarding/signin_screen.dart`)
 - Two modes toggled by `bool _otpMode`: **password mode** (Email + Password fields, "Sign in" + "Sign in with email OTP" side-by-side) and **OTP mode** (Email + OTP field, full-width "Sign in with email OTP" button).
 - "Forgot password?" / "Resend OTP" — left-aligned, acc color, onTap empty (not yet implemented).
-- "New here? Create account" — right-aligned, only visible when `!_otpMode`, routes to `KaalRoutes.signup`.
-- Social row: Google + Apple (same row), Microsoft + "Skip — use local storage" (same row). Skip goes to `KaalRoutes.focus`.
+- "New here? Create account" — right-aligned, only visible when `!_otpMode`, routes to `TaskEraRoutes.signup`.
+- Social row: Google + Apple (same row), Microsoft + "Skip — use local storage" (same row). Skip goes to `TaskEraRoutes.focus`.
 - No bottom nav. No progress bar.
 
 ### SignupScreen (`lib/screens/onboarding/signup_screen.dart`)
 - Mirrors SigninScreen layout exactly (same wallpaper, SafeArea, padding `fromLTRB(18,22,18,24)`, same private widget set: `_Flbl`, `_FinputField`, `_SocialBtn`).
 - Two modes: **password mode** (Email + Password + Confirm Password, "Create Account" acc fill + "Sign up with email OTP" outline side-by-side, "Have an account? Sign in" right link) and **OTP mode** (Email + OTP, "Resend OTP" left link, full-width "Verify & Create Account" button).
-- On successful account creation (any method): routes to `KaalRoutes.onboard` (starts onboarding at step 0 = age gate).
-- Social buttons also route to `KaalRoutes.onboard`.
-- "← Back to sign in" and "Have an account? Sign in" both route to `KaalRoutes.signin`.
+- On successful account creation (any method): routes to `TaskEraRoutes.onboard` (starts onboarding at step 0 = age gate).
+- Social buttons also route to `TaskEraRoutes.onboard`.
+- "← Back to sign in" and "Have an account? Sign in" both route to `TaskEraRoutes.signin`.
 - No bottom nav. No progress bar.
 
 ### OnboardScreen (`lib/screens/onboarding/onboard_screen.dart`)
 - Single `StatefulWidget` with `int _step` (0–5). **No separate screen files per step.**
 - Step 0 = AgeGate, 1 = Who are you, 2 = Focus style, 3 = Peak hours, 4 = Goal, 5 = Upsell.
-- Step 5 completes onboarding → routes to `KaalRoutes.focus`.
-- **Progress bar:** 6 segments, height 4px, pinned at the **bottom** of screen (below `Expanded` content, above safe area). Active = `KaalColors.acc`, inactive = `Color(0x40FFFFFF)`.
+- Step 5 completes onboarding → routes to `TaskEraRoutes.focus`.
+- **Progress bar:** 6 segments, height 4px, pinned at the **bottom** of screen (below `Expanded` content, above safe area). Active = `TaskEraColors.acc`, inactive = `Color(0x40FFFFFF)`.
 - **Blur overlay:** `BackdropFilter(sigmaX:8, sigmaY:8)` + `Color(0x33000000)` dark overlay applied to the `Expanded` content region only — not the progress bar strip. Cards inside use `Colors.transparent` background (not `colors.surf`), `colors.bdr` border only.
-- **No bottom nav** on any onboarding screen. `KaalBottomNav` only appears inside `AppShell` (i.e., once the user reaches `/focus` and sibling tabs).
+- **No bottom nav** on any onboarding screen. `TaskEraBottomNav` only appears inside `AppShell` (i.e., once the user reaches `/focus` and sibling tabs).
 - Layout skeleton:
   ```dart
   Column(children: [
@@ -149,12 +149,12 @@ Implemented in `lib/util/platform_layout.dart` (`isDesktop` / `isMobile` helpers
 │       └── ocean.jpg
 ├── pubspec.yaml
 ├── CLAUDE.md                       ← you are reading this
-├── kaal_pkg/                       ← reference package (read-only)
+├── taskera_pkg/                       ← reference package (read-only)
 │   ├── README.md
 │   ├── CLAUDE_CODE_PROMPT.md
 │   ├── tokens.json
 │   ├── components.md
-│   ├── kaal-prototype.html
+│   ├── taskera-prototype.html
 │   ├── screens_png/                ← 100 reference PNGs
 │   ├── screens_html/               ← 100 HTML extracts
 │   ├── shared/
@@ -201,13 +201,13 @@ Alert me if:
 
 ## "Done" definition
 
-Run the Flutter app on each platform next to `kaal-prototype.html` at 390×844 in Chrome. The user can't tell which is which at a glance. Same colors, density, gestures, animations, data.
+Run the Flutter app on each platform next to `taskera-prototype.html` at 390×844 in Chrome. The user can't tell which is which at a glance. Same colors, density, gestures, animations, data.
 
 ## Common mistakes to avoid
 
 - Using Material defaults because they're convenient — they don't match.
-- Adding shadows / elevation — Kaal cards are flat translucent.
-- Hardcoding colors instead of using the theme palette via `KaalTheme.of(context).colors.X`.
+- Adding shadows / elevation — TaskEra cards are flat translucent.
+- Hardcoding colors instead of using the theme palette via `TaskEraTheme.of(context).colors.X`.
 - Using `AppBar` — wrong density. Build the top bar from `Container` + `Row`.
 - Using `Switch()` or `CupertinoSwitch()` — both wrong shape. Build custom (32×17 track, 13×13 thumb).
 - Using `ListTile` — anatomy doesn't match. Build rows from `Row` + `Container`.

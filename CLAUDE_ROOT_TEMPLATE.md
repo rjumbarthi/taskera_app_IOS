@@ -1,10 +1,10 @@
-# Kaal — Project Context for Claude Code (Flutter)
+# TaskEra — Project Context for Claude Code (Flutter)
 
 This file is auto-loaded by Claude Code on every session. It tells you what this project is, what's in this folder, and where to look for what.
 
 ## What this project is
 
-Kaal is an "Execution OS for high performers" — a Covey 4-quadrant productivity app. The reference is an HTML/CSS/JS prototype (single file, ~14k lines). You're rebuilding it as a **cross-platform Flutter app (Android + iOS + Windows)** as a 1:1 visual + interaction mirror.
+TaskEra is an "Execution OS for high performers" — a Covey 4-quadrant productivity app. The reference is an HTML/CSS/JS prototype (single file, ~14k lines). You're rebuilding it as a **cross-platform Flutter app (Android + iOS + Windows)** as a 1:1 visual + interaction mirror.
 
 - **Framework:** Flutter 3.44+
 - **Language:** Dart 3.x
@@ -16,22 +16,22 @@ Kaal is an "Execution OS for high performers" — a Covey 4-quadrant productivit
 ## How to start a new session
 
 Read these in order:
-1. `kaal_pkg/CLAUDE_CODE_PROMPT.md` — the full build instructions
-2. `kaal_pkg/specs/SPEC.md` — build spec
-3. `kaal_pkg/tokens.json` — design tokens
-4. `kaal_pkg/components.md` — component inventory (Flutter targets)
-5. `kaal_pkg/specs/SCREEN_MAP.md` — build order
+1. `taskera_pkg/CLAUDE_CODE_PROMPT.md` — the full build instructions
+2. `taskera_pkg/specs/SPEC.md` — build spec
+3. `taskera_pkg/tokens.json` — design tokens
+4. `taskera_pkg/components.md` — component inventory (Flutter targets)
+5. `taskera_pkg/specs/SCREEN_MAP.md` — build order
 
 Don't write any code before reading all five.
 
 ## Source-of-truth priority
 
 When two sources disagree:
-1. `kaal_pkg/screens_png/*.png` — what the user sees (visual ground truth)
-2. `kaal_pkg/tokens.json` — verified numeric values
-3. `kaal_pkg/shared/shared.css` — class-level CSS
-4. `kaal_pkg/screens_html/*.html` — DOM structure
-5. `kaal_pkg/components.md` and `specs/SPEC.md` — guidance
+1. `taskera_pkg/screens_png/*.png` — what the user sees (visual ground truth)
+2. `taskera_pkg/tokens.json` — verified numeric values
+3. `taskera_pkg/shared/shared.css` — class-level CSS
+4. `taskera_pkg/screens_html/*.html` — DOM structure
+5. `taskera_pkg/components.md` and `specs/SPEC.md` — guidance
 
 Never invent. If a value isn't in the package, ask. If anything conflicts with the PNG, the PNG wins.
 
@@ -83,12 +83,12 @@ After each phase: show the user what you built, wait for confirmation, then proc
 │       └── ocean.jpg
 ├── pubspec.yaml
 ├── CLAUDE.md                       ← you are reading this
-├── kaal_pkg/                       ← reference package (read-only)
+├── taskera_pkg/                       ← reference package (read-only)
 │   ├── README.md
 │   ├── CLAUDE_CODE_PROMPT.md
 │   ├── tokens.json
 │   ├── components.md
-│   ├── kaal-prototype.html
+│   ├── taskera-prototype.html
 │   ├── screens_png/                ← 100 reference PNGs
 │   ├── screens_html/               ← 100 HTML extracts
 │   ├── shared/
@@ -102,13 +102,13 @@ After each phase: show the user what you built, wait for confirmation, then proc
 
 ## "Done" definition
 
-Run the Flutter app on each platform next to `kaal-prototype.html` at 390×844 in Chrome. The user can't tell which is which at a glance. Same colors, density, gestures, animations, data.
+Run the Flutter app on each platform next to `taskera-prototype.html` at 390×844 in Chrome. The user can't tell which is which at a glance. Same colors, density, gestures, animations, data.
 
 ## Common mistakes to avoid
 
 - Using Material defaults because they're convenient — they don't match.
-- Adding shadows / elevation — Kaal cards are flat translucent.
-- Hardcoding colors instead of using the theme palette via `KaalTheme.of(context).colors.X`.
+- Adding shadows / elevation — TaskEra cards are flat translucent.
+- Hardcoding colors instead of using the theme palette via `TaskEraTheme.of(context).colors.X`.
 - Using `AppBar` — wrong density. Build the top bar from `Container` + `Row`.
 - Using `Switch()` or `CupertinoSwitch()` — both wrong shape. Build custom (32×17 track, 13×13 thumb).
 - Using `ListTile` — anatomy doesn't match. Build rows from `Row` + `Container`.

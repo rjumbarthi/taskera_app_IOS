@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class KaalShape {
+class TaskEraShape {
   // Border radii — from tokens.json radii_used (frequency ordered)
   static const BorderRadius card        = BorderRadius.all(Radius.circular(12)); // default card
   static const BorderRadius statCard    = BorderRadius.all(Radius.circular(14)); // .sc
@@ -15,5 +15,5 @@ class KaalShape {
   static const BorderRadius input       = BorderRadius.all(Radius.circular(4));  // text inputs
   static const BorderRadius roundChip   = BorderRadius.all(Radius.circular(18)); // round chip
 
-  const KaalShape();
+  const TaskEraShape();
 }

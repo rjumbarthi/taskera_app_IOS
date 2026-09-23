@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
+import '../theme/taskera_colors.dart';
 
 class TrendLine extends StatelessWidget {
   final List<double> values; // normalized 0.0–1.0
@@ -23,7 +23,7 @@ class TrendLine extends StatelessWidget {
       child: CustomPaint(
         painter: _TrendPainter(
           values: values,
-          color: color ?? KaalColors.acc,
+          color: color ?? TaskEraColors.acc,
         ),
       ),
     );

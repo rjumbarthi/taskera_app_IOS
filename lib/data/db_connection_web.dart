@@ -9,11 +9,11 @@ import 'package:drift/wasm.dart';
 ///
 /// `WasmDatabase.open` transparently picks the best available persistence
 /// backend for the browser (OPFS → IndexedDB → in-memory) so the same
-/// `kaal_db` name survives reloads wherever the browser allows it.
+/// `taskera_db` name survives reloads wherever the browser allows it.
 LazyDatabase openDatabaseConnection() {
   return LazyDatabase(() async {
     final result = await WasmDatabase.open(
-      databaseName: 'kaal_db',
+      databaseName: 'taskera_db',
       sqlite3Uri: Uri.parse('sqlite3.wasm'),
       driftWorkerUri: Uri.parse('drift_worker.js'),
     );

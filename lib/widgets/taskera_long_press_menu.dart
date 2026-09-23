@@ -10,13 +10,13 @@ import '../util/platform_layout.dart';
 // ── Public API ────────────────────────────────────────────────────────────────
 
 /// A single action item shown in the long-press context menu.
-class KaalMenuAction {
+class TaskEraMenuAction {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
   final bool destructive;
 
-  const KaalMenuAction({
+  const TaskEraMenuAction({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -31,23 +31,23 @@ class KaalMenuAction {
 ///
 /// Example:
 /// ```dart
-/// KaalLongPressMenu(
+/// TaskEraLongPressMenu(
 ///   actions: [
-///     KaalMenuAction(icon: Icons.edit, label: 'Edit', onTap: () { ... }),
-///     KaalMenuAction(icon: Icons.delete_rounded, label: 'Delete',
+///     TaskEraMenuAction(icon: Icons.edit, label: 'Edit', onTap: () { ... }),
+///     TaskEraMenuAction(icon: Icons.delete_rounded, label: 'Delete',
 ///                    onTap: () { ... }, destructive: true),
 ///   ],
 ///   child: MyRow(),
 /// )
 /// ```
-class KaalLongPressMenu extends StatefulWidget {
+class TaskEraLongPressMenu extends StatefulWidget {
   final Widget child;
-  final List<KaalMenuAction> actions;
+  final List<TaskEraMenuAction> actions;
   final String? menuTitle;
   final VoidCallback? onTap;
   final double scaleDown;
 
-  const KaalLongPressMenu({
+  const TaskEraLongPressMenu({
     super.key,
     required this.child,
     required this.actions,
@@ -57,10 +57,10 @@ class KaalLongPressMenu extends StatefulWidget {
   });
 
   @override
-  State<KaalLongPressMenu> createState() => _KaalLongPressMenuState();
+  State<TaskEraLongPressMenu> createState() => _TaskEraLongPressMenuState();
 }
 
-class _KaalLongPressMenuState extends State<KaalLongPressMenu> {
+class _TaskEraLongPressMenuState extends State<TaskEraLongPressMenu> {
   bool _pressed = false;
   Timer? _timer;
 
@@ -148,7 +148,7 @@ class _KaalLongPressMenuState extends State<KaalLongPressMenu> {
 
 class _MenuSheet extends StatelessWidget {
   final String? title;
-  final List<KaalMenuAction> actions;
+  final List<TaskEraMenuAction> actions;
   const _MenuSheet({this.title, required this.actions});
 
   @override
@@ -246,7 +246,7 @@ class _MenuSheet extends StatelessWidget {
 }
 
 class _ActionRow extends StatefulWidget {
-  final KaalMenuAction action;
+  final TaskEraMenuAction action;
   const _ActionRow({required this.action});
 
   @override

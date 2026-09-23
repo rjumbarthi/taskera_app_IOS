@@ -24,10 +24,10 @@ abstract class OAuthHelper {
     return List.generate(n, (_) => c[r.nextInt(c.length)]).join();
   }
 
-  static String get _scheme => isDesktop ? 'http' : 'kaalapp';
+  static String get _scheme => isDesktop ? 'http' : 'taskeraapp';
 
   static String redirect(String path) =>
-      isDesktop ? 'http://localhost' : 'kaalapp://$path';
+      isDesktop ? 'http://localhost' : 'taskeraapp://$path';
 
   /// Returns the callback URI on success, null if user cancelled, throws on error.
   static Future<String?> launch(String url) async {

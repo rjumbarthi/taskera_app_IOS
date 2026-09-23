@@ -3,7 +3,7 @@ import '../l10n/app_l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/database.dart' show Task, Note, Habit, KaalDatabase, DbRow, DbProperty;
+import '../data/database.dart' show Task, Note, Habit, TaskEraDatabase, DbRow, DbProperty;
 import '../data/models/note_block.dart';
 import '../data/models/db_models.dart';
 import '../data/providers/tasks_provider.dart';
@@ -11,8 +11,8 @@ import '../data/providers/notes_provider.dart';
 import '../data/providers/habits_provider.dart';
 import '../data/providers/databases_provider.dart';
 import '../routing/routes.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 import '../util/input_limits.dart';
 import '../widgets/add_back_button.dart';
 import '../widgets/quick_capture_bar.dart';
@@ -58,7 +58,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     List<Task> tasks,
     List<Note> notes,
     List<Habit> habits,
-    List<KaalDatabase> databases,
+    List<TaskEraDatabase> databases,
     List<DbRow> dbRows,
     List<DbProperty> dbProps,
   ) {
@@ -72,7 +72,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             kind: 'Task',
             title: t.title,
             sub: 'Q${t.quadrant}${t.isDone ? ' · Done' : ''}',
-            route: KaalRoutes.tasks,
+            route: TaskEraRoutes.tasks,
           ));
         }
       }
@@ -87,7 +87,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             kind: 'Note',
             title: n.title,
             sub: plain.length > 60 ? '${plain.substring(0, 60)}…' : plain,
-            route: '${KaalRoutes.notesEditor}/${n.id}',
+            route: '${TaskEraRoutes.notesEditor}/${n.id}',
           ));
         }
       }
@@ -100,7 +100,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             kind: 'Habit',
             title: '${h.emoji} ${h.name}',
             sub: h.frequencyLabel,
-            route: KaalRoutes.habits,
+            route: TaskEraRoutes.habits,
           ));
         }
       }
@@ -125,7 +125,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             kind: 'DB',
             title: title.isEmpty ? 'Untitled' : title,
             sub: 'in ${dbName[row.databaseId] ?? 'database'}',
-            route: '${KaalRoutes.databases}/${row.databaseId}',
+            route: '${TaskEraRoutes.databases}/${row.databaseId}',
           ));
         }
       }
@@ -136,7 +136,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final tasks   = ref.watch(allTasksProvider).value ?? [];
     final notes   = ref.watch(notesProvider).value ?? [];
     final habits  = ref.watch(habitsProvider).value ?? [];
@@ -156,7 +156,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           children: [
             AddBackButton(
               onTap: () =>
-                  context.canPop() ? context.pop() : context.go(KaalRoutes.focus),
+                  context.canPop() ? context.pop() : context.go(TaskEraRoutes.focus),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -220,7 +220,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 class _SearchInput extends StatelessWidget {
   final TextEditingController ctrl;
   final String query;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<String> onChange;
   final VoidCallback onClear;
   const _SearchInput({
@@ -279,7 +279,7 @@ class _SearchInput extends StatelessWidget {
 
 class _FilterRow extends StatelessWidget {
   final int selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onSelect;
   final List<String> filters;
   const _FilterRow({
@@ -303,7 +303,7 @@ class _FilterRow extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                   decoration: BoxDecoration(
-                    color: selected == i ? KaalColors.acc : colors.surf2,
+                    color: selected == i ? TaskEraColors.acc : colors.surf2,
                     borderRadius: BorderRadius.circular(6),
                     border: selected == i
                         ? null
@@ -332,20 +332,20 @@ class _FilterRow extends StatelessWidget {
 
 class _ResultTile extends StatelessWidget {
   final _Result result;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _ResultTile({required this.result, required this.colors, required this.onTap});
 
   static const _kindColor = {
-    'Task':  KaalColors.acc2,
+    'Task':  TaskEraColors.acc2,
     'Note':  Color(0xFF9FCD44),
-    'Habit': KaalColors.q4,
+    'Habit': TaskEraColors.q4,
     'DB':    Color(0xFFBF5AF2),
   };
 
   @override
   Widget build(BuildContext context) {
-    final kindColor = _kindColor[result.kind] ?? KaalColors.acc2;
+    final kindColor = _kindColor[result.kind] ?? TaskEraColors.acc2;
     return GestureDetector(
       onTap: onTap,
       child: Container(

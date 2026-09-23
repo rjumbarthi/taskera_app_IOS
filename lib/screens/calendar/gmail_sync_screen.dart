@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/google_access_sheet.dart';
 
@@ -75,7 +75,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final gmailEnabled = ref.watch(gmailEnabledProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,7 +149,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                         children: [
                           _StatCell(value: '0', label: AppL10n.of(context).emailsScanned, valueColor: colors.ink),
                           Container(width: 0.5, height: 32, color: colors.bdr),
-                          _StatCell(value: '0',  label: AppL10n.of(context).tasksCreated,  valueColor: KaalColors.acc2),
+                          _StatCell(value: '0',  label: AppL10n.of(context).tasksCreated,  valueColor: TaskEraColors.acc2),
                           Container(width: 0.5, height: 32, color: colors.bdr),
                           _StatCell(value: '0',  label: AppL10n.of(context).pendingReview, valueColor: colors.successFg),
                         ],
@@ -160,7 +160,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                         onTap: _connecting ? null : _connect,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+                          decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
                           alignment: Alignment.center,
                           child: _connecting
                               ? const SizedBox(width: 14, height: 14,
@@ -242,7 +242,7 @@ class _StatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Expanded(
       child: Column(
         children: [
@@ -257,7 +257,7 @@ class _StatCell extends StatelessWidget {
 
 class _SettingsCard extends StatefulWidget {
   final List<String> labels;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SettingsCard({required this.labels, required this.colors});
 
   @override
@@ -327,7 +327,7 @@ class _Toggle extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: 36, height: 21,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: value ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(11),
         ),
         child: AnimatedAlign(

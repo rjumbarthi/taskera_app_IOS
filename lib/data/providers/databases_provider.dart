@@ -3,13 +3,13 @@ import '../database.dart';
 import 'database_provider.dart';
 
 /// All databases, newest first.
-final databasesProvider = StreamProvider<List<KaalDatabase>>((ref) {
+final databasesProvider = StreamProvider<List<TaskEraDatabase>>((ref) {
   return ref.watch(appDatabaseProvider).databasesDao.watchDatabases();
 });
 
 /// A single database by id.
 final databaseProvider =
-    StreamProvider.family<KaalDatabase?, int>((ref, id) {
+    StreamProvider.family<TaskEraDatabase?, int>((ref, id) {
   return ref.watch(appDatabaseProvider).databasesDao.watchDatabase(id);
 });
 

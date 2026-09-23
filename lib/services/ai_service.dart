@@ -108,7 +108,7 @@ final aiServiceProvider = Provider<AiService>(
     Supabase.instance.client,
     () async {
       // Use whichever provider the user connected; Claude wins if both are set,
-      // otherwise fall back to Kaal's managed keys.
+      // otherwise fall back to TaskEra's managed keys.
       final anth = await ref.read(anthropicServiceProvider).getKey();
       if (anth != null && anth.isNotEmpty) return (provider: 'anthropic', key: anth);
       final oai = await ref.read(openAiServiceProvider).getKey();

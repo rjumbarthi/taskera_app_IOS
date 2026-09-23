@@ -9,7 +9,7 @@ import '../util/platform_layout.dart';
 class DtnWidgetBridge {
   DtnWidgetBridge._();
 
-  static const _appGroupId = 'group.com.port443.kaal'; // iOS App Group
+  static const _appGroupId = 'group.com.port443.taskera'; // iOS App Group
 
   static Future<void> update({
     required String title,

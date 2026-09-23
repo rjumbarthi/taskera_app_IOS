@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class KaalColorSwatch extends StatelessWidget {
+class TaskEraColorSwatch extends StatelessWidget {
   final Color color;
   final bool selected;
   final VoidCallback? onTap;
 
-  const KaalColorSwatch({
+  const TaskEraColorSwatch({
     super.key,
     required this.color,
     required this.selected,

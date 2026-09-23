@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class SettingsRow extends StatelessWidget {
   final Widget? icon;
@@ -22,7 +22,7 @@ class SettingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -36,7 +36,7 @@ class SettingsRow extends StatelessWidget {
                 height: 22,
                 decoration: BoxDecoration(
                   color: iconBg,
-                  borderRadius: KaalShape.setIco,
+                  borderRadius: TaskEraShape.setIco,
                 ),
                 child: icon,
               ),

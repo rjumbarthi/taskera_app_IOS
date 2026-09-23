@@ -5,11 +5,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/providers/auth_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_top_bar.dart';
+import '../../widgets/taskera_top_bar.dart';
 import '../../widgets/wallpaper_background.dart';
 
 class ReferralScreen extends ConsumerWidget {
@@ -17,9 +17,9 @@ class ReferralScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors   = KaalTheme.of(context).colors;
+    final colors   = TaskEraTheme.of(context).colors;
     final safeBot  = MediaQuery.of(context).padding.bottom;
-    final wallpaper = ref.watch(kaalSettingsProvider).wallpaper;
+    final wallpaper = ref.watch(taskeraSettingsProvider).wallpaper;
     // Per-user referral code derived from the account id (null when local-only).
     final code = referralCodeFor(ref.watch(currentUserProvider)?.id);
 
@@ -28,7 +28,7 @@ class ReferralScreen extends ConsumerWidget {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          KaalTopBar(
+          TaskEraTopBar(
             title: AppL10n.of(context).inviteFriends,
             leading: AddBackButton(onTap: () => Navigator.of(context).pop()),
           ),
@@ -66,7 +66,7 @@ String? referralCodeFor(String? uid) {
 // ── Hero section ──────────────────────────────────────────────────────────────
 
 class _HeroSection extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _HeroSection({required this.colors});
 
   @override
@@ -82,7 +82,7 @@ class _HeroSection extends StatelessWidget {
                 fontVariations: const [FontVariation('wght', 700)],
                 color: colors.ink, height: 1.2)),
         const SizedBox(height: 6),
-        Text('Invite a friend. When they subscribe to Kaal Pro, you both get\n1 month free.',
+        Text('Invite a friend. When they subscribe to TaskEra Pro, you both get\n1 month free.',
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'Inter', fontSize: 13,
                 color: colors.ink3, height: 1.5)),
@@ -94,7 +94,7 @@ class _HeroSection extends StatelessWidget {
 // ── Referral link card ────────────────────────────────────────────────────────
 
 class _ReferralLinkCard extends StatefulWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String? code;
   const _ReferralLinkCard({required this.colors, this.code});
 
@@ -107,7 +107,7 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
 
   void _copy() {
     if (widget.code == null) return;
-    Clipboard.setData(ClipboardData(text: 'kaal.app/join/${widget.code}'));
+    Clipboard.setData(ClipboardData(text: 'taskera.app/join/${widget.code}'));
     setState(() => _copied = true);
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) setState(() => _copied = false);
@@ -138,9 +138,9 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                  widget.code != null ? 'kaal.app/join/${widget.code}' : 'Sign in to get your link',
+                  widget.code != null ? 'taskera.app/join/${widget.code}' : 'Sign in to get your link',
                   style: TextStyle(fontFamily: 'ui-monospace, monospace',
-                      fontSize: 12, color: widget.code != null ? KaalColors.acc2 : c.ink3, height: 1)),
+                      fontSize: 12, color: widget.code != null ? TaskEraColors.acc2 : c.ink3, height: 1)),
             ),
           ),
           const SizedBox(width: 6),
@@ -149,7 +149,7 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
               decoration: BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(_copied ? 'Copied!' : 'Copy',
@@ -166,13 +166,13 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
 // ── Share buttons ─────────────────────────────────────────────────────────────
 
 class _ShareButtons extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String? code;
   const _ShareButtons({required this.colors, this.code});
 
   String get _invite => code != null
-      ? 'Join me on Kaal — https://kaal.app/join/$code'
-      : 'Join me on Kaal — https://kaal.app';
+      ? 'Join me on TaskEra — https://taskera.app/join/$code'
+      : 'Join me on TaskEra — https://taskera.app';
 
   // Open the target app with the invite prefilled; fall back to copying the
   // link if the app/scheme isn't available (e.g. WhatsApp not installed).
@@ -236,7 +236,7 @@ class _ShareBtn extends StatelessWidget {
 // ── Stats card ────────────────────────────────────────────────────────────────
 
 class _StatsCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatsCard({required this.colors});
 
   @override
@@ -256,13 +256,13 @@ class _StatsCard extends StatelessWidget {
         const SizedBox(height: 8),
         Row(children: [
           _StatCell(value: '0', label: 'Invited',
-              bg: colors.surf2, valueColor: KaalColors.acc2),
+              bg: colors.surf2, valueColor: TaskEraColors.acc2),
           const SizedBox(width: 5),
           _StatCell(value: '0', label: 'Joined',
-              bg: colors.surf2, valueColor: KaalColors.q2),
+              bg: colors.surf2, valueColor: TaskEraColors.q2),
           const SizedBox(width: 5),
           _StatCell(value: '0', label: 'Earned',
-              bg: const Color(0x14127000), valueColor: KaalColors.q2),
+              bg: const Color(0x14127000), valueColor: TaskEraColors.q2),
         ]),
       ]),
     );

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/providers/habits_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../l10n/app_l10n.dart';
 import '../../widgets/add_back_button.dart';
 
@@ -99,7 +99,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final habits  = ref.watch(habitsProvider).valueOrNull ?? [];
     final logs    = ref.watch(allHabitLogsInRangeProvider((_periodStart, _periodEnd))).valueOrNull ?? [];
     final doneLogs = logs.where((l) => !l.isSkipped).toList();
@@ -266,7 +266,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
               const SizedBox(height: 6),
               Row(
                 children: [
-                  _StatTile(label: 'Perfect Days', value: '$perfectDays', valueColor: KaalColors.acc2, colors: colors),
+                  _StatTile(label: 'Perfect Days', value: '$perfectDays', valueColor: TaskEraColors.acc2, colors: colors),
                   const SizedBox(width: 6),
                   _StatTile(label: 'Total Completions', value: '$totalCompletions', valueColor: colors.ink, colors: colors),
                 ],
@@ -365,7 +365,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
 
 class _RoundBtn extends StatelessWidget {
   final IconData icon;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _RoundBtn({required this.icon, required this.colors, required this.onTap});
 
@@ -385,7 +385,7 @@ class _RoundBtn extends StatelessWidget {
 class _StatTile extends StatelessWidget {
   final String label, value;
   final Color valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatTile({required this.label, required this.value, required this.valueColor, required this.colors});
 
   @override
@@ -415,7 +415,7 @@ class _HabitBar extends StatelessWidget {
   final String emoji, name;
   final double pct;
   final Color barColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _HabitBar({required this.emoji, required this.name, required this.pct, required this.barColor, required this.colors});
 
   @override

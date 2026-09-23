@@ -1,17 +1,17 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract final class AppLaunchPrefs {
-  static const _onboardingDone = 'kaal.onboardingDone';
-  static const _skipAuth       = 'kaal.skipAuth';
-  static const _installDate    = 'kaal.installDate';
-  static const _lastActive     = 'kaal.lastActiveAt';
-  static const _eodShownDate   = 'kaal.eodShownDate'; // yyyymmdd
-  static const _eodHour        = 'kaal.eodHour';      // 0–23, default 18 (6 PM)
+  static const _onboardingDone = 'taskera.onboardingDone';
+  static const _skipAuth       = 'taskera.skipAuth';
+  static const _installDate    = 'taskera.installDate';
+  static const _lastActive     = 'taskera.lastActiveAt';
+  static const _eodShownDate   = 'taskera.eodShownDate'; // yyyymmdd
+  static const _eodHour        = 'taskera.eodHour';      // 0–23, default 18 (6 PM)
 
   // ── Onboarding profile (written once on finish, read-only after) ─────────────
-  static const _kRole  = 'kaal.profile.role';
-  static const _kFocus = 'kaal.profile.focus';
-  static const _kPeak  = 'kaal.profile.peak';
+  static const _kRole  = 'taskera.profile.role';
+  static const _kFocus = 'taskera.profile.focus';
+  static const _kPeak  = 'taskera.profile.peak';
 
   static Future<void> saveProfile(
     SharedPreferences p, {

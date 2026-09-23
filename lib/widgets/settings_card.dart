@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 /// B4 — Wraps a list of SettingsRows in a glass card with hairline dividers between rows.
 class SettingsCard extends StatelessWidget {
@@ -10,15 +10,15 @@ class SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       decoration: BoxDecoration(
         color: colors.surf,
-        borderRadius: KaalShape.card,
+        borderRadius: TaskEraShape.card,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: ClipRRect(
-        borderRadius: KaalShape.card,
+        borderRadius: TaskEraShape.card,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

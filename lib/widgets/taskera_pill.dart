@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
+import '../theme/taskera_shape.dart';
 
 /// Tiny metadata badge — "Q1 · Overdue", schedule tags, etc.
-class KaalPill extends StatelessWidget {
+class TaskEraPill extends StatelessWidget {
   final String label;
   final Color color;
   final Color? bgColor;
 
-  const KaalPill({
+  const TaskEraPill({
     super.key,
     required this.label,
     required this.color,
@@ -20,7 +20,7 @@ class KaalPill extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
       decoration: BoxDecoration(
         color: bgColor ?? color.withAlpha(30),
-        borderRadius: KaalShape.pill,
+        borderRadius: TaskEraShape.pill,
       ),
       child: Text(
         label,

@@ -229,10 +229,10 @@ class GoogleService {
     await _supabase.auth.signInWithOAuth(
       OAuthProvider.google,
       scopes: scope,
-      redirectTo: 'io.supabase.kaalapp://login-callback',
+      redirectTo: 'io.supabase.taskeraapp://login-callback',
       authScreenLaunchMode: LaunchMode.externalApplication,
       // Force Google to always render the full consent screen listing every
-      // requested scope, even for an account that authorized Kaal before.
+      // requested scope, even for an account that authorized TaskEra before.
       // Without prompt=consent, a returning account skips the scope screen —
       // which is why OAuth verification couldn't see the scopes in the demo.
       // access_type=offline also ensures a refresh token is issued.

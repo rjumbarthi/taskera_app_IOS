@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/tasks_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -15,15 +15,15 @@ class BoardScreen extends ConsumerWidget {
   const BoardScreen({super.key});
 
   static const _cols = [
-    (quad: 1, label: 'Q1 · Do Now',    color: KaalColors.q1),
-    (quad: 2, label: 'Q2 · Schedule',  color: KaalColors.q2),
-    (quad: 3, label: 'Q3 · Delegate',  color: KaalColors.q3),
-    (quad: 4, label: 'Q4 · Eliminate', color: KaalColors.q4),
+    (quad: 1, label: 'Q1 · Do Now',    color: TaskEraColors.q1),
+    (quad: 2, label: 'Q2 · Schedule',  color: TaskEraColors.q2),
+    (quad: 3, label: 'Q3 · Delegate',  color: TaskEraColors.q3),
+    (quad: 4, label: 'Q4 · Eliminate', color: TaskEraColors.q4),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final tasksByQuad = [
       ref.watch(quadrantTasksProvider(1)).valueOrNull ?? [],
       ref.watch(quadrantTasksProvider(2)).valueOrNull ?? [],
@@ -85,7 +85,7 @@ class _BoardColumn extends StatelessWidget {
   final String label;
   final Color color;
   final List<Task> tasks;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _BoardColumn({required this.label, required this.color, required this.tasks, required this.colors});
 
   @override
@@ -164,7 +164,7 @@ class _BoardColumn extends StatelessWidget {
 class _BoardTaskCard extends StatelessWidget {
   final Task task;
   final Color quadColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _BoardTaskCard({required this.task, required this.quadColor, required this.colors});
 
   String get _meta {

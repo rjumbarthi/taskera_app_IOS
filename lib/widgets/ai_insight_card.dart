@@ -7,13 +7,13 @@ import '../routing/routes.dart';
 import '../services/ad_service.dart';
 import '../services/ai_service.dart';
 import '../util/platform_layout.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
-/// On-demand "Kaal AI" insight card. Tapping **Generate** calls the built-in AI
+/// On-demand "TaskEra AI" insight card. Tapping **Generate** calls the built-in AI
 /// (the `ai-proxy` edge function → Claude/OpenAI) with [input] and renders the
 /// returned insights. It's on-demand by design so it never auto-burns the daily
-/// AI quota on every screen view. Replaces the old hardcoded "✦ Kaal AI" mockups.
+/// AI quota on every screen view. Replaces the old hardcoded "✦ TaskEra AI" mockups.
 class AiInsightCard extends ConsumerStatefulWidget {
   /// The real context the AI reasons over (built from the screen's live data).
   final String input;
@@ -26,7 +26,7 @@ class AiInsightCard extends ConsumerStatefulWidget {
   const AiInsightCard({
     super.key,
     required this.input,
-    this.hint = 'Get a Kaal AI insight on this',
+    this.hint = 'Get a TaskEra AI insight on this',
     this.margin,
   });
 
@@ -82,7 +82,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final unlocked = ref.watch(aiUnlockedProvider).valueOrNull ?? false;
     return Padding(
       padding: widget.margin ?? const EdgeInsets.only(bottom: 8),
@@ -97,10 +97,10 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Text((unlocked || _adUnlock) ? '✦ KAAL AI' : '✦ KAAL AI · PRO',
+              Text((unlocked || _adUnlock) ? '✦ TASKERA AI' : '✦ TASKERA AI · PRO',
                   style: const TextStyle(
                       fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
-                      letterSpacing: 0.4, color: KaalColors.acc2, height: 1)),
+                      letterSpacing: 0.4, color: TaskEraColors.acc2, height: 1)),
               const Spacer(),
               if (unlocked && _generated && !_loading)
                 GestureDetector(
@@ -118,15 +118,15 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
   }
 
   // Shown to free users instead of real AI output.
-  Widget _upgradeBody(BuildContext context, KaalColors colors) {
+  Widget _upgradeBody(BuildContext context, TaskEraColors colors) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       GestureDetector(
-        onTap: () => context.push(KaalRoutes.paywall),
+        onTap: () => context.push(TaskEraRoutes.paywall),
         behavior: HitTestBehavior.opaque,
         child: Row(children: [
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Unlock AI insights with Kaal Pro',
+              Text('Unlock AI insights with TaskEra Pro',
                   style: TextStyle(
                       fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600,
                       color: colors.ink, height: 1.3)),
@@ -139,14 +139,14 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
           Container(
             padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
             decoration: BoxDecoration(
-              color: KaalColors.accBg,
+              color: TaskEraColors.accBg,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
             ),
             child: const Text('Upgrade →',
                 style: TextStyle(
                     fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
-                    color: KaalColors.acc2, height: 1)),
+                    color: TaskEraColors.acc2, height: 1)),
           ),
         ]),
       ),
@@ -173,11 +173,11 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
     ]);
   }
 
-  Widget _body(KaalColors colors) {
+  Widget _body(TaskEraColors colors) {
     if (_loading) {
       return Row(children: [
         const SizedBox(width: 13, height: 13,
-            child: CircularProgressIndicator(strokeWidth: 1.6, color: KaalColors.acc2)),
+            child: CircularProgressIndicator(strokeWidth: 1.6, color: TaskEraColors.acc2)),
         const SizedBox(width: 8),
         Text('Thinking…', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
       ]);
@@ -203,12 +203,12 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
           Container(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             decoration: BoxDecoration(
-              color: KaalColors.accBg,
+              color: TaskEraColors.accBg,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
             ),
             child: const Text('Generate',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
           ),
         ]),
       );
@@ -231,7 +231,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
 
 class _InsightRow extends StatelessWidget {
   final Map<String, String> item;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _InsightRow({required this.item, required this.colors});
 
   @override

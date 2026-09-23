@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 
 class BarChartData {
   final double value; // 0.0 – 1.0 (normalized)
@@ -9,13 +9,13 @@ class BarChartData {
   const BarChartData({required this.value, required this.color, this.label});
 }
 
-class KaalBarChart extends StatelessWidget {
+class TaskEraBarChart extends StatelessWidget {
   final List<BarChartData> bars;
   final double height;
   final double barWidth;
   final double gap;
 
-  const KaalBarChart({
+  const TaskEraBarChart({
     super.key,
     required this.bars,
     this.height = 80,
@@ -25,7 +25,7 @@ class KaalBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return SizedBox(
       height: height,
       child: Row(

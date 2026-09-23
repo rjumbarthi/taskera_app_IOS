@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/reminder.dart';
 import '../data/providers/reminders_provider.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
-import 'kaal_sheet.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
+import 'taskera_sheet.dart';
 
 String fmtReminderWhen(DateTime d) {
   final now = DateTime.now();
@@ -50,7 +50,7 @@ void showAddReminderSheet(
 /// Inline "Reminders & Alarms" manager — lives directly on a parent screen
 /// (the Calendar tab). Shows the list with delete + an Add button; no subscreen.
 class RemindersSection extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const RemindersSection({super.key, required this.colors});
 
   @override
@@ -144,7 +144,7 @@ class RemindersSection extends ConsumerWidget {
 
 class _InlineReminderRow extends StatelessWidget {
   final Reminder reminder;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onDelete;
   const _InlineReminderRow({
     required this.reminder,
@@ -155,7 +155,7 @@ class _InlineReminderRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final past = reminder.isPast;
-    final accent = reminder.isAlarm ? const Color(0xFFFF453A) : KaalColors.acc;
+    final accent = reminder.isAlarm ? const Color(0xFFFF453A) : TaskEraColors.acc;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -273,7 +273,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final safeBot =
         MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom;
     final valid = !_when.isBefore(DateTime.now());
@@ -281,7 +281,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-        child: KaalSheetSurface(
+        child: TaskEraSheetSurface(
           borderRadius: BorderRadius.circular(22),
           child: Container(
             padding: EdgeInsets.fromLTRB(18, 16, 18, 16 + safeBot),
@@ -342,7 +342,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
                       border: InputBorder.none,
                       isDense: true,
                     ),
-                    cursorColor: KaalColors.acc,
+                    cursorColor: TaskEraColors.acc,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -388,7 +388,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
                   child: Container(
                     height: 46,
                     decoration: BoxDecoration(
-                      color: valid ? KaalColors.acc : colors.surf2,
+                      color: valid ? TaskEraColors.acc : colors.surf2,
                       borderRadius: BorderRadius.circular(11),
                     ),
                     alignment: Alignment.center,
@@ -425,7 +425,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
 class _TypeBtn extends StatelessWidget {
   final String label;
   final bool selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _TypeBtn(
       {required this.label, required this.selected, required this.colors, required this.onTap});
@@ -438,7 +438,7 @@ class _TypeBtn extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
-            color: selected ? KaalColors.accBg : Colors.transparent,
+            color: selected ? TaskEraColors.accBg : Colors.transparent,
             borderRadius: BorderRadius.circular(9),
             border: Border.all(
                 width: 0.5, color: selected ? const Color(0x4D0A84FF) : colors.bdr),
@@ -449,7 +449,7 @@ class _TypeBtn extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: selected ? KaalColors.acc2 : colors.ink3,
+                  color: selected ? TaskEraColors.acc2 : colors.ink3,
                   height: 1)),
         ),
       ),
@@ -460,7 +460,7 @@ class _TypeBtn extends StatelessWidget {
 class _PickField extends StatelessWidget {
   final IconData icon;
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _PickField(
       {required this.icon, required this.label, required this.colors, required this.onTap});

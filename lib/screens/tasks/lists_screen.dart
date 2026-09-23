@@ -8,8 +8,8 @@ import '../../data/database.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/lists_provider.dart';
 import '../../services/activity_log_service.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ Future<void> _showListSheet(
   WidgetRef ref, {
   CustomList? existing,
 }) async {
-  final colors = KaalTheme.of(context).colors;
+  final colors = TaskEraTheme.of(context).colors;
   final titleCtrl = TextEditingController(text: existing?.title ?? '');
   final emojiCtrl = TextEditingController(text: existing?.emoji ?? '📋');
   DateTime? selectedDate = existing?.dueDate;
@@ -119,7 +119,7 @@ Future<void> _showListSheet(
                           hintStyle: TextStyle(fontFamily: 'Inter', color: colors.ink3),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: colors.bdr)),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: colors.bdr)),
-                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: KaalColors.acc)),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: TaskEraColors.acc)),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           filled: true,
                           fillColor: colors.surf2,
@@ -146,18 +146,18 @@ Future<void> _showListSheet(
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
                         decoration: BoxDecoration(
-                          color: selectedDate != null ? KaalColors.accBg : Colors.transparent,
+                          color: selectedDate != null ? TaskEraColors.accBg : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(width: 0.5, color: selectedDate != null ? const Color(0x330A84FF) : colors.bdr),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.calendar_today_outlined, size: 12, color: selectedDate != null ? KaalColors.acc2 : colors.ink3),
+                            Icon(Icons.calendar_today_outlined, size: 12, color: selectedDate != null ? TaskEraColors.acc2 : colors.ink3),
                             const SizedBox(width: 5),
                             Text(
                               selectedDate != null ? _fmtDate(selectedDate!) : 'Add date',
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: selectedDate != null ? KaalColors.acc2 : colors.ink3),
+                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: selectedDate != null ? TaskEraColors.acc2 : colors.ink3),
                             ),
                           ],
                         ),
@@ -186,7 +186,7 @@ Future<void> _showListSheet(
                           margin: const EdgeInsets.only(right: 6),
                           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           decoration: BoxDecoration(
-                            color: active ? KaalColors.accBg : Colors.transparent,
+                            color: active ? TaskEraColors.accBg : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               width: 0.5,
@@ -198,7 +198,7 @@ Future<void> _showListSheet(
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 12,
-                              color: active ? KaalColors.acc2 : colors.ink3,
+                              color: active ? TaskEraColors.acc2 : colors.ink3,
                               height: 1,
                             ),
                           ),
@@ -239,7 +239,7 @@ Future<void> _showListSheet(
                   child: Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 11),
-                    decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(12)),
                     child: Text(existing == null ? 'Create Checklist' : 'Save Changes',
                         style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white)),
                   ),
@@ -289,7 +289,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final lists  = ref.watch(listsProvider).valueOrNull ?? [];
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeScrollToTarget());
 
@@ -362,7 +362,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
             child: Container(
               width: 38, height: 38,
               decoration: const BoxDecoration(
-                color: KaalColors.acc,
+                color: TaskEraColors.acc,
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Color(0x800A84FF), blurRadius: 14, offset: Offset(0, 4))],
               ),
@@ -380,7 +380,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
 
 class _ListCard extends ConsumerStatefulWidget {
   final CustomList list;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -466,17 +466,17 @@ class _ListCardState extends ConsumerState<_ListCard> {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                     decoration: BoxDecoration(
-                      color: newDate != null ? KaalColors.accBg : Colors.transparent,
+                      color: newDate != null ? TaskEraColors.accBg : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(width: 0.5, color: newDate != null ? const Color(0x330A84FF) : colors.bdr),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today_outlined, size: 14, color: newDate != null ? KaalColors.acc2 : colors.ink3),
+                        Icon(Icons.calendar_today_outlined, size: 14, color: newDate != null ? TaskEraColors.acc2 : colors.ink3),
                         const SizedBox(width: 8),
                         Text(
                           newDate != null ? _fmtDate(newDate!) : 'Pick a date',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: newDate != null ? KaalColors.acc2 : colors.ink3),
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: newDate != null ? TaskEraColors.acc2 : colors.ink3),
                         ),
                       ],
                     ),
@@ -506,7 +506,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
-                      color: newDate != null ? KaalColors.acc : colors.surf2,
+                      color: newDate != null ? TaskEraColors.acc : colors.surf2,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text('Duplicate',
@@ -573,13 +573,13 @@ class _ListCardState extends ConsumerState<_ListCard> {
                 Row(
                   children: [
                     Icon(Icons.calendar_today_outlined, size: 11,
-                        color: _datePassed(list.dueDate) ? KaalColors.warn : colors.ink3),
+                        color: _datePassed(list.dueDate) ? TaskEraColors.warn : colors.ink3),
                     const SizedBox(width: 4),
                     Text(
                       list.dueDate != null ? _fmtDate(list.dueDate!) : 'No date',
                       style: TextStyle(
                         fontFamily: 'Inter', fontSize: 11, height: 1,
-                        color: _datePassed(list.dueDate) ? KaalColors.warn : colors.ink3,
+                        color: _datePassed(list.dueDate) ? TaskEraColors.warn : colors.ink3,
                       ),
                     ),
                     const Spacer(),
@@ -669,7 +669,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                           onTap: () async => _addItem(_addCtrl.text),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Icon(Icons.send_rounded, size: 14, color: KaalColors.acc2),
+                            child: Icon(Icons.send_rounded, size: 14, color: TaskEraColors.acc2),
                           ),
                         ),
                         GestureDetector(
@@ -713,9 +713,9 @@ class _ListCardState extends ConsumerState<_ListCard> {
                   onTap: () => setState(() => _isAdding = true),
                   child: Row(
                     children: [
-                      Icon(Icons.add, size: 16, color: KaalColors.acc2),
+                      Icon(Icons.add, size: 16, color: TaskEraColors.acc2),
                       const SizedBox(width: 4),
-                      Text('Add item', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: KaalColors.acc2)),
+                      Text('Add item', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: TaskEraColors.acc2)),
                     ],
                   ),
                 ),
@@ -737,7 +737,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
 
 class _ItemChip extends StatelessWidget {
   final CustomListItem item;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
 

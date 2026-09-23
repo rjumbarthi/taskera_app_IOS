@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database.dart' show Task;
 import '../../data/providers/database_provider.dart';
 import '../../data/repositories/focus_session_repository.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
-import '../../widgets/kaal_sheet.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
+import '../../widgets/taskera_sheet.dart';
 
 // Immutable quadrant colors + suggested default focus durations (minutes).
-const _kQuadColor = {1: KaalColors.q1, 2: KaalColors.q2, 3: KaalColors.q3, 4: KaalColors.q4};
+const _kQuadColor = {1: TaskEraColors.q1, 2: TaskEraColors.q2, 3: TaskEraColors.q3, 4: TaskEraColors.q4};
 const _kQuadMins  = {1: 25, 2: 50, 3: 15, 4: 15};
 
 /// Launches the task-linked focus session as a modal (not a route).
@@ -127,15 +127,15 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
 
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBottom = MediaQuery.of(context).padding.bottom;
     final task      = _task;
     final quad      = task?.quadrant ?? 2;
-    final qColor    = _kQuadColor[quad] ?? KaalColors.acc2;
+    final qColor    = _kQuadColor[quad] ?? TaskEraColors.acc2;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-      child: KaalSheetSurface(
+      child: TaskEraSheetSurface(
         borderRadius: BorderRadius.circular(22),
         child: Container(
       padding: EdgeInsets.fromLTRB(18, 16, 18, 16 + safeBottom),
@@ -235,7 +235,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                 Expanded(
                   child: _PrimaryBtn(
                     label: _running ? 'PAUSE' : 'START FOCUS',
-                    color: _running ? const Color(0xFF636366) : KaalColors.acc,
+                    color: _running ? const Color(0xFF636366) : TaskEraColors.acc,
                     onTap: _startPause,
                   ),
                 ),
@@ -246,12 +246,12 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                     height: 44, width: 64,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: KaalColors.warn.withValues(alpha: 0.4)),
+                      border: Border.all(width: 1, color: TaskEraColors.warn.withValues(alpha: 0.4)),
                     ),
                     alignment: Alignment.center,
                     child: const Text('End',
                         style: TextStyle(fontFamily: 'Inter', fontSize: 13,
-                            fontWeight: FontWeight.w700, color: KaalColors.warn)),
+                            fontWeight: FontWeight.w700, color: TaskEraColors.warn)),
                   ),
                 ),
               ],
@@ -275,7 +275,7 @@ class _DurPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final active = value == selected;
     return GestureDetector(
       onTap: () => onTap(value),

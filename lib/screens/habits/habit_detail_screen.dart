@@ -6,9 +6,9 @@ import '../../data/database.dart';
 import '../../data/providers/database_provider.dart';
 import '../../data/providers/habits_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../util/taskera_dialogs.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class HabitDetailScreen extends ConsumerStatefulWidget {
@@ -99,7 +99,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
     required Set<int> doneDays,
     required Set<int> skipDays,
     required DateTime? createdAt,
-    required KaalColors colors,
+    required TaskEraColors colors,
     required Color accent,
   }) {
     final today       = DateTime.now();
@@ -148,12 +148,12 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
           margin: const EdgeInsets.all(1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(width: 0.5, color: KaalColors.acc.withAlpha(0x80)),
+            border: Border.all(width: 0.5, color: TaskEraColors.acc.withAlpha(0x80)),
           ),
           child: Center(
             child: Text('$day',
               style: const TextStyle(fontFamily: 'Inter', fontSize: 8,
-                color: KaalColors.acc, height: 1)),
+                color: TaskEraColors.acc, height: 1)),
           ),
         );
       } else if (isPast) {
@@ -182,7 +182,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final id      = int.tryParse(widget.habitId) ?? 0;
     final habit   = ref.watch(singleHabitProvider(id)).valueOrNull;
     final subs    = ref.watch(subHabitsProvider(id)).valueOrNull ?? [];
@@ -325,7 +325,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                         const SizedBox(width: 8),
                         _HeroStat(value: '$filled/7', label: 'This week', valueColor: colors.ink),
                         const SizedBox(width: 8),
-                        _HeroStat(value: filled > 0 ? '${(filled / 7 * 100).round()}%' : '—', label: 'Completion', valueColor: KaalColors.acc2),
+                        _HeroStat(value: filled > 0 ? '${(filled / 7 * 100).round()}%' : '—', label: 'Completion', valueColor: TaskEraColors.acc2),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -339,7 +339,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                               .habitsDao
                               .toggleSubHabitDone(s.id, !s.isDone),
                           onDelete: () async {
-                            final ok = await kaalConfirmDelete(context,
+                            final ok = await taskeraConfirmDelete(context,
                                 message: 'Delete step "${s.title}"?');
                             if (ok) {
                               await ref
@@ -547,7 +547,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () async {
-                  final confirmed = await kaalConfirmDelete(context);
+                  final confirmed = await taskeraConfirmDelete(context);
                   if (confirmed && context.mounted) {
                     await ref.read(appDatabaseProvider).habitsDao.deleteHabit(id);
                     if (context.mounted) context.pop();
@@ -576,7 +576,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
 
 class _Card extends StatelessWidget {
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Card({required this.child, required this.colors});
 
   @override
@@ -601,7 +601,7 @@ class _HeroStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
@@ -625,7 +625,7 @@ class _HeroStat extends StatelessWidget {
 
 class _NavBtn extends StatelessWidget {
   final IconData icon;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _NavBtn({required this.icon, required this.colors, required this.onTap});
 
@@ -647,7 +647,7 @@ class _LegendIcon extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LegendIcon({required this.icon, required this.iconColor, required this.label, required this.colors});
 
   @override
@@ -667,7 +667,7 @@ class _StatCell2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
@@ -710,7 +710,7 @@ class _ToggleWidgetState extends State<_ToggleWidget> {
         duration: const Duration(milliseconds: 200),
         width: 36, height: 21,
         decoration: BoxDecoration(
-          color: _on ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: _on ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(11),
         ),
         child: AnimatedAlign(
@@ -772,7 +772,7 @@ class _SubHabitRow extends StatelessWidget {
   final String title;
   final bool isDone;
   final Color accent;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   final VoidCallback onDelete;
   const _SubHabitRow({
@@ -817,7 +817,7 @@ class _SubHabitRow extends StatelessWidget {
 
 // ── Inline "add routine step" affordance ──────────────────────────────────────
 class _AddStepRow extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Color accent;
   final TextEditingController controller;
   final bool adding;
@@ -882,7 +882,7 @@ class _AddStepRow extends StatelessWidget {
 // ── "Something came up?" skip card (per-habit) ────────────────────────────────
 
 class _HabitSkipCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onSkip;
   const _HabitSkipCard({required this.colors, required this.onSkip});
 

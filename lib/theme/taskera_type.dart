@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class KaalType {
+class TaskEraType {
   // Type scale (CSS px = logical px, 1:1)
   static const double xs   = 9;
   static const double sm   = 11;
@@ -131,5 +131,5 @@ class KaalType {
     fontFeatures: [FontFeature.tabularFigures()],
   );
 
-  const KaalType();
+  const TaskEraType();
 }

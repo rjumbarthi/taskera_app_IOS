@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 
 /// Full-screen overlay shown when a task/habit is marked complete.
 /// Push via [CompletedPanel.push] — do not use as a named route.
@@ -36,7 +36,7 @@ class CompletedPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final safeTop = MediaQuery.of(context).padding.top;
     return ColoredBox(
       color: colors.appBg,

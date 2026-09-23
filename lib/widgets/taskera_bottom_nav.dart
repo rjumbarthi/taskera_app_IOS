@@ -2,12 +2,12 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../settings/kaal_settings.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_motion.dart';
-import '../theme/kaal_theme.dart';
+import '../settings/taskera_settings.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_motion.dart';
+import '../theme/taskera_theme.dart';
 
-enum KaalTab { focus, tasks, habits, calendar, inbox, notes, search, settings, profile }
+enum TaskEraTab { focus, tasks, habits, calendar, inbox, notes, search, settings, profile }
 
 // ── Nav icon SVG strings — strokes/fills in white so ColorFilter.srcIn recolors them.
 
@@ -62,11 +62,11 @@ const _svgInbox =
     '<polyline points="22,6 12,13 2,6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
     '</svg>';
 
-class KaalBottomNav extends ConsumerWidget {
-  final KaalTab currentTab;
-  final ValueChanged<KaalTab>? onTabChanged;
+class TaskEraBottomNav extends ConsumerWidget {
+  final TaskEraTab currentTab;
+  final ValueChanged<TaskEraTab>? onTabChanged;
 
-  const KaalBottomNav({
+  const TaskEraBottomNav({
     super.key,
     required this.currentTab,
     this.onTabChanged,
@@ -76,23 +76,23 @@ class KaalBottomNav extends ConsumerWidget {
   // automatically by install age (see _applyTabUnlocks in main.dart) or manually
   // in Settings → Tabs. Locked tabs still show their icon (dimmed) so users know
   // what's coming; tapping one explains how to unlock it.
-  static bool _enabled(KaalSettingsState s, KaalTab tab) => switch (tab) {
-        KaalTab.habits   => s.sw('habits'),
-        KaalTab.calendar => s.sw('calendar'),
-        KaalTab.notes    => s.sw('notes'),
-        KaalTab.inbox  => s.sw('inbox'),
+  static bool _enabled(TaskEraSettingsState s, TaskEraTab tab) => switch (tab) {
+        TaskEraTab.habits   => s.sw('habits'),
+        TaskEraTab.calendar => s.sw('calendar'),
+        TaskEraTab.notes    => s.sw('notes'),
+        TaskEraTab.inbox  => s.sw('inbox'),
         _                => true,
       };
 
-  static String _tabName(KaalTab tab) => switch (tab) {
-        KaalTab.habits   => 'Habits',
-        KaalTab.calendar => 'Calendar',
-        KaalTab.notes    => 'Notes',
-        KaalTab.inbox  => 'Inbox',
+  static String _tabName(TaskEraTab tab) => switch (tab) {
+        TaskEraTab.habits   => 'Habits',
+        TaskEraTab.calendar => 'Calendar',
+        TaskEraTab.notes    => 'Notes',
+        TaskEraTab.inbox  => 'Inbox',
         _                => '',
       };
 
-  void _showLockedMessage(BuildContext context, KaalTab tab) {
+  void _showLockedMessage(BuildContext context, TaskEraTab tab) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
           '${_tabName(tab)} is locked. Enable it in Settings → Tabs, or it unlocks automatically in a few days.'),
@@ -103,22 +103,22 @@ class KaalBottomNav extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors         = KaalTheme.of(context).colors;
+    final colors         = TaskEraTheme.of(context).colors;
     final bottomSafeArea = MediaQuery.viewPaddingOf(context).bottom;
-    final settings       = ref.watch(kaalSettingsProvider);
+    final settings       = ref.watch(taskeraSettingsProvider);
 
     // All four optional tabs are always shown (locked ones dimmed). Search,
     // Settings and Profile are reached elsewhere, never from the bottom nav.
-    final visibleTabs = KaalTab.values.where((tab) => switch (tab) {
-      KaalTab.focus    => true,
-      KaalTab.tasks    => true,
-      KaalTab.habits   => true,
-      KaalTab.calendar => true,
-      KaalTab.notes    => true,
-      KaalTab.inbox  => true,
-      KaalTab.search   => false,
-      KaalTab.settings => false,
-      KaalTab.profile  => false,
+    final visibleTabs = TaskEraTab.values.where((tab) => switch (tab) {
+      TaskEraTab.focus    => true,
+      TaskEraTab.tasks    => true,
+      TaskEraTab.habits   => true,
+      TaskEraTab.calendar => true,
+      TaskEraTab.notes    => true,
+      TaskEraTab.inbox  => true,
+      TaskEraTab.search   => false,
+      TaskEraTab.settings => false,
+      TaskEraTab.profile  => false,
     }).toList();
 
     return _GlassPill(
@@ -158,7 +158,7 @@ class _GlassPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLight = KaalTheme.of(context).mode == KaalThemeMode.light;
+    final isLight = TaskEraTheme.of(context).mode == TaskEraThemeMode.light;
     final pillColor  = isLight ? const Color(0xD9F2F2F7) : const Color(0x8C080812);
     final borderCol  = isLight ? const Color(0x33000000) : const Color(0x33FFFFFF);
     final shadowCol  = isLight ? const Color(0x20000000) : const Color(0x40000000);
@@ -187,10 +187,10 @@ class _GlassPill extends StatelessWidget {
 }
 
 class _NavItem extends StatefulWidget {
-  final KaalTab tab;
+  final TaskEraTab tab;
   final bool isActive;
   final bool enabled;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
 
   const _NavItem({
@@ -210,26 +210,26 @@ class _NavItemState extends State<_NavItem> {
 
   // Focus tab uses an asset SVG (handled in _icon); this getter is only called for the other tabs.
   String get _svg => switch (widget.tab) {
-        KaalTab.tasks    => _svgTasks,
-        KaalTab.habits   => _svgHabits,
-        KaalTab.calendar => _svgCalendar,
-        KaalTab.notes    => _svgNotes,
-        KaalTab.inbox  => _svgInbox,
-        KaalTab.search   => _svgSearch,
-        KaalTab.settings => _svgSettings,
-        KaalTab.profile  => _svgProfile,
-        KaalTab.focus    => '',
+        TaskEraTab.tasks    => _svgTasks,
+        TaskEraTab.habits   => _svgHabits,
+        TaskEraTab.calendar => _svgCalendar,
+        TaskEraTab.notes    => _svgNotes,
+        TaskEraTab.inbox  => _svgInbox,
+        TaskEraTab.search   => _svgSearch,
+        TaskEraTab.settings => _svgSettings,
+        TaskEraTab.profile  => _svgProfile,
+        TaskEraTab.focus    => '',
       };
 
   Color get _iconColor =>
-      widget.isActive ? KaalColors.acc : widget.colors.ink2;
+      widget.isActive ? TaskEraColors.acc : widget.colors.ink2;
 
   // Focus renders at 26px (slightly larger, matching prototype); others at 20px.
   Widget get _icon {
-    final size   = widget.tab == KaalTab.focus ? 26.0 : 20.0;
+    final size   = widget.tab == TaskEraTab.focus ? 26.0 : 20.0;
     final filter = ColorFilter.mode(_iconColor, BlendMode.srcIn);
 
-    if (widget.tab == KaalTab.focus) {
+    if (widget.tab == TaskEraTab.focus) {
       return SvgPicture.asset(
         'assets/icons/focus_nav.svg',
         width: size,
@@ -257,7 +257,7 @@ class _NavItemState extends State<_NavItem> {
         behavior: HitTestBehavior.opaque,
         child: AnimatedScale(
           scale: _pressed ? 0.88 : 1.0,
-          duration: KaalMotion.fastPress,
+          duration: TaskEraMotion.fastPress,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             // Locked tabs render dimmed so they read as "not yet available".

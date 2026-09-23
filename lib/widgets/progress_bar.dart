@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
-class KaalProgressBar extends StatelessWidget {
+class TaskEraProgressBar extends StatelessWidget {
   final double value; // 0.0 – 1.0
   final Color? color;
   final double height;
 
-  const KaalProgressBar({
+  const TaskEraProgressBar({
     super.key,
     required this.value,
     this.color,
@@ -16,8 +16,8 @@ class KaalProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
-    final barColor = color ?? KaalColors.acc;
+    final colors = TaskEraTheme.of(context).colors;
+    final barColor = color ?? TaskEraColors.acc;
     return Container(
       height: height,
       decoration: BoxDecoration(

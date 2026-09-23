@@ -11,11 +11,11 @@ from the Flutter CLI / non-macOS):
 3. Replace the generated `DtnWidget.swift` with this folder's `DtnWidget.swift`
    (or add this file to the new target and delete the generated one).
 4. **App Groups** — Signing & Capabilities → + Capability → App Groups, add
-   `group.com.kaal.kaal_app` to **both** the `Runner` target **and** the
+   `group.com.taskera.taskera_app` to **both** the `Runner` target **and** the
    `DtnWidget` target. (Must match `_appGroupId` in `dtn_widget_bridge.dart`
    and `appGroupId` in `DtnWidget.swift`.)
-5. Deep link: `Runner/Info.plist` already needs URL scheme `kaalapp` (used by
-   `widgetURL(URL(string: "kaalapp://focus"))`) — already present for OAuth.
+5. Deep link: `Runner/Info.plist` already needs URL scheme `taskeraapp` (used by
+   `widgetURL(URL(string: "taskeraapp://focus"))`) — already present for OAuth.
 6. Build the `DtnWidget` scheme once, then run the app; long-press the home
    screen / lock screen to add the **Do The Next** widget.
 

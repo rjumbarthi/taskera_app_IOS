@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../settings/kaal_settings.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../settings/taskera_settings.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 import '../util/platform_layout.dart';
-import 'kaal_top_bar.dart';
+import 'taskera_top_bar.dart';
 import 'wallpaper_background.dart';
 
 // Root chrome for every full-tab screen.
@@ -31,7 +31,7 @@ class AppShell extends ConsumerWidget {
   // Floating bottom-nav content height (must match _NavShell._kNavContentHeight).
   static const _kNavContentHeight = 50.0;
 
-  Widget _contentColumn(BuildContext context, KaalColors colors) {
+  Widget _contentColumn(BuildContext context, TaskEraColors colors) {
     // Reserve the nav's full footprint (system gesture inset + nav height) below
     // the body so no screen's content or buttons sit under the floating nav.
     // removeBottom stops inner screens from *also* adding the system inset as
@@ -41,7 +41,7 @@ class AppShell extends ConsumerWidget {
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        KaalTopBar(title: title, subtitle: subtitle, actions: actions),
+        TaskEraTopBar(title: title, subtitle: subtitle, actions: actions),
         Expanded(
           child: ColoredBox(
             color: colors.bg,
@@ -70,8 +70,8 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors   = KaalTheme.of(context).colors;
-    final settings  = ref.watch(kaalSettingsProvider);
+    final colors   = TaskEraTheme.of(context).colors;
+    final settings  = ref.watch(taskeraSettingsProvider);
     final wallpaper = settings.wallpaper;
     final dim       = settings.wallpaperDim;
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kaal_app/data/providers/ai_access_provider.dart';
+import 'package:taskera_app/data/providers/ai_access_provider.dart';
 
 // Covers the one rule the whole payment redesign depends on: Pro access must
 // track real subscription state + expiry, never "a purchase happened once".

@@ -16,7 +16,7 @@ import '../data/providers/notes_provider.dart';
 import '../data/providers/tasks_provider.dart';
 import '../l10n/app_l10n.dart';
 import '../settings/app_launch_prefs.dart';
-import '../settings/kaal_settings.dart';
+import '../settings/taskera_settings.dart';
 import '../settings/prefs_provider.dart';
 import '../screens/focus/focus_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
@@ -77,11 +77,11 @@ import '../screens/settings/settings_screen.dart';
 import '../screens/settings/student_mode_screen.dart';
 import '../screens/settings/logs_screen.dart';
 import '../screens/settings/widget_preview_screen.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 import '../widgets/app_shell.dart';
-import '../widgets/kaal_avatar.dart';
-import '../widgets/kaal_bottom_nav.dart';
+import '../widgets/taskera_avatar.dart';
+import '../widgets/taskera_bottom_nav.dart';
 import '../widgets/top_ico_button.dart';
 import 'current_tab.dart';
 import 'page_transitions.dart';
@@ -151,28 +151,28 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
     final path = state.uri.path;
     // These routes are always reachable — no auth required.
     const publicPaths = {
-      KaalRoutes.quote,
-      KaalRoutes.signin,
-      KaalRoutes.signup,
-      KaalRoutes.onboard,
+      TaskEraRoutes.quote,
+      TaskEraRoutes.signin,
+      TaskEraRoutes.signup,
+      TaskEraRoutes.onboard,
     };
     if (publicPaths.contains(path)) return null;
 
     // Must complete onboarding before accessing any other screen.
-    if (!AppLaunchPrefs.onboardingDone(prefs)) return KaalRoutes.quote;
+    if (!AppLaunchPrefs.onboardingDone(prefs)) return TaskEraRoutes.quote;
 
     // Must be signed in or have explicitly skipped auth.
     final isSignedIn = Supabase.instance.client.auth.currentUser != null;
-    if (!AppLaunchPrefs.skipAuth(prefs) && !isSignedIn) return KaalRoutes.signin;
+    if (!AppLaunchPrefs.skipAuth(prefs) && !isSignedIn) return TaskEraRoutes.signin;
 
     return null;
   },
   routes: [
     // ── Standalone routes — onboarding (fade transition, full-replace flow) ──
-    GoRoute(path: KaalRoutes.quote,       pageBuilder: (c, s) => fadePage(child: const QuoteSplashScreen(),   state: s)),
-    GoRoute(path: KaalRoutes.signin,      pageBuilder: (c, s) => fadePage(child: const SigninScreen(),        state: s)),
-    GoRoute(path: KaalRoutes.signup,      pageBuilder: (c, s) => slideRightPage(child: const SignupScreen(),  state: s)),
-    GoRoute(path: KaalRoutes.onboard,     pageBuilder: (c, s) => fadePage(child: const OnboardScreen(),      state: s)),
+    GoRoute(path: TaskEraRoutes.quote,       pageBuilder: (c, s) => fadePage(child: const QuoteSplashScreen(),   state: s)),
+    GoRoute(path: TaskEraRoutes.signin,      pageBuilder: (c, s) => fadePage(child: const SigninScreen(),        state: s)),
+    GoRoute(path: TaskEraRoutes.signup,      pageBuilder: (c, s) => slideRightPage(child: const SignupScreen(),  state: s)),
+    GoRoute(path: TaskEraRoutes.onboard,     pageBuilder: (c, s) => fadePage(child: const OnboardScreen(),      state: s)),
 
     // ── Authenticated shell — bottom nav always visible ──────────────────
     ShellRoute(
@@ -180,8 +180,8 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           _NavShell(path: state.uri.path, child: child),
       routes: [
     // Root-level modals — accessible from any tab via root navigator
-    GoRoute(path: KaalRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: PaywallScreen(from: s.uri.queryParameters['from']), state: s)),
-    GoRoute(path: KaalRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(tab: switch (s.uri.queryParameters['tab']) {
+    GoRoute(path: TaskEraRoutes.paywall, pageBuilder: (c, s) => slideUpPage(child: PaywallScreen(from: s.uri.queryParameters['from']), state: s)),
+    GoRoute(path: TaskEraRoutes.legal,   pageBuilder: (c, s) => slideRightPage(child: LegalScreen(tab: switch (s.uri.queryParameters['tab']) {
       'privacy'   => LegalTab.privacy,
       'copyright' => LegalTab.copyright,
       'support'   => LegalTab.support,
@@ -189,13 +189,13 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
       'datainfo'  => LegalTab.dataInfo,
       _           => LegalTab.terms,
     }), state: s)),
-    GoRoute(path: KaalRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
+    GoRoute(path: TaskEraRoutes.report,  pageBuilder: (c, s) => slideRightPage(child: const ReportFeedbackScreen(), state: s)),
     // Was nested under the Profile tab's StatefulShellBranch, but it's also
     // pushed from the paywall — a different ShellRoute entirely. Pushing a
     // StatefulShellRoute-nested path from outside that shell renders blank
     // (two separate navigator trees), so this needs to live at the root
     // alongside the other cross-shell modals above.
-    GoRoute(path: KaalRoutes.referral, pageBuilder: (c, s) => slideRightPage(child: const ReferralScreen(), state: s)),
+    GoRoute(path: TaskEraRoutes.referral, pageBuilder: (c, s) => slideRightPage(child: const ReferralScreen(), state: s)),
       ], // _NavShell.routes
     ),   // ShellRoute(_NavShell)
 
@@ -208,7 +208,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _focusKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.focus,
+              path: TaskEraRoutes.focus,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const FocusDashboardScreen()),
               routes: [
@@ -243,7 +243,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _tasksKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.tasks,
+              path: TaskEraRoutes.tasks,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const TasksScreen()),
               routes: [
@@ -276,7 +276,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _habitsKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.habits,
+              path: TaskEraRoutes.habits,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const HabitsScreen()),
               routes: [
@@ -296,7 +296,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _calKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.cal,
+              path: TaskEraRoutes.cal,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const CalendarScreen()),
               routes: [
@@ -315,7 +315,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _inboxKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.inbox,
+              path: TaskEraRoutes.inbox,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const InboxScreen()),
               routes: [
@@ -330,7 +330,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _notesKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.notes,
+              path: TaskEraRoutes.notes,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const NotesScreen()),
               routes: [
@@ -348,7 +348,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _searchKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.search,
+              path: TaskEraRoutes.search,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const SearchScreen()),
             ),
@@ -360,7 +360,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _settingsKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.settings,
+              path: TaskEraRoutes.settings,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const SettingsScreen()),
               routes: [
@@ -379,7 +379,7 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
           navigatorKey: _profileKey,
           routes: [
             GoRoute(
-              path: KaalRoutes.profile,
+              path: TaskEraRoutes.profile,
               pageBuilder: (context, state) =>
                   NoTransitionPage<void>(key: state.pageKey, child: const ProfileScreen()),
               routes: [
@@ -394,36 +394,36 @@ GoRouter buildAppRouter(String initialLocation, SharedPreferences prefs) => GoRo
   ],
 );
 
-// ── Global nav shell — renders KaalBottomNav over every authenticated screen ─
+// ── Global nav shell — renders TaskEraBottomNav over every authenticated screen ─
 
 class _NavShell extends StatelessWidget {
   final String path;
   final Widget child;
   const _NavShell({required this.path, required this.child});
 
-  static KaalTab _tabFromPath(String path) {
-    if (path.startsWith('/focus'))    return KaalTab.focus;
-    if (path.startsWith('/tasks'))    return KaalTab.tasks;
-    if (path.startsWith('/habits'))   return KaalTab.habits;
-    if (path.startsWith('/cal'))      return KaalTab.calendar;
-    if (path.startsWith('/inbox'))    return KaalTab.inbox;
-    if (path.startsWith('/notes'))    return KaalTab.notes;
-    if (path.startsWith('/search'))   return KaalTab.search;
-    if (path.startsWith('/settings')) return KaalTab.settings;
-    if (path.startsWith('/profile'))  return KaalTab.profile;
-    return KaalTab.focus;
+  static TaskEraTab _tabFromPath(String path) {
+    if (path.startsWith('/focus'))    return TaskEraTab.focus;
+    if (path.startsWith('/tasks'))    return TaskEraTab.tasks;
+    if (path.startsWith('/habits'))   return TaskEraTab.habits;
+    if (path.startsWith('/cal'))      return TaskEraTab.calendar;
+    if (path.startsWith('/inbox'))    return TaskEraTab.inbox;
+    if (path.startsWith('/notes'))    return TaskEraTab.notes;
+    if (path.startsWith('/search'))   return TaskEraTab.search;
+    if (path.startsWith('/settings')) return TaskEraTab.settings;
+    if (path.startsWith('/profile'))  return TaskEraTab.profile;
+    return TaskEraTab.focus;
   }
 
-  static String _routeForTab(KaalTab tab) => switch (tab) {
-    KaalTab.focus    => KaalRoutes.focus,
-    KaalTab.tasks    => KaalRoutes.tasks,
-    KaalTab.habits   => KaalRoutes.habits,
-    KaalTab.calendar => KaalRoutes.cal,
-    KaalTab.inbox  => KaalRoutes.inbox,
-    KaalTab.notes    => KaalRoutes.notes,
-    KaalTab.search   => KaalRoutes.search,
-    KaalTab.settings => KaalRoutes.settings,
-    KaalTab.profile  => KaalRoutes.profile,
+  static String _routeForTab(TaskEraTab tab) => switch (tab) {
+    TaskEraTab.focus    => TaskEraRoutes.focus,
+    TaskEraTab.tasks    => TaskEraRoutes.tasks,
+    TaskEraTab.habits   => TaskEraRoutes.habits,
+    TaskEraTab.calendar => TaskEraRoutes.cal,
+    TaskEraTab.inbox  => TaskEraRoutes.inbox,
+    TaskEraTab.notes    => TaskEraRoutes.notes,
+    TaskEraTab.search   => TaskEraRoutes.search,
+    TaskEraTab.settings => TaskEraRoutes.settings,
+    TaskEraTab.profile  => TaskEraRoutes.profile,
   };
 
   // Nav bar fixed content height: 6px top-pad + 44px minHeight = 50px above the
@@ -437,9 +437,9 @@ class _NavShell extends StatelessWidget {
     // Full-screen modals with no tab context — show without the bottom nav.
     // (Paywall included so the post-onboarding mandatory gate can't be escaped
     // by tapping a tab.)
-    if (path == KaalRoutes.legal ||
-        path == KaalRoutes.report ||
-        path == KaalRoutes.paywall) {
+    if (path == TaskEraRoutes.legal ||
+        path == TaskEraRoutes.report ||
+        path == TaskEraRoutes.paywall) {
       return child;
     }
 
@@ -456,7 +456,7 @@ class _NavShell extends StatelessWidget {
           Positioned.fill(child: child),
           Align(
             alignment: Alignment.bottomCenter,
-            child: KaalBottomNav(
+            child: TaskEraBottomNav(
               currentTab: tab,
               onTabChanged: (t) {
                 // Free users see an occasional interstitial (capped in AdService).
@@ -479,20 +479,20 @@ class _RouterShell extends ConsumerWidget {
   final StatefulNavigationShell shell;
   const _RouterShell({required this.shell});
 
-  KaalTab get _tab => KaalTab.values[shell.currentIndex];
+  TaskEraTab get _tab => TaskEraTab.values[shell.currentIndex];
 
   String _title(BuildContext context) {
     final str = AppL10n.of(context);
     return switch (_tab) {
-      KaalTab.focus    => str.focus,
-      KaalTab.tasks    => str.tasks,
-      KaalTab.habits   => str.habits,
-      KaalTab.calendar => str.calendar,
-      KaalTab.inbox  => str.inbox,
-      KaalTab.notes    => str.notes,
-      KaalTab.search   => str.search,
-      KaalTab.settings => str.settings,
-      KaalTab.profile  => str.profile,
+      TaskEraTab.focus    => str.focus,
+      TaskEraTab.tasks    => str.tasks,
+      TaskEraTab.habits   => str.habits,
+      TaskEraTab.calendar => str.calendar,
+      TaskEraTab.inbox  => str.inbox,
+      TaskEraTab.notes    => str.notes,
+      TaskEraTab.search   => str.search,
+      TaskEraTab.settings => str.settings,
+      TaskEraTab.profile  => str.profile,
     };
   }
 
@@ -525,30 +525,30 @@ class _RouterShell extends ConsumerWidget {
     required int inviteCount,
     required int noteCount,
   }) => switch (_tab) {
-        KaalTab.focus    => '${_focusDateLabel()} · 🔥 ${streakDays}d streak',
-        KaalTab.tasks    => '$activeCount ${activeCount == 1 ? 'task' : 'tasks'} active${overdueCount > 0 ? ' · $overdueCount overdue' : ''}',
-        KaalTab.habits   => '$habitCount active · 🔥 ${streakDays}d streak',
-        KaalTab.calendar => '$eventCount ${eventCount == 1 ? 'event' : 'events'}${inviteCount > 0 ? ' · $inviteCount ${inviteCount == 1 ? 'invite' : 'invites'}' : ''}',
-        KaalTab.notes    => '$noteCount ${noteCount == 1 ? 'note' : 'notes'}',
-        KaalTab.inbox  => 'Email · Parsed',
+        TaskEraTab.focus    => '${_focusDateLabel()} · 🔥 ${streakDays}d streak',
+        TaskEraTab.tasks    => '$activeCount ${activeCount == 1 ? 'task' : 'tasks'} active${overdueCount > 0 ? ' · $overdueCount overdue' : ''}',
+        TaskEraTab.habits   => '$habitCount active · 🔥 ${streakDays}d streak',
+        TaskEraTab.calendar => '$eventCount ${eventCount == 1 ? 'event' : 'events'}${inviteCount > 0 ? ' · $inviteCount ${inviteCount == 1 ? 'invite' : 'invites'}' : ''}',
+        TaskEraTab.notes    => '$noteCount ${noteCount == 1 ? 'note' : 'notes'}',
+        TaskEraTab.inbox  => 'Email · Parsed',
         _                => null,
       };
 
   List<Widget> _actions(BuildContext context) {
-    final ink3 = KaalTheme.of(context).colors.ink3;
+    final ink3 = TaskEraTheme.of(context).colors.ink3;
     final cf   = ColorFilter.mode(ink3, BlendMode.srcIn);
     switch (_tab) {
-      case KaalTab.focus:
+      case TaskEraTab.focus:
         return [
           const _SyncPill(),
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.tasks:
+      case TaskEraTab.tasks:
         return [
           GestureDetector(
-            onTap: () => context.push(KaalRoutes.tasksUpcoming),
+            onTap: () => context.push(TaskEraRoutes.tasksUpcoming),
             child: SizedBox(
               width: 38,
               height: 38,
@@ -557,54 +557,54 @@ class _RouterShell extends ConsumerWidget {
               ),
             ),
           ),
-          TopIcoButton(icon: SvgPicture.string(_kAnalyticsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.push(KaalRoutes.tasksAnalytics)),
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,    width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg,  width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kAnalyticsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.push(TaskEraRoutes.tasksAnalytics)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,    width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg,  width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.habits:
+      case TaskEraTab.habits:
         return [
           TopIcoButton(icon: SvgPicture.string(_kHabitStatsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.push('/habits/habitstats')),
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,      width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg,    width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,      width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg,    width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.calendar:
+      case TaskEraTab.calendar:
         return [
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.notes:
+      case TaskEraTab.notes:
         return [
           TopIcoButton(icon: SvgPicture.string(_kShareSvg,    width: 22, height: 22, colorFilter: cf), onTap: () {}),
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.inbox:
+      case TaskEraTab.inbox:
         return [
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.search:
+      case TaskEraTab.search:
         return [
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.settings:
+      case TaskEraTab.settings:
         return [
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
           TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22,
-              colorFilter: const ColorFilter.mode(KaalColors.acc, BlendMode.srcIn)), onTap: () {}),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: () => context.go(KaalRoutes.profile)),
+              colorFilter: const ColorFilter.mode(TaskEraColors.acc, BlendMode.srcIn)), onTap: () {}),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: () => context.go(TaskEraRoutes.profile)),
         ];
-      case KaalTab.profile:
+      case TaskEraTab.profile:
         return [
-          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.search)),
-          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(KaalRoutes.settings)),
-          TopIcoButton(icon: const KaalAvatar(size: 24), onTap: null),
+          TopIcoButton(icon: SvgPicture.string(_kSearchSvg,   width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.search)),
+          TopIcoButton(icon: SvgPicture.string(_kSettingsSvg, width: 22, height: 22, colorFilter: cf), onTap: () => context.go(TaskEraRoutes.settings)),
+          TopIcoButton(icon: const TaskEraAvatar(size: 24), onTap: null),
         ];
     }
   }
@@ -661,7 +661,7 @@ class _RouterShell extends ConsumerWidget {
             Positioned.fill(child: appShell()),
             Align(
               alignment: Alignment.bottomCenter,
-              child: KaalBottomNav(
+              child: TaskEraBottomNav(
                 currentTab: tab,
                 onTabChanged: (t) {
                   if (!ProviderScope.containerOf(context, listen: false).read(isProProvider)) {
@@ -692,10 +692,10 @@ class _RouterShell extends ConsumerWidget {
     }
 
     final prefs   = ref.read(sharedPreferencesProvider);
-    final eodOn   = ref.read(kaalSettingsProvider).sw('eodReflect');
+    final eodOn   = ref.read(taskeraSettingsProvider).sw('eodReflect');
     if (eodOn && AppLaunchPrefs.shouldShowEodOnExit(prefs)) {
       AppLaunchPrefs.markEodShownToday(prefs);
-      context.push(KaalRoutes.eodReflect);
+      context.push(TaskEraRoutes.eodReflect);
       _lastBackAt = null;
       return;
     }
@@ -725,7 +725,7 @@ class _SyncPill extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final signedIn = ref.watch(isSignedInProvider);
-    final color  = signedIn ? KaalColors.success : const Color(0xFF8E8E93);
+    final color  = signedIn ? TaskEraColors.success : const Color(0xFF8E8E93);
     final bgColor = signedIn ? const Color(0x1F7FBA00) : const Color(0x1A8E8E93);
     final bdColor = signedIn ? const Color(0x407FBA00) : const Color(0x338E8E93);
     final label   = signedIn ? 'Synced' : 'Local';

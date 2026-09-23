@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/database.dart' show Task, Habit;
-import '../theme/kaal_colors.dart';
+import '../theme/taskera_colors.dart';
 import '../l10n/app_l10n.dart';
 
 /// Opens a bottom-sheet to pick which [tasks] are linked.
@@ -10,7 +10,7 @@ void showTaskLinkPicker({
   required BuildContext context,
   required List<Task> tasks,
   required Set<int> initial,
-  required KaalColors colors,
+  required TaskEraColors colors,
   required void Function(Set<int> selected) onSave,
   String? title,
 }) {
@@ -35,7 +35,7 @@ void showHabitLinkPicker({
   required BuildContext context,
   required List<Habit> habits,
   required Set<int> initial,
-  required KaalColors colors,
+  required TaskEraColors colors,
   required void Function(Set<int> selected) onSave,
 }) {
   showModalBottomSheet(
@@ -58,7 +58,7 @@ class _SheetScaffold extends StatelessWidget {
   final String title;
   final Widget body;
   final VoidCallback onSave;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SheetScaffold({
     required this.title,
     required this.body,
@@ -95,7 +95,7 @@ class _SheetScaffold extends StatelessWidget {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 13),
-              decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(11)),
+              decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(11)),
               alignment: Alignment.center,
               child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter',
                   fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white)),
@@ -110,7 +110,7 @@ class _SheetScaffold extends StatelessWidget {
 Widget _checkbox(bool on) => Container(
       width: 16, height: 16,
       decoration: BoxDecoration(
-        color: on ? KaalColors.acc : Colors.transparent,
+        color: on ? TaskEraColors.acc : Colors.transparent,
         borderRadius: BorderRadius.circular(4),
         border: on ? null : Border.all(width: 1.5, color: const Color(0x40FFFFFF)),
       ),
@@ -123,7 +123,7 @@ Widget _checkbox(bool on) => Container(
 class _TaskPickerSheet extends StatefulWidget {
   final List<Task> tasks;
   final Set<int> initial;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final void Function(Set<int>) onSave;
   final String? title;
   const _TaskPickerSheet({
@@ -188,7 +188,7 @@ class _TaskPickerSheetState extends State<_TaskPickerSheet> {
 class _HabitPickerSheet extends StatefulWidget {
   final List<Habit> habits;
   final Set<int> initial;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final void Function(Set<int>) onSave;
   const _HabitPickerSheet({
     required this.habits,

@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/providers/integrations_provider.dart';
 import '../../services/sync_service.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 
 class InboxIntegrationsScreen extends ConsumerWidget {
@@ -14,7 +14,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final safeBot = MediaQuery.of(context).padding.bottom;
 
     return Column(
@@ -42,7 +42,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
               await ref.read(integrationsProvider.notifier).checkStatus();
               await ref.read(syncServiceProvider).syncAll();
             },
-            color: KaalColors.acc2,
+            color: TaskEraColors.acc2,
             backgroundColor: const Color(0xFF1C1C1E),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -56,7 +56,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
           title: 'Gmail',
           sub: 'Auto-parse tasks from emails · coming soon',
           connected: false,
-          accentColor: KaalColors.q4,
+          accentColor: TaskEraColors.q4,
           colors: colors,
         ),
         const SizedBox(height: 6),
@@ -66,7 +66,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
           title: 'Outlook',
           sub: 'Microsoft 365 inbox parsing',
           connected: false,
-          accentColor: KaalColors.q3,
+          accentColor: TaskEraColors.q3,
           colors: colors,
         ),
         const SizedBox(height: 6),
@@ -76,7 +76,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
           title: 'Apple Mail',
           sub: 'iOS / macOS mail parsing',
           connected: false,
-          accentColor: KaalColors.q2,
+          accentColor: TaskEraColors.q2,
           colors: colors,
         ),
         const SizedBox(height: 12),
@@ -98,7 +98,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
           title: 'Slack',
           sub: 'Turn messages into tasks',
           connected: false,
-          accentColor: KaalColors.acc,
+          accentColor: TaskEraColors.acc,
           colors: colors,
         ),
         const SizedBox(height: 6),
@@ -128,7 +128,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel(this.text, this.colors);
 
   @override
@@ -152,7 +152,7 @@ class _IntegrationRow extends StatelessWidget {
   final String sub;
   final bool connected;
   final Color accentColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _IntegrationRow({required this.emoji, required this.iconBg,
       required this.title, required this.sub, required this.connected,
       required this.accentColor, required this.colors});
@@ -195,7 +195,7 @@ class _IntegrationRow extends StatelessWidget {
             ),
             child: Text(AppL10n.of(context).connected,
                 style: const TextStyle(fontFamily: 'Inter', fontSize: 10,
-                    fontWeight: FontWeight.w600, color: KaalColors.q2, height: 1)),
+                    fontWeight: FontWeight.w600, color: TaskEraColors.q2, height: 1)),
           )
         else
           Container(
@@ -207,7 +207,7 @@ class _IntegrationRow extends StatelessWidget {
             ),
             child: Text(AppL10n.of(context).connect,
                 style: const TextStyle(fontFamily: 'Inter', fontSize: 10,
-                    fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1)),
+                    fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
           ),
       ]),
     );
@@ -217,7 +217,7 @@ class _IntegrationRow extends StatelessWidget {
 // ── How it works card ─────────────────────────────────────────────────────────
 
 class _HowItWorksCard extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _HowItWorksCard({required this.colors});
 
   @override
@@ -236,7 +236,7 @@ class _HowItWorksCard extends StatelessWidget {
               color: const Color(0x1A0A84FF),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.auto_awesome_rounded, color: KaalColors.acc, size: 14),
+            child: const Icon(Icons.auto_awesome_rounded, color: TaskEraColors.acc, size: 14),
           ),
           const SizedBox(width: 10),
           Text(AppL10n.of(context).aiPoweredInboxParsing,
@@ -246,7 +246,7 @@ class _HowItWorksCard extends StatelessWidget {
         const SizedBox(height: 10),
         _Step(n: '1', text: AppL10n.of(context).connectEmailOrApp, colors: colors),
         const SizedBox(height: 7),
-        _Step(n: '2', text: AppL10n.of(context).kaalReadsWithAi, colors: colors),
+        _Step(n: '2', text: AppL10n.of(context).taskeraReadsWithAi, colors: colors),
         const SizedBox(height: 7),
         _Step(n: '3', text: AppL10n.of(context).actionItemsSurfaced, colors: colors),
         const SizedBox(height: 7),
@@ -259,7 +259,7 @@ class _HowItWorksCard extends StatelessWidget {
 class _Step extends StatelessWidget {
   final String n;
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Step({required this.n, required this.text, required this.colors});
 
   @override
@@ -274,7 +274,7 @@ class _Step extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(n,
             style: const TextStyle(fontFamily: 'Inter', fontSize: 9,
-                fontWeight: FontWeight.w700, color: KaalColors.acc, height: 1)),
+                fontWeight: FontWeight.w700, color: TaskEraColors.acc, height: 1)),
       ),
       const SizedBox(width: 8),
       Expanded(

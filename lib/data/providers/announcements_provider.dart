@@ -17,7 +17,7 @@ import '../models/announcement.dart';
 //     for select using (published = true);
 // The developer INSERTs rows (dashboard). No insert policy = users can't post.
 
-const _kLastSeenKey = 'kaal.msgs.lastSeenId';
+const _kLastSeenKey = 'taskera.msgs.lastSeenId';
 
 bool get _backendConfigured =>
     !AppConfig.supabaseUrl.contains('YOUR_PROJECT_REF') &&

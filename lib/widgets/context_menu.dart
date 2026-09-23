@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class ContextMenuItem {
   final String label;
@@ -17,21 +17,21 @@ class ContextMenuItem {
   });
 }
 
-/// Shows a Kaal-styled context menu anchored to touch coordinates.
-/// Call via [showKaalContextMenu]; do not push as a route.
-Future<void> showKaalContextMenu({
+/// Shows a TaskEra-styled context menu anchored to touch coordinates.
+/// Call via [showTaskEraContextMenu]; do not push as a route.
+Future<void> showTaskEraContextMenu({
   required BuildContext context,
   required Offset position,
   required List<ContextMenuItem> items,
 }) {
-  return _KaalContextMenuController.show(
+  return _TaskEraContextMenuController.show(
     context: context,
     position: position,
     items: items,
   );
 }
 
-class _KaalContextMenuController {
+class _TaskEraContextMenuController {
   static Future<void> show({
     required BuildContext context,
     required Offset position,
@@ -104,7 +104,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Stack(
       children: [
         // Dismiss tap area
@@ -126,7 +126,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
                 constraints: const BoxConstraints(minWidth: 160),
                 decoration: BoxDecoration(
                   color: colors.surf2,
-                  borderRadius: KaalShape.card,
+                  borderRadius: TaskEraShape.card,
                   border: Border.all(width: 0.5, color: colors.bdr),
                   boxShadow: const [
                     BoxShadow(
@@ -137,7 +137,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: KaalShape.card,
+                  borderRadius: TaskEraShape.card,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -172,7 +172,7 @@ class _MenuItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final itemColor = item.color ?? colors.ink;
     return GestureDetector(
       onTap: onTap,

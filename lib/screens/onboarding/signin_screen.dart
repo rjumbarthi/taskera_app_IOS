@@ -11,8 +11,8 @@ import 'otp_cooldown.dart';
 import '../../settings/app_launch_prefs.dart';
 import '../../settings/prefs_provider.dart';
 import '../../data/providers/feature_flags_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../util/platform_layout.dart';
 import '../../widgets/wallpaper_background.dart';
 
@@ -80,8 +80,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
   // After auth: send first-run users through onboarding, else straight to Focus.
   String get _postAuthRoute =>
       AppLaunchPrefs.onboardingDone(ref.read(sharedPreferencesProvider))
-          ? KaalRoutes.focus
-          : KaalRoutes.onboard;
+          ? TaskEraRoutes.focus
+          : TaskEraRoutes.onboard;
 
   static final _emailRe = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
   bool get _emailValid => _emailRe.hasMatch(_email.text.trim());
@@ -93,7 +93,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
 
   Future<void> _run(Future<void> Function() fn, {String? successRoute}) async {
     if (!_backendConfigured) {
-      if (mounted) context.go(KaalRoutes.focus);
+      if (mounted) context.go(TaskEraRoutes.focus);
       return;
     }
     setState(() { _loading = true; _error = null; });
@@ -132,7 +132,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
   Future<void> _sendOtp() async {
     if (!_consentOk()) return;
     if (!_backendConfigured) {
-      if (mounted) context.go(KaalRoutes.focus);
+      if (mounted) context.go(TaskEraRoutes.focus);
       return;
     }
     if (_email.text.trim().isEmpty) {
@@ -238,7 +238,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final microsoftEnabled = ref.watch(microsoftSignInEnabledProvider);
 
     return Stack(
@@ -265,12 +265,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         decoration: const BoxDecoration(shape: BoxShape.circle),
                         clipBehavior: Clip.antiAlias,
                         child: Image.asset(
-                          'assets/logo/kaal_logo.png',
+                          'assets/logo/taskera_logo.png',
                           fit: BoxFit.cover,
                         ),
                       ),
                       Text(
-                        'Kaal',
+                        'TaskEra',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Fraunces',
@@ -349,15 +349,15 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                               fontFamily: 'Inter',
                               fontSize: 12,
                               color: (_otpMode && otpOnCooldown)
-                                  ? KaalColors.acc.withAlpha(0x80)
-                                  : KaalColors.acc,
+                                  ? TaskEraColors.acc.withAlpha(0x80)
+                                  : TaskEraColors.acc,
                             ),
                           ),
                         ),
                       ),
                       if (!_otpMode)
                         GestureDetector(
-                          onTap: () => context.go(KaalRoutes.signup),
+                          onTap: () => context.go(TaskEraRoutes.signup),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Row(
@@ -376,7 +376,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 12,
-                                    color: KaalColors.acc,
+                                    color: TaskEraColors.acc,
                                   ),
                                 ),
                               ],
@@ -419,7 +419,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(vertical: 11),
                           decoration: BoxDecoration(
-                            color: KaalColors.acc,
+                            color: TaskEraColors.acc,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: _loading
@@ -445,7 +445,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(vertical: 11),
                                 decoration: BoxDecoration(
-                                  color: KaalColors.acc,
+                                  color: TaskEraColors.acc,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: _loading
@@ -473,7 +473,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     width: 1.5,
-                                    color: KaalColors.acc.withValues(alpha: 0.5),
+                                    color: TaskEraColors.acc.withValues(alpha: 0.5),
                                   ),
                                 ),
                                 child: const FittedBox(
@@ -484,7 +484,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                       fontFamily: 'Inter',
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: KaalColors.acc,
+                                      color: TaskEraColors.acc,
                                     ),
                                   ),
                                 ),
@@ -581,7 +581,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                             AppLaunchPrefs.markSkipAuth(prefs);
                             // Local-storage users run through onboarding too; the
                             // mandatory Pro upsell is shown right after it.
-                            context.go(KaalRoutes.onboard);
+                            context.go(TaskEraRoutes.onboard);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -644,12 +644,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                 TextSpan(text: 'Tasks save '),
                                 TextSpan(
                                   text: 'locally on this device',
-                                  style: TextStyle(color: KaalColors.acc),
+                                  style: TextStyle(color: TaskEraColors.acc),
                                 ),
                                 TextSpan(text: '. Sign in for free cloud sync. '),
                                 TextSpan(
-                                  text: 'Skip (local storage) requires a Kaal Pro subscription.',
-                                  style: TextStyle(color: KaalColors.acc2, fontWeight: FontWeight.w600),
+                                  text: 'Skip (local storage) requires a TaskEra Pro subscription.',
+                                  style: TextStyle(color: TaskEraColors.acc2, fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -671,9 +671,9 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           width: 18, height: 18,
                           margin: const EdgeInsets.only(top: 1),
                           decoration: BoxDecoration(
-                            color: _accepted ? KaalColors.acc : Colors.transparent,
+                            color: _accepted ? TaskEraColors.acc : Colors.transparent,
                             borderRadius: BorderRadius.circular(5),
-                            border: Border.all(width: 1.2, color: _accepted ? KaalColors.acc : colors.ink3),
+                            border: Border.all(width: 1.2, color: _accepted ? TaskEraColors.acc : colors.ink3),
                           ),
                           child: _accepted ? const Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
                         ),
@@ -685,16 +685,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                               Text('I agree to the ',
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
-                                onTap: () => context.push(KaalRoutes.legal),
+                                onTap: () => context.push(TaskEraRoutes.legal),
                                 child: const Text('Terms of Service',
-                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
                               ),
                               Text(' and ',
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
-                                onTap: () => context.push('${KaalRoutes.legal}?tab=privacy'),
+                                onTap: () => context.push('${TaskEraRoutes.legal}?tab=privacy'),
                                 child: const Text('Privacy Policy',
-                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: KaalColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
                               ),
                               Text('.',
                                   style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
@@ -718,7 +718,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
 
 class _Flbl extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Flbl(this.label, this.colors);
 
   @override
@@ -743,7 +743,7 @@ class _FinputField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
   final bool isPassword;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final TextInputType? keyboardType;
   final bool readOnly;
   final ValueChanged<String>? onChanged;
@@ -790,7 +790,7 @@ class _FinputField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: KaalColors.acc, width: 1),
+          borderSide: const BorderSide(color: TaskEraColors.acc, width: 1),
         ),
       ),
     );
@@ -812,7 +812,7 @@ void _comingSoon(BuildContext context, String what) {
 class _SocialBtn extends StatelessWidget {
   final String label;
   final Widget icon;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback? onTap;
   final bool comingSoon; // dim like a disabled button but still tappable for the toast
   const _SocialBtn({

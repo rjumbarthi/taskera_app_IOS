@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_theme.dart';
 
 class TimelineRow extends StatelessWidget {
   final String time;
@@ -15,7 +15,7 @@ class TimelineRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

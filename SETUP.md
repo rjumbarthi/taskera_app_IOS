@@ -1,4 +1,4 @@
-# Kaal — Real Backend Setup Guide
+# TaskEra — Real Backend Setup Guide
 
 Complete these steps once to turn the app from UI-only to fully functional.
 Estimated time: 45-60 minutes.
@@ -20,8 +20,8 @@ Estimated time: 45-60 minutes.
 - **Dashboard → Auth → URL Configuration**
 - Add to **Redirect URLs**:
   ```
-  io.supabase.kaalapp://login-callback/
-  io.supabase.kaalapp://reset-callback/
+  io.supabase.taskeraapp://login-callback/
+  io.supabase.taskeraapp://reset-callback/
   ```
 
 ### 1d. Copy your project credentials
@@ -70,8 +70,8 @@ Create **three** OAuth 2.0 Client IDs (one per platform):
 | Platform | Application type | Notes |
 |---|---|---|
 | Web | Web application | Add `https://YOUR_PROJECT.supabase.co/auth/v1/callback` to Authorized redirect URIs |
-| Android | Android | Package name: `com.example.kaal_app`, SHA-1 from keystore |
-| iOS | iOS | Bundle ID: `com.example.kaalApp` |
+| Android | Android | Package name: `com.example.taskera_app`, SHA-1 from keystore |
+| iOS | iOS | Bundle ID: `com.example.taskeraApp` |
 
 ### 2d. Paste client IDs
 In `lib/config/app_config.dart`:
@@ -95,10 +95,10 @@ static const googleClientIdAndroid = 'YOUR_ANDROID_ID.apps.googleusercontent.com
 
 ### 3a. Register an Azure app
 1. https://portal.azure.com → Azure Active Directory → App registrations → New registration
-2. Name: "Kaal App"
+2. Name: "TaskEra App"
 3. Account types: "Accounts in any organizational directory and personal Microsoft accounts"
 4. Redirect URIs — add these:
-   - Mobile/Desktop: `kaalapp://microsoft-auth`
+   - Mobile/Desktop: `taskeraapp://microsoft-auth`
    - Desktop (Windows/macOS): `http://localhost`
 
 ### 3b. Add API permissions
@@ -128,12 +128,12 @@ Add to `ios/Runner/Info.plist`:
   <!-- Supabase OAuth callback -->
   <dict>
     <key>CFBundleURLSchemes</key>
-    <array><string>io.supabase.kaalapp</string></array>
+    <array><string>io.supabase.taskeraapp</string></array>
   </dict>
   <!-- Microsoft OAuth callback -->
   <dict>
     <key>CFBundleURLSchemes</key>
-    <array><string>kaalapp</string></array>
+    <array><string>taskeraapp</string></array>
   </dict>
 </array>
 ```

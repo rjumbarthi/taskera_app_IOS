@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../data/providers/tasks_provider.dart';
 import '../l10n/app_l10n.dart';
 import '../routing/routes.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_theme.dart';
 
 /// Today / Active / Done / Overdue stat row — shared by Focus and Tasks screens.
 class TaskMetaRow extends ConsumerWidget {
@@ -14,7 +14,7 @@ class TaskMetaRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     final l = AppL10n.of(context);
 
     final q1   = ref.watch(quadrantTasksProvider(1)).valueOrNull ?? [];
@@ -55,25 +55,25 @@ class TaskMetaRow extends ConsumerWidget {
                 Expanded(child: _Col(
                   label: l.today,   value: '$todayCount',
                   color: const Color(0xFFFF9F0A), colors: colors,
-                  onTap: () => context.go('${KaalRoutes.focusList}?f=today'),
+                  onTap: () => context.go('${TaskEraRoutes.focusList}?f=today'),
                 )),
                 VerticalDivider(width: 1, thickness: 0.5, color: colors.bdr),
                 Expanded(child: _Col(
                   label: l.active,  value: '${allActive.length}',
-                  color: KaalColors.acc2, colors: colors,
-                  onTap: () => context.go('${KaalRoutes.focusList}?f=active'),
+                  color: TaskEraColors.acc2, colors: colors,
+                  onTap: () => context.go('${TaskEraRoutes.focusList}?f=active'),
                 )),
                 VerticalDivider(width: 1, thickness: 0.5, color: colors.bdr),
                 Expanded(child: _Col(
                   label: l.done,    value: '${done.length}',
-                  color: KaalColors.success, colors: colors,
-                  onTap: () => context.go('${KaalRoutes.focusList}?f=done'),
+                  color: TaskEraColors.success, colors: colors,
+                  onTap: () => context.go('${TaskEraRoutes.focusList}?f=done'),
                 )),
                 VerticalDivider(width: 1, thickness: 0.5, color: colors.bdr),
                 Expanded(child: _Col(
                   label: l.overdue, value: '$overdueCount',
-                  color: KaalColors.warn, colors: colors,
-                  onTap: () => context.go('${KaalRoutes.focusList}?f=overdue'),
+                  color: TaskEraColors.warn, colors: colors,
+                  onTap: () => context.go('${TaskEraRoutes.focusList}?f=overdue'),
                 )),
               ],
             ),
@@ -88,7 +88,7 @@ class _Col extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback? onTap;
   const _Col({required this.label, required this.value,
       required this.color, required this.colors, this.onTap});

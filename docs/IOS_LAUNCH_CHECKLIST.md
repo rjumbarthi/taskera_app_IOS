@@ -1,13 +1,13 @@
-# Kaal — iOS App Store Launch Checklist
+# TaskEra — iOS App Store Launch Checklist
 
-Everything needed to get Kaal onto the App Store, in order. Code changes are
+Everything needed to get TaskEra onto the App Store, in order. Code changes are
 already committed (`5b2a7d6`); the rest is Mac + Apple/Supabase portal work that
 only you can do with your logins.
 
-- **Bundle ID:** `com.port443.kaal`
+- **Bundle ID:** `com.port443.taskera`
 - **Team / Developer:** Port443 LLC (your active Apple Developer account)
-- **Privacy policy URL:** https://jumbarthi.com/kaal
-- **Support email:** kaal_support@jumbarthi.com
+- **Privacy policy URL:** https://jumbarthi.com/taskera
+- **Support email:** taskera_support@jumbarthi.com
 
 ---
 
@@ -27,7 +27,7 @@ only you can do with your logins.
 
 6. [ ] Open **`ios/Runner.xcworkspace`** (the workspace, NOT `.xcodeproj`).
 7. [ ] Runner → **Signing & Capabilities**:
-       - Set **Team** (Port443 LLC); confirm bundle id `com.port443.kaal`.
+       - Set **Team** (Port443 LLC); confirm bundle id `com.port443.taskera`.
        - **+ Capability → Sign in with Apple**. (`ios/Runner/Runner.entitlements`
          already exists with the entitlement — Xcode will link it.)
 8. [ ] Confirm automatic signing resolves a provisioning profile with the
@@ -36,20 +36,20 @@ only you can do with your logins.
 ## Phase 3 — Apple Developer portal (developer.apple.com)
 
 9.  [ ] Certificates, Identifiers & Profiles → **Identifiers** → App ID
-        `com.port443.kaal` → ensure **Sign In with Apple** is enabled (Xcode
+        `com.port443.taskera` → ensure **Sign In with Apple** is enabled (Xcode
         usually does this in step 7).
 10. [ ] **Keys → +** → enable **Sign in with Apple** → **download the `.p8`**;
         note the **Key ID**.
 11. [ ] Note your **Team ID** (top-right of the portal).
 12. [ ] (For Supabase web/token validation) **Identifiers → + → Services ID**,
-        e.g. `com.port443.kaal.signin`; enable Sign in with Apple on it and set
+        e.g. `com.port443.taskera.signin`; enable Sign in with Apple on it and set
         the return URL to your Supabase callback
         `https://dutlcoxtxmnqektttffg.supabase.co/auth/v1/callback`.
 
 ## Phase 4 — Supabase (enable Apple provider)
 
 13. [ ] Dashboard → **Authentication → Providers → Apple → Enable**.
-14. [ ] **Client IDs:** add `com.port443.kaal` (the app bundle id). *This is the
+14. [ ] **Client IDs:** add `com.port443.taskera` (the app bundle id). *This is the
         field that makes the native id-token flow work — the critical one.* Add
         the Services ID from step 12 too if you use the web flow.
 15. [ ] Fill the **Secret Key** section with **Team ID**, **Key ID**, and the
@@ -57,15 +57,15 @@ only you can do with your logins.
 
 ## Phase 5 — App Store Connect
 
-16. [ ] Create the **app record** (bundle id `com.port443.kaal`), name, primary
+16. [ ] Create the **app record** (bundle id `com.port443.taskera`), name, primary
         category, etc.
-17. [ ] Create the **Pro subscription IAP product**. Kaal uses `in_app_purchase`
+17. [ ] Create the **Pro subscription IAP product**. TaskEra uses `in_app_purchase`
         = Apple StoreKit on iOS, so **Pro will not work until this product exists
         and is approved**. Match the product identifiers the app queries.
 18. [ ] Fill **App Privacy** ("nutrition labels") — must match your data-safety
         declarations (Personal info, Financial info from IAP, etc.).
 19. [ ] Upload screenshots (6.7" + 6.5" + iPad if you ship iPad), description,
-        keywords, support URL, privacy URL `https://jumbarthi.com/kaal`.
+        keywords, support URL, privacy URL `https://jumbarthi.com/taskera`.
 
 ## Phase 6 — Build & submit (on Mac)
 
@@ -90,7 +90,7 @@ only you can do with your logins.
 ## Notes & gotchas
 
 - **Google sign-in on iOS needs no extra config** — it uses the Supabase browser
-  flow, and the `io.supabase.kaalapp` URL scheme is already in `Info.plist`.
+  flow, and the `io.supabase.taskeraapp` URL scheme is already in `Info.plist`.
 - **AdMob is still on Google TEST IDs** (Android and iOS). The iOS
   `GADApplicationIdentifier` in `Info.plist` is Google's test app id. Real ads
   require the 6 AdMob IDs (2 app ids + 4 unit ids) — see the AdMob walkthrough.
@@ -109,6 +109,6 @@ only you can do with your logins.
 |---|---|---|
 | Team ID | developer.apple.com (top-right) | Supabase Apple secret |
 | Key ID + `.p8` | Apple portal → Keys | Supabase Apple secret |
-| App ID `com.port443.kaal` | Apple portal → Identifiers | Supabase Client IDs |
+| App ID `com.port443.taskera` | Apple portal → Identifiers | Supabase Client IDs |
 | Services ID (optional) | Apple portal → Identifiers | Supabase Client IDs |
 | Supabase callback URL | `https://dutlcoxtxmnqektttffg.supabase.co/auth/v1/callback` | Services ID return URL |

@@ -6,17 +6,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../l10n/app_l10n.dart';
 import '../../widgets/add_back_button.dart';
-import '../../widgets/kaal_top_bar.dart';
+import '../../widgets/taskera_top_bar.dart';
 import '../../data/providers/auth_provider.dart'
     show profileImagePathProvider, profileAvatarColorProvider, profileAvatarLogoProvider,
          profileDisplayNameProvider, displayNameProvider, currentUserProvider;
 import '../../services/auth_service.dart';
-import '../../util/kaal_dialogs.dart';
-import '../../widgets/kaal_avatar.dart' show kKaalAvatarColors;
+import '../../util/taskera_dialogs.dart';
+import '../../widgets/taskera_avatar.dart' show kTaskEraAvatarColors;
 import '../../routing/routes.dart';
-import '../../settings/kaal_settings.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../settings/taskera_settings.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/wallpaper_background.dart';
 
 // ── Picker tab ────────────────────────────────────────────────────────────────
@@ -32,7 +32,7 @@ class _SvgLogo    extends _Logo { final String path; const _SvgLogo(this.path); 
 class _EmojiLogo  extends _Logo { final String emoji; const _EmojiLogo(this.emoji); }
 
 const _kLogos = <_Logo>[
-  _AssetLogo('assets/logo/kaal_logo.png'),
+  _AssetLogo('assets/logo/taskera_logo.png'),
   _SvgLogo('assets/icons/focus_nav.svg'),
   _EmojiLogo('🎯'),
   _EmojiLogo('🔥'),
@@ -89,9 +89,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors    = KaalTheme.of(context).colors;
+    final colors    = TaskEraTheme.of(context).colors;
     final safeBot   = MediaQuery.of(context).padding.bottom;
-    final settings  = ref.watch(kaalSettingsProvider);
+    final settings  = ref.watch(taskeraSettingsProvider);
     final wallpaper = settings.wallpaper;
 
     return Stack(
@@ -103,7 +103,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              KaalTopBar(
+              TaskEraTopBar(
                 title: AppL10n.of(context).editProfile,
                 leading: AddBackButton(onTap: () => context.pop()),
                 actions: [
@@ -112,13 +112,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
                       decoration: BoxDecoration(
-                        color: KaalColors.accBg,
+                        color: TaskEraColors.accBg,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                       ),
                       child: Text(AppL10n.of(context).save,
                           style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
-                              fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+                              fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
                     ),
                   ),
                 ],
@@ -170,7 +170,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         await ref.read(authServiceProvider).signOut();
                         await ref.read(profileImagePathProvider.notifier).clear();
                         await ref.read(profileDisplayNameProvider.notifier).setName('');
-                        if (context.mounted) context.go(KaalRoutes.signin);
+                        if (context.mounted) context.go(TaskEraRoutes.signin);
                       },
                       behavior: HitTestBehavior.opaque,
                       child: Container(
@@ -187,7 +187,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             fontFamily: 'Inter',
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: KaalColors.warn,
+                            color: TaskEraColors.warn,
                             height: 1,
                           ),
                         ),
@@ -197,7 +197,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     // ── delete account ──────────────────────────────────────
                     GestureDetector(
                       onTap: () async {
-                        final ok = await kaalConfirmDelete(
+                        final ok = await taskeraConfirmDelete(
                           context,
                           message:
                               'This permanently deletes your account and all your '
@@ -211,7 +211,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           await ref
                               .read(profileDisplayNameProvider.notifier)
                               .setName('');
-                          if (context.mounted) context.go(KaalRoutes.signin);
+                          if (context.mounted) context.go(TaskEraRoutes.signin);
                         } catch (_) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -270,13 +270,13 @@ class _AvatarHero extends StatelessWidget {
   final String initials;
   final int colorIdx;
   final int? logoIdx;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _AvatarHero({required this.initials, required this.colorIdx,
       required this.logoIdx, required this.colors});
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = kKaalAvatarColors[colorIdx];
+    final bgColor = kTaskEraAvatarColors[colorIdx];
 
     Widget face;
     if (logoIdx != null) {
@@ -340,7 +340,7 @@ class _PickerCard extends StatelessWidget {
   final _PickerTab tab;
   final int colorIdx;
   final int? logoIdx;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<_PickerTab> onTab;
   final ValueChanged<int> onColor;
   final ValueChanged<int> onLogo;
@@ -383,7 +383,7 @@ class _PickerCard extends StatelessWidget {
 
 class _TabRow extends StatelessWidget {
   final _PickerTab tab;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<_PickerTab> onTap;
   const _TabRow({required this.tab, required this.colors, required this.onTap});
 
@@ -424,7 +424,7 @@ class _TabChip extends StatelessWidget {
         duration: const Duration(milliseconds: 160),
         padding: const EdgeInsets.symmetric(vertical: 7),
         decoration: BoxDecoration(
-          color: selected ? KaalColors.accBg : Colors.transparent,
+          color: selected ? TaskEraColors.accBg : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
           border: selected ? Border.all(width: 0.5, color: const Color(0x4D0A84FF)) : null,
         ),
@@ -432,7 +432,7 @@ class _TabChip extends StatelessWidget {
         child: Text(label,
             style: TextStyle(fontFamily: 'Inter', fontSize: 12,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                color: selected ? KaalColors.acc2 : KaalTheme.of(context).colors.ink3,
+                color: selected ? TaskEraColors.acc2 : TaskEraTheme.of(context).colors.ink3,
                 height: 1)),
       ),
     );
@@ -443,7 +443,7 @@ class _TabChip extends StatelessWidget {
 
 class _ColorBody extends StatelessWidget {
   final int selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<int> onTap;
   const _ColorBody({required this.selected, required this.colors, required this.onTap});
 
@@ -452,7 +452,7 @@ class _ColorBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        for (int i = 0; i < kKaalAvatarColors.length; i++)
+        for (int i = 0; i < kTaskEraAvatarColors.length; i++)
           GestureDetector(
             onTap: () { HapticFeedback.selectionClick(); onTap(i); },
             child: AnimatedContainer(
@@ -460,11 +460,11 @@ class _ColorBody extends StatelessWidget {
               width:  selected == i ? 30 : 26,
               height: selected == i ? 30 : 26,
               decoration: BoxDecoration(
-                color: kKaalAvatarColors[i],
+                color: kTaskEraAvatarColors[i],
                 shape: BoxShape.circle,
                 border: selected == i ? Border.all(width: 2.5, color: Colors.white) : null,
                 boxShadow: selected == i
-                    ? [BoxShadow(color: kKaalAvatarColors[i].withValues(alpha: 0.5), blurRadius: 8)]
+                    ? [BoxShadow(color: kTaskEraAvatarColors[i].withValues(alpha: 0.5), blurRadius: 8)]
                     : null,
               ),
             ),
@@ -478,7 +478,7 @@ class _ColorBody extends StatelessWidget {
 
 class _LogoBody extends StatelessWidget {
   final int? selected;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final int colorIdx;
   final ValueChanged<int> onTap;
   const _LogoBody({required this.selected, required this.colors,
@@ -486,7 +486,7 @@ class _LogoBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = kKaalAvatarColors[colorIdx];
+    final bgColor = kTaskEraAvatarColors[colorIdx];
 
     return GridView.builder(
       shrinkWrap: true,
@@ -530,7 +530,7 @@ class _LogoBody extends StatelessWidget {
 
 class _FieldLabel extends StatelessWidget {
   final String text;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FieldLabel(this.text, this.colors);
 
   @override
@@ -545,7 +545,7 @@ class _FieldLabel extends StatelessWidget {
 class _GlassField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final ValueChanged<String>? onChanged;
   const _GlassField({required this.controller, required this.hint,
       required this.colors, this.onChanged});
@@ -572,7 +572,7 @@ class _GlassField extends StatelessWidget {
           border: InputBorder.none,
           isDense: true,
         ),
-        cursorColor: KaalColors.acc,
+        cursorColor: TaskEraColors.acc,
         cursorWidth: 1.5,
       ),
     );
@@ -581,7 +581,7 @@ class _GlassField extends StatelessWidget {
 
 class _ReadonlyField extends StatelessWidget {
   final String value;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ReadonlyField({required this.value, required this.colors});
 
   @override

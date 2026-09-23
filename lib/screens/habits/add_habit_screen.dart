@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart';
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../widgets/add_back_button.dart';
 import '../../widgets/reminders_section.dart';
 import '../../services/activity_log_service.dart';
@@ -219,7 +219,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -229,7 +229,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
           trailing: _isLoading
               ? const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14),
-                  child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: KaalColors.acc)),
+                  child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: TaskEraColors.acc)),
                 )
               : _SaveBtn(onTap: _save),
         ),
@@ -252,7 +252,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                         decoration: BoxDecoration(
                           color: const Color(0x120A84FF),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1.5, color: KaalColors.acc),
+                          border: Border.all(width: 1.5, color: TaskEraColors.acc),
                         ),
                         child: Center(child: Text(_icon, style: const TextStyle(fontSize: 20, height: 1))),
                       ),
@@ -395,11 +395,11 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                               child: Container(
                                 width: 16, height: 16,
                                 decoration: BoxDecoration(
-                                  color: _steps[i].isDone ? KaalColors.acc.withAlpha(0x33) : Colors.transparent,
+                                  color: _steps[i].isDone ? TaskEraColors.acc.withAlpha(0x33) : Colors.transparent,
                                   borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(width: 0.5, color: _steps[i].isDone ? KaalColors.acc : colors.bdr),
+                                  border: Border.all(width: 0.5, color: _steps[i].isDone ? TaskEraColors.acc : colors.bdr),
                                 ),
-                                child: _steps[i].isDone ? const Icon(Icons.check_rounded, size: 11, color: KaalColors.acc) : null,
+                                child: _steps[i].isDone ? const Icon(Icons.check_rounded, size: 11, color: TaskEraColors.acc) : null,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -430,9 +430,9 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                             decoration: BoxDecoration(
                               color: const Color(0x120A84FF),
                               borderRadius: BorderRadius.circular(9),
-                              border: Border.all(width: 0.5, color: KaalColors.acc.withAlpha(0x55)),
+                              border: Border.all(width: 0.5, color: TaskEraColors.acc.withAlpha(0x55)),
                             ),
-                            child: const Icon(Icons.add_rounded, size: 18, color: KaalColors.acc),
+                            child: const Icon(Icons.add_rounded, size: 18, color: TaskEraColors.acc),
                           ),
                         ),
                       ],
@@ -546,7 +546,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
 
 class _SubBar extends StatelessWidget {
   final String title;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final Widget? trailing;
   const _SubBar({required this.title, required this.colors, this.trailing});
 
@@ -584,7 +584,7 @@ class _SaveBtn extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-        decoration: BoxDecoration(color: KaalColors.acc, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
         child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
       ),
     );
@@ -594,7 +594,7 @@ class _SaveBtn extends StatelessWidget {
 class _FormRow extends StatelessWidget {
   final String label;
   final Widget child;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FormRow({required this.label, required this.child, required this.colors});
 
   @override
@@ -617,7 +617,7 @@ class _FormRow extends StatelessWidget {
 class _InputField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _InputField({required this.controller, required this.hint, required this.colors});
 
   @override
@@ -631,7 +631,7 @@ class _InputField extends StatelessWidget {
         filled: false,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: KaalColors.acc)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc)),
         contentPadding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
         isDense: true,
       ),
@@ -643,7 +643,7 @@ class _Chip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _Chip({required this.label, required this.selected, required this.onTap, required this.colors});
 
   @override
@@ -653,9 +653,9 @@ class _Chip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(9, 5, 9, 5),
         decoration: BoxDecoration(
-          color: selected ? KaalColors.acc : Colors.transparent,
+          color: selected ? TaskEraColors.acc : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(width: 0.5, color: selected ? KaalColors.acc : colors.bdr),
+          border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label,
           style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
@@ -678,7 +678,7 @@ class _Toggle extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: 36, height: 21,
         decoration: BoxDecoration(
-          color: value ? KaalColors.acc : const Color(0x33FFFFFF),
+          color: value ? TaskEraColors.acc : const Color(0x33FFFFFF),
           borderRadius: BorderRadius.circular(11),
         ),
         child: AnimatedAlign(

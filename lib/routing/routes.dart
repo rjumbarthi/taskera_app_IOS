@@ -1,4 +1,4 @@
-abstract final class KaalRoutes {
+abstract final class TaskEraRoutes {
   // Tab roots (also used with context.go())
   static const focus   = '/focus';
   static const tasks   = '/tasks';

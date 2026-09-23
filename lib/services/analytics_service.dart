@@ -21,7 +21,7 @@ class AnalyticsService {
   AnalyticsService._();
   static final AnalyticsService instance = AnalyticsService._();
 
-  static const _anonKey = 'kaal.analytics.anonId';
+  static const _anonKey = 'taskera.analytics.anonId';
 
   final _client = http.Client();
   String _anonId = '';
@@ -69,7 +69,7 @@ class AnalyticsService {
       'distinct_id': _distinctId,
       'timestamp': DateTime.now().toUtc().toIso8601String(),
       'properties': <String, dynamic>{
-        '\$lib': 'kaal-flutter',
+        '\$lib': 'taskera-flutter',
         'platform': defaultTargetPlatform.name,
         ...?props,
       },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class HabitRow extends StatelessWidget {
   final String name;
@@ -21,12 +21,12 @@ class HabitRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.fromLTRB(11, 9, 11, 9),
       decoration: BoxDecoration(
         color: colors.surf2,
-        borderRadius: KaalShape.card,
+        borderRadius: TaskEraShape.card,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Row(
@@ -64,7 +64,7 @@ class HabitRow extends StatelessWidget {
                         height: 8,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: weekDots[i] ? KaalColors.acc : colors.surf3,
+                          color: weekDots[i] ? TaskEraColors.acc : colors.surf3,
                         ),
                       ),
                     ],

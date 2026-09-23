@@ -81,9 +81,9 @@ class ProEntitlement {
       );
 }
 
-const _kEntitlementPrefsKey = 'kaal.proEntitlement';
+const _kEntitlementPrefsKey = 'taskera.proEntitlement';
 
-/// Whether the user has Kaal Pro right now. Authoritative source: the
+/// Whether the user has TaskEra Pro right now. Authoritative source: the
 /// server-validated [proEntitlementProvider] (store receipt / Razorpay
 /// webhook via `pro_entitlements`), cached locally so it survives offline
 /// launches. This never grants Pro merely because a purchase transaction

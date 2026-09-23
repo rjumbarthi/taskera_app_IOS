@@ -14,15 +14,15 @@ import '../routing/routes.dart';
 import '../util/platform_layout.dart';
 
 // ── Android channel IDs ───────────────────────────────────────────────────────
-const _chTasks    = 'kaal_tasks';
-const _chHabits   = 'kaal_habits';
-const _chGoals    = 'kaal_goals';
-const _chCalendar = 'kaal_calendar';
-const _chInbox    = 'kaal_inbox';
-const _chFocus    = 'kaal_focus';
-const _chDtn      = 'kaal_dtn';
-const _chReminders = 'kaal_reminders';
-const _chAlarms    = 'kaal_alarms';
+const _chTasks    = 'taskera_tasks';
+const _chHabits   = 'taskera_habits';
+const _chGoals    = 'taskera_goals';
+const _chCalendar = 'taskera_calendar';
+const _chInbox    = 'taskera_inbox';
+const _chFocus    = 'taskera_focus';
+const _chDtn      = 'taskera_dtn';
+const _chReminders = 'taskera_reminders';
+const _chAlarms    = 'taskera_alarms';
 
 // ── DTN notification action ids ───────────────────────────────────────────────
 const kDtnDone  = 'dtn_done';
@@ -76,7 +76,7 @@ class DtnPendingAction {
 
 /// SharedPreferences key holding DTN actions tapped while the app was in the
 /// background — entries are `done:<id>` / `skip:<id>`. Drained on next resume.
-const _kDtnQueueKey = 'kaal.dtn.pending';
+const _kDtnQueueKey = 'taskera.dtn.pending';
 
 /// Background-isolate entry point for action buttons tapped while the app is
 /// backgrounded or terminated (all `showsUserInterface: false`). It runs in a
@@ -225,7 +225,7 @@ class NotificationService {
         instance._snoozeReminder(data['id'] as int,
             (data['label'] as String?) ?? '', (data['isAlarm'] as bool?) ?? false);
       } else if (action != kReminderDismiss) {
-        _pendingRoute = KaalRoutes.cal; // body tap → open the calendar (reminders live there)
+        _pendingRoute = TaskEraRoutes.cal; // body tap → open the calendar (reminders live there)
         onTapHandled?.call();
       }
       return;
@@ -488,7 +488,7 @@ class NotificationService {
       _nextDaily(8, 0),
       DateTimeComponents.time,
       _chTasks, high: true,
-      payload: KaalRoutes.tasks,
+      payload: TaskEraRoutes.tasks,
     );
   }
 
@@ -516,7 +516,7 @@ class NotificationService {
       _nextDaily(9, 0),
       DateTimeComponents.time,
       _chTasks, high: true,
-      payload: '${KaalRoutes.focusList}?f=overdue',
+      payload: '${TaskEraRoutes.focusList}?f=overdue',
     );
   }
 
@@ -532,7 +532,7 @@ class NotificationService {
       _nextDaily(8, 0),
       DateTimeComponents.time,
       _chHabits,
-      payload: KaalRoutes.habits,
+      payload: TaskEraRoutes.habits,
     );
   }
 
@@ -546,7 +546,7 @@ class NotificationService {
       _nextDaily(21, 0),
       DateTimeComponents.time,
       _chHabits, high: true,
-      payload: KaalRoutes.habits,
+      payload: TaskEraRoutes.habits,
     );
   }
 
@@ -562,7 +562,7 @@ class NotificationService {
       _nextWeekday(DateTime.friday, 18, 0),
       DateTimeComponents.dayOfWeekAndTime,
       _chGoals,
-      payload: KaalRoutes.weeklyReview,
+      payload: TaskEraRoutes.weeklyReview,
     );
   }
 
@@ -576,7 +576,7 @@ class NotificationService {
       '${goal.emoji} Goal deadline in 7 days', goal.title,
       tz.TZDateTime.from(t, tz.local),
       _chGoals,
-      payload: '${KaalRoutes.goals}/${goal.id}',
+      payload: '${TaskEraRoutes.goals}/${goal.id}',
     );
   }
 
@@ -590,7 +590,7 @@ class NotificationService {
       '${goal.emoji} Goal deadline tomorrow!', goal.title,
       tz.TZDateTime.from(t, tz.local),
       _chGoals, high: true,
-      payload: '${KaalRoutes.goals}/${goal.id}',
+      payload: '${TaskEraRoutes.goals}/${goal.id}',
     );
   }
 
@@ -606,7 +606,7 @@ class NotificationService {
       '📅 ${event.title}', 'Starting in 15 minutes',
       tz.TZDateTime.from(t, tz.local),
       _chCalendar, high: true,
-      payload: KaalRoutes.cal,
+      payload: TaskEraRoutes.cal,
     );
   }
 
@@ -621,7 +621,7 @@ class NotificationService {
       '📅 ${event.title}', 'Starting now',
       tz.TZDateTime.from(t, tz.local),
       _chCalendar, high: true,
-      payload: KaalRoutes.cal,
+      payload: TaskEraRoutes.cal,
     );
   }
 
@@ -633,11 +633,11 @@ class NotificationService {
     await _zonedRepeat(
       5000,
       '✦ $actionCount inbox ${actionCount == 1 ? 'action' : 'actions'} to review',
-      'Kaal AI found items that need your decision',
+      'TaskEra AI found items that need your decision',
       _nextDaily(8, 30),
       DateTimeComponents.time,
       _chInbox,
-      payload: KaalRoutes.inbox,
+      payload: TaskEraRoutes.inbox,
     );
   }
 
@@ -653,7 +653,7 @@ class NotificationService {
           ? 'Your break is done. Start the next session.'
           : 'Take a 5-minute break, then keep going.',
       _details(_chFocus, high: true),
-      payload: KaalRoutes.pomodoro,
+      payload: TaskEraRoutes.pomodoro,
     );
   }
 
@@ -667,7 +667,7 @@ class NotificationService {
       _nextWeekday(DateTime.sunday, 20, 0),
       DateTimeComponents.dayOfWeekAndTime,
       _chFocus,
-      payload: KaalRoutes.weeklyReview,
+      payload: TaskEraRoutes.weeklyReview,
     );
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/kaal_colors.dart';
-import '../theme/kaal_shape.dart';
-import '../theme/kaal_theme.dart';
+import '../theme/taskera_colors.dart';
+import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 class AiNudgeCard extends StatelessWidget {
   final String message;
@@ -19,12 +19,12 @@ class AiNudgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
         color: colors.surf,
-        borderRadius: KaalShape.card,
+        borderRadius: TaskEraShape.card,
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Column(
@@ -34,13 +34,13 @@ class AiNudgeCard extends StatelessWidget {
           Row(
             children: [
               const Text(
-                '✨ KAAL AI',
+                '✨ TASKERA AI',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.6,
-                  color: KaalColors.acc2,
+                  color: TaskEraColors.acc2,
                 ),
               ),
               const Spacer(),
@@ -67,7 +67,7 @@ class AiNudgeCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: KaalColors.accBg,
+                color: TaskEraColors.accBg,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   width: 0.5,
@@ -80,7 +80,7 @@ class AiNudgeCard extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: KaalColors.acc,
+                  color: TaskEraColors.acc,
                 ),
               ),
             ),

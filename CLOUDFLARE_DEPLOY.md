@@ -1,12 +1,12 @@
-# Deploying the Kaal web app to Cloudflare Pages
+# Deploying the TaskEra web app to Cloudflare Pages
 
-The `kaal_app_Web_App` repo auto-deploys to Cloudflare Pages. Cloudflare builds
+The `taskera_app_Web_App` repo auto-deploys to Cloudflare Pages. Cloudflare builds
 the Flutter web bundle on every push to `main` and serves it globally.
 
 ## One-time setup (Cloudflare dashboard)
 
 1. <https://dash.cloudflare.com> → **Workers & Pages** → **Create** →
-   **Pages** → **Connect to Git** → authorize GitHub → pick **`kaal_app_Web_App`**.
+   **Pages** → **Connect to Git** → authorize GitHub → pick **`taskera_app_Web_App`**.
 2. **Build settings:**
    - **Framework preset:** `None`
    - **Build command:**
@@ -17,7 +17,7 @@ the Flutter web bundle on every push to `main` and serves it globally.
    - **Root directory:** `/` (leave default)
 3. **Save and Deploy.** First build is slow (~5–8 min: it clones Flutter). Later
    builds are faster with Cloudflare's cache.
-4. Your site goes live at `https://kaal-app-web-app.pages.dev` (Cloudflare shows
+4. Your site goes live at `https://taskera-app-web-app.pages.dev` (Cloudflare shows
    the exact URL). Every push to `main` redeploys automatically.
 
 > The Flutter version is pinned to **3.44.1** (matches local dev). Bump the
@@ -29,7 +29,7 @@ Once you know your `*.pages.dev` URL (and any custom domain):
 
 - **Supabase** → Authentication → **URL Configuration**:
   - Set **Site URL** to your Pages URL.
-  - Add it to **Redirect URLs** (e.g. `https://kaal-app-web-app.pages.dev/*`).
+  - Add it to **Redirect URLs** (e.g. `https://taskera-app-web-app.pages.dev/*`).
 - **Google Cloud** (only if using Google sign-in on web) → your OAuth client →
   add the Pages URL to **Authorized JavaScript origins**. (The Google→Supabase
   redirect URI stays `https://dutlcoxtxmnqektttffg.supabase.co/auth/v1/callback`.)

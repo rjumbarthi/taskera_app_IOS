@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/time_tracker_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 import '../../l10n/app_l10n.dart';
 import '../../widgets/add_back_button.dart';
 
@@ -16,7 +16,7 @@ class AnalyticsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors  = KaalTheme.of(context).colors;
+    final colors  = TaskEraTheme.of(context).colors;
     final done    = ref.watch(doneTasksProvider).valueOrNull ?? [];
     final tracker = ref.watch(timeTrackerProvider);
 
@@ -99,7 +99,7 @@ class AnalyticsScreen extends ConsumerWidget {
                   child: CustomPaint(
                     painter: _BarChartPainter(
                       values: dailyCounts,
-                      color: KaalColors.acc,
+                      color: TaskEraColors.acc,
                       bgColor: Colors.white.withAlpha(0x15),
                     ),
                     size: Size.infinite,
@@ -129,13 +129,13 @@ class AnalyticsScreen extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                _QuadBar(label: 'Q1 · Do Now',    value: quadFrac[0], count: qCounts[0], color: KaalColors.q1, colors: colors),
+                _QuadBar(label: 'Q1 · Do Now',    value: quadFrac[0], count: qCounts[0], color: TaskEraColors.q1, colors: colors),
                 const SizedBox(height: 8),
-                _QuadBar(label: 'Q2 · Schedule',  value: quadFrac[1], count: qCounts[1], color: KaalColors.q2, colors: colors),
+                _QuadBar(label: 'Q2 · Schedule',  value: quadFrac[1], count: qCounts[1], color: TaskEraColors.q2, colors: colors),
                 const SizedBox(height: 8),
-                _QuadBar(label: 'Q3 · Delegate',  value: quadFrac[2], count: qCounts[2], color: KaalColors.q3, colors: colors),
+                _QuadBar(label: 'Q3 · Delegate',  value: quadFrac[2], count: qCounts[2], color: TaskEraColors.q3, colors: colors),
                 const SizedBox(height: 8),
-                _QuadBar(label: 'Q4 · Eliminate', value: quadFrac[3], count: qCounts[3], color: KaalColors.q4, colors: colors),
+                _QuadBar(label: 'Q4 · Eliminate', value: quadFrac[3], count: qCounts[3], color: TaskEraColors.q4, colors: colors),
               ],
             ),
           ),
@@ -190,11 +190,11 @@ class AnalyticsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('KAAL AI · INSIGHT', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: KaalColors.acc2)),
+                const Text('TASKERA AI · INSIGHT', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
                 const SizedBox(height: 5),
                 Text(
                   insight,
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: KaalColors.acc2, height: 1.5),
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1.5),
                 ),
               ],
             ),
@@ -215,7 +215,7 @@ String _fmtTime(int seconds) {
   return '0m';
 }
 
-// Derives the "Kaal AI" insight from real completed-task data: the weekday with
+// Derives the "TaskEra AI" insight from real completed-task data: the weekday with
 // the most completions and the most-completed quadrant. Falls back to a neutral
 // prompt until there's enough history.
 String _buildInsight(List<dynamic> done, int completedCount, List<int> qCounts) {
@@ -247,7 +247,7 @@ String _buildInsight(List<dynamic> done, int completedCount, List<int> qCounts) 
 
 class _StatCell extends StatelessWidget {
   final String value, label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatCell({required this.value, required this.label, required this.colors});
 
   @override
@@ -274,7 +274,7 @@ class _StatCell extends StatelessWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String label;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _SectionLabel({required this.label, required this.colors});
 
   @override
@@ -288,7 +288,7 @@ class _QuadBar extends StatelessWidget {
   final double value;
   final int count;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _QuadBar({required this.label, required this.value, required this.count, required this.color, required this.colors});
 
   @override
@@ -324,7 +324,7 @@ class _QuadBar extends StatelessWidget {
 class _LegendRow extends StatelessWidget {
   final Color color;
   final String label, value;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LegendRow({required this.color, required this.label, required this.value, required this.colors});
 
   @override

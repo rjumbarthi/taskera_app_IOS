@@ -6,7 +6,7 @@ import '../../l10n/app_l10n.dart';
 import '../../data/providers/auth_provider.dart'
     show displayNameProvider, currentUserProvider,
          profileImagePathProvider, profileDisplayNameProvider;
-import '../../widgets/kaal_avatar.dart';
+import '../../widgets/taskera_avatar.dart';
 import '../../widgets/goal_meta_label.dart';
 import '../../services/auth_service.dart';
 import '../../data/providers/tasks_provider.dart';
@@ -17,8 +17,8 @@ import '../../data/providers/calendar_provider.dart';
 import '../../data/providers/goals_provider.dart';
 import '../../routing/routes.dart';
 import '../../settings/prefs_provider.dart';
-import '../../theme/kaal_colors.dart';
-import '../../theme/kaal_theme.dart';
+import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
@@ -48,17 +48,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     await ref.read(authServiceProvider).signOut();
     await ref.read(profileImagePathProvider.notifier).clear();
     await ref.read(profileDisplayNameProvider.notifier).setName('');
-    if (mounted) context.go(KaalRoutes.signin);
+    if (mounted) context.go(TaskEraRoutes.signin);
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = KaalTheme.of(context).colors;
+    final colors = TaskEraTheme.of(context).colors;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
       children: [
-        _HeroCard(colors: colors, onTap: () => context.push(KaalRoutes.profileEdit)),
+        _HeroCard(colors: colors, onTap: () => context.push(TaskEraRoutes.profileEdit)),
         _PersonaCard(colors: colors), // self-spaces / hides when no onboarding data
         const SizedBox(height: 8),
         _StreakBanner(colors: colors),
@@ -81,7 +81,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         const SizedBox(height: 16),
         _AccountCard(colors: colors),
         const SizedBox(height: 24),
-        _InviteButton(colors: colors, onTap: () => context.push(KaalRoutes.referral)),
+        _InviteButton(colors: colors, onTap: () => context.push(TaskEraRoutes.referral)),
         const SizedBox(height: 10),
         _SignOutButton(busy: _signingOut, onTap: _signOut),
       ],
@@ -92,7 +92,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 // ── Hero: avatar + name ───────────────────────────────────────────────────────
 
 class _HeroCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _HeroCard({required this.colors, required this.onTap});
 
@@ -116,7 +116,7 @@ class _HeroCard extends ConsumerWidget {
       GestureDetector(
         onTap: onTap,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const KaalAvatar(size: 44),
+          const TaskEraAvatar(size: 44),
           const SizedBox(width: 10),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(display,
@@ -130,11 +130,11 @@ class _HeroCard extends ConsumerWidget {
       const Spacer(),
       if (!isPro)
         GestureDetector(
-          onTap: () => context.push(KaalRoutes.paywall),
+          onTap: () => context.push(TaskEraRoutes.paywall),
           child: Container(
             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [Color(0xFF5856D6), KaalColors.acc]),
+              gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(AppL10n.of(context).goPro,
@@ -149,7 +149,7 @@ class _HeroCard extends ConsumerWidget {
 // ── Weekly Review + Achievements + Stats (merged card) ────────────────────────
 
 class _ReviewAchievementsStats extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _ReviewAchievementsStats({required this.colors});
 
   @override
@@ -220,9 +220,9 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
-                onTap: () => context.push(KaalRoutes.weeklyReview),
+                onTap: () => context.push(TaskEraRoutes.weeklyReview),
                 child: Text(l.startLabel, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: KaalColors.acc2, height: 1)),
+                    color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
             const SizedBox(height: 6),
@@ -232,7 +232,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
             const SizedBox(height: 8),
             Row(children: [
               _StatCell('$weekDone', l.completedLabel, colors.ink, colors),
-              _StatCell('$carriedOv', l.carriedOver, KaalColors.q4, colors),
+              _StatCell('$carriedOv', l.carriedOver, TaskEraColors.q4, colors),
               _StatCell(streakStr, l.streak, colors.successFg, colors),
               Container(
                 padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -247,7 +247,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
             ]),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => context.push(KaalRoutes.weeklyReview),
+              onTap: () => context.push(TaskEraRoutes.weeklyReview),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 9),
                 decoration: BoxDecoration(
@@ -258,7 +258,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                 alignment: Alignment.center,
                 child: Text(l.startWeeklyReview,
                     style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
-                        fontWeight: FontWeight.w600, color: KaalColors.acc2, height: 1)),
+                        fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
               ),
             ),
           ]),
@@ -275,19 +275,19 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
-                onTap: () => context.push(KaalRoutes.habitsAchievements),
+                onTap: () => context.push(TaskEraRoutes.habitsAchievements),
                 child: Text(l.viewAllArrow, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: KaalColors.acc2, height: 1)),
+                    color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _AchieveBadge('🔥', l.badge14DaysStreak, KaalColors.q4, colors, earned: earnStreak),
-                _AchieveBadge('⚡', l.badgeQ1Slayer, KaalColors.q1, colors, earned: earnQ1),
-                _AchieveBadge('🎯', l.badgeDeepWork, KaalColors.acc, colors, earned: earnFocus),
-                _AchieveBadge('✅', l.badgeCentury, KaalColors.success, colors, earned: earnCentury),
+                _AchieveBadge('🔥', l.badge14DaysStreak, TaskEraColors.q4, colors, earned: earnStreak),
+                _AchieveBadge('⚡', l.badgeQ1Slayer, TaskEraColors.q1, colors, earned: earnQ1),
+                _AchieveBadge('🎯', l.badgeDeepWork, TaskEraColors.acc, colors, earned: earnFocus),
+                _AchieveBadge('✅', l.badgeCentury, TaskEraColors.success, colors, earned: earnCentury),
               ],
             ),
           ]),
@@ -299,13 +299,13 @@ class _ReviewAchievementsStats extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           child: Row(children: [
-            _StatCard(streakStr, l.streak, KaalColors.q4, colors),
+            _StatCard(streakStr, l.streak, TaskEraColors.q4, colors),
             const SizedBox(width: 6),
-            _StatCard(q2RateStr, l.q2RateLabel, KaalColors.q2, colors),
+            _StatCard(q2RateStr, l.q2RateLabel, TaskEraColors.q2, colors),
             const SizedBox(width: 6),
-            _StatCard('$done', l.done, KaalColors.acc, colors),
+            _StatCard('$done', l.done, TaskEraColors.acc, colors),
             const SizedBox(width: 6),
-            _StatCard('$todayDone', l.today, KaalColors.acc2, colors),
+            _StatCard('$todayDone', l.today, TaskEraColors.acc2, colors),
           ]),
         ),
       ]),
@@ -317,7 +317,7 @@ class _AchieveBadge extends StatelessWidget {
   final String emoji;
   final String label;
   final Color color;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final bool earned;
   const _AchieveBadge(this.emoji, this.label, this.color, this.colors, {this.earned = true});
 
@@ -350,7 +350,7 @@ class _StatCard extends StatelessWidget {
   final String value;
   final String label;
   final Color accent;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatCard(this.value, this.label, this.accent, this.colors);
 
   @override
@@ -377,7 +377,7 @@ class _StatCard extends StatelessWidget {
 // ── Tasks card (Peak Hours + DTN + Tasks This Week + Quad Completion) ─────────
 
 class _FocusCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _FocusCard({required this.colors});
 
   @override
@@ -452,13 +452,13 @@ class _FocusCard extends ConsumerWidget {
       return total == 0 ? 0.0 : d / total;
     }
 
-    const q1c = KaalColors.q1; const q2c = KaalColors.q2;
-    const q3c = KaalColors.q3; const q4c = KaalColors.q4;
+    const q1c = TaskEraColors.q1; const q2c = TaskEraColors.q2;
+    const q3c = TaskEraColors.q3; const q4c = TaskEraColors.q4;
     final quads = <(String, Color, double, String)>[
-      ('Q1', KaalColors.q1, qFrac(q1Done, q1Active), qRate(q1Done, q1Active)),
-      ('Q2', KaalColors.q2, qFrac(q2Done, q2Active), qRate(q2Done, q2Active)),
-      ('Q3', KaalColors.q3, qFrac(q3Done, q3Active), qRate(q3Done, q3Active)),
-      ('Q4', KaalColors.q4, qFrac(q4Done, q4Active), qRate(q4Done, q4Active)),
+      ('Q1', TaskEraColors.q1, qFrac(q1Done, q1Active), qRate(q1Done, q1Active)),
+      ('Q2', TaskEraColors.q2, qFrac(q2Done, q2Active), qRate(q2Done, q2Active)),
+      ('Q3', TaskEraColors.q3, qFrac(q3Done, q3Active), qRate(q3Done, q3Active)),
+      ('Q4', TaskEraColors.q4, qFrac(q4Done, q4Active), qRate(q4Done, q4Active)),
     ];
 
     return Container(
@@ -491,7 +491,7 @@ class _FocusCard extends ConsumerWidget {
                       fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.4, height: 1)),
                   const SizedBox(height: 4),
                   Text(peakHoursStr, style: const TextStyle(fontFamily: 'Inter', fontSize: 16,
-                      fontWeight: FontWeight.w700, color: KaalColors.acc2, height: 1.2)),
+                      fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1.2)),
                   Text(activeDays > 0
                       ? '${l.basedOnLabel} $activeDays ${l.daysLabel}'
                       : '—',
@@ -623,7 +623,7 @@ class _QuadDonut extends StatelessWidget {
   final Color color;
   final double fraction; // 0–1 completion for this quadrant
   final String sub;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _QuadDonut(this.quad, this.color, this.fraction, this.sub, this.colors);
 
   @override
@@ -659,7 +659,7 @@ class _QuadDonut extends StatelessWidget {
 // ── Goals list ────────────────────────────────────────────────────────────────
 
 class _GoalsList extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _GoalsList({required this.colors});
 
   @override
@@ -682,9 +682,9 @@ class _GoalsList extends ConsumerWidget {
                   color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
-                onTap: () => context.push(KaalRoutes.goals),
+                onTap: () => context.push(TaskEraRoutes.goals),
                 child: Text(l.viewAllArrow, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
-                    color: KaalColors.acc2, height: 1)),
+                    color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
           ),
@@ -736,7 +736,7 @@ class _GoalsList extends ConsumerWidget {
 // ── Habits this week ──────────────────────────────────────────────────────────
 
 class _HabitsThisWeek extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _HabitsThisWeek({required this.colors});
 
   @override
@@ -804,7 +804,7 @@ class _HabitsThisWeek extends ConsumerWidget {
 // ── Calendar this week ────────────────────────────────────────────────────────
 
 class _CalendarThisWeek extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _CalendarThisWeek({required this.colors});
 
   @override
@@ -833,8 +833,8 @@ class _CalendarThisWeek extends ConsumerWidget {
         const SizedBox(height: 10),
         Row(children: [
           _StatCell('$totalEvents', l.eventsLabel, colors.ink, colors),
-          _StatCell('—', l.deepWorkLabel, KaalColors.acc, colors),
-          _StatCell('—', l.conflicts, KaalColors.q1, colors),
+          _StatCell('—', l.deepWorkLabel, TaskEraColors.acc, colors),
+          _StatCell('—', l.conflicts, TaskEraColors.q1, colors),
         ]),
       ]),
     );
@@ -844,7 +844,7 @@ class _CalendarThisWeek extends ConsumerWidget {
 // ── Notes section ─────────────────────────────────────────────────────────────
 
 class _NotesSection extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _NotesSection({required this.colors});
 
   @override
@@ -867,8 +867,8 @@ class _NotesSection extends ConsumerWidget {
         const SizedBox(height: 10),
         Row(children: [
           _StatCell('$total', l.total, colors.ink, colors),
-          _StatCell('$ai', l.aiActionsLabel, KaalColors.acc2, colors),
-          _StatCell('$pinned', l.pinnedLabel, KaalColors.q4, colors),
+          _StatCell('$ai', l.aiActionsLabel, TaskEraColors.acc2, colors),
+          _StatCell('$pinned', l.pinnedLabel, TaskEraColors.q4, colors),
         ]),
       ]),
     );
@@ -881,7 +881,7 @@ class _StatCell extends StatelessWidget {
   final String value;
   final String label;
   final Color valueColor;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StatCell(this.value, this.label, this.valueColor, this.colors);
 
   @override
@@ -900,7 +900,7 @@ class _StatCell extends StatelessWidget {
 // ── Invite button ─────────────────────────────────────────────────────────────
 
 class _InviteButton extends StatelessWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _InviteButton({required this.colors, required this.onTap});
 
@@ -959,7 +959,7 @@ class _SignOutButton extends StatelessWidget {
 // ── Persona card — surfaces the onboarding answers (role / focus / peak) ───────
 
 class _PersonaCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _PersonaCard({required this.colors});
 
   static const _roles = [
@@ -984,11 +984,11 @@ class _PersonaCard extends ConsumerWidget {
       return (i != null && i >= 0 && i < opts.length) ? opts[i] : null;
     }
     final rows = <(String, (String, String))>[];
-    final r = pick(_roles, 'kaal.onboard.role');
+    final r = pick(_roles, 'taskera.onboard.role');
     if (r != null) rows.add(('You are', r));
-    final f = pick(_focus, 'kaal.onboard.focusStyle');
+    final f = pick(_focus, 'taskera.onboard.focusStyle');
     if (f != null) rows.add(('Focus style', f));
-    final pk = pick(_peak, 'kaal.onboard.peakHours');
+    final pk = pick(_peak, 'taskera.onboard.peakHours');
     if (pk != null) rows.add(('Peak hours', pk));
     if (rows.isEmpty) return const SizedBox.shrink();
 
@@ -1029,7 +1029,7 @@ class _PersonaCard extends ConsumerWidget {
 // ── Productivity streak banner ────────────────────────────────────────────────
 
 class _StreakBanner extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _StreakBanner({required this.colors});
 
   @override
@@ -1098,7 +1098,7 @@ class _StreakBanner extends ConsumerWidget {
 // ── At-a-glance lifetime totals ───────────────────────────────────────────────
 
 class _LifetimeStatsCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _LifetimeStatsCard({required this.colors});
 
   @override
@@ -1133,8 +1133,8 @@ class _LifetimeStatsCard extends ConsumerWidget {
         const SizedBox(height: 12),
         Row(children: [
           _StatCell('$totalDone', 'Tasks done', colors.successFg, colors),
-          _StatCell(focusLabel, 'Focus time', KaalColors.acc2, colors),
-          _StatCell('$goalsHit', 'Goals hit', KaalColors.q2, colors),
+          _StatCell(focusLabel, 'Focus time', TaskEraColors.acc2, colors),
+          _StatCell('$goalsHit', 'Goals hit', TaskEraColors.q2, colors),
           _StatCell('$activeDays', 'Active days', colors.ink, colors),
         ]),
       ]),
@@ -1145,14 +1145,14 @@ class _LifetimeStatsCard extends ConsumerWidget {
 // ── Quadrant balance (lifetime completion distribution) ───────────────────────
 
 class _QuadrantBalanceCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _QuadrantBalanceCard({required this.colors});
 
   static Color _qc(int q) => switch (q) {
-        1 => KaalColors.q1,
-        2 => KaalColors.q2,
-        3 => KaalColors.q3,
-        _ => KaalColors.q4,
+        1 => TaskEraColors.q1,
+        2 => TaskEraColors.q2,
+        3 => TaskEraColors.q3,
+        _ => TaskEraColors.q4,
       };
 
   @override
@@ -1225,7 +1225,7 @@ class _QuadrantBalanceCard extends ConsumerWidget {
 // ── Account details ───────────────────────────────────────────────────────────
 
 class _AccountCard extends ConsumerWidget {
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _AccountCard({required this.colors});
 
   @override
@@ -1283,7 +1283,7 @@ class _AccountCard extends ConsumerWidget {
 
 class _AccountRow extends StatelessWidget {
   final String label, value;
-  final KaalColors colors;
+  final TaskEraColors colors;
   const _AccountRow({required this.label, required this.value, required this.colors});
 
   @override

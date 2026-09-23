@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../data/models/note_block.dart';
-import '../../theme/kaal_colors.dart';
+import '../../theme/taskera_colors.dart';
 import '../../util/input_limits.dart';
 import 'block_types.dart';
 
@@ -14,7 +14,7 @@ import 'block_types.dart';
 class BlockEditor extends StatefulWidget {
   final BlockDocument document;
   final ValueChanged<BlockDocument> onChanged;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final String hintText;
 
   const BlockEditor({
@@ -517,7 +517,7 @@ class _BlockEditorState extends State<BlockEditor> {
           inputFormatters: maxLen(kMaxLongText),
           onChanged: (v) => _onTextChanged(i, v),
           style: _styleFor(b, colors),
-          cursorColor: KaalColors.acc,
+          cursorColor: TaskEraColors.acc,
           decoration: InputDecoration(
             isDense: true,
             border: InputBorder.none,
@@ -612,10 +612,10 @@ class _BlockEditorState extends State<BlockEditor> {
             child: Container(
               width: 17, height: 17,
               decoration: BoxDecoration(
-                color: b.checked ? KaalColors.acc : Colors.transparent,
+                color: b.checked ? TaskEraColors.acc : Colors.transparent,
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                    width: 1.2, color: b.checked ? KaalColors.acc : colors.ink3),
+                    width: 1.2, color: b.checked ? TaskEraColors.acc : colors.ink3),
               ),
               child: b.checked
                   ? const Icon(Icons.check_rounded, size: 13, color: Colors.white)
@@ -628,7 +628,7 @@ class _BlockEditorState extends State<BlockEditor> {
     }
   }
 
-  TextStyle _styleFor(NoteBlock b, KaalColors colors) {
+  TextStyle _styleFor(NoteBlock b, TaskEraColors colors) {
     final struck = b.type == BlockType.todo && b.checked;
     final base = TextStyle(
       fontFamily: b.type == BlockType.code ? 'monospace' : 'Inter',
@@ -722,7 +722,7 @@ class _BlockEditorState extends State<BlockEditor> {
     if (type != null && mounted) _setType(i, type);
   }
 
-  Widget _sheetRow(BuildContext ctx, KaalColors colors, IconData icon, String label,
+  Widget _sheetRow(BuildContext ctx, TaskEraColors colors, IconData icon, String label,
       String value, {bool danger = false}) {
     final color = danger ? const Color(0xFFFF453A) : colors.ink;
     return InkWell(
@@ -743,7 +743,7 @@ class _BlockEditorState extends State<BlockEditor> {
 
 class _GutterBtn extends StatelessWidget {
   final IconData icon;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _GutterBtn({required this.icon, required this.colors, required this.onTap});
 
@@ -762,7 +762,7 @@ class _GutterBtn extends StatelessWidget {
 
 class _SlashItem extends StatelessWidget {
   final BlockTypeDesc desc;
-  final KaalColors colors;
+  final TaskEraColors colors;
   final VoidCallback onTap;
   const _SlashItem({required this.desc, required this.colors, required this.onTap});
 
