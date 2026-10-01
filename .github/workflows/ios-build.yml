@@ -193,18 +193,13 @@ jobs:
           cat ios/ExportOptions.plist
 
       - name: Compute next build number
-        env:
-          APP_STORE_CONNECT_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ vars.APPSTORE_API_KEY_ID }}
-          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
         run: |
-          set -e
-
-          pip3 install --quiet --break-system-packages codemagic-cli-tools
-
-          LATEST=$(app-store-connect get-latest-testflight-build-number 6815404327 2>/dev/null || echo 0)
-          echo "Latest TestFlight build number: $LATEST"
-          echo "BUILD_NUMBER=$((LATEST + 1))" >> "$GITHUB_ENV"
+          # github.run_number is a per-workflow monotonic counter that never
+          # resets and doesn't depend on querying Apple (which only counts
+          # builds that finished processing — a rejected/invalid build like
+          # #1 still reserves its bundle version with Apple without showing
+          # up in that query, which caused a 409 duplicate-version collision).
+          echo "BUILD_NUMBER=${{ github.run_number }}" >> "$GITHUB_ENV"
 
       - name: Build Flutter iOS
         run: |
