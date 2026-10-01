@@ -8,13 +8,16 @@ class AppConfig {
   AppConfig._();
 
   // ── Supabase ─────────────────────────────────────────────────────────────
-  // TaskEra needs its OWN Supabase project (fully separate backend from
-  // Kaal — decided 2026-09-23). Not yet created: hit the free-tier cap of 2
-  // active projects per org. Create one (or upgrade the plan / pause an
-  // existing project) then paste its URL + anon key here.
-  // Dashboard → Project Settings → API
-  static const supabaseUrl     = 'YOUR_PROJECT_REF.supabase.co';
-  static const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+  // TaskEra shares Kaal's Supabase project (free-tier cap of 2 projects per
+  // org, hit on 2026-09-23 — a separate project wasn't available) but is
+  // fully isolated under its own `taskera` Postgres schema, own RLS
+  // policies, and its own auth.users trigger — decided + set up 2026-10-01.
+  // auth.users IS shared across both apps (one Supabase Auth per project):
+  // the same email signing into Kaal and TaskEra is the same account, but
+  // each app's data (tasks/habits/goals/etc.) lives only in its own schema.
+  // See supabase/migrations/taskera_schema.sql for the full setup.
+  static const supabaseUrl     = 'https://dutlcoxtxmnqektttffg.supabase.co';
+  static const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1dGxjb3h0eG1ucWVrdHR0ZmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTk2MzcsImV4cCI6MjA5NTc5NTYzN30.zWEkDSfSH8IS8IuhTx7f3bzoRkwo9FnILvOk2aGmxoM';
 
   // ── PostHog product analytics ─────────────────────────────────────────────
   // app.posthog.com → Project Settings → Project API Key (starts with `phc_`).
@@ -54,7 +57,7 @@ class AppConfig {
   // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs
   // Create one client per platform type (Web, Android, iOS).
   static const googleClientIdWeb     = 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';
-  static const googleClientIdIos     = '657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3.apps.googleusercontent.com';
+  static const googleClientIdIos     = 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com';
   static const googleClientIdAndroid = 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com';
 
   // ── Azure / Microsoft ─────────────────────────────────────────────────────

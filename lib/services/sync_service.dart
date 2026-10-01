@@ -104,7 +104,7 @@ class SyncService {
     for (final table in _tables) {
       ch.onPostgresChanges(
         event: PostgresChangeEvent.all,
-        schema: 'public',
+        schema: 'taskera',
         table: table,
         filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq, column: 'user_id', value: uid),

@@ -84,12 +84,16 @@ void main() async {
   };
 
   // ── Supabase (auth + cloud DB + edge functions) ──────────────────────────
+  // postgrestOptions targets the `taskera` schema, not `public` — this app
+  // shares Kaal's Supabase project but keeps its own isolated tables. Auth
+  // itself is NOT schema-scoped (one auth.users per project, shared).
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
     anonKey: AppConfig.supabaseAnonKey,
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
     ),
+    postgrestOptions: const PostgrestClientOptions(schema: 'taskera'),
   );
 
   final prefs = await SharedPreferences.getInstance();
