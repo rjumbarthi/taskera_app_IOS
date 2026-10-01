@@ -19,6 +19,7 @@ import 'data/reminder.dart';
 import 'data/db_connection.dart' show deleteDatabaseFile;
 import 'data/seed_data.dart';
 import 'data/providers/database_provider.dart';
+import 'data/providers/dtn_provider.dart' show sortDtn;
 import 'routing/app_router.dart';
 import 'routing/routes.dart';
 import 'settings/app_launch_prefs.dart';
@@ -240,10 +241,19 @@ Future<void> _rescheduleNotifications(AppDatabase db, SharedPreferences prefs) a
       'notifCalendar': prefs.getBool('taskera.toggle.notifCalendar') ?? true,
       'notifInbox':    prefs.getBool('taskera.toggle.notifInbox')    ?? true,
       'notifFocus':    prefs.getBool('taskera.toggle.notifFocus')    ?? true,
+      'notifQuickActions': prefs.getBool('taskera.toggle.notifQuickActions') ?? false,
     };
+    // No Riverpod ref here (this runs before the widget tree exists) — derive
+    // the current DTN task the same way dtnTaskProvider does, so its own due
+    // reminder isn't double-scheduled alongside the DTN card.
+    final useScore = prefs.getBool('taskera.toggle.scoreRec') ?? true;
+    final dtnCandidates = tasks.where((t) => !t.isDone && t.quadrant <= 3).toList();
+    final dtnSorted = sortDtn(dtnCandidates, useScore: useScore);
+    final dtnTaskId = dtnSorted.isEmpty ? null : dtnSorted.first.id;
     await NotificationService.instance.rescheduleAll(
       tasks: tasks, habits: habits, goals: goals, events: events,
       notifToggles: toggles,
+      dtnTaskId: dtnTaskId,
     );
   } catch (_) {
     // Non-fatal — notifications degrade gracefully if DB read fails at launch.

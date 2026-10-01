@@ -5,7 +5,7 @@ publish_to: 'none'
 # Play Store release. Format: semantic+versionCode.
 # Bump the +N (versionCode) on EVERY upload — Play rejects a build whose
 # versionCode it has already seen. versionName (1.0.0) can stay across builds.
-version: 1.0.0+13
+version: 1.0.0+14
 
 environment:
   sdk: ^3.12.0

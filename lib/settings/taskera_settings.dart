@@ -46,6 +46,10 @@ class TaskEraSettingsState {
       'notifCalendar': true, 'notifInbox':  true, 'notifFocus':    true,
       // Do The Next ongoing notification (music-player-style lock-screen card)
       'dtnNotif':      true, 'dtnLockScreen': true,
+      // Check off a task or habit right from its notification (also reaches a
+      // paired Apple Watch / Wear OS via notification mirroring). Default OFF —
+      // opt-in, since it changes what buttons appear on existing notifications.
+      'notifQuickActions': false,
     },
     this.theme = 2,
     this.accent = 0,

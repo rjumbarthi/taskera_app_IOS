@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' show Value;
 import '../../data/database.dart' show Task, TasksCompanion;
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/pomodoro_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/time_tracker_provider.dart';
 import '../../theme/taskera_colors.dart';
@@ -49,44 +50,55 @@ class PomodoroScreen extends ConsumerStatefulWidget {
 }
 
 class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
+  // The timer's own truth (running/elapsed/which task) lives in
+  // pomodoroProvider — persisted to SharedPreferences so it survives the app
+  // being backgrounded or killed, which is what lets Start/Pause work from a
+  // notification or a paired Apple Watch / Wear OS. Everything here is just
+  // queue/duration-picker UI state.
   int _mins        = 25;
   int _activeIndex = 0;
-  bool _running    = false;
   bool _userPicked = false; // user manually chose a task → stop auto-selecting
   int _activeTaskId = -1;   // id of the task currently shown (for saving duration)
   int _loadedTaskId = -2;   // last task whose saved duration we loaded into _mins
-  late int _secondsLeft;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _secondsLeft = _mins * 60;
-  }
+  Timer? _tickTimer;        // local 1s repaint tick while running; not the source of truth
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _tickTimer?.cancel();
     super.dispose();
   }
 
-  String get _timerLabel {
-    final m = _secondsLeft ~/ 60;
-    final s = _secondsLeft % 60;
+  // Starts/stops the local repaint tick to match the persisted running state.
+  // Idempotent — safe to call every build in addition to the ref.listen below.
+  void _ensureTicker(bool running) {
+    if (running && _tickTimer == null) {
+      _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        final pomo = ref.read(pomodoroProvider);
+        if (pomo.secondsLeftAt(DateTime.now()) <= 0) {
+          ref.read(pomodoroProvider.notifier).pause();
+        }
+        ref.read(pomodoroProvider.notifier).touch();
+      });
+    } else if (!running && _tickTimer != null) {
+      _tickTimer?.cancel();
+      _tickTimer = null;
+    }
+  }
+
+  String _timerLabelFor(int secondsLeft) {
+    final m = secondsLeft ~/ 60;
+    final s = secondsLeft % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
-  double get _progress =>
-      _mins > 0 ? 1.0 - (_secondsLeft / (_mins * 60)) : 0.0;
-
   void _selectTask(int i) {
-    _timer?.cancel();
-    _timer = null;
+    // Only changes which task is shown/edited here — does NOT touch a
+    // session already running for some other task (e.g. started from the
+    // DTN notification/watch), which should keep running untouched.
     setState(() {
       _userPicked  = true;
       _activeIndex = i;
       _loadedTaskId = -2; // force build to load the new task's saved duration
-      _running     = false;
     });
   }
 
@@ -113,13 +125,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   }
 
   void _onMinsChanged(int m) {
-    _timer?.cancel();
-    _timer = null;
-    setState(() {
-      _mins        = m;
-      _secondsLeft = m * 60;
-      _running     = false;
-    });
+    setState(() => _mins = m);
     // Persist the chosen duration to the active task so it sticks next time.
     if (_activeTaskId >= 0) {
       ref.read(appDatabaseProvider).tasksDao.updateTask(
@@ -127,36 +133,25 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
             TasksCompanion(timeAllocatedMin: Value(m)),
           );
     }
-  }
-
-  void _startPause() {
-    if (_running) {
-      _timer?.cancel();
-      _timer = null;
-      setState(() => _running = false);
-    } else {
-      if (_secondsLeft == 0) _secondsLeft = _mins * 60;
-      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (_secondsLeft > 0) {
-          setState(() => _secondsLeft--);
-        } else {
-          _timer?.cancel();
-          _timer = null;
-          setState(() => _running = false);
-        }
-      });
-      setState(() => _running = true);
+    // If this task has an idle (not running) session on record, drop it so
+    // the idle countdown reflects the newly chosen duration immediately.
+    final pomo = ref.read(pomodoroProvider);
+    if (pomo.taskId == _activeTaskId && !pomo.running) {
+      ref.read(pomodoroProvider.notifier).reset();
     }
   }
 
-  void _reset() {
-    _timer?.cancel();
-    _timer = null;
-    setState(() {
-      _secondsLeft = _mins * 60;
-      _running     = false;
-    });
+  void _startPause() {
+    final pomo = ref.read(pomodoroProvider);
+    final notifier = ref.read(pomodoroProvider.notifier);
+    if (pomo.taskId == _activeTaskId && pomo.running) {
+      notifier.pause();
+    } else {
+      notifier.start(_activeTaskId, _mins * 60);
+    }
   }
+
+  void _reset() => ref.read(pomodoroProvider.notifier).reset();
 
   // Finish the session: mark the active task done and reset the timer.
   void _complete() {
@@ -175,28 +170,55 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     final colors = TaskEraTheme.of(context).colors;
     final rawTasks = ref.watch(allTasksProvider).valueOrNull ?? [];
     final queue = _buildQueue(rawTasks);
-    // Default the active task to the one currently being tracked (e.g. started
-    // from the Focus DTN card) so the Timer opens on it — until the user picks
-    // another from the queue.
+    final pomo = ref.watch(pomodoroProvider);
+
+    // Only re-sync queue selection / the tick timer when running actually
+    // flips, not on the per-second touch() the ticker itself triggers.
+    ref.listen<bool>(
+      pomodoroProvider.select((s) => s.running),
+      (_, running) => _ensureTicker(running),
+    );
+
+    // Default the active task to whichever one the persisted session is
+    // actually tracking (e.g. started from the DTN notification/watch), then
+    // the one currently being tracked in-app — until the user picks another
+    // from the queue.
     var idx = _activeIndex;
     if (!_userPicked) {
-      final tracked = ref.watch(timeTrackerProvider).taskTitle;
-      if (tracked != null) {
-        final ti = queue.indexWhere((q) => q.title == tracked);
-        if (ti >= 0) idx = ti;
+      if (pomo.taskId >= 0) {
+        final pi = queue.indexWhere((q) => q.id == pomo.taskId);
+        if (pi >= 0) idx = pi;
+      } else {
+        final tracked = ref.watch(timeTrackerProvider).taskTitle;
+        if (tracked != null) {
+          final ti = queue.indexWhere((q) => q.title == tracked);
+          if (ti >= 0) idx = ti;
+        }
       }
     }
     final safeIndex = queue.isEmpty ? 0 : idx.clamp(0, queue.length - 1);
     final activeTask = queue.isEmpty ? _kEmptyTask : queue[safeIndex];
+    _activeTaskId = activeTask.id;
+
+    final running = pomo.taskId == activeTask.id && pomo.running;
 
     // When the active task changes (selection or auto-select), load its saved
-    // duration so the custom timer persists per task. Skip while a timer runs.
-    _activeTaskId = activeTask.id;
-    if (activeTask.id >= 0 && activeTask.id != _loadedTaskId && !_running) {
+    // duration so the custom timer persists per task. Skip while it's running.
+    if (activeTask.id >= 0 && activeTask.id != _loadedTaskId && !running) {
       _loadedTaskId = activeTask.id;
       _mins = activeTask.mins;
-      _secondsLeft = _mins * 60;
     }
+
+    final durationSec = _mins * 60;
+    final secondsLeft = pomo.taskId == activeTask.id
+        ? pomo.secondsLeftAt(DateTime.now())
+        : durationSec;
+    final progress = durationSec > 0 ? 1.0 - (secondsLeft / durationSec) : 0.0;
+
+    // Covers the very first build after navigating here while a session
+    // (started elsewhere) is already running — the listen above only catches
+    // it flipping afterwards.
+    _ensureTicker(pomo.running);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -212,9 +234,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   activeTask: activeTask,
                   mins: _mins,
                   colors: colors,
-                  timerLabel: _timerLabel,
-                  progress: _progress,
-                  running: _running,
+                  timerLabel: _timerLabelFor(secondsLeft),
+                  progress: progress,
+                  running: running,
                   onMinsChanged: _onMinsChanged,
                   onStartPause: _startPause,
                   onReset: _reset,

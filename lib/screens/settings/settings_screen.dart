@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../data/providers/announcements_provider.dart';
 import '../../data/providers/database_provider.dart';
+import '../../data/providers/dtn_provider.dart';
 import '../../data/providers/feature_flags_provider.dart';
 import '../../data/providers/tasks_provider.dart';
 import '../../data/providers/integrations_provider.dart';
@@ -271,6 +272,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       await NotificationService.instance.rescheduleAll(
         tasks: tasks, habits: habits, goals: goals, events: events,
         notifToggles: s.toggles,
+        dtnTaskId: ref.read(dtnTaskProvider)?.id,
       );
     } catch (_) {}
   }
@@ -1272,6 +1274,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _SwRow(settingKey: 'dtnNotif', label: 'Ongoing "Do The Next" card', colors: colors),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _SwRow(settingKey: 'dtnLockScreen', label: 'Show on lock screen', colors: colors),
+          ]),
+          _SetSec('Quick Actions', colors),
+          _SetCard(colors: colors, children: [
+            _NotifSwRow(
+              settingKey: 'notifQuickActions',
+              label: 'Check off from notifications',
+              sub: 'Mark done / check in right from the notification — also works from a paired Apple Watch or Wear OS',
+              colors: colors,
+              afterChange: _rescheduleAfterToggle,
+            ),
           ]),
         ]),
       ),

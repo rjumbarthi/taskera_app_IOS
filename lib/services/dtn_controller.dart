@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../data/database.dart' show Task;
 import '../data/providers/database_provider.dart';
 import '../data/providers/dtn_provider.dart';
+import '../data/providers/pomodoro_provider.dart';
 import '../settings/app_launch_prefs.dart';
 import '../settings/taskera_settings.dart';
 import '../settings/prefs_provider.dart';
@@ -64,6 +65,11 @@ class _DtnControllerState extends ConsumerState<DtnController>
 
   // Apply a pending notification-button action and any deep-link route.
   Future<void> _consumePending() async {
+    // Pick up any Start/Pause the background isolate applied directly to disk
+    // while the app was closed — the live provider's in-memory state would
+    // otherwise be stale until this runs.
+    ref.read(pomodoroProvider.notifier).refreshFromDisk();
+
     // Foreground action (app was open when the button was tapped).
     final action = NotificationService.consumePendingDtnAction();
     if (action != null) {
@@ -71,19 +77,21 @@ class _DtnControllerState extends ConsumerState<DtnController>
       switch (action.action) {
         case kDtnDone:
           await db.tasksDao.toggleDone(action.taskId, true);
+          if (ref.read(pomodoroProvider).taskId == action.taskId) {
+            ref.read(pomodoroProvider.notifier).reset();
+          }
           break;
-        case kDtnSkip:
-          ref.read(dtnSkipProvider.notifier)
-              .update((s) => {...s, action.taskId});
+        case kDtnStart:
+          ref.read(pomodoroProvider.notifier)
+              .start(action.taskId, action.durationSec);
           break;
-        case kDtnFocus:
-          // Open the task itself (where Start-focus lives), not just the dashboard.
-          widget.router.go('/tasks/taskdetail/${action.taskId}');
+        case kDtnPause:
+          ref.read(pomodoroProvider.notifier).pause();
           break;
       }
     }
 
-    // Background-queued Done/Skip taps — applied without the app having opened.
+    // Background-queued Done taps — applied without the app having opened.
     final queued = await NotificationService.consumeDtnQueue(
         ref.read(sharedPreferencesProvider));
     if (queued.isNotEmpty) {
@@ -95,8 +103,9 @@ class _DtnControllerState extends ConsumerState<DtnController>
         if (id == null) continue;
         if (e.startsWith('done:')) {
           await db.tasksDao.toggleDone(id, true);
-        } else if (e.startsWith('skip:')) {
-          ref.read(dtnSkipProvider.notifier).update((s) => {...s, id});
+          if (ref.read(pomodoroProvider).taskId == id) {
+            ref.read(pomodoroProvider.notifier).reset();
+          }
         }
       }
     }
@@ -112,10 +121,14 @@ class _DtnControllerState extends ConsumerState<DtnController>
     final task    = ref.read(dtnTaskProvider);
     final svc     = ref.read(notificationServiceProvider);
     if (enabled && task != null) {
+      final pomo = ref.read(pomodoroProvider);
+      final durationSec = (task.timeAllocatedMin ?? 25) * 60;
       await svc.showDtnCard(
         taskId: task.id,
         title: task.title,
         quadrant: task.quadrant,
+        durationSec: durationSec,
+        running: pomo.taskId == task.id && pomo.running,
         lockScreen: ref.read(taskeraSettingsProvider).sw('dtnLockScreen'),
       );
       await DtnWidgetBridge.update(title: task.title, meta: 'Q${task.quadrant}');
@@ -127,10 +140,20 @@ class _DtnControllerState extends ConsumerState<DtnController>
 
   @override
   Widget build(BuildContext context) {
-    // Refresh the card whenever the top task changes or the setting flips.
+    // Refresh the card whenever the top task changes, the setting flips, or
+    // the Pomodoro session's running state changes (so the Start/Pause button
+    // on the card stays in sync with what the Timer screen is doing).
     ref.listen<Task?>(dtnTaskProvider, (_, _) => _sync());
     ref.listen<bool>(
       taskeraSettingsProvider.select((s) => s.sw('dtnNotif')),
+      (_, _) => _sync(),
+    );
+    // select, not a bare listen — pomodoroProvider.touch() emits a new state
+    // every second while running (to drive the Timer screen's countdown); the
+    // DTN card only needs to refresh when (taskId, running) actually changes,
+    // not every second, or this would re-post the notification every second.
+    ref.listen<(int, bool)>(
+      pomodoroProvider.select((s) => (s.taskId, s.running)),
       (_, _) => _sync(),
     );
     return widget.child;
