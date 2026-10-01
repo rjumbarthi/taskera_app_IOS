@@ -200,7 +200,7 @@ jobs:
         run: |
           set -e
 
-          pip3 install --quiet codemagic-cli-tools
+          pip3 install --quiet --break-system-packages codemagic-cli-tools
 
           LATEST=$(app-store-connect get-latest-testflight-build-number 6815404327 2>/dev/null || echo 0)
           echo "Latest TestFlight build number: $LATEST"
