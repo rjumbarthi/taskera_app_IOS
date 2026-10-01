@@ -192,6 +192,20 @@ jobs:
           echo "ExportOptions.plist:"
           cat ios/ExportOptions.plist
 
+      - name: Compute next build number
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ vars.APPSTORE_API_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        run: |
+          set -e
+
+          pip3 install --quiet codemagic-cli-tools
+
+          LATEST=$(app-store-connect get-latest-testflight-build-number 6815404327 2>/dev/null || echo 0)
+          echo "Latest TestFlight build number: $LATEST"
+          echo "BUILD_NUMBER=$((LATEST + 1))" >> "$GITHUB_ENV"
+
       - name: Build Flutter iOS
         run: |
           set -e
@@ -199,7 +213,7 @@ jobs:
           flutter build ios \
             --release \
             --no-codesign \
-            --build-number=1
+            --build-number="$BUILD_NUMBER"
 
       - name: Archive TaskEra
         run: |
