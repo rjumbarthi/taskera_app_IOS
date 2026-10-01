@@ -225,17 +225,18 @@ jobs:
 
           echo "=== Archiving Runner ==="
 
+          # Signing identity (DEVELOPMENT_TEAM/CODE_SIGN_STYLE/PROVISIONING_PROFILE_SPECIFIER)
+          # lives on the Runner target in project.pbxproj, not here — a command-line
+          # override here would apply to every target in the build graph, including
+          # CocoaPods and Swift Package Manager dependency targets that can't carry a
+          # provisioning profile at all.
           xcodebuild \
           -workspace ios/Runner.xcworkspace \
           -scheme Runner \
             -configuration Release \
            -sdk iphoneos \
              -archivePath build/ios/archive/Runner.xcarchive \
-            archive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=3DNDH5L226 \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER=TaskEra_AppStore_2026
+            archive
 
       - name: Export TaskEra IPA
         run: |
