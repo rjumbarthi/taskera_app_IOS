@@ -54,7 +54,7 @@ class AppConfig {
   // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs
   // Create one client per platform type (Web, Android, iOS).
   static const googleClientIdWeb     = 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';
-  static const googleClientIdIos     = 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com';
+  static const googleClientIdIos     = '657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3.apps.googleusercontent.com';
   static const googleClientIdAndroid = 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com';
 
   // ── Azure / Microsoft ─────────────────────────────────────────────────────

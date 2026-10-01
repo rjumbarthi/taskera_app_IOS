@@ -39,7 +39,7 @@
 	     work — it's tied to a different bundle id). Must match
 	     AppConfig.googleClientIdIos once set. -->
 	<key>GIDClientID</key>
-	<string>YOUR_IOS_CLIENT_ID.apps.googleusercontent.com</string>
+	<string>657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3.apps.googleusercontent.com</string>
 	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network
 	     (not app-specific — safe to keep as-is). Add other ad networks' ids here
 	     if you enable mediation. Missing this loses ad attribution but is not a
@@ -127,7 +127,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.YOUR_IOS_CLIENT_ID</string>
+				<string>com.googleusercontent.apps.657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3</string>
 			</array>
 		</dict>
 	</array>
