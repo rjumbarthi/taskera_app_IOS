@@ -34,12 +34,11 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<!-- Native Google Sign-In (google_sign_in package) — required for
-	     GoogleSignIn() to work on iOS. PLACEHOLDER: needs a real iOS OAuth
-	     client id registered for com.port443.taskera (Kaal's client id won't
-	     work — it's tied to a different bundle id). Must match
-	     AppConfig.googleClientIdIos once set. -->
+	     GoogleSignIn() to work on iOS. TaskEra's own OAuth client, in its own
+	     Google Cloud project (separate from Kaal's), registered 2026-10-07.
+	     Must match AppConfig.googleClientIdIos. -->
 	<key>GIDClientID</key>
-	<string>657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3.apps.googleusercontent.com</string>
+	<string>636693805171-h79tolreih3dvpiuro7tqndiqg1pegdd.apps.googleusercontent.com</string>
 	<!-- SKAdNetwork ad-attribution ids. cstr6suwn9 is Google/AdMob's own network
 	     (not app-specific — safe to keep as-is). Add other ad networks' ids here
 	     if you enable mediation. Missing this loses ad attribution but is not a
@@ -118,16 +117,13 @@
 			</array>
 		</dict>
 		<!-- Reversed GIDClientID — required callback scheme for native Google
-		     Sign-In on iOS. PLACEHOLDER: update once a real iOS Google OAuth
-		     client id is registered (see GIDClientID above); the scheme is the
-		     client id with the numeric prefix reversed, e.g.
-		     com.googleusercontent.apps.<numeric-id>-<random> -->
+		     Sign-In on iOS. Must stay in sync with GIDClientID above. -->
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3</string>
+				<string>com.googleusercontent.apps.636693805171-h79tolreih3dvpiuro7tqndiqg1pegdd</string>
 			</array>
 		</dict>
 	</array>

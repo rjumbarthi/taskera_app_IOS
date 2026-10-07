@@ -80,17 +80,31 @@ class AuthService {
   }
 
   // ── Google ──────────────────────────────────────────────────────────────
-  // Native sign-in sheet on iOS (matches Sign in with Apple's UX, no browser
-  // hop); browser-based PKCE via Supabase OAuth everywhere else.
+  // Native sign-in sheet on iOS AND Android (matches Sign in with Apple's UX,
+  // no browser hop); browser-based PKCE via Supabase OAuth everywhere else
+  // (desktop/web). Both mobile platforms verify via Supabase's list-based
+  // "Authorized Client IDs" field rather than its single shared Client
+  // ID/Secret pair — that's what lets TaskEra's own Google Cloud project
+  // coexist with Kaal's in one Supabase project without either stepping on
+  // the other's OAuth consent-screen branding.
 
-  bool get _isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  bool get _isIOS     => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  bool get _isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
-  Future<void> signInWithGoogle() =>
-      _isIOS ? _signInWithGoogleNative() : _signInWithGoogleBrowser();
+  Future<void> signInWithGoogle() => (_isIOS || _isAndroid)
+      ? _signInWithGoogleNative()
+      : _signInWithGoogleBrowser();
 
   Future<void> _signInWithGoogleNative() async {
     final googleSignIn = GoogleSignIn(
-      clientId: AppConfig.googleClientIdIos,
+      // iOS needs its own client id explicitly; Android resolves its client
+      // implicitly from the app's package name + signing cert registered in
+      // Cloud Console, and instead needs serverClientId (a Web client) so
+      // the id token it returns carries a verifiable, server-checkable
+      // audience — without it Android's token audience wouldn't match
+      // anything in Supabase's Authorized Client IDs list.
+      clientId: _isIOS ? AppConfig.googleClientIdIos : null,
+      serverClientId: _isAndroid ? AppConfig.googleClientIdWeb : null,
       scopes: const ['email'],
     );
     final account = await googleSignIn.signIn();

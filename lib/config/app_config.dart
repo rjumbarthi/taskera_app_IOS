@@ -51,14 +51,17 @@ class AppConfig {
   static const razorpayUpiLink = 'https://razorpay.me/@TaskEra_App';
 
   // ── Google OAuth ──────────────────────────────────────────────────────────
-  // These were Kaal's own client IDs, registered to com.port443.kaal — won't
-  // work for TaskEra's own bundle id. Register new ones for
-  // com.port443.taskera before shipping.
-  // Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs
-  // Create one client per platform type (Web, Android, iOS).
-  static const googleClientIdWeb     = 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';
-  static const googleClientIdIos     = '657874499735-l7t6sv5op41m1ad3sjg16bghjorjpln3.apps.googleusercontent.com';
-  static const googleClientIdAndroid = '657874499735-rfn883avlqh3vgqb3s1cnekpcfrvmpnl.apps.googleusercontent.com';
+  // TaskEra's own Google Cloud project (separate from Kaal's, project number
+  // 636693805171), registered to com.port443.taskera — set up 2026-10-07 so
+  // the OAuth consent screen shows "TaskEra" branding, not Kaal's. Both
+  // platforms sign in natively (ID-token based, see auth_service.dart) so
+  // Supabase's list-based "Authorized Client IDs" field — not the single
+  // shared Client ID/Secret pair — is what has to accept these; that field
+  // supports multiple projects at once, which is what makes this coexist
+  // cleanly with Kaal's own (separate-project) client IDs.
+  static const googleClientIdWeb     = '636693805171-d9991qicj0fsavsmoodl9jnp7sjhvi5o.apps.googleusercontent.com';
+  static const googleClientIdIos     = '636693805171-h79tolreih3dvpiuro7tqndiqg1pegdd.apps.googleusercontent.com';
+  static const googleClientIdAndroid = '636693805171-9vt546qmgapmlnoqc41jsgm830k2h6a6.apps.googleusercontent.com';
 
   // ── Azure / Microsoft ─────────────────────────────────────────────────────
   // portal.azure.com → App Registrations → New Registration
