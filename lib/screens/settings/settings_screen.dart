@@ -310,11 +310,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final settings     = ref.watch(taskeraSettingsProvider);
     final notifier     = ref.read(taskeraSettingsProvider.notifier);
     final integrations = ref.watch(integrationsProvider);
+    // Pro subscribers already know they're Pro — the section is just status
+    // at that point, not an upsell, so it moves to the end of the list.
+    // Free users still see it first, where the upgrade pitch belongs.
+    final isPro = ref.watch(isProProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(0, 4, 0, 32),
       children: [
-        _sgrpTaskEraPro(colors),
+        if (!isPro) _sgrpTaskEraPro(colors),
         _sgrpDisplay(colors, settings, notifier),
         _sgrpTabs(colors, settings, notifier),
         _sgrpTasks(colors, settings, notifier),
@@ -324,6 +328,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _sgrpSyncData(colors),
         _sgrpNotifications(colors, settings, notifier),
         _sgrpAboutLegal(colors),
+        if (isPro) _sgrpTaskEraPro(colors),
         const SizedBox(height: 12),
         Center(
           child: Text('TaskEra · v1.0.0',
@@ -1641,7 +1646,7 @@ class _WpThumb extends StatelessWidget {
   // Order matches TaskEraSettingsState._wallpapers exactly
   static const _paths = [
     'assets/wallpapers/OCEAN.jpg',          // 0 ocean
-    'assets/wallpapers/AURORA3 - Copy.JPG', // 1 aurora3
+    'assets/wallpapers/AURORA.JPG',         // 1 aurora3
     'assets/wallpapers/BEACH.JPG',          // 2 beach
     'assets/wallpapers/NightSky.JPG',       // 3 nightSky
     'assets/wallpapers/tree.jpg',           // 4 tree

@@ -22,7 +22,7 @@ class WallpaperBackground extends StatelessWidget {
 
   String? get _assetPath => switch (wallpaper) {
         TaskEraWallpaper.none     => null,
-        TaskEraWallpaper.aurora3  => 'assets/wallpapers/AURORA3 - Copy.JPG',
+        TaskEraWallpaper.aurora3  => 'assets/wallpapers/AURORA.JPG',
         TaskEraWallpaper.beach    => 'assets/wallpapers/BEACH.JPG',
         TaskEraWallpaper.nightSky => 'assets/wallpapers/NightSky.JPG',
         TaskEraWallpaper.ocean    => 'assets/wallpapers/OCEAN.jpg',

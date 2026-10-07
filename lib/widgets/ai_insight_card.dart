@@ -23,11 +23,19 @@ class AiInsightCard extends ConsumerStatefulWidget {
 
   final EdgeInsetsGeometry? margin;
 
+  /// Shows a small "✦ PRO" chip confirming actual Pro-subscriber status —
+  /// separate from the existing "· PRO" suffix below (which is a *gate*
+  /// indicator for locked/free users and disappears once AI is unlocked by
+  /// any means, including a watched ad or a personal API key, not just a
+  /// real subscription). Off by default so existing call sites are unaffected.
+  final bool showProBadge;
+
   const AiInsightCard({
     super.key,
     required this.input,
     this.hint = 'Get a TaskEra AI insight on this',
     this.margin,
+    this.showProBadge = false,
   });
 
   @override
@@ -84,6 +92,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
   Widget build(BuildContext context) {
     final colors = TaskEraTheme.of(context).colors;
     final unlocked = ref.watch(aiUnlockedProvider).valueOrNull ?? false;
+    final isPro = widget.showProBadge && ref.watch(isProProvider);
     return Padding(
       padding: widget.margin ?? const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -101,6 +110,19 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
                   style: const TextStyle(
                       fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
                       letterSpacing: 0.4, color: TaskEraColors.acc2, height: 1)),
+              if (isPro) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Text('✦ PRO',
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                          color: Colors.white, height: 1)),
+                ),
+              ],
               const Spacer(),
               if (unlocked && _generated && !_loading)
                 GestureDetector(

@@ -128,7 +128,18 @@ class _HeroCard extends ConsumerWidget {
         ]),
       ),
       const Spacer(),
-      if (!isPro)
+      if (isPro)
+        Container(
+          padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Text('✦ PRO',
+              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                  fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+        )
+      else
         GestureDetector(
           onTap: () => context.push(TaskEraRoutes.paywall),
           child: Container(

@@ -149,6 +149,7 @@ class NotesScreen extends ConsumerWidget {
                       return '- ${n.title}: ${t.length > 160 ? t.substring(0, 160) : t}';
                     }).join('\n')}',
               hint: 'See what TaskEra AI notices across your notes',
+              showProBadge: true,
             ),
             const SizedBox(height: 8),
             GestureDetector(
