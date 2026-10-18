@@ -163,6 +163,7 @@ class PurchaseService {
           'platform': Platform.isIOS ? 'ios' : 'android',
           'productId': p.productID,
           'token': p.verificationData.serverVerificationData,
+          'bundleId': AppConfig.bundleId,
         },
       );
       final data = res.data;

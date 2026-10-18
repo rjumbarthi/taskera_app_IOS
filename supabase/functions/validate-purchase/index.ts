@@ -69,10 +69,14 @@ function decodeJwsPayload(jws: string): any {
 }
 
 // Our own ES256-signed JWT to authenticate to Apple's App Store Server API.
-async function appStoreServerJwt(): Promise<string> {
+// `bundleIdOverride` is the calling app's own id (TaskEra and Kaal share this
+// function/project, so a single APPLE_BUNDLE_ID secret can't serve both —
+// the client tells us which app it is; absent that we fall back to the env
+// default for older clients that don't send it yet).
+async function appStoreServerJwt(bundleIdOverride?: string): Promise<string> {
   const keyId = Deno.env.get("APPLE_IAP_KEY_ID")!;
   const issuerId = Deno.env.get("APPLE_IAP_ISSUER_ID")!;
-  const bundleId = Deno.env.get("APPLE_BUNDLE_ID") ?? "com.port443.kaal";
+  const bundleId = bundleIdOverride || Deno.env.get("APPLE_BUNDLE_ID") || "com.port443.kaal";
   const pem = Deno.env.get("APPLE_IAP_PRIVATE_KEY")!;
 
   const now = Math.floor(Date.now() / 1000);
@@ -101,14 +105,14 @@ async function appStoreServerJwt(): Promise<string> {
 // JWS from the client. We decode it locally only to extract the transaction
 // id; the entitlement decision comes from Apple's authoritative
 // /inApps/v1/subscriptions lookup (real subscription status + auto-renew).
-async function verifyApple(transactionJws: string, productId: string): Promise<Entitlement> {
+async function verifyApple(transactionJws: string, productId: string, bundleId?: string): Promise<Entitlement> {
   try {
     const decoded = decodeJwsPayload(transactionJws);
     const originalTransactionId = decoded.originalTransactionId ?? decoded.transactionId;
     if (!originalTransactionId) return { ...EXPIRED, debug: "no_transaction_id_in_jws" };
 
     const lookup = async (base: string) => {
-      const jwt = await appStoreServerJwt(); // fresh JWT (with new nonce) per call
+      const jwt = await appStoreServerJwt(bundleId); // fresh JWT (with new nonce) per call
       return fetch(`${base}/inApps/v1/subscriptions/${originalTransactionId}`, {
         headers: { Authorization: `Bearer ${jwt}`, Accept: "application/json" },
       });
@@ -194,7 +198,7 @@ async function googleAccessToken(sa: { client_email: string; private_key: string
 }
 
 // Android — verify the subscription token via the Play Developer API.
-async function verifyAndroid(productId: string, token: string): Promise<Entitlement> {
+async function verifyAndroid(productId: string, token: string, packageOverride?: string): Promise<Entitlement> {
   const saRaw = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT");
   if (!saRaw) {
     console.warn("[validate-purchase] Play service account not set — granting optimistically (UNVERIFIED)");
@@ -202,7 +206,7 @@ async function verifyAndroid(productId: string, token: string): Promise<Entitlem
   }
   try {
     const sa = JSON.parse(saRaw);
-    const pkg = Deno.env.get("ANDROID_PACKAGE") ?? "com.port443.kaal";
+    const pkg = packageOverride || Deno.env.get("ANDROID_PACKAGE") || "com.port443.kaal";
     const accessToken = await googleAccessToken(sa);
     const url =
       `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${pkg}` +
@@ -236,18 +240,18 @@ Deno.serve(async (req) => {
     const userId = userData?.user?.id;
     if (!userId) return new Response("Unauthorized", { status: 401, headers: cors });
 
-    let payload: { platform?: string; productId?: string; token?: string };
+    let payload: { platform?: string; productId?: string; token?: string; bundleId?: string };
     try {
       payload = await req.json();
     } catch {
       return new Response("Bad JSON", { status: 400, headers: cors });
     }
-    const { platform, productId, token } = payload;
+    const { platform, productId, token, bundleId } = payload;
     if (!platform || !token) return new Response("Missing fields", { status: 400, headers: cors });
 
     const entitlement = platform === "ios"
-      ? await verifyApple(token, productId ?? "")
-      : await verifyAndroid(productId ?? "", token);
+      ? await verifyApple(token, productId ?? "", bundleId)
+      : await verifyAndroid(productId ?? "", token, bundleId);
 
     const { error } = await admin.from("pro_entitlements").upsert(
       {

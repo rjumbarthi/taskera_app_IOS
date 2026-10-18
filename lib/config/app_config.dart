@@ -45,6 +45,12 @@ class AppConfig {
   static String get proAnnualProductId =>
       (!kIsWeb && Platform.isIOS) ? proAnnualProductIdIOS : _proAnnualProductIdAndroid;
 
+  // TaskEra and Kaal share one Supabase project, so validate-purchase (which
+  // verifies receipts against Apple/Google) can't tell which app's bundle ID
+  // to check from a single global secret alone — sent explicitly per request
+  // instead. Same reverse-DNS id on both stores.
+  static const bundleId = 'com.port443.taskera';
+
   // Razorpay payment LINK (razorpay.me/... or a generated Payment Link). Opened
   // in an external browser for a UPI checkout on your website — kept OUTSIDE the
   // in-app purchase flow to stay within Play/Apple policy. Empty = not set up.
