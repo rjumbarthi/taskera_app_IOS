@@ -253,7 +253,14 @@ Deno.serve(async (req) => {
       ? await verifyApple(token, productId ?? "", bundleId)
       : await verifyAndroid(productId ?? "", token, bundleId);
 
-    const { error } = await admin.from("pro_entitlements").upsert(
+    // TaskEra's pro_entitlements table lives in its own `taskera` Postgres
+    // schema (see supabase/migrations/taskera_schema.sql) — Kaal's is in
+    // `public`. This admin client defaults to `public`, so without this the
+    // row silently lands in the wrong schema: the client-side read (scoped to
+    // `taskera`) never sees it, and Pro never unlocks despite a verified purchase.
+    const db = bundleId === "com.port443.taskera" ? admin.schema("taskera") : admin;
+
+    const { error } = await db.from("pro_entitlements").upsert(
       {
         user_id: userId,
         is_pro: entitlement.valid,

@@ -195,6 +195,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   onRetry: _loadProducts,
                   errorMessage: _loadErrorMessage,
                 ),
+                // TEMP diagnostic for the USD-vs-local-price investigation — shows
+                // exactly what the store query returned (every offer/base-plan
+                // entry per product id). Remove once the root cause is confirmed.
+                if (_products.isNotEmpty) _RawPriceDebugDump(products: _products),
                 const SizedBox(height: 14),
                 _SubscribeButton(
                   onTap: (_loadState == _LoadState.ok && !busy) ? _subscribe : null,
@@ -558,6 +562,36 @@ class _PriceHero extends StatelessWidget {
         ),
       ],
     ]));
+  }
+}
+
+// TEMP — dumps the raw store-reported price/currency for every product/offer
+// entry returned, so a real TestFlight/Play test gives hard evidence instead
+// of guessing why the paywall shows USD while checkout shows the local price.
+// Remove this widget + its call site once that's root-caused.
+class _RawPriceDebugDump extends StatelessWidget {
+  final List<ProductDetails> products;
+  const _RawPriceDebugDump({required this.products});
+
+  @override
+  Widget build(BuildContext context) {
+    final lines = products.map((p) {
+      final extra = p is GooglePlayProductDetails ? ' offerIdx=${p.subscriptionIndex}' : '';
+      return '${p.id}: price=${p.price} raw=${p.rawPrice} ccy=${p.currencyCode}$extra';
+    }).join('\n');
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text('DEBUG store query:\n$lines',
+            style: const TextStyle(fontFamily: 'monospace', fontSize: 9, color: Colors.greenAccent)),
+      ),
+    );
   }
 }
 
