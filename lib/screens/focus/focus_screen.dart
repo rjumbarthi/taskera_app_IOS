@@ -727,6 +727,14 @@ class _QuadGrid extends ConsumerWidget {
     final q3 = ref.watch(quadrantTasksProvider(3)).valueOrNull ?? [];
     final q4 = ref.watch(quadrantTasksProvider(4)).valueOrNull ?? [];
     final done = ref.watch(doneTasksProvider).valueOrNull ?? [];
+    final settings = ref.watch(taskeraSettingsProvider);
+    final useCovey = settings.qnames == 0;
+    final quadColorsOn = settings.sw('quadColors');
+    final l = AppL10n.of(context);
+    final action1 = useCovey ? l.doNow : l.urgent;
+    final action2 = useCovey ? l.scheduleLabel : l.important;
+    final action3 = l.delegate;
+    final action4 = useCovey ? l.eliminate : l.drop;
 
     double prog(List<Task> active, int quad) {
       final d = done.where((t) => t.quadrant == quad).length;
@@ -748,18 +756,20 @@ class _QuadGrid extends ConsumerWidget {
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(child: _FocusQuadCard(
-              quadrant: TaskEraQuadrant.q1, action: AppL10n.of(context).doNow, emoji: '⚡',
+              quadrant: TaskEraQuadrant.q1, action: action1, emoji: '⚡',
               count: q1.length, overdue: q1Overdue, today: dueToday(q1),
               progressFraction: prog(q1, 1),
               minHeight: 96,
+              coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q1'),
             )),
             const SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
-              quadrant: TaskEraQuadrant.q2, action: AppL10n.of(context).scheduleLabel, emoji: '🎯',
+              quadrant: TaskEraQuadrant.q2, action: action2, emoji: '🎯',
               count: q2.length, today: dueToday(q2),
               progressFraction: prog(q2, 2),
               minHeight: 96,
+              coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q2'),
             )),
           ]),
@@ -768,16 +778,18 @@ class _QuadGrid extends ConsumerWidget {
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(child: _FocusQuadCard(
-              quadrant: TaskEraQuadrant.q3, action: AppL10n.of(context).delegate, emoji: '🤝',
+              quadrant: TaskEraQuadrant.q3, action: action3, emoji: '🤝',
               count: q3.length, today: dueToday(q3),
               progressFraction: prog(q3, 3),
+              coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q3'),
             )),
             const SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
-              quadrant: TaskEraQuadrant.q4, action: AppL10n.of(context).eliminate, emoji: '🗑',
+              quadrant: TaskEraQuadrant.q4, action: action4, emoji: '🗑',
               count: q4.length,
               progressFraction: prog(q4, 4),
+              coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q4'),
             )),
           ]),
@@ -803,6 +815,7 @@ class _FocusQuadCard extends StatefulWidget {
   final int today;
   final double progressFraction;
   final double minHeight;
+  final bool coloredStyle;
   final VoidCallback? onTap;
 
   const _FocusQuadCard({
@@ -814,6 +827,7 @@ class _FocusQuadCard extends StatefulWidget {
     this.today = 0,
     required this.progressFraction,
     this.minHeight = 82,
+    this.coloredStyle = true,
     this.onTap,
   });
 
@@ -827,6 +841,19 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
   @override
   Widget build(BuildContext context) {
     final q = widget.quadrant;
+    // coloredStyle (Settings → Tasks → Quad background colors) swaps the bold
+    // per-quad gradient card for a neutral card — matching the rest of this
+    // screen's cards — with the quad's accent color carried by the name text
+    // and progress fill instead of the whole background.
+    final flat = widget.coloredStyle;
+    final colors = TaskEraTheme.of(context).colors;
+
+    final accentColor = switch (q) {
+      TaskEraQuadrant.q1 => TaskEraColors.q1,
+      TaskEraQuadrant.q2 => TaskEraColors.q2,
+      TaskEraQuadrant.q3 => TaskEraColors.q3,
+      TaskEraQuadrant.q4 => TaskEraColors.q4,
+    };
 
     final gradientColors = switch (q) {
       TaskEraQuadrant.q1 => const [Color(0xB89B1600), Color(0xFFF25022)],
@@ -868,11 +895,14 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
           clipBehavior: Clip.antiAlias,
           constraints: BoxConstraints(minHeight: widget.minHeight),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradientColors,
-            ),
+            color: flat ? Colors.transparent : null,
+            gradient: flat
+                ? null
+                : LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(width: 0.5, color: q.borderColor),
           ),
@@ -899,22 +929,22 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                         children: [
                           Text(
                             '$qNum · ${widget.action}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: TaskEraType.md,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xE6000000),
+                              color: flat ? accentColor : const Color(0xE6000000),
                               height: 1,
                             ),
                           ),
                           const SizedBox(height: 5),
                           Text(
                             metaText,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: TaskEraType.sm,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xCC000000),
+                              color: flat ? colors.ink3 : const Color(0xCC000000),
                               height: 1.2,
                             ),
                           ),
@@ -934,22 +964,22 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                     if (chipLabel != null)
                       Text(
                         chipLabel,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: TaskEraType.sm,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xCC000000),
+                          color: flat ? colors.ink3 : const Color(0xCC000000),
                           height: 1,
                         ),
                       ),
                     const Spacer(),
                     Text(
                       '${widget.count}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Fraunces',
-                        fontVariations: [FontVariation('wght', 700)],
+                        fontVariations: const [FontVariation('wght', 700)],
                         fontSize: TaskEraType.md,
-                        color: Color(0xD9000000),
+                        color: flat ? colors.ink : const Color(0xD9000000),
                         height: 1,
                       ),
                     ),
@@ -968,13 +998,13 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                           height: 3,
                           child: Stack(
                             children: [
-                              Container(color: const Color(0x26000000)),
+                              Container(color: flat ? colors.bdr2 : const Color(0x26000000)),
                               FractionallySizedBox(
                                 alignment: Alignment.centerLeft,
                                 widthFactor: widget.progressFraction
                                     .clamp(0.0, 1.0),
-                                child:
-                                    Container(color: const Color(0x73000000)),
+                                child: Container(
+                                    color: flat ? accentColor : const Color(0x73000000)),
                               ),
                             ],
                           ),

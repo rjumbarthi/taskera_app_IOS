@@ -637,7 +637,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     const fontSizes   = ['Sm', 'Md', 'Lg', 'XL'];
     const lineSpacings = ['Compact', 'Normal', 'Relaxed'];
     const accents     = [Color(0xFF0A84FF), Color(0xFF7FBA00), Color(0xFFFF6B00),
-      Color(0xFFBF5AF2), Color(0xFFFF2D55), Color(0xFF00BCD4)];
+      Color(0xFFBF5AF2), Color(0xFFFF2D55), Color(0xFF00BCD4), Color(0xFF155EEF)];
     // Labels match TaskEraSettingsState._wallpapers order exactly (6 entries)
     const wpLabels = ['Ocean', 'Aurora', 'Beach', 'Night Sky', 'Tree'];
 
@@ -784,6 +784,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _VtRow(label: AppL10n.of(context).quadrantNames, options: qnames, selected: s.qnames, colors: colors,
                 onTap: n.setQnames),
+            Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+            _SwRow(settingKey: 'quadColors', label: AppL10n.of(context).quadBgColors, colors: colors),
             Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
             _SwRow(settingKey: 'listsGrid', label: AppL10n.of(context).showMyChecklists, colors: colors),
           ]),

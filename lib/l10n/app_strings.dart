@@ -92,6 +92,7 @@ class AppStrings {
   String get lineSpacing        => _t(['Line spacing','行間','Zeilenabstand','줄 간격','Interligne','行距','Espaciado de línea','Espaçamento de linha','Spaziatura riga','Regelafstand','تباعد الأسطر']);
   String get layoutLabel        => _t(['Layout','レイアウト','Layout','레이아웃','Disposition','布局','Diseño','Layout','Layout','Indeling','التخطيط']);
   String get quadrantNames      => _t(['Quadrant names','象限名','Quadrantennamen','사분면 이름','Noms des quadrants','象限名称','Nombres de cuadrantes','Nomes dos quadrantes','Nomi quadranti','Kwadrantnamen','أسماء الأقسام']);
+  String get quadBgColors       => 'Quad background colors';
 
   // ── Focus dashboard ─────────────────────────────────────────────────────────
   String get doThisNow          => _t(['DO THIS NOW','今すぐやれ','JETZT TUN','지금 하세요','FAITES CECI','现在就做','HAZ ESTO AHORA','FAÇA AGORA','FAI ORA','DOE DIT NU','افعل الآن']);

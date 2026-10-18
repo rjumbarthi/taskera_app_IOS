@@ -158,7 +158,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             _FilterChips(colors: colors, isListView: _isListView, onToggle: (v) => setState(() => _isListView = v)),
             Expanded(
               child: _isListView
-                  ? _listView(context, colors, q1, q2, q3, q4, done, qn, frac, showLists, lists)
+                  ? _listView(context, colors, q1, q2, q3, q4, done, qn, frac, showLists, lists, settings.sw('quadColors'))
                   : _gridView(context, colors, q1, q2, q3, q4, done, qn, frac, showLists, lists),
             ),
           ],
@@ -175,7 +175,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   Widget _listView(BuildContext context, TaskEraColors colors,
       List<_Task> q1, List<_Task> q2, List<_Task> q3, List<_Task> q4,
       List<_DoneTask> done, Map<int, String> qn, double Function(int, int) frac,
-      bool showLists, List<CustomList> lists) {
+      bool showLists, List<CustomList> lists, bool quadColorsOn) {
     // paddingOf().bottom already includes the nav-bar height (injected by the
     // router shell), so this clears the floating nav on every device.
     final navClear = MediaQuery.paddingOf(context).bottom + 16;
@@ -188,7 +188,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         children: [
           _QuadSection(
             quadColor: TaskEraColors.q1,
-            bgColor: Colors.transparent,
+            bgColor: quadColorsOn ? TaskEraColors.q1.withAlpha(0x12) : Colors.transparent,
             name: qn[1]!,
             quadKey: 'q1',
             aiBadge: _HeaderBadge(label: '⚠ ${AppL10n.of(context).overdue}', isRed: true),
@@ -201,7 +201,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           const SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q2,
-            bgColor: Colors.transparent,
+            bgColor: quadColorsOn ? TaskEraColors.q2.withAlpha(0x12) : Colors.transparent,
             name: qn[2]!,
             quadKey: 'q2',
             aiBadge: _HeaderBadge(label: '✦ ${AppL10n.of(context).focus}', isRed: false),
@@ -214,7 +214,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           const SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q3,
-            bgColor: Colors.transparent,
+            bgColor: quadColorsOn ? TaskEraColors.q3.withAlpha(0x12) : Colors.transparent,
             name: qn[3]!,
             quadKey: 'q3',
             aiBadge: null,
@@ -227,7 +227,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           const SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q4,
-            bgColor: Colors.transparent,
+            bgColor: quadColorsOn ? TaskEraColors.q4.withAlpha(0x12) : Colors.transparent,
             name: qn[4]!,
             quadKey: 'q4',
             aiBadge: null,

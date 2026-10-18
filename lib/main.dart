@@ -99,7 +99,6 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   await AppLaunchPrefs.recordInstallDate(prefs);
-  _applyTabUnlocks(prefs);
 
   // One-time cleanup: earlier builds seeded demo data. The app now ships empty
   // (kSeedDemoData=false), but an app UPDATE keeps the old database — so a device
@@ -201,20 +200,6 @@ Future<AppDatabase> _openDatabase() async {
   }
 }
 
-// Auto-unlock timed tabs based on days since install.
-// Only sets a key if the user has never touched it (getBool == null).
-// Thresholds: habits=7d, calendar=10d, notes=14d, inbox=14d.
-void _applyTabUnlocks(SharedPreferences prefs) {
-  final days = AppLaunchPrefs.daysSinceInstall(prefs);
-  const thresholds = {'habits': 7, 'calendar': 10, 'notes': 14, 'inbox': 14};
-  for (final entry in thresholds.entries) {
-    final key = 'taskera.toggle.${entry.key}';
-    if (prefs.getBool(key) == null && days >= entry.value) {
-      prefs.setBool(key, true);
-    }
-  }
-}
-
 Future<void> _rescheduleReminders(SharedPreferences prefs) async {
   try {
     final raw = prefs.getStringList('taskera.reminders') ?? const [];
@@ -300,6 +285,7 @@ const _kAccents = [
   (Color(0xFFBF5AF2), Color(0xFFCF7BFF), Color(0x1FBF5AF2)), // purple
   (Color(0xFFFF2D55), Color(0xFFFF6578), Color(0x1FFF2D55)), // red
   (Color(0xFF00BCD4), Color(0xFF4DD0E1), Color(0x1F00BCD4)), // cyan
+  (Color(0xFF155EEF), Color(0xFF168BFF), Color(0x1F155EEF)), // cobalt (glass theme)
 ];
 
 const _kFontFamilies  = ['Inter', 'Fraunces', 'Inter', 'Inter'];

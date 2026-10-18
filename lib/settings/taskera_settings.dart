@@ -35,9 +35,8 @@ class TaskEraSettingsState {
     this.dimGlass = defaultDimGlass,
     this.toggles = const {
       'scoreRec':    true, 'quoteSplash': true, 'eodReflect':   true,
-      // habits/calendar/notes/inbox default OFF — auto-unlock by install age (see main.dart)
-      'habits':      false, 'calendar':   false, 'notes':        false, 'inbox':      false,
-      'listsGrid':   true,
+      'habits':      true, 'calendar':   true, 'notes':        true, 'inbox':      true,
+      'listsGrid':   true, 'quadColors': true,
       'focusPeak':   true, 'focusBrain':  true,
       'calSync':     true, 'gmailSync':   true, 'suggestTasks':  true, 'messages':   true,
       'cloudSync':   true, 'q1Alert':     true, 'q2Nudge':       true, 'reminders':  true,

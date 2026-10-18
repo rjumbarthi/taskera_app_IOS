@@ -54,12 +54,6 @@ abstract final class AppLaunchPrefs {
     return ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
   }
 
-  static int daysSinceInstall(SharedPreferences p) {
-    final d = installDate(p);
-    if (d == null) return 0;
-    return DateTime.now().difference(d).inDays;
-  }
-
   // ── Last-active tracking — used to suppress the splash on quick re-launch ─────
   // Written when the app is backgrounded; read on cold start to tell a genuine
   // fresh start (show splash) from Android killing us while backgrounded and the
