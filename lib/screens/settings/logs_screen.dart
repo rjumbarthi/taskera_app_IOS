@@ -25,7 +25,7 @@ class LogsScreen extends ConsumerWidget {
     Widget logList = logsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator(color: TaskEraColors.acc)),
       error: (_, _) => Center(
-        child: Text('Could not load logs', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+        child: Text('Could not load logs', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
       ),
       data: (logs) => logs.isEmpty
           ? _EmptyState(colors: colors)
@@ -53,12 +53,12 @@ class LogsScreen extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(AppL10n.of(context).activityLog,
-                      style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5,
                           color: colors.ink, height: 1.1)),
                 ),
                 GestureDetector(
                   onTap: () => ref.read(activityLogProvider.notifier).clear(),
-                  child: Text(AppL10n.of(context).clearAll, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                  child: Text(AppL10n.of(context).clearAll, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                 ),
               ],
             ),
@@ -85,12 +85,12 @@ class LogsScreen extends ConsumerWidget {
                   AddBackButton(onTap: () => context.pop()),
                   const SizedBox(width: 8),
                   Expanded(child: Text(AppL10n.of(context).activityLog,
-                      style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5,
                           color: colors.ink, height: 1.1))),
                   GestureDetector(
                     onTap: () => ref.read(activityLogProvider.notifier).clear(),
                     child: Text(AppL10n.of(context).clearAll,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                             color: colors.ink3, height: 1)),
                   ),
                 ]),
@@ -145,7 +145,7 @@ class _LogRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 12, 0, 6),
             child: Text(date.toUpperCase(),
-                style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                     fontWeight: FontWeight.w700, color: colors.ink3,
                     letterSpacing: 0.5, height: 1)),
           ),
@@ -167,12 +167,12 @@ class _LogRow extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(log.message,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                       color: colors.ink, height: 1.4)),
             ),
             const SizedBox(width: 8),
             Text(time,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                     color: colors.ink3, height: 1)),
           ]),
         ),
@@ -213,15 +213,15 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Text('📋', style: const TextStyle(fontSize: 40)),
+        Text('📋', style: TextStyle(fontSize: 40)),
         const SizedBox(height: 12),
         Text(AppL10n.of(context).noActivityYet,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                 fontWeight: FontWeight.w600, color: colors.ink)),
         const SizedBox(height: 4),
         Text('Actions like completing tasks, adding items,\nor deleting goals will appear here.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 color: colors.ink3, height: 1.5)),
       ]),
     );

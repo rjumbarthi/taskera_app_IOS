@@ -76,11 +76,11 @@ class _Section extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(title,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 fontWeight: FontWeight.w700, color: colors.ink, height: 1.5)),
         const SizedBox(height: 4),
         Text(body,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 color: colors.ink2, height: 1.75)),
       ]),
     );
@@ -98,7 +98,7 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(text,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 17,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 17,
                 fontWeight: FontWeight.w700, color: colors.ink, height: 1.3)),
         const SizedBox(height: 4),
         Divider(color: colors.bdr, thickness: 0.5),
@@ -118,7 +118,7 @@ class _TermsContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'TaskEra — Terms of Service', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
@@ -235,7 +235,7 @@ class _PrivacyContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'TaskEra — Privacy Policy', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
@@ -387,7 +387,7 @@ class _CopyrightContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'TaskEra — Copyright & Licenses', colors: colors),
       Text('Effective date: June 19, 2026  ·  Version 1.0',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
@@ -486,7 +486,7 @@ class _SupportContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'Support & Help', colors: colors),
       Text('We\'re here to help you get the most out of TaskEra.',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
@@ -557,7 +557,7 @@ class _DeletionContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'Account & Data Deletion', colors: colors),
       Text('You are always in control of your data.',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 
@@ -626,7 +626,7 @@ class _DataInfoContent extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _Header(text: 'Data, Permissions & Ads', colors: colors),
       Text('A plain-language summary. The full detail is in the Privacy Policy.',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               color: colors.ink3, height: 1.5)),
       const SizedBox(height: 16),
 

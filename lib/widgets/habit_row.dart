@@ -39,7 +39,7 @@ class HabitRow extends StatelessWidget {
                 Text(
                   name,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: colors.ink,
@@ -49,7 +49,7 @@ class HabitRow extends StatelessWidget {
                 Text(
                   schedule,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11,
                     color: colors.ink3,
                   ),
@@ -83,8 +83,8 @@ class HabitRow extends StatelessWidget {
               ),
               child: Text(
                 '🔥 $streak',
-                style: const TextStyle(
-                  fontFamily: 'Inter',
+                style: TextStyle(
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFFFF9500),

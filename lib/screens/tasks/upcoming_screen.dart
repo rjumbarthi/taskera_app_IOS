@@ -93,7 +93,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                     Text(
                       'Upcoming',
                       style: TextStyle(
-                        fontFamily: 'Fraunces',
+                        fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 19,
                         letterSpacing: -0.5,
@@ -104,7 +104,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                     Text(
                       'Next 7 days · $totalCount scheduled${undatedCount > 0 ? ' · $undatedCount undated' : ''}',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         color: colors.ink3,
                         height: 1.2,
@@ -146,7 +146,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                       Text(
                         d.day,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
                           color: sel ? Colors.white : colors.ink3,
@@ -156,7 +156,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                       Text(
                         d.date,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: sel ? Colors.white : colors.ink,
@@ -167,7 +167,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                         Text(
                           '${d.tasks.length}',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 9,
                             color: sel
                                 ? Colors.white.withAlpha(0xCC)
@@ -191,7 +191,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                   child: Text(
                     'No tasks for this day',
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       color: colors.ink3,
                     ),
@@ -251,7 +251,7 @@ class _UpTaskRow extends ConsumerWidget {
                   Text(
                     task.title,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: qc,
@@ -261,7 +261,7 @@ class _UpTaskRow extends ConsumerWidget {
                   Text(
                     timeLabel,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: isOverdue
                           ? const Color(0xFFFF6B6B)
@@ -281,8 +281,8 @@ class _UpTaskRow extends ConsumerWidget {
                 ),
                 child: Text(
                   task.priority!,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
+                  style: TextStyle(
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFFFF6B6B),

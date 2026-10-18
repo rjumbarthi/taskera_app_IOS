@@ -44,7 +44,7 @@ class TaskMetaRow extends ConsumerWidget {
         children: [
           Text(
             l.tasks.toUpperCase(),
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 fontWeight: FontWeight.w700, letterSpacing: 0.5,
                 color: colors.ink3, height: 1),
           ),
@@ -102,12 +102,12 @@ class _Col extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(value,
-            style: TextStyle(fontFamily: 'Fraunces',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                 fontVariations: const [FontVariation('wght', 700)],
                 fontSize: 15, color: color, height: 1)),
           const SizedBox(height: 2),
           Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                 color: colors.ink3, height: 1.2)),
         ],
       ),

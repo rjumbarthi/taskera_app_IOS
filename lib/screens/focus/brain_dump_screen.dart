@@ -102,9 +102,9 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
 
   void _showAiUpgrade() {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text(
+      content: Text(
           'AI is a TaskEra Pro feature — upgrade, or add your own key in Settings',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
       backgroundColor: const Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 4),
@@ -177,10 +177,10 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
                   ),
-                  child: const Text(
+                  child: Text(
                     '✦ Type anything on your mind. TaskEra AI will sort each item into the right quadrant — and suggest tasks, checklists & goals if it detects a plan.',
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       color: Color(0xFFBF5AF2),
                       height: 1.55,
@@ -188,7 +188,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Text input
                 Container(
@@ -203,7 +203,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     maxLines: null,
                     minLines: 8,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 14,
                       color: colors.ink,
                       height: 1.6,
@@ -211,7 +211,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     decoration: InputDecoration(
                       hintText: AppL10n.of(context).brainDumpHint,
                       hintStyle: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 14,
                         color: colors.ink3,
                         height: 1.6,
@@ -222,7 +222,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Process button
                 GestureDetector(
@@ -235,14 +235,14 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     ),
                     alignment: Alignment.center,
                     child: _loading
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 18, height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
-                        : const Text(
+                        : Text(
                             '✦ Process with AI',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -253,7 +253,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
 
                 // Error state
                 if (_error != null) ...[
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
@@ -263,13 +263,13 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Text('⚠', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 8),
+                        Text('⚠', style: TextStyle(fontSize: 14)),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             _error!,
-                            style: const TextStyle(
-                              fontFamily: 'Inter',
+                            style: TextStyle(
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 13,
                               color: Color(0xFFFF453A),
                               height: 1.4,
@@ -283,13 +283,13 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
 
                 // Quadrant sort results
                 if (_result != null) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _ResultsSection(result: _result!, colors: colors),
                 ],
 
                 // Smart suggestions panel
                 if (_suggestions != null) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   _SuggestionsPanel(
                     suggestions: _suggestions!,
                     colors: colors,
@@ -354,11 +354,11 @@ class _SuggestionsPanel extends StatelessWidget {
             border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
           ),
           child: Row(children: [
-            const Text('✦ ', style: TextStyle(color: Color(0xFFBF5AF2), fontSize: 13)),
+            Text('✦ ', style: TextStyle(color: Color(0xFFBF5AF2), fontSize: 13)),
             Expanded(
               child: Text('TaskEra detected: $ctx',
-                  style: const TextStyle(
-                      fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
+                  style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
                       color: Color(0xFFBF5AF2), height: 1.3)),
             ),
           ]),
@@ -366,9 +366,9 @@ class _SuggestionsPanel extends StatelessWidget {
 
         // Tasks
         if (tasks.isNotEmpty) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _SugLabel(label: 'SUGGESTED TASKS', colors: colors),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
@@ -395,9 +395,9 @@ class _SuggestionsPanel extends StatelessWidget {
 
         // Checklist
         if (checklist.isNotEmpty) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _SugLabel(label: 'SUGGESTED CHECKLIST', colors: colors),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             decoration: BoxDecoration(
@@ -422,12 +422,12 @@ class _SuggestionsPanel extends StatelessWidget {
                     ),
                     child: Text(item,
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 12,
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                             color: listCreated ? const Color(0xFF30D158) : colors.ink,
                             height: 1)),
                   )).toList(),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 GestureDetector(
                   onTap: listCreated ? null : () {
                     final ctx2 = suggestions['context'] as String? ?? 'My list';
@@ -449,7 +449,7 @@ class _SuggestionsPanel extends StatelessWidget {
                           ? '✓ Checklist created'
                           : '＋ Create checklist with all ${checklist.length} items',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: listCreated ? const Color(0xFF30D158) : TaskEraColors.acc2,
@@ -465,9 +465,9 @@ class _SuggestionsPanel extends StatelessWidget {
 
         // Goals
         if (goals.isNotEmpty) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _SugLabel(label: 'SUGGESTED GOALS', colors: colors),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
@@ -503,7 +503,7 @@ class _SugLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(label,
       style: TextStyle(
-          fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
           color: colors.ink3, letterSpacing: 0.5, height: 1));
 }
 
@@ -552,17 +552,17 @@ class _TaskSugRowState extends State<_TaskSugRow> {
           width: 5, height: 5,
           decoration: BoxDecoration(color: qc, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(widget.title,
               style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 13,
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   color: done ? widget.colors.ink3 : widget.colors.ink,
                   decoration: done ? TextDecoration.lineThrough : null,
                   decorationColor: widget.colors.ink3,
                   height: 1.3)),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
           decoration: BoxDecoration(
@@ -571,10 +571,10 @@ class _TaskSugRowState extends State<_TaskSugRow> {
             border: Border.all(width: 0.5, color: qc.withAlpha(0x66)),
           ),
           child: Text(ql,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   fontWeight: FontWeight.w700, color: qc, height: 1)),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         GestureDetector(
           onTap: done || _busy ? null : () async {
             setState(() => _busy = true);
@@ -594,7 +594,7 @@ class _TaskSugRowState extends State<_TaskSugRow> {
             ),
             alignment: Alignment.center,
             child: _busy
-                ? const SizedBox(width: 12, height: 12,
+                ? SizedBox(width: 12, height: 12,
                     child: CircularProgressIndicator(strokeWidth: 1.5, color: TaskEraColors.acc2))
                 : Icon(
                     done ? Icons.check_rounded : Icons.add_rounded,
@@ -636,18 +636,18 @@ class _GoalSugRowState extends State<_GoalSugRow> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
       child: Row(children: [
-        const Text('🎯', style: TextStyle(fontSize: 14)),
-        const SizedBox(width: 8),
+        Text('🎯', style: TextStyle(fontSize: 14)),
+        SizedBox(width: 8),
         Expanded(
           child: Text(widget.title,
               style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 13,
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   color: done ? widget.colors.ink3 : widget.colors.ink,
                   decoration: done ? TextDecoration.lineThrough : null,
                   decorationColor: widget.colors.ink3,
                   height: 1.3)),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         GestureDetector(
           onTap: done || _busy ? null : () async {
             setState(() => _busy = true);
@@ -667,7 +667,7 @@ class _GoalSugRowState extends State<_GoalSugRow> {
             ),
             alignment: Alignment.center,
             child: _busy
-                ? const SizedBox(width: 12, height: 12,
+                ? SizedBox(width: 12, height: 12,
                     child: CircularProgressIndicator(strokeWidth: 1.5, color: TaskEraColors.acc2))
                 : Icon(
                     done ? Icons.check_rounded : Icons.add_rounded,
@@ -705,15 +705,15 @@ class _ResultsSection extends StatelessWidget {
             ),
             child: Text(
               '✦ $summary',
-              style: const TextStyle(
-                fontFamily: 'Inter',
+              style: TextStyle(
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
                 color: Color(0xFFBF5AF2),
                 height: 1.5,
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
         ],
         for (final key in const ['q1', 'q2', 'q3', 'q4']) ...[
           _QuadCard(
@@ -721,7 +721,7 @@ class _ResultsSection extends StatelessWidget {
             items: (result[key] as List<dynamic>? ?? []).cast<String>(),
             colors: colors,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ],
     );
@@ -760,7 +760,7 @@ class _QuadCard extends StatelessWidget {
             child: Text(
               '${quadKey.toUpperCase()} — ${m.$1}',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
@@ -777,10 +777,10 @@ class _QuadCard extends StatelessWidget {
                 children: [
                   Container(width: 5, height: 5,
                       decoration: BoxDecoration(color: m.$2, shape: BoxShape.circle)),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(items[i],
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                             color: colors.ink, height: 1.4)),
                   ),
                 ],
@@ -806,17 +806,17 @@ class _SubHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AddBackButton(onTap: () => context.pop()),
-          const SizedBox(width: 2),
+          SizedBox(width: 2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       'Brain Dump',
                       style: TextStyle(
-                        fontFamily: 'Fraunces',
+                        fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 19,
                         letterSpacing: -0.5,
@@ -824,17 +824,17 @@ class _SubHeader extends StatelessWidget {
                         height: 1.1,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                       decoration: BoxDecoration(
                         color: const Color(0x245856D6),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: const Text(
+                      child: Text(
                         '3/5 free',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: Color(0xFF8B8BFF),
@@ -843,11 +843,11 @@ class _SubHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 1),
-                const Text(
+                SizedBox(height: 1),
+                Text(
                   'Get everything out of your head',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 12,
                     color: Color(0xFF8E8E93),
                     height: 1.3,

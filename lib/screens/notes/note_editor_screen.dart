@@ -77,14 +77,14 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     final messenger = ScaffoldMessenger.of(context);
     if (body.isEmpty) {
       messenger.showSnackBar(
-          const SnackBar(content: Text('Write a note first to scan it')));
+          SnackBar(content: Text('Write a note first to scan it')));
       return;
     }
     if (!(await ref.read(aiUnlockedProvider.future))) {
       messenger.showSnackBar(SnackBar(
-        content: const Text(
+        content: Text(
             'AI is a TaskEra Pro feature — upgrade, or add your own key in Settings',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),
@@ -96,7 +96,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ));
       return;
     }
-    messenger.showSnackBar(const SnackBar(content: Text('✦ Scanning note…')));
+    messenger.showSnackBar(SnackBar(content: Text('✦ Scanning note…')));
     try {
       final summary = await ref.read(aiServiceProvider).summarizeNote(body);
       if (!mounted) return;
@@ -200,11 +200,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   _isEdit ? 'Edit note' : 'New note',
-                  style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1),
                 ),
               ),
               GestureDetector(
@@ -212,7 +212,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+                  child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
             ],
@@ -232,10 +232,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: TextField(
                         controller: _titleCtrl,
                         inputFormatters: maxLen(kMaxTitle),
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink, height: 1.3),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: colors.ink, height: 1.3),
                         decoration: InputDecoration(
                           hintText: '"Product Roadmap thoughts"',
-                          hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink3),
+                          hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: colors.ink3),
                           filled: false,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
@@ -245,11 +245,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     // Camera btn
                     GestureDetector(
                       onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Photo capture coming soon'))),
+                          SnackBar(content: Text('Photo capture coming soon'))),
                       child: Container(
                         width: 30, height: 30,
                         decoration: BoxDecoration(
@@ -260,18 +260,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         child: Icon(Icons.camera_alt_rounded, size: 14, color: colors.successFg),
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     // Mic btn
                     GestureDetector(
                       onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Voice notes coming soon'))),
+                          SnackBar(content: Text('Voice notes coming soon'))),
                       child: Container(
                         width: 30, height: 30,
                         decoration: const BoxDecoration(
                           color: Color(0x1AFF453A),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.mic_rounded, size: 14, color: Color(0xFFFF6B6B)),
+                        child: Icon(Icons.mic_rounded, size: 14, color: Color(0xFFFF6B6B)),
                       ),
                     ),
                   ],
@@ -349,10 +349,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         Expanded(
                           child: Text(
                             "Type '/' for blocks · '#', '-', '[]' shortcuts",
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         GestureDetector(
                           onTap: _aiScan,
                           child: Container(
@@ -361,12 +361,12 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                             ),
-                            child: const Text('✦ AI scan', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: TaskEraColors.acc2)),
+                            child: Text('✦ AI scan', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: TaskEraColors.acc2)),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     Container(
                       constraints: const BoxConstraints(minHeight: 160),
                       decoration: BoxDecoration(
@@ -375,7 +375,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       ),
                       padding: const EdgeInsets.fromLTRB(6, 8, 6, 8),
                       child: _seed == null
-                          ? const Padding(
+                          ? Padding(
                               padding: EdgeInsets.symmetric(vertical: 40),
                               child: Center(child: SizedBox(
                                   width: 18, height: 18,
@@ -411,7 +411,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                             ),
                         ],
                       ),
-                      const SizedBox(height: 7),
+                      SizedBox(height: 7),
                     ],
                     GestureDetector(
                       onTap: () => _openTaskPicker(colors),
@@ -425,7 +425,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         ),
                         child: Text(
                           linkedTasks.isEmpty ? '+ Link tasks' : '+ Edit linked tasks',
-                          style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                               fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1),
                         ),
                       ),
@@ -440,13 +440,13 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(AppL10n.of(context).pinToTop, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2)),
+                    Text(AppL10n.of(context).pinToTop, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2)),
                     _Toggle(value: _pinned, onChanged: (v) => setState(() => _pinned = v)),
                   ],
                 ),
               ),
               if (_isEdit) ...[
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 GestureDetector(
                   onTap: () async {
                     final confirmed = await taskeraConfirmDelete(context);
@@ -463,7 +463,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                     ),
                     alignment: Alignment.center,
-                    child: Text(AppL10n.of(context).deleteNote, style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                    child: Text(AppL10n.of(context).deleteNote, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
                   ),
                 ),
               ],
@@ -491,8 +491,8 @@ class _FormRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(label.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
-          const SizedBox(height: 7),
+          Text(label.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
+          SizedBox(height: 7),
           child,
         ],
       ),
@@ -518,7 +518,7 @@ class _Chip extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
-        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+        child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? Colors.white : colors.ink2, height: 1)),
       ),
     );
@@ -549,10 +549,10 @@ class _LinkedTaskChip extends StatelessWidget {
         children: [
           Flexible(
             child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
                     color: colors.ink, height: 1)),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           GestureDetector(
             onTap: onRemove,
             behavior: HitTestBehavior.opaque,
@@ -583,7 +583,7 @@ class _ColorChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(width: 0.5, color: selected ? activeColor.withAlpha(0x80) : colors.bdr),
         ),
-        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+        child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? activeColor : colors.ink2, height: 1)),
       ),
     );

@@ -41,7 +41,7 @@ class TaskEraSegmentedControl extends StatelessWidget {
                 child: Text(
                   options[i],
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: i == selectedIndex ? Colors.white : colors.ink3,

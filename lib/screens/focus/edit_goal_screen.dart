@@ -114,9 +114,9 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                 decoration: BoxDecoration(
                     color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2)),
               ),
-              Text('Choose an icon', style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+              Text('Choose an icon', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                   fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
-              const SizedBox(height: 14),
+              SizedBox(height: 14),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -138,7 +138,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                         ),
                       ),
                       alignment: Alignment.center,
-                      child: Text(e, style: const TextStyle(fontSize: 22)),
+                      child: Text(e, style: TextStyle(fontSize: 22)),
                     ),
                   );
                 }).toList(),
@@ -225,12 +225,12 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 2),
+              SizedBox(width: 2),
               Expanded(
                 child: Text(
                   _isNew ? 'Add goal' : 'Edit goal',
-                  style: const TextStyle(
-                    fontFamily: 'Fraunces',
+                  style: TextStyle(
+                    fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                     fontVariations: [FontVariation('wght', 600)],
                     fontSize: 19,
                     letterSpacing: -0.5,
@@ -248,10 +248,10 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: _loading
-                      ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text(
+                      ? SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      : Text(
                           'Save',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
                         ),
                 ),
               ),
@@ -280,7 +280,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           colors: colors,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       GestureDetector(
                         onTap: _showEmojiPicker,
                         child: Container(
@@ -291,13 +291,13 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                             border: Border.all(width: 1.5, color: const Color(0xFFBF5AF2)),
                           ),
                           alignment: Alignment.center,
-                          child: Text(_emoji, style: const TextStyle(fontSize: 20)),
+                          child: Text(_emoji, style: TextStyle(fontSize: 20)),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Category
                 _FormRow(
@@ -317,7 +317,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     )),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Why this matters
                 _FormRow(
@@ -331,7 +331,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     colors: colors,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Notes — freeform, surfaced in the Notes tab
                 _FormRow(
@@ -344,7 +344,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     colors: colors,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Measurable outcome
                 _FormRow(
@@ -360,19 +360,19 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                             width: 80,
                             child: _Input(hint: '100', centered: true, colors: colors),
                           ),
-                          const SizedBox(width: 5),
+                          SizedBox(width: 5),
                           Expanded(
                             child: _Input(hint: 'unit (k MRR / kg / books)', colors: colors),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5),
                       Row(
                         children: [
                           Expanded(child: _Input(hint: 'start: 12', centered: true, small: true, colors: colors)),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: Text('→', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                            child: Text('→', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                           ),
                           Expanded(child: _Input(hint: 'now: 28', centered: true, small: true, colors: colors)),
                         ],
@@ -380,7 +380,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Deadline
                 _FormRow(
@@ -410,13 +410,13 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                             children: [
                               Icon(Icons.calendar_today_outlined, size: 14,
                                   color: _deadline != null ? TaskEraColors.acc2 : colors.ink3),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 _deadline != null
                                     ? '${_deadline!.month.toString().padLeft(2, '0')}/${_deadline!.day.toString().padLeft(2, '0')}/${_deadline!.year}'
                                     : 'Select deadline…',
                                 style: TextStyle(
-                                  fontFamily: 'Inter', fontSize: 14,
+                                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                                   color: _deadline != null ? colors.ink : colors.ink3,
                                 ),
                               ),
@@ -424,7 +424,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Wrap(
                         spacing: 4,
                         runSpacing: 4,
@@ -438,7 +438,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Linked quadrant
                 _FormRow(
@@ -458,7 +458,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     )),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Milestones
                 _FormRow(
@@ -479,9 +479,9 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                 border: Border.all(width: 1.5, color: colors.bdr2),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Expanded(child: Text(e.value,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink))),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
                             GestureDetector(
                               onTap: () => setState(() => _milestones.removeAt(e.key)),
                               child: Icon(Icons.close_rounded, size: 14, color: colors.ink3),
@@ -499,7 +499,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                 colors: colors,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             GestureDetector(
                               onTap: () {
                                 final text = _milestoneCtrl.text.trim();
@@ -518,7 +518,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                   border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                                 ),
                                 child: Text('＋ ${AppL10n.of(context).add}',
-                                    style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                                         fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                               ),
                             ),
@@ -527,7 +527,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Supporting tasks
                 _FormRow(
@@ -542,7 +542,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           Expanded(
                             child: _Input(hint: AppL10n.of(context).addLinkedTaskHint, colors: colors),
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
                             decoration: BoxDecoration(
@@ -550,10 +550,10 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                             ),
-                            child: const Text(
+                            child: Text(
                               '＋ Add',
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
                                 color: TaskEraColors.acc2,
@@ -562,11 +562,11 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
-                      const Text(
+                      SizedBox(height: 6),
+                      Text(
                         '＋ Create full task →',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 12,
                           color: TaskEraColors.acc2,
                         ),
@@ -574,7 +574,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Supporting habits — link recurring routines to this goal
                 _FormRow(
@@ -589,11 +589,11 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
                             children: [
-                              Text(h.emoji, style: const TextStyle(fontSize: 14)),
-                              const SizedBox(width: 8),
+                              Text(h.emoji, style: TextStyle(fontSize: 14)),
+                              SizedBox(width: 8),
                               Expanded(
                                 child: Text(h.name,
-                                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.3)),
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.3)),
                               ),
                               GestureDetector(
                                 onTap: () => setState(() => _habitIds.remove(h.id)),
@@ -626,7 +626,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                               border: Border.all(width: 0.5, color: const Color(0x4DBF5AF2)),
                             ),
                             child: Text('＋ ${AppL10n.of(context).linkHabit}',
-                                style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                                     fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2))),
                           ),
                         ),
@@ -635,7 +635,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                   ),
                 ),
                 if (!_isNew) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
                       final confirmed = await taskeraConfirmDelete(context);
@@ -652,7 +652,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                         border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                       ),
                       alignment: Alignment.center,
-                      child: Text(AppL10n.of(context).deleteGoal, style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                      child: Text(AppL10n.of(context).deleteGoal, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
                     ),
                   ),
                 ],
@@ -693,7 +693,7 @@ class _DeadlineChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter', fontSize: 12,
+            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
             fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
             color: isActive ? TaskEraColors.acc2 : colors.ink3,
           ),
@@ -727,7 +727,7 @@ class _FormRow extends StatelessWidget {
         RichText(
           text: TextSpan(
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 12,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -736,19 +736,19 @@ class _FormRow extends StatelessWidget {
             children: [
               TextSpan(text: label),
               if (required)
-                const TextSpan(
+                TextSpan(
                   text: ' *',
                   style: TextStyle(color: TaskEraColors.warn),
                 ),
               if (labelSuffix != null)
                 TextSpan(
                   text: labelSuffix,
-                  style: const TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0),
+                  style: TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0),
                 ),
             ],
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         child,
       ],
     );
@@ -778,14 +778,14 @@ class _Input extends StatelessWidget {
       maxLines: maxLines,
       textAlign: centered ? TextAlign.center : TextAlign.start,
       style: TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: TaskEraTheme.of(context).fontFamily,
         fontSize: small ? 12 : 14,
         color: colors.ink,
       ),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: small ? 12 : 14,
           color: colors.ink3,
         ),
@@ -834,7 +834,7 @@ class _Chip extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 12,
           fontWeight: active ? FontWeight.w700 : FontWeight.w400,
           color: color,

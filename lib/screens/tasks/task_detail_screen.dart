@@ -148,20 +148,20 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        title: const Text(
+        title: Text(
           'Time Allocated',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
         ),
         content: TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
           autofocus: true,
-          style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: Colors.white),
           decoration: InputDecoration(
             hintText: AppL10n.of(context).minutesHint,
-            hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF8E8E93)),
+            hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Color(0xFF8E8E93)),
             suffixText: 'min',
-            suffixStyle: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF8E8E93)),
+            suffixStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Color(0xFF8E8E93)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(width: 0.5, color: Color(0x40FFFFFF)),
@@ -177,11 +177,11 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(fontFamily: 'Inter', color: Color(0xFF8E8E93))),
+            child: Text('Cancel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: Color(0xFF8E8E93))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, int.tryParse(ctrl.text.trim())),
-            child: const Text('Save', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+            child: Text('Save', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -202,8 +202,8 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
     final subsAsync = ref.watch(subtasksProvider(_id));
 
     return taskAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error:   (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
+      loading: () => Center(child: CircularProgressIndicator()),
+      error:   (e, _) => Center(child: Text('Error: $e', style: TextStyle(color: Colors.white))),
       data: (task) {
         if (task == null) {
           return Center(child: Text('Task not found', style: TextStyle(color: colors.ink3)));
@@ -304,12 +304,12 @@ class _Body extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AddBackButton(strokeColor: qCol, onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: const TextStyle(
-                      fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19,
+                    style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19,
                       letterSpacing: -0.5, height: 1.3,
                     ),
                     children: [
@@ -319,7 +319,7 @@ class _Body extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               GestureDetector(
                 onTap: () => context.push('/tasks/edittask/${task.id}'),
                 child: Container(
@@ -333,7 +333,7 @@ class _Body extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           // Hero card
           Container(
@@ -356,14 +356,14 @@ class _Body extends StatelessWidget {
                           Text(
                             task.title,
                             style: TextStyle(
-                              fontFamily: 'Fraunces',
+                              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                               fontVariations: const [FontVariation('wght', 600)],
                               fontSize: 15,
                               color: colors.ink,
                               height: 1.2,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Wrap(
                             spacing: 5,
                             runSpacing: 5,
@@ -377,25 +377,25 @@ class _Body extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => showFocusSession(context, taskId: task.id),
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
                         decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(9)),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.play_arrow_rounded, color: Colors.white, size: 10),
                             SizedBox(width: 5),
-                            Text('Start', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
+                            Text('Start', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 // Stats row: Date | Time | Allotted
                 Row(
                   children: [
@@ -413,7 +413,7 @@ class _Body extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: GestureDetector(
                         onTap: onChangeDue,
@@ -426,7 +426,7 @@ class _Body extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: GestureDetector(
                         onTap: onEditTimeAlloc,
@@ -444,7 +444,7 @@ class _Body extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Subtasks card
           Container(
@@ -460,22 +460,22 @@ class _Body extends StatelessWidget {
                 Row(
                   children: [
                     Text('Subtasks · $doneCount/${subs.length}',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink)),
                     const Spacer(),
                     Text('$doneCount / ${subs.length} done',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
-                    const SizedBox(width: 6),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
+                    SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => subtaskFocus.requestFocus(),
                       behavior: HitTestBehavior.opaque,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(4),
-                        child: Text('+', style: TextStyle(fontFamily: 'Inter', fontSize: 19, color: TaskEraColors.acc, height: 1)),
+                        child: Text('+', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 19, color: TaskEraColors.acc, height: 1)),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(2),
                   child: SizedBox(
@@ -487,17 +487,17 @@ class _Body extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 ...subs.map((s) => Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: _SubtaskRow(sub: s, qCol: qCol, colors: colors, onToggle: () => onToggleSub(s)),
                 )),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 _AddSubtaskRow(ctrl: subtaskCtrl, focus: subtaskFocus, colors: colors, onSubmit: onAddSub),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Notes card
           Container(
@@ -510,15 +510,15 @@ class _Body extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Notes', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink)),
-                const SizedBox(height: 8),
+                Text('Notes', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink)),
+                SizedBox(height: 8),
                 TextField(
                   controller: noteCtrl,
                   maxLines: null,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.6),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.6),
                   decoration: InputDecoration(
                     hintText: AppL10n.of(context).addNoteHint,
-                    hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.6),
+                    hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.6),
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
@@ -527,7 +527,7 @@ class _Body extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Mark as Done
           GestureDetector(
@@ -546,13 +546,13 @@ class _Body extends StatelessWidget {
                   Text(
                     task.isDone ? 'Completed' : 'Mark task as Done',
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: task.isDone ? Colors.white : qCol,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     width: 20, height: 20,
@@ -588,7 +588,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(5)),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: fg, height: 1)),
+      child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: fg, height: 1)),
     );
   }
 }
@@ -614,9 +614,9 @@ class _StatCell extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1.2)),
-          const SizedBox(height: 1),
-          Text(value, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500, color: valueColor, height: 1.2)),
+          Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1.2)),
+          SizedBox(height: 1),
+          Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w500, color: valueColor, height: 1.2)),
         ],
       ),
     );
@@ -648,9 +648,9 @@ class _SubtaskRow extends StatelessWidget {
               child: Container(width: 15, height: 15,
                   decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.5, color: qCol))),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(child: Text(sub.title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink))),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink))),
           ],
         ),
       );
@@ -671,10 +671,10 @@ class _SubtaskRow extends StatelessWidget {
               child: Center(child: Icon(Icons.check, size: 8, color: qCol)),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(sub.title,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3,
                   decoration: TextDecoration.lineThrough, decorationColor: colors.ink3)),
           ),
         ],
@@ -701,15 +701,15 @@ class _AddSubtaskRow extends StatelessWidget {
       children: [
         Container(width: 15, height: 15,
             decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.2, color: colors.bdr2))),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: TextField(
             controller: ctrl,
             focusNode: focus,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
             decoration: InputDecoration(
               hintText: AppL10n.of(context).addSubtaskHint,
-              hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+              hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
               border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero,
             ),
             textInputAction: TextInputAction.done,

@@ -69,7 +69,7 @@ class _ConflictsScreenState extends ConsumerState<ConflictsScreen> {
                   children: [
                     Text(l.conflicts,
                         style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -80,7 +80,7 @@ class _ConflictsScreenState extends ConsumerState<ConflictsScreen> {
                           ? 'No scheduling conflicts'
                           : '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'} detected',
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 11,
                           color: colors.ink3,
                           height: 1.2),
@@ -187,7 +187,7 @@ class _ConflictCard extends StatelessWidget {
                   '${overlap ? 'Overlap' : 'Back-to-back'} — '
                   '${_ConflictsScreenState._dayLabel(a.start)} ${fmtTime(b.start)}',
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: accent),
@@ -207,7 +207,7 @@ class _ConflictCard extends StatelessWidget {
                       : 'Only ${conflict.minutes} min between them',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: accent),
@@ -263,13 +263,13 @@ class _ItemRow extends StatelessWidget {
         children: [
           Text(sched.title,
               style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: colors.ink)),
           Text(sched.meta,
               style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
         ],
       ),
     );
@@ -305,7 +305,7 @@ class _ActionBtn extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: filled ? Colors.white : accent,
@@ -342,7 +342,7 @@ class _AllClearCard extends StatelessWidget {
           Text(
             footer ? 'Rest of your schedule looks clear' : '✓ No conflicts',
             style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: footer ? 12 : 14,
                 fontWeight: FontWeight.w700,
                 color: colors.successFg),
@@ -356,7 +356,7 @@ class _AllClearCard extends StatelessWidget {
                     : 'Your $scheduledCount scheduled item${scheduledCount == 1 ? '' : 's'} don\'t clash.',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4),
           ),
         ],
       ),

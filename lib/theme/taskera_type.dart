@@ -29,43 +29,51 @@ class TaskEraType {
     FontFeature('calt'),
   ];
 
-  // Top bar title: Fraunces 600 23sp, ls -0.5
-  static const TextStyle topBarTitle = TextStyle(
-    fontFamily: 'Fraunces',
-    fontVariations: [FontVariation('wght', 600)],
+  // General UI text font (Settings → Display → Typography → Font style) and
+  // the dedicated font for numeral/stat displays (Settings → Typography →
+  // Number style) — both resolved once per theme build in TaskEraThemeData.fromMode.
+  final String fontFamily;
+  final String numberFontFamily;
+
+  const TaskEraType({this.fontFamily = 'Inter', this.numberFontFamily = 'Fraunces'});
+
+  // Top bar title: 600 23sp, ls -0.5
+  TextStyle get topBarTitle => TextStyle(
+    fontFamily: fontFamily,
+    fontVariations: const [FontVariation('wght', 600)],
     fontSize: x2l,
     letterSpacing: -0.5,
     height: 1,
   );
 
-  // Top bar subtitle: Inter 400 11sp
-  static const TextStyle topBarSubtitle = TextStyle(
-    fontFamily: 'Inter',
+  // Top bar subtitle: 400 11sp
+  TextStyle get topBarSubtitle => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
     fontSize: sm,
     letterSpacing: 0.2,
     fontFeatures: _interFeatures,
   );
 
-  // Display headings (Fraunces)
-  static const TextStyle display = TextStyle(
-    fontFamily: 'Fraunces',
-    fontVariations: [FontVariation('wght', 600)],
+  // Display headings
+  TextStyle get display => TextStyle(
+    fontFamily: fontFamily,
+    fontVariations: const [FontVariation('wght', 600)],
     fontSize: hero,
     height: 1.1,
   );
 
-  // Settings group title: Inter 600 13sp
-  static const TextStyle sgrpTitle = TextStyle(
-    fontFamily: 'Inter',
+  // Settings group title: 600 13sp
+  TextStyle get sgrpTitle => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w600,
     fontSize: md,
     fontFeatures: _interFeatures,
   );
 
-  // Body text: Inter 400 13sp
-  static const TextStyle body = TextStyle(
-    fontFamily: 'Inter',
+  // Body text: 400 13sp
+  TextStyle get body => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
     fontSize: bodySize,
     height: 1.3,
@@ -73,63 +81,61 @@ class TaskEraType {
   );
 
   // Body medium weight
-  static const TextStyle bodyMedium = TextStyle(
-    fontFamily: 'Inter',
+  TextStyle get bodyMedium => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w500,
     fontSize: bodySize,
     height: 1.3,
     fontFeatures: _interFeatures,
   );
 
-  // Section label: Inter 600 15sp
-  static const TextStyle section = TextStyle(
-    fontFamily: 'Inter',
+  // Section label: 600 15sp
+  TextStyle get section => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w600,
     fontSize: sectionSize,
     fontFeatures: _interFeatures,
   );
 
-  // Row label: Inter 400 11sp
-  static const TextStyle label = TextStyle(
-    fontFamily: 'Inter',
+  // Row label: 400 11sp
+  TextStyle get label => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
     fontSize: labelSize,
     fontFeatures: _interFeatures,
   );
 
-  // Tag / pill: Inter 600 9sp ls 0.2
-  static const TextStyle tag = TextStyle(
-    fontFamily: 'Inter',
+  // Tag / pill: 600 9sp ls 0.2
+  TextStyle get tag => TextStyle(
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w600,
     fontSize: tagSize,
     letterSpacing: 0.2,
     fontFeatures: _interFeatures,
   );
 
-  // Large numbers (stat cards): Fraunces 700 23sp
-  static const TextStyle number = TextStyle(
-    fontFamily: 'Fraunces',
-    fontVariations: [FontVariation('wght', 700)],
+  // Large numbers (stat cards): 700 23sp — uses the numbers font.
+  TextStyle get number => TextStyle(
+    fontFamily: numberFontFamily,
+    fontVariations: const [FontVariation('wght', 700)],
     fontSize: numberSize,
     height: 1,
-    fontFeatures: [FontFeature.tabularFigures()],
+    fontFeatures: const [FontFeature.tabularFigures()],
   );
 
-  // Quadrant count badge: Fraunces 700 19sp
-  static const TextStyle quadrantCount = TextStyle(
-    fontFamily: 'Fraunces',
-    fontVariations: [FontVariation('wght', 700)],
+  // Quadrant count badge: 700 19sp — uses the numbers font.
+  TextStyle get quadrantCount => TextStyle(
+    fontFamily: numberFontFamily,
+    fontVariations: const [FontVariation('wght', 700)],
     fontSize: xl,
     height: 1,
   );
 
-  // Pomodoro timer: Fraunces 750 46sp tabular
-  static const TextStyle pomodoroTimer = TextStyle(
-    fontFamily: 'Fraunces',
-    fontVariations: [FontVariation('wght', 750)],
+  // Pomodoro timer: 750 46sp tabular — uses the numbers font.
+  TextStyle get pomodoroTimer => TextStyle(
+    fontFamily: numberFontFamily,
+    fontVariations: const [FontVariation('wght', 750)],
     fontSize: 46,
-    fontFeatures: [FontFeature.tabularFigures()],
+    fontFeatures: const [FontFeature.tabularFigures()],
   );
-
-  const TaskEraType();
 }

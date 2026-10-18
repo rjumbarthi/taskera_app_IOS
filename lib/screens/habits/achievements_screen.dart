@@ -106,7 +106,7 @@ class AchievementsScreen extends ConsumerWidget {
               AddBackButton(onTap: () => context.pop()),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(AppL10n.of(context).achievements, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                child: Text(AppL10n.of(context).achievements, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
               ),
             ],
           ),
@@ -119,7 +119,7 @@ class AchievementsScreen extends ConsumerWidget {
               if (unlocked.isNotEmpty) ...[
                 Text(
                   'UNLOCKED (${unlocked.length})',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3),
                 ),
                 const SizedBox(height: 8),
                 GridView.count(
@@ -135,7 +135,7 @@ class AchievementsScreen extends ConsumerWidget {
               if (locked.isNotEmpty) ...[
                 Text(
                   'LOCKED (${locked.length})',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3),
                 ),
                 const SizedBox(height: 8),
                 GridView.count(
@@ -172,13 +172,13 @@ class _UnlockedCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 28, height: 1)),
+          Text(emoji, style: TextStyle(fontSize: 28, height: 1)),
           const SizedBox(height: 5),
           Text(title, textAlign: TextAlign.center,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFF2F2F7), height: 1.2)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFF2F2F7), height: 1.2)),
           const SizedBox(height: 3),
           Text(desc, textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.labelMuted, height: 1.4)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.labelMuted, height: 1.4)),
         ],
       ),
     );
@@ -212,14 +212,14 @@ class _LockedCard extends StatelessWidget {
                 0.2126, 0.7152, 0.0722, 0, 0,
                 0,      0,      0,      1, 0,
               ]),
-              child: Text(emoji, style: const TextStyle(fontSize: 28, height: 1)),
+              child: Text(emoji, style: TextStyle(fontSize: 28, height: 1)),
             ),
             const SizedBox(height: 5),
             Text(title, textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink, height: 1.2)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink, height: 1.2)),
             const SizedBox(height: 3),
             Text(desc, textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1.4)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1.4)),
             const SizedBox(height: 6),
             if (pct > 0) ...[
               Container(
@@ -231,9 +231,9 @@ class _LockedCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 3),
-              Text('${(pct * 100).toInt()}%', style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+              Text('${(pct * 100).toInt()}%', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
             ] else
-              Text('🔒 Locked', style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+              Text('🔒 Locked', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
           ],
         ),
       ),

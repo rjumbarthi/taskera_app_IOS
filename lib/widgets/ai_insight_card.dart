@@ -54,7 +54,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
     if (!ad.rewardedReady) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ad not ready yet — try again in a moment.')),
+          SnackBar(content: Text('Ad not ready yet — try again in a moment.')),
         );
       }
       return;
@@ -107,19 +107,19 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
           children: [
             Row(children: [
               Text((unlocked || _adUnlock) ? '✦ TASKERA AI' : '✦ TASKERA AI · PRO',
-                  style: const TextStyle(
-                      fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+                  style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
                       letterSpacing: 0.4, color: TaskEraColors.acc2, height: 1)),
               if (isPro) ...[
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Container(
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: const Text('✦ PRO',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                  child: Text('✦ PRO',
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                           color: Colors.white, height: 1)),
                 ),
               ],
@@ -128,10 +128,10 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
                 GestureDetector(
                   onTap: _generate,
                   child: Text('↻ Refresh',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1)),
                 ),
             ]),
-            const SizedBox(height: 7),
+            SizedBox(height: 7),
             if (unlocked || _adUnlock) _body(colors) else _upgradeBody(context, colors),
           ],
         ),
@@ -150,14 +150,14 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Unlock AI insights with TaskEra Pro',
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600,
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600,
                       color: colors.ink, height: 1.3)),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text('Or connect your own OpenAI / Claude key in Settings → Integrations.',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.35)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.35)),
             ]),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
             decoration: BoxDecoration(
@@ -165,18 +165,18 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
             ),
-            child: const Text('Upgrade →',
+            child: Text('Upgrade →',
                 style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
                     color: TaskEraColors.acc2, height: 1)),
           ),
         ]),
       ),
       // Rewarded-ad path (mobile only): watch a short ad to get one insight free.
       if (isMobile) ...[
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         GestureDetector(
           onTap: _watchAdForInsight,
           behavior: HitTestBehavior.opaque,
@@ -184,11 +184,11 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
             Expanded(
               child: Text('▶  Watch a short ad for one AI insight',
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
                       color: colors.ink2, height: 1.3)),
             ),
             Text('Free',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1)),
           ]),
         ),
       ],
@@ -198,10 +198,10 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
   Widget _body(TaskEraColors colors) {
     if (_loading) {
       return Row(children: [
-        const SizedBox(width: 13, height: 13,
+        SizedBox(width: 13, height: 13,
             child: CircularProgressIndicator(strokeWidth: 1.6, color: TaskEraColors.acc2)),
-        const SizedBox(width: 8),
-        Text('Thinking…', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+        SizedBox(width: 8),
+        Text('Thinking…', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
       ]);
     }
     if (_error != null) {
@@ -209,7 +209,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
         onTap: _generate,
         behavior: HitTestBehavior.opaque,
         child: Text('$_error · tap to retry',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Color(0xFFFF6B6B), height: 1.4)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: Color(0xFFFF6B6B), height: 1.4)),
       );
     }
     if (!_generated) {
@@ -219,9 +219,9 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
         child: Row(children: [
           Expanded(
             child: Text(widget.hint,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             decoration: BoxDecoration(
@@ -229,21 +229,21 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
             ),
-            child: const Text('Generate',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+            child: Text('Generate',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
           ),
         ]),
       );
     }
     if (_insights.isEmpty) {
       return Text('No insight available right now — tap ↻ to retry.',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4));
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4));
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int i = 0; i < _insights.length; i++) ...[
-          if (i > 0) const SizedBox(height: 8),
+          if (i > 0) SizedBox(height: 8),
           _InsightRow(item: _insights[i], colors: colors),
         ],
       ],
@@ -265,11 +265,11 @@ class _InsightRow extends StatelessWidget {
       children: [
         if (title.isNotEmpty)
           Text(title,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink, height: 1.3)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink, height: 1.3)),
         if (detail.isNotEmpty) ...[
-          if (title.isNotEmpty) const SizedBox(height: 2),
+          if (title.isNotEmpty) SizedBox(height: 2),
           Text(detail,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11.5, color: colors.ink2, height: 1.45)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11.5, color: colors.ink2, height: 1.45)),
         ],
       ],
     );

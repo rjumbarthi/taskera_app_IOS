@@ -33,10 +33,10 @@ class AiNudgeCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text(
+              Text(
                 '✨ TASKERA AI',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.6,
@@ -51,17 +51,17 @@ class AiNudgeCard extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             message,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 13,
               color: colors.ink2,
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           GestureDetector(
             onTap: onCta,
             child: Container(
@@ -76,8 +76,8 @@ class AiNudgeCard extends StatelessWidget {
               ),
               child: Text(
                 ctaLabel,
-                style: const TextStyle(
-                  fontFamily: 'Inter',
+                style: TextStyle(
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: TaskEraColors.acc,

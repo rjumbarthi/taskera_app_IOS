@@ -66,8 +66,8 @@ Future<void> _showListSheet(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(existing == null ? 'New Checklist' : 'Edit Checklist',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
-                const SizedBox(height: 10),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
+                SizedBox(height: 10),
 
                 // Templates (only on create)
                 if (existing == null) ...[
@@ -85,12 +85,12 @@ Future<void> _showListSheet(
                             border: Border.all(width: 0.5, color: colors.bdr),
                           ),
                           child: Text('${t.$1} ${t.$2}',
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink2, height: 1)),
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink2, height: 1)),
                         ),
                       )).toList(),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                 ],
 
                 // Emoji + Title
@@ -102,21 +102,21 @@ Future<void> _showListSheet(
                       child: TextField(
                         controller: emojiCtrl,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20),
                         decoration: const InputDecoration(border: InputBorder.none),
                         maxLength: 2,
                         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         controller: titleCtrl,
                         autofocus: existing == null,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: colors.ink),
                         decoration: InputDecoration(
                           hintText: AppL10n.of(context).listNameHint,
-                          hintStyle: TextStyle(fontFamily: 'Inter', color: colors.ink3),
+                          hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: colors.ink3),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: colors.bdr)),
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: colors.bdr)),
                           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: TaskEraColors.acc)),
@@ -128,7 +128,7 @@ Future<void> _showListSheet(
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Date picker row
                 Row(
@@ -154,25 +154,25 @@ Future<void> _showListSheet(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.calendar_today_outlined, size: 12, color: selectedDate != null ? TaskEraColors.acc2 : colors.ink3),
-                            const SizedBox(width: 5),
+                            SizedBox(width: 5),
                             Text(
                               selectedDate != null ? _fmtDate(selectedDate!) : 'Add date',
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: selectedDate != null ? TaskEraColors.acc2 : colors.ink3),
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: selectedDate != null ? TaskEraColors.acc2 : colors.ink3),
                             ),
                           ],
                         ),
                       ),
                     ),
                     if (selectedDate != null) ...[
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       GestureDetector(
                         onTap: () => setSS(() => selectedDate = null),
-                        child: Text('×', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: colors.ink3, height: 1)),
+                        child: Text('×', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18, color: colors.ink3, height: 1)),
                       ),
                     ],
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Repeat chips
                 SingleChildScrollView(
@@ -196,7 +196,7 @@ Future<void> _showListSheet(
                           child: Text(
                             '↻ $r',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 12,
                               color: active ? TaskEraColors.acc2 : colors.ink3,
                               height: 1,
@@ -207,7 +207,7 @@ Future<void> _showListSheet(
                     }).toList(),
                   ),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // Confirm button
                 GestureDetector(
@@ -241,7 +241,7 @@ Future<void> _showListSheet(
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(12)),
                     child: Text(existing == null ? 'Create Checklist' : 'Save Changes',
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white)),
                   ),
                 ),
               ],
@@ -303,16 +303,16 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
               child: Row(
                 children: [
                   AddBackButton(onTap: () => context.pop()),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text('Checklist',
-                            style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
                         Text('${lists.length} lists',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                       ],
                     ),
                   ),
@@ -325,12 +325,12 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text('📋', style: TextStyle(fontSize: 40)),
-                          const SizedBox(height: 10),
-                          Text('No checklists yet', style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink3)),
-                          const SizedBox(height: 4),
+                          Text('📋', style: TextStyle(fontSize: 40)),
+                          SizedBox(height: 10),
+                          Text('No checklists yet', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: colors.ink3)),
+                          SizedBox(height: 4),
                           Text('Tap + to create one', textAlign: TextAlign.center,
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                         ],
                       ),
                     )
@@ -367,7 +367,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 boxShadow: [BoxShadow(color: Color(0x800A84FF), blurRadius: 14, offset: Offset(0, 4))],
               ),
               alignment: Alignment.center,
-              child: const Text('+', style: TextStyle(fontFamily: 'Inter', fontSize: 22, color: Colors.white, fontWeight: FontWeight.w300, height: 1)),
+              child: Text('+', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 22, color: Colors.white, fontWeight: FontWeight.w300, height: 1)),
             ),
           ),
         ),
@@ -448,11 +448,11 @@ class _ListCardState extends ConsumerState<_ListCard> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text('Duplicate "${widget.list.title}"',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
-                const SizedBox(height: 4),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
+                SizedBox(height: 4),
                 Text('All items will be reset. Pick a date for the new list.',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
-                const SizedBox(height: 14),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
+                SizedBox(height: 14),
                 GestureDetector(
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -473,16 +473,16 @@ class _ListCardState extends ConsumerState<_ListCard> {
                     child: Row(
                       children: [
                         Icon(Icons.calendar_today_outlined, size: 14, color: newDate != null ? TaskEraColors.acc2 : colors.ink3),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           newDate != null ? _fmtDate(newDate!) : 'Pick a date',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: newDate != null ? TaskEraColors.acc2 : colors.ink3),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: newDate != null ? TaskEraColors.acc2 : colors.ink3),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 GestureDetector(
                   onTap: () async {
                     if (newDate == null) return;
@@ -510,7 +510,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text('Duplicate',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700,
                             color: newDate != null ? Colors.white : colors.ink3)),
                   ),
                 ),
@@ -548,11 +548,11 @@ class _ListCardState extends ConsumerState<_ListCard> {
               children: [
                 Row(
                   children: [
-                    Text(list.emoji, style: const TextStyle(fontSize: 18)),
-                    const SizedBox(width: 10),
+                    Text(list.emoji, style: TextStyle(fontSize: 18)),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Text(list.title,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink)),
                     ),
                     // Edit icon
                     GestureDetector(
@@ -563,22 +563,22 @@ class _ListCardState extends ConsumerState<_ListCard> {
                         child: Icon(Icons.edit_outlined, size: 14, color: colors.ink3),
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     if (items.isNotEmpty)
                       Text('$doneCount/${items.length}',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                   ],
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5),
                 Row(
                   children: [
                     Icon(Icons.calendar_today_outlined, size: 11,
                         color: _datePassed(list.dueDate) ? TaskEraColors.warn : colors.ink3),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       list.dueDate != null ? _fmtDate(list.dueDate!) : 'No date',
                       style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 11, height: 1,
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, height: 1,
                         color: _datePassed(list.dueDate) ? TaskEraColors.warn : colors.ink3,
                       ),
                     ),
@@ -590,9 +590,9 @@ class _ListCardState extends ConsumerState<_ListCard> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.copy_outlined, size: 11, color: colors.successFg),
-                            const SizedBox(width: 3),
+                            SizedBox(width: 3),
                             Text('Duplicate',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.successFg, height: 1)),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.successFg, height: 1)),
                           ],
                         ),
                       ),
@@ -610,7 +610,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text('No items yet',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                   )
                 : Wrap(
                     spacing: 5,
@@ -648,15 +648,15 @@ class _ListCardState extends ConsumerState<_ListCard> {
                     ),
                     child: Row(
                       children: [
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Expanded(
                           child: TextField(
                             controller: _addCtrl,
                             autofocus: true,
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                             decoration: InputDecoration(
                               hintText: AppL10n.of(context).typeItemOrTap,
-                              hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                              hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                               border: InputBorder.none,
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(vertical: 9),
@@ -676,13 +676,13 @@ class _ListCardState extends ConsumerState<_ListCard> {
                           onTap: () => setState(() { _isAdding = false; _addCtrl.clear(); }),
                           child: Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: Text('×', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: colors.ink3, height: 1)),
+                            child: Text('×', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18, color: colors.ink3, height: 1)),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Wrap(
                     spacing: 5,
                     runSpacing: 5,
@@ -695,7 +695,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(width: 0.5, color: colors.bdr),
                         ),
-                        child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                        child: Text(s, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1)),
                       ),
                     )).toList(),
                   ),
@@ -714,15 +714,15 @@ class _ListCardState extends ConsumerState<_ListCard> {
                   child: Row(
                     children: [
                       Icon(Icons.add, size: 16, color: TaskEraColors.acc2),
-                      const SizedBox(width: 4),
-                      Text('Add item', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: TaskEraColors.acc2)),
+                      SizedBox(width: 4),
+                      Text('Add item', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: TaskEraColors.acc2)),
                     ],
                   ),
                 ),
                 const Spacer(),
                 GestureDetector(
                   onTap: widget.onDelete,
-                  child: Text('Delete', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  child: Text('Delete', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                 ),
               ],
             ),
@@ -772,13 +772,13 @@ class _ItemChip extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(width: 1, color: done ? const Color(0xFF30D158) : colors.bdr2),
               ),
-              child: done ? const Icon(Icons.check, size: 9, color: Colors.white) : null,
+              child: done ? Icon(Icons.check, size: 9, color: Colors.white) : null,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               item.content,
               style: TextStyle(
-                fontFamily: 'Inter', fontSize: 12, height: 1,
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, height: 1,
                 color: done ? colors.ink3 : colors.ink,
                 decoration: done ? TextDecoration.lineThrough : null,
                 decorationColor: colors.ink3,

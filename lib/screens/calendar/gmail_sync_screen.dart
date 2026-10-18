@@ -92,8 +92,8 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppL10n.of(context).gmailSync, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('Full email-to-task pipeline', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(AppL10n.of(context).gmailSync, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text('Full email-to-task pipeline', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -123,11 +123,11 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(_connected ? 'Gmail' : 'Connect Gmail',
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
                               Text(_connected
                                       ? '● Connected · Syncs every 15 min · 5 min in-app'
                                       : (gmailEnabled ? '○ Not connected' : '○ Coming soon'),
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                                       color: _connected ? colors.successFg : colors.ink3)),
                             ],
                           ),
@@ -138,7 +138,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                               decoration: BoxDecoration(color: const Color(0x1AFF453A), borderRadius: BorderRadius.circular(6)),
-                              child: Text(AppL10n.of(context).disconnect, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: Color(0xFFFF6B6B))),
+                              child: Text(AppL10n.of(context).disconnect, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: Color(0xFFFF6B6B))),
                             ),
                           ),
                       ],
@@ -166,7 +166,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                               ? const SizedBox(width: 14, height: 14,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                               : Text(gmailEnabled ? '${AppL10n.of(context).connect} Gmail' : 'Coming soon',
-                                  style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
                       ),
                     ],
@@ -177,7 +177,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
               // Pending — only when connected; no fake previews.
               if (_connected) ...[
                 Text(AppL10n.of(context).pendingApproval.toUpperCase(),
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
@@ -188,13 +188,13 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                     border: Border.all(width: 0.5, color: const Color(0x407FBA00)),
                   ),
                   child: Text('Extracted tasks will appear here after your next sync.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
                 ),
                 const SizedBox(height: 14),
               ],
               // Sync settings
               Text(AppL10n.of(context).syncSettings.toUpperCase(),
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
               const SizedBox(height: 8),
               _SettingsCard(labels: _settingLabels, colors: colors),
             ],
@@ -246,9 +246,9 @@ class _StatCell extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+          Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
           const SizedBox(height: 2),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.labelMuted)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted)),
         ],
       ),
     );
@@ -289,7 +289,7 @@ class _SettingsCardState extends State<_SettingsCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: Text(widget.labels[i], style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: widget.colors.ink2))),
+                  Expanded(child: Text(widget.labels[i], style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: widget.colors.ink2))),
                   _Toggle(value: _on[i], onChanged: (v) => setState(() => _on[i] = v)),
                 ],
               ),
@@ -299,11 +299,11 @@ class _SettingsCardState extends State<_SettingsCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(AppL10n.of(context).neverAutoSendEmails, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: widget.colors.ink3)),
+                Text(AppL10n.of(context).neverAutoSendEmails, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: widget.colors.ink3)),
                 Container(
                   padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
                   decoration: BoxDecoration(color: const Color(0x1A9FCD44), borderRadius: BorderRadius.circular(4)),
-                  child: Text(AppL10n.of(context).alwaysOn, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: widget.colors.successFg)),
+                  child: Text(AppL10n.of(context).alwaysOn, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: widget.colors.successFg)),
                 ),
               ],
             ),

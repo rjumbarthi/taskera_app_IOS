@@ -162,7 +162,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   void _snack(String msg) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white, height: 1.35)),
+      content: Text(msg, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white, height: 1.35)),
       backgroundColor: const Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 2),
@@ -285,7 +285,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           messenger.showSnackBar(
             SnackBar(
               content: Text('Added to Q$quadrant',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
               backgroundColor: const Color(0xFF1C1C1E),
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
@@ -333,7 +333,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     messenger.showSnackBar(
       SnackBar(
         content: Text('$addedToLabel Q$quad',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -357,7 +357,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
         children: [
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         _SourcePills(
           colors: colors,
           gmailEnabled: gmailEnabled,
@@ -365,9 +365,9 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           onGmail: _connectGmail,
           onSoon: (name) => _snack('$name is coming soon.'),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         _AddManuallyButton(colors: colors, onTap: () => _showAddItemSheet(context)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         _StatsGrid(
           total: _fetchedEmails.length,
           unread: _fetchedEmails.where((e) => e.unread).length,
@@ -375,10 +375,10 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           actions: _fetchedActions.length,
           colors: colors,
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         if (gmailEnabled && !_gmailConnected && !_loading) ...[
           _ConnectGmailPrompt(colors: colors, onConnect: _connectGmail),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
         if (gmailEnabled && _gmailConnected) ...[
           Container(
@@ -390,33 +390,33 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
               border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
             ),
             child: Row(children: [
-              const Text('ℹ️', style: TextStyle(fontSize: 12)),
-              const SizedBox(width: 7),
+              Text('ℹ️', style: TextStyle(fontSize: 12)),
+              SizedBox(width: 7),
               Expanded(
                 child: Text(
                   'Only new incoming emails are processed into tasks & habits — your existing inbox history isn\'t scanned.',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.4),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.4),
                 ),
               ),
             ]),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
         _SectionRow(
           left: Text(AppL10n.of(context).recentInboxLabel,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
                 letterSpacing: 0.5, color: colors.ink3, height: 1)),
           right: _lastSync != null
               ? Text('↻ Updated ${_syncAgo(_lastSync!)}',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1))
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1))
               : (_loading
                   ? Text('↻ Syncing…',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2, height: 1))
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2, height: 1))
                   : null),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         if (_loading)
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 28),
             child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: TaskEraColors.acc)),
           )
@@ -429,7 +429,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                     ? 'Gmail sync is coming soon. Add tasks manually above for now.'
                     : (_gmailConnected ? AppL10n.of(context).inboxEmptyHint : AppL10n.of(context).connectGmailSeeEmails)),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, height: 1.4,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, height: 1.4,
                     color: _error != null ? TaskEraColors.warn : colors.ink3)),
             ),
           )
@@ -442,18 +442,18 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
               onTap: () => _showEmailDetail(context, i),
               onLongPress: () => _showEmailDetail(context, i),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
           ],
         if (_fetchedActions.isNotEmpty) ...[
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           _SectionRow(
             left: Text('${_fetchedActions.length} ${AppL10n.of(context).actionableItems}',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5, color: colors.successFg, height: 1)),
             right: Text(AppL10n.of(context).fromYourInbox,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           for (int i = 0; i < _fetchedActions.length; i++) ...[
             _ActionCard(
               item: _fetchedActions[i],
@@ -461,7 +461,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
               isConverted: _convertedActions.contains(i),
               onConvert: () => _convertToTask(context, i, _fetchedActions[i]),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
           ],
         ],
         ],
@@ -546,17 +546,17 @@ class _SourceChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 12)),
-            const SizedBox(width: 5),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+            Text(emoji, style: TextStyle(fontSize: 12)),
+            SizedBox(width: 5),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                 fontWeight: active ? FontWeight.w600 : FontWeight.w400,
                 color: active ? colors.ink : colors.ink2, height: 1)),
             if (connected) ...[
-              const SizedBox(width: 5),
+              SizedBox(width: 5),
               Container(width: 5, height: 5, decoration: const BoxDecoration(color: TaskEraColors.q2, shape: BoxShape.circle)),
             ] else if (soon) ...[
-              const SizedBox(width: 5),
-              Text('Soon', style: TextStyle(fontFamily: 'Inter', fontSize: 8,
+              SizedBox(width: 5),
+              Text('Soon', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
                   fontWeight: FontWeight.w700, letterSpacing: 0.3, color: colors.ink3, height: 1)),
             ],
           ],
@@ -588,9 +588,9 @@ class _AddManuallyButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.add_rounded, size: 15, color: TaskEraColors.acc2),
-            const SizedBox(width: 5),
-            Text('Add task manually', style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            Icon(Icons.add_rounded, size: 15, color: TaskEraColors.acc2),
+            SizedBox(width: 5),
+            Text('Add task manually', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 fontWeight: FontWeight.w600, color: colors.ink2, height: 1)),
           ],
         ),
@@ -655,9 +655,9 @@ class _AddItemSheetState extends State<_AddItemSheet> {
             child: Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 14),
                 decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
           ),
-          Text('Add to inbox', style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+          Text('Add to inbox', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
               fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
             decoration: BoxDecoration(
@@ -668,20 +668,20 @@ class _AddItemSheetState extends State<_AddItemSheet> {
             child: TextField(
               controller: _ctrl,
               autofocus: true,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink, height: 1.4),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink, height: 1.4),
               decoration: InputDecoration(
                 hintText: 'Task title…',
-                hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink3),
+                hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3),
                 border: InputBorder.none,
               ),
               onSubmitted: (_) => _submit(),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               for (int i = 0; i < _quads.length; i++) ...[
-                if (i > 0) const SizedBox(width: 6),
+                if (i > 0) SizedBox(width: 6),
                 Expanded(
                   child: GestureDetector(
                     onTap: () => setState(() => _quad = i + 1),
@@ -697,7 +697,7 @@ class _AddItemSheetState extends State<_AddItemSheet> {
                       ),
                       alignment: Alignment.center,
                       child: Text(_quads[i].n,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: _quad == i + 1 ? _quads[i].color : colors.ink3, height: 1)),
                     ),
@@ -706,7 +706,7 @@ class _AddItemSheetState extends State<_AddItemSheet> {
               ],
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           GestureDetector(
             onTap: _submit,
             child: Container(
@@ -714,9 +714,9 @@ class _AddItemSheetState extends State<_AddItemSheet> {
               decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(10)),
               alignment: Alignment.center,
               child: _saving
-                  ? const SizedBox(width: 18, height: 18,
+                  ? SizedBox(width: 18, height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Add task', style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                  : Text('Add task', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                       fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
             ),
           ),
@@ -746,11 +746,11 @@ class _ConnectGmailPrompt extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(AppL10n.of(context).connectGmailInbox,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
-          const SizedBox(height: 4),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+          SizedBox(height: 4),
           Text(AppL10n.of(context).inboxEmptyHint,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4)),
-          const SizedBox(height: 10),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4)),
+          SizedBox(height: 10),
           GestureDetector(
             onTap: onConnect,
             child: Container(
@@ -758,7 +758,7 @@ class _ConnectGmailPrompt extends StatelessWidget {
               decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
               alignment: Alignment.center,
               child: Text('${AppL10n.of(context).connect} Gmail',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
             ),
           ),
         ],
@@ -780,11 +780,11 @@ class _StatsGrid extends StatelessWidget {
     return Row(
       children: [
         _StatCell(value: '$actions', label: AppL10n.of(context).aiItems, valueColor: TaskEraColors.acc2,         colors: colors),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         _StatCell(value: '$unread',  label: AppL10n.of(context).unread, valueColor: const Color(0xFFFF8080), colors: colors),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         _StatCell(value: '$added',   label: AppL10n.of(context).added,  valueColor: TaskEraColors.q2,           colors: colors),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         _StatCell(value: '$total',   label: AppL10n.of(context).total,  valueColor: null,                    colors: colors),
       ],
     );
@@ -811,11 +811,11 @@ class _StatCell extends StatelessWidget {
         child: Column(
           children: [
             Text(value, textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Fraunces', fontSize: 15, fontWeight: FontWeight.w700,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700,
                   color: valueColor ?? colors.ink3, height: 1)),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(label, textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
           ],
         ),
       ),
@@ -883,7 +883,7 @@ class _EmailItem extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 9),
+            SizedBox(width: 9),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -891,18 +891,18 @@ class _EmailItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(email.sender, style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                      Text(email.sender, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                           fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
-                      Text(email.time, style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                      Text(email.time, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                           color: colors.ink3, height: 1)),
                     ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(email.subject, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                  SizedBox(height: 2),
+                  Text(email.subject, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                       fontWeight: FontWeight.w600, color: colors.ink, height: 1.2),
                       maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 2),
-                  Text(email.preview, style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  SizedBox(height: 2),
+                  Text(email.preview, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       color: colors.ink3, height: 1.3),
                       maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
@@ -1065,7 +1065,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
     setState(() => _added.add(index));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Added to $where',
-          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
       backgroundColor: const Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 2),
@@ -1097,46 +1097,46 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
               children: [
                 Expanded(
                   child: Text(email.sender, maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
                 ),
-                const SizedBox(width: 8),
-                Text(email.time, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                SizedBox(width: 8),
+                Text(email.time, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1)),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(email.subject, style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            SizedBox(height: 4),
+            Text(email.subject, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 fontWeight: FontWeight.w600, color: colors.ink, height: 1.3)),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             // Full body
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.32),
               child: _loadingBody
-                  ? const Padding(
+                  ? Padding(
                       padding: EdgeInsets.symmetric(vertical: 18),
                       child: Center(child: SizedBox(width: 18, height: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: TaskEraColors.acc))),
                     )
                   : SingleChildScrollView(
                       child: Text(_body!.isEmpty ? '(no preview available)' : _body!,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.5)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1.5)),
                     ),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             // On-device suggestions (keyword heuristics — no AI, no server)
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                   decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
-                  child: const Text('SUGGESTED', style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  child: Text('SUGGESTED', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                 ),
-                const SizedBox(width: 6),
-                Text('Suggested — add to TaskEra', style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                SizedBox(width: 6),
+                Text('Suggested — add to TaskEra', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     fontWeight: FontWeight.w600, color: colors.ink3)),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             for (int i = 0; i < suggestions.length; i++) ...[
               _SuggestionCard(
                 s: suggestions[i],
@@ -1144,9 +1144,9 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                 colors: colors,
                 onAdd: () => _add(suggestions[i], i),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
             ],
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             // Archive / Snooze
             Row(
               children: [
@@ -1161,12 +1161,12 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                         border: Border.all(width: 0.5, color: const Color(0x338E8E93)),
                       ),
                       alignment: Alignment.center,
-                      child: Text(AppL10n.of(context).archive, style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+                      child: Text(AppL10n.of(context).archive, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                           color: Color(0xFF8E8E93), height: 1)),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: GestureDetector(
                     onTap: widget.onSnooze,
@@ -1178,7 +1178,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                         border: Border.all(width: 0.5, color: const Color(0x40FFB900)),
                       ),
                       alignment: Alignment.center,
-                      child: Text(AppL10n.of(context).snooze, style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+                      child: Text(AppL10n.of(context).snooze, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                           color: Color(0xFFFFB900), height: 1)),
                     ),
                   ),
@@ -1220,8 +1220,8 @@ class _SuggestionCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(m.emoji, style: const TextStyle(fontSize: 15)),
-          const SizedBox(width: 8),
+          Text(m.emoji, style: TextStyle(fontSize: 15)),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1229,19 +1229,19 @@ class _SuggestionCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
                   decoration: BoxDecoration(color: m.color.withAlpha(0x26), borderRadius: BorderRadius.circular(3)),
-                  child: Text(m.label.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 8,
+                  child: Text(m.label.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
                       fontWeight: FontWeight.w700, color: m.color)),
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Text(s.title, maxLines: 2, overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1.25)),
-                const SizedBox(height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1.25)),
+                SizedBox(height: 1),
                 Text(s.detail, maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1.2)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1.2)),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           GestureDetector(
             onTap: added ? null : onAdd,
             child: Container(
@@ -1251,7 +1251,7 @@ class _SuggestionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(width: 0.5, color: m.color.withAlpha(added ? 0x33 : 0x66)),
               ),
-              child: Text(added ? '✓ Added' : '+ Add', style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              child: Text(added ? '✓ Added' : '+ Add', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   fontWeight: FontWeight.w700, color: added ? colors.ink3 : m.color)),
             ),
           ),
@@ -1292,20 +1292,20 @@ class _ActionCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 5),
             child: Container(width: 5, height: 5, decoration: BoxDecoration(color: item.dotColor, shape: BoxShape.circle)),
           ),
-          const SizedBox(width: 9),
+          SizedBox(width: 9),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                Text(item.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     fontWeight: FontWeight.w500, color: colors.ink, height: 1.2)),
-                const SizedBox(height: 1),
-                Text(item.source, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                SizedBox(height: 1),
+                Text(item.source, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: colors.ink3, height: 1)),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           if (isConverted)
             Container(
               padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
@@ -1314,7 +1314,7 @@ class _ActionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(width: 0.5, color: const Color(0x407FBA00)),
               ),
-              child: Text('✓ Added', style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              child: Text('✓ Added', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   color: colors.successFg, height: 1)),
             )
           else
@@ -1327,7 +1327,7 @@ class _ActionCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(width: 0.5, color: item.btnBorder),
                 ),
-                child: Text(item.quadLabel, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                child: Text(item.quadLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: item.btnText, height: 1)),
               ),
             ),

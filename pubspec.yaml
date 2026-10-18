@@ -91,3 +91,9 @@ flutter:
     - family: Fraunces
       fonts:
         - asset: assets/fonts/Fraunces-Variable.ttf
+    - family: Caveat Brush
+      fonts:
+        - asset: assets/fonts/CaveatBrush-Regular.ttf
+    - family: Finger Paint
+      fonts:
+        - asset: assets/fonts/FingerPaint-Regular.ttf

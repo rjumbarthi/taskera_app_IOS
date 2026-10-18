@@ -52,7 +52,7 @@ class StatCard extends StatelessWidget {
             Text(
               number,
               style: TextStyle(
-                fontFamily: 'Fraunces',
+                fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                 fontVariations: const [FontVariation('wght', 700)],
                 fontSize: 15,
                 color: numColor,
@@ -63,7 +63,7 @@ class StatCard extends StatelessWidget {
             Text(
               label.toUpperCase(),
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.3,

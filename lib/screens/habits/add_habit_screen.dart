@@ -254,7 +254,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(width: 1.5, color: TaskEraColors.acc),
                         ),
-                        child: Center(child: Text(_icon, style: const TextStyle(fontSize: 20, height: 1))),
+                        child: Center(child: Text(_icon, style: TextStyle(fontSize: 20, height: 1))),
                       ),
                     ),
                   ],
@@ -274,7 +274,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       spacing: 4, runSpacing: 4,
                       children: _icons.map((e) => GestureDetector(
                         onTap: () => setState(() { _icon = e; _showIconPicker = false; }),
-                        child: Padding(padding: const EdgeInsets.all(4), child: Text(e, style: const TextStyle(fontSize: 22, height: 1))),
+                        child: Padding(padding: const EdgeInsets.all(4), child: Text(e, style: TextStyle(fontSize: 22, height: 1))),
                       )).toList(),
                     ),
                   ),
@@ -287,7 +287,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text('SUGGESTIONS', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.4, color: colors.ink3, height: 1)),
+                      Text('SUGGESTIONS', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.4, color: colors.ink3, height: 1)),
                       const SizedBox(height: 9),
                       Wrap(
                         spacing: 7, runSpacing: 7,
@@ -309,9 +309,9 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(s.emoji, style: const TextStyle(fontSize: 13, height: 1)),
+                                    Text(s.emoji, style: TextStyle(fontSize: 13, height: 1)),
                                     const SizedBox(width: 5),
-                                    Text(s.name, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1)),
+                                    Text(s.name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1)),
                                   ],
                                 ),
                               ),
@@ -405,7 +405,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(_steps[i].title, style: TextStyle(
-                                fontFamily: 'Inter', fontSize: 13,
+                                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                 color: _steps[i].isDone ? colors.ink3 : colors.ink,
                                 decoration: _steps[i].isDone ? TextDecoration.lineThrough : null,
                                 decorationColor: colors.ink3,
@@ -463,7 +463,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                         child: Text(
                           _reminderOn ? _reminderTime.format(context) : 'Off',
                           style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 13,
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                             color: _reminderOn ? colors.ink : colors.ink3,
                           ),
                         ),
@@ -486,7 +486,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       Expanded(
                         child: Text('+ Set reminder or alarm',
                             style: TextStyle(
-                                fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                       ),
                       Icon(Icons.alarm, size: 14, color: colors.ink3),
                     ],
@@ -506,7 +506,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                     const SizedBox(height: 5),
                     Text(
                       'Habits stick when tied to a specific time + place cue.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3.withAlpha(0xB3), height: 1.4),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3.withAlpha(0xB3), height: 1.4),
                     ),
                   ],
                 ),
@@ -530,7 +530,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(AppL10n.of(context).deleteHabit,
-                      style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
                   ),
                 ),
               ],
@@ -563,7 +563,7 @@ class _SubBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(title, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                Text(title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
               ],
             ),
           ),
@@ -585,7 +585,7 @@ class _SaveBtn extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
         decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-        child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+        child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
       ),
     );
   }
@@ -605,7 +605,7 @@ class _FormRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(label.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
+          Text(label.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
           const SizedBox(height: 7),
           child,
         ],
@@ -624,10 +624,10 @@ class _InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.4),
+      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.4),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+        hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
         filled: false,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
@@ -658,7 +658,7 @@ class _Chip extends StatelessWidget {
           border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
             color: selected ? Colors.white : colors.ink2, height: 1)),
       ),
     );

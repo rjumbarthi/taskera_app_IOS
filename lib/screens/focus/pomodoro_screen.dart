@@ -242,7 +242,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   onReset: _reset,
                   onComplete: _complete,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 _QueueSection(
                   items: queue,
                   activeIndex: safeIndex,
@@ -250,11 +250,11 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   onSelect: _selectTask,
                 ),
                 // Time log embedded at the bottom of the timer screen.
-                const SizedBox(height: 22),
+                SizedBox(height: 22),
                 Text('TIME LOG',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
                         letterSpacing: 0.5, color: colors.ink3, height: 1)),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 const TimeTrackContent(),
               ],
             ),
@@ -277,11 +277,11 @@ class _TimerSubHeader extends StatelessWidget {
       child: Row(
         children: [
           AddBackButton(onTap: () => context.pop()),
-          const SizedBox(width: 2),
-          const Text(
+          SizedBox(width: 2),
+          Text(
             'Timer',
             style: TextStyle(
-              fontFamily: 'Fraunces',
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontVariations: [FontVariation('wght', 600)],
               fontSize: 19,
               letterSpacing: -0.5,
@@ -343,7 +343,7 @@ class _ActiveCard extends StatelessWidget {
                 child: Icon(Icons.access_time_outlined,
                     size: 14, color: TaskEraColors.acc2),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +351,7 @@ class _ActiveCard extends StatelessWidget {
                     Text(
                       'Now focusing',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.3,
@@ -359,11 +359,11 @@ class _ActiveCard extends StatelessWidget {
                         height: 1.3,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       activeTask.title,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: colors.ink,
@@ -371,11 +371,11 @@ class _ActiveCard extends StatelessWidget {
                       ),
                     ),
                     if (activeTask.meta.isNotEmpty) ...[
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         activeTask.meta,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 11,
                           color: colors.ink3,
                           height: 1.3,
@@ -388,14 +388,14 @@ class _ActiveCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           // Timer
           Text(
             timerLabel,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'Fraunces',
+            style: TextStyle(
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontVariations: [FontVariation('wght', 300)],
               fontSize: 58,
               color: Color(0xFFF2F2F7),
@@ -403,7 +403,7 @@ class _ActiveCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Progress bar
           ClipRRect(
@@ -419,23 +419,23 @@ class _ActiveCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           // Duration pills
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _DurationPill(label: '15m', value: 15, selected: mins, onTap: onMinsChanged),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _DurationPill(label: '25m', value: 25, selected: mins, onTap: onMinsChanged),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _DurationPill(label: '45m', value: 45, selected: mins, onTap: onMinsChanged),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _CustomDurationPill(selected: mins, onTap: onMinsChanged),
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Action buttons
           Row(
@@ -452,8 +452,8 @@ class _ActiveCard extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       running ? 'PAUSE' : 'START FOCUS',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
+                      style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -463,9 +463,9 @@ class _ActiveCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _IconCircleBtn(icon: Icons.check_rounded, color: colors.successFg, onTap: onComplete),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               _IconCircleBtn(icon: Icons.close_rounded, color: TaskEraColors.warn, onTap: onReset),
             ],
           ),
@@ -511,7 +511,7 @@ class _DurationPill extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: _active ? TaskEraColors.acc2 : colors.ink3,
@@ -561,7 +561,7 @@ class _CustomDurationPill extends StatelessWidget {
         child: Text(
           _label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: _active ? TaskEraColors.acc2 : colors.ink3,
@@ -650,11 +650,11 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           Text(
             'CUSTOM DURATION',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -662,21 +662,21 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
               height: 1,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           // Stepper + editable value
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _StepBtn(icon: Icons.remove_rounded, onTap: _dec, enabled: _value > 5),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               IntrinsicWidth(
                 child: TextField(
                   controller: _ctrl,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   onChanged: _onTextChanged,
-                  style: const TextStyle(
-                    fontFamily: 'Fraunces',
+                  style: TextStyle(
+                    fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                     fontVariations: [FontVariation('wght', 300)],
                     fontSize: 52,
                     color: Color(0xFFF2F2F7),
@@ -692,26 +692,26 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
               Text(
                 ' min',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14,
                   color: colors.ink3,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               _StepBtn(icon: Icons.add_rounded, onTap: _inc, enabled: _value < 180),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             '1 – 180 min',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               color: colors.ink3,
               height: 1,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           // Set button
           GestureDetector(
             onTap: _set,
@@ -722,10 +722,10 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 'Set Duration',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -823,7 +823,7 @@ class _QueueSection extends StatelessWidget {
             Text(
               'Queue',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: colors.ink,
@@ -833,7 +833,7 @@ class _QueueSection extends StatelessWidget {
             Text(
               '${items.length} tasks',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: colors.ink3,
@@ -841,7 +841,7 @@ class _QueueSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
 
         // Rows
         ...items.asMap().entries.map((e) {
@@ -861,11 +861,11 @@ class _QueueSection extends StatelessWidget {
           );
         }),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Text(
           'Ready for deep focus.',
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontStyle: FontStyle.italic,
             color: colors.ink3,
@@ -907,7 +907,7 @@ class _QueueRow extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             // Title + meta
             Expanded(
               child: Column(
@@ -917,7 +917,7 @@ class _QueueRow extends StatelessWidget {
                   Text(
                     task.title,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: isActive ? task.color : colors.ink,
@@ -927,7 +927,7 @@ class _QueueRow extends StatelessWidget {
                   Text(
                     task.meta,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: colors.ink3,
                       height: 1.3,
@@ -936,7 +936,7 @@ class _QueueRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             // Duration pill
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -953,7 +953,7 @@ class _QueueRow extends StatelessWidget {
               child: Text(
                 '${task.mins}m',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: isActive ? task.color : colors.ink3,

@@ -189,7 +189,7 @@ class _MenuItemTile extends StatelessWidget {
             Text(
               item.label,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
                 color: itemColor,
               ),

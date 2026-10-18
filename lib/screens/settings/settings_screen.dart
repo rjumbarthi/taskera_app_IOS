@@ -208,7 +208,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$feature — coming soon',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -244,7 +244,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
       messenger.showSnackBar(SnackBar(
         content: Text('Exported to ${file.path}',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.white)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: Colors.white)),
         backgroundColor: const Color(0xFF1C1C1E),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -252,7 +252,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (e) {
       messenger.showSnackBar(SnackBar(
         content: Text('Export failed: $e',
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.white)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: Colors.white)),
         backgroundColor: const Color(0xFFFF453A),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -294,7 +294,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ..showSnackBar(SnackBar(
         content: Text(
           '$name theme on · adjust wallpaper brightness below to suit',
-          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
         ),
         backgroundColor: const Color(0xFF1C1C1E),
         behavior: SnackBarBehavior.floating,
@@ -329,10 +329,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _sgrpNotifications(colors, settings, notifier),
         _sgrpAboutLegal(colors),
         if (isPro) _sgrpTaskEraPro(colors),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Center(
           child: Text('TaskEra · v1.0.0',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
         ),
       ],
     );
@@ -438,8 +438,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         child: Center(child: SvgPicture.string(_svgStarFill, width: 12, height: 12)),
       ),
-      titleWidget: const Text('TaskEra Pro',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
+      titleWidget: Text('TaskEra Pro',
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
               color: TaskEraColors.acc2, height: 1)),
       // "✦ PRO" badge only for actual subscribers; free users see "Upgrade".
       badge: isPro
@@ -449,8 +449,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const Text('✦ PRO',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+              child: Text('✦ PRO',
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                       color: Colors.white, height: 1)),
             )
           : Container(
@@ -459,8 +459,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(width: 0.5, color: TaskEraColors.acc2),
               ),
-              child: const Text('Upgrade',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+              child: Text('Upgrade',
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                       color: TaskEraColors.acc2, height: 1)),
             ),
       body: Padding(
@@ -474,40 +474,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ? _proActiveChildren(context, colors)
                   : [
                 Text(AppL10n.of(context).freePlan,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
                         color: colors.ink, height: 1.3)),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 for (final s in ['✓ Tasks, Habits, Calendar, Notes',
                   '✓ AI with your own OpenAI / Claude key',
                   '✓ Basic widgets'])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 3),
-                    child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4)),
+                    child: Text(s, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4)),
                   ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   children: [
-                    const Text('✦ TaskEra Pro',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+                    Text('✦ TaskEra Pro',
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
                             color: TaskEraColors.acc2, height: 1)),
                     const Spacer(),
                     Text('Monthly or annual',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w600,
                             color: colors.ink3, height: 1)),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 for (final s in ['✦ Unlimited AI features', '✦ Home screen widget',
                   '✦ Export / share (PDF, image)', '✦ Pro badge + custom themes',
                   '✦ Gmail deep sync'])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 3),
-                    child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                    child: Text(s, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                         color: colors.ink2, height: 1.4)),
                   ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 GestureDetector(
                   onTap: () => context.push(TaskEraRoutes.paywall),
                   child: Container(
@@ -518,11 +518,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(AppL10n.of(context).upgrade,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
                             color: Colors.white, height: 1)),
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 GestureDetector(
                   onTap: () => context.push(TaskEraRoutes.referral),
                   child: Container(
@@ -532,8 +532,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         border: Border.all(width: 0.5, color: colors.bdr0),
                         borderRadius: BorderRadius.circular(11)),
                     alignment: Alignment.center,
-                    child: const Text('🎁 Invite → both get 1 month free',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600,
+                    child: Text('🎁 Invite → both get 1 month free',
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600,
                             color: TaskEraColors.acc2, height: 1)),
                   ),
                 ),
@@ -550,23 +550,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   List<Widget> _proActiveChildren(BuildContext context, TaskEraColors colors) {
     Widget feature(String s) => Padding(
           padding: const EdgeInsets.only(bottom: 3),
-          child: Text(s, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.4)),
+          child: Text(s, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.4)),
         );
     return [
       Row(children: [
-        const Text('✦ TaskEra Pro — active',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+        Text('✦ TaskEra Pro — active',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
                 color: TaskEraColors.acc2, height: 1.3)),
         const Spacer(),
         Text('Thanks for your support',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w600,
                 color: colors.successFg, height: 1)),
       ]),
-      const SizedBox(height: 8),
+      SizedBox(height: 8),
       for (final s in ['✦ Unlimited AI features', '✦ Home screen widget',
         '✦ Export / share (PDF, image)', '✦ Pro badge + custom themes', '✦ Gmail deep sync'])
         feature(s),
-      const SizedBox(height: 10),
+      SizedBox(height: 10),
       GestureDetector(
         onTap: _managePlaySubscription,
         child: Container(
@@ -576,12 +576,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             borderRadius: BorderRadius.circular(11),
           ),
           alignment: Alignment.center,
-          child: const Text('Manage subscription',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700,
+          child: Text('Manage subscription',
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
                   color: Colors.white, height: 1)),
         ),
       ),
-      const SizedBox(height: 6),
+      SizedBox(height: 6),
       GestureDetector(
         onTap: _restorePurchase,
         child: Container(
@@ -591,8 +591,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               border: Border.all(width: 0.5, color: colors.bdr0),
               borderRadius: BorderRadius.circular(11)),
           alignment: Alignment.center,
-          child: const Text('Restore purchase',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600,
+          child: Text('Restore purchase',
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600,
                   color: TaskEraColors.acc2, height: 1)),
         ),
       ),
@@ -611,7 +611,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open subscription settings.')));
+            SnackBar(content: Text('Could not open subscription settings.')));
       }
     }
   }
@@ -621,19 +621,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       await ref.read(purchaseServiceProvider).restore();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Checking for past purchases…')));
+            SnackBar(content: Text('Checking for past purchases…')));
       }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Restore failed. Please try again.')));
+            SnackBar(content: Text('Restore failed. Please try again.')));
       }
     }
   }
 
   Widget _sgrpDisplay(TaskEraColors colors, TaskEraSettingsState s, TaskEraSettingsNotifier n) {
     const themes      = ['🌙 Dark', '☀️ Light', '🪟 Glass', '📱 System'];
-    const fonts       = ['System', 'Serif', 'Rounded', 'Mono'];
+    const fonts       = ['System', 'Serif', 'Rounded', 'Mono', 'Caveat Brush', 'Finger Paint'];
+    const numberFonts = ['Serif', 'Sans', 'Caveat Brush', 'Finger Paint'];
     const fontSizes   = ['Sm', 'Md', 'Lg', 'XL'];
     const lineSpacings = ['Compact', 'Normal', 'Relaxed'];
     const accents     = [Color(0xFF0A84FF), Color(0xFF7FBA00), Color(0xFFFF6B00),
@@ -674,8 +675,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(AppL10n.of(context).accentColour,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1)),
-                  const SizedBox(height: 10),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1)),
+                  SizedBox(height: 10),
                   Row(
                     children: [
                       for (int i = 0; i < accents.length; i++)
@@ -705,7 +706,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                  separatorBuilder: (_, _) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => SizedBox(width: 8),
                   itemCount: wpLabels.length,
                   itemBuilder: (context, i) {
                     final sel = s.wallpaperIndex == i;
@@ -728,13 +729,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          SizedBox(height: 5),
                           Text(wpLabels[i],
                               textAlign: TextAlign.center,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontFamily: 'Inter', fontSize: 9,
+                                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                                 fontWeight: sel ? FontWeight.w600 : FontWeight.w400,
                                 color: sel ? Colors.white : colors.ink3,
                                 height: 1,
@@ -748,8 +749,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ]),
             _SetSec(AppL10n.of(context).typography, colors),
             _SetCard(colors: colors, children: [
-              _VtRow(label: AppL10n.of(context).fontStyle, options: fonts, selected: s.font, colors: colors,
-                  onTap: n.setFont),
+              // 6 options with long names ("Caveat Brush", "Finger Paint") would
+              // overflow a single _VtRow (equal-width Expanded cells) — split
+              // into two balanced rows of 3 instead.
+              _VtRow(label: AppL10n.of(context).fontStyle, options: fonts.sublist(0, 3),
+                  selected: s.font < 3 ? s.font : -1, colors: colors, onTap: n.setFont),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(children: [
+                  for (int i = 3; i < fonts.length; i++)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => n.setFont(i),
+                        child: Container(
+                          margin: EdgeInsets.only(right: i < fonts.length - 1 ? 3 : 0, bottom: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            color: s.font == i ? TaskEraColors.accBg : colors.surf2,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(width: 0.5,
+                                color: s.font == i ? const Color(0x4D0A84FF) : colors.bdr0),
+                          ),
+                          child: Text(fonts[i], textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: s.font == i ? TaskEraColors.acc2 : colors.ink2)),
+                        ),
+                      ),
+                    ),
+                ]),
+              ),
+              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+              _VtRow(label: AppL10n.of(context).numberFontStyle, options: numberFonts, selected: s.numberFont, colors: colors,
+                  onTap: n.setNumberFont),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
               _VtRow(label: AppL10n.of(context).fontSizeLabel, options: fontSizes, selected: s.fontSize, colors: colors,
                   onTap: n.setFontSize),
@@ -920,22 +952,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        title: const Text('OpenAI API key',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+        title: Text('OpenAI API key',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                 fontWeight: FontWeight.w600, color: Colors.white)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('Enter your secret API key (sk-…). It powers all of TaskEra’s AI.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                   color: colors.labelMuted)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           TextField(
             autofocus: true,
             onChanged: (v) => key = v,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 color: Colors.white),
             decoration: InputDecoration(
               hintText: 'sk-…',
-              hintStyle: const TextStyle(color: Color(0x40FFFFFF)),
+              hintStyle: TextStyle(color: Color(0x40FFFFFF)),
               filled: true,
               fillColor: colors.bdr0,
               border: OutlineInputBorder(
@@ -951,12 +983,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text('Cancel',
-                style: TextStyle(fontFamily: 'Inter', color: colors.labelMuted)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: colors.labelMuted)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
-                style: TextStyle(fontFamily: 'Inter',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                     color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
@@ -966,7 +998,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final ok =
           await ref.read(integrationsProvider.notifier).connectOpenAi(key.trim());
       if (mounted && !ok) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Invalid API key — check and try again'),
           duration: Duration(seconds: 2),
         ));
@@ -983,21 +1015,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        title: const Text('Claude (Anthropic) API key',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+        title: Text('Claude (Anthropic) API key',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                 fontWeight: FontWeight.w600, color: Colors.white)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('Enter your secret API key (sk-ant-…). It powers all of TaskEra’s AI.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                   color: colors.labelMuted)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           TextField(
             autofocus: true,
             onChanged: (v) => key = v,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
             decoration: InputDecoration(
               hintText: 'sk-ant-…',
-              hintStyle: const TextStyle(color: Color(0x40FFFFFF)),
+              hintStyle: TextStyle(color: Color(0x40FFFFFF)),
               filled: true,
               fillColor: colors.bdr0,
               border: OutlineInputBorder(
@@ -1012,12 +1044,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text('Cancel',
-                style: TextStyle(fontFamily: 'Inter', color: colors.labelMuted)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: colors.labelMuted)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
-                style: TextStyle(fontFamily: 'Inter',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                     color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
@@ -1027,7 +1059,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final ok =
           await ref.read(integrationsProvider.notifier).connectAnthropic(key.trim());
       if (mounted && !ok) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Invalid API key — check and try again'),
           duration: Duration(seconds: 2),
         ));
@@ -1050,10 +1082,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 } else {
                   final ok = await connect();
                   if (mounted && !ok) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                           'Could not connect — credentials not configured or connection cancelled',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                               color: Colors.white)),
                       backgroundColor: Color(0xFF1C1C1E),
                       duration: Duration(seconds: 2),
@@ -1172,19 +1204,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           _IntStatusPill(colors: colors),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _IntSection(label: 'Productivity', services: _intProductivity, colors: colors,
               onTaps: productivityTaps, liveStatuses: productivityStatuses),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _IntSection(label: 'Work & Corporate', services: _intWork, colors: colors,
               onTaps: workTaps, liveStatuses: workStatuses),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _IntSection(label: 'Calendar & Email', services: _intCalEmail, colors: colors,
               onTaps: calEmailTaps, liveStatuses: calEmailStatuses),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _IntSection(label: 'AI Assistants', services: _intAi, colors: colors,
               onTaps: aiTaps, liveStatuses: aiStatuses),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _IntHowCard(colors: colors),
         ]),
       ),
@@ -1351,17 +1383,17 @@ class _Sgrp extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
             child: Row(children: [
               ico,
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: titleWidget ?? Text(title ?? '',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                         fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
               ),
-              if (badge != null) ...[badge!, const SizedBox(width: 6)],
+              if (badge != null) ...[badge!, SizedBox(width: 6)],
               AnimatedRotation(
                 turns: isOpen ? 0.25 : 0,
                 duration: const Duration(milliseconds: 200),
-                child: Text('›', style: TextStyle(fontFamily: 'Inter', fontSize: 18,
+                child: Text('›', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18,
                     color: colors.ink3, height: 1)),
               ),
             ]),
@@ -1391,7 +1423,7 @@ class _SetSec extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 6, 0, 4),
       child: Text(label.toUpperCase(),
-          style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.5, height: 1)),
     );
   }
@@ -1430,7 +1462,7 @@ class _AboutPara extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         child: Text(text,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 fontWeight: strong ? FontWeight.w700 : FontWeight.w400,
                 letterSpacing: strong ? 0.3 : 0,
                 color: strong ? colors.ink2 : colors.ink3, height: 1.6)),
@@ -1450,7 +1482,7 @@ class _SwRow extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       child: Row(children: [
         Expanded(child: Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
         _Sw(
           value: value,
           onChanged: (v) => ref.read(taskeraSettingsProvider.notifier).toggle(settingKey, v),
@@ -1480,15 +1512,15 @@ class _NotifSwRow extends ConsumerWidget {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(label,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     color: colors.ink, height: 1)),
-            const SizedBox(height: 3),
+            SizedBox(height: 3),
             Text(sub,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: colors.ink3, height: 1.3)),
           ]),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
         _Sw(
           value: value,
           onChanged: (v) {
@@ -1519,12 +1551,12 @@ class _NavRow extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
         child: Row(children: [
           Expanded(child: Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
           Text(right,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: rightColor, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: rightColor, height: 1)),
           if (right != '›') ...[
-            const SizedBox(width: 4),
-            Text('›', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink3, height: 1)),
+            SizedBox(width: 4),
+            Text('›', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3, height: 1)),
           ],
         ]),
       ),
@@ -1549,7 +1581,7 @@ class _VtRow extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 7),
           child: Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1)),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -1573,7 +1605,7 @@ class _VtRow extends StatelessWidget {
                       child: Text(options[i],
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w500,
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w500,
                             color: selected == i ? TaskEraColors.acc2 : colors.ink3,
                             height: 1,
                           )),
@@ -1617,7 +1649,7 @@ class _LangRowState extends State<_LangRow> {
               color: sel ? const Color(0x4D0A84FF) : widget.colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
-          fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500,
+          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w500,
           color: sel ? TaskEraColors.acc2 : widget.colors.ink3,
           height: 1,
         )),
@@ -1681,9 +1713,9 @@ class _DimSliderRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppL10n.of(context).brightness,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   color: colors.ink, height: 1)),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Text('☀', style: TextStyle(fontSize: 13, color: colors.ink2)),
@@ -1750,13 +1782,13 @@ class _IntStatusPill extends ConsumerWidget {
                 child: CircularProgressIndicator(
                     strokeWidth: 2, color: colors.successFg))
             : Icon(Icons.check_rounded, color: colors.successFg, size: 18),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text('$count integration${count == 1 ? '' : 's'} active',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 fontWeight: FontWeight.w600, color: colors.successFg, height: 1)),
         const Spacer(),
         Text(count == 0 ? 'None connected' : 'Syncing',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1)),
       ]),
     );
   }
@@ -1777,7 +1809,7 @@ class _IntSection extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.only(bottom: 6, left: 2),
         child: Text(label.toUpperCase(),
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 fontWeight: FontWeight.w700, letterSpacing: 0.5,
                 color: colors.ink3, height: 1)),
       ),
@@ -1848,19 +1880,19 @@ class _IntServiceRow extends StatelessWidget {
             ),
             child: Center(child: SvgPicture.string(service.iconSvg, width: 14, height: 14)),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(service.name,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                       color: isHighlighted ? TaskEraColors.acc2 : colors.ink, height: 1)),
-              const SizedBox(height: 3),
+              SizedBox(height: 3),
               Text(service.sub,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                       color: colors.ink3, height: 1.3)),
             ]),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           _IntStatusBadge(status: effectiveStatus, colors: colors),
         ]),
       ),
@@ -1883,7 +1915,7 @@ class _IntStatusBadge extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(status == _IntStatus.connected ? 'Connected' : 'Active',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                 fontWeight: FontWeight.w600, color: colors.successFg, height: 1)),
       );
     }
@@ -1894,12 +1926,12 @@ class _IntStatusBadge extends StatelessWidget {
           color: colors.surf2,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Text('Soon', style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+        child: Text('Soon', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
             fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
       );
     }
     return Text('${AppL10n.of(context).connect} ›',
-        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1));
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1));
   }
 }
 
@@ -1923,26 +1955,26 @@ class _IntHowCard extends StatelessWidget {
         border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('✦ How integrations work',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+        Text('✦ How integrations work',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                 fontWeight: FontWeight.w700, letterSpacing: 0.4,
                 color: TaskEraColors.acc2, height: 1)),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         for (int i = 0; i < steps.length; i++) ...[
-          if (i > 0) const SizedBox(height: 8),
+          if (i > 0) SizedBox(height: 8),
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               width: 16, height: 16,
               decoration: const BoxDecoration(color: TaskEraColors.acc, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text('${i + 1}',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Text(steps[i],
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                       color: colors.ink2, height: 1.5)),
             ),
           ]),

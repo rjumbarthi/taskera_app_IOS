@@ -1,7 +1,6 @@
 import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import '../theme/taskera_theme.dart';
-import '../theme/taskera_type.dart';
 
 // Primary top bar. NO BackdropFilter — wallpaper shows through directly.
 // Padding: left=16, top=max(12,safeArea), right=4, bottom=4.
@@ -35,10 +34,11 @@ class TaskEraTopBar extends StatelessWidget {
     final safeTop = MediaQuery.of(context).padding.top;
     final topPad = max(12.0, safeTop);
     final colors = TaskEraTheme.of(context).colors;
+    final type = TaskEraTheme.of(context).type;
 
     final titleStyle = isSubScreen
-        ? TaskEraType.section.copyWith(color: colors.ink)
-        : TaskEraType.topBarTitle.copyWith(color: colors.ink);
+        ? type.section.copyWith(color: colors.ink)
+        : type.topBarTitle.copyWith(color: colors.ink);
 
     // When a leading widget is present shift left padding to 4 so the 38px
     // hit-area sits flush with the edge (mirrors edit_profile_screen pattern).
@@ -69,7 +69,7 @@ class TaskEraTopBar extends StatelessWidget {
               padding: EdgeInsets.only(left: leading != null ? 42.0 : 0),
               child: Text(
                 subtitle!,
-                style: TaskEraType.topBarSubtitle.copyWith(color: colors.ink2),
+                style: type.topBarSubtitle.copyWith(color: colors.ink2),
               ),
             ),
           ],

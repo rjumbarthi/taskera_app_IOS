@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/taskera_colors.dart';
 import '../theme/taskera_motion.dart';
 import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 enum TaskEraQuadrant { q1, q2, q3, q4 }
 
@@ -131,7 +132,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                             borderRadius: TaskEraShape.sgrpIcon,
                           ),
                           alignment: Alignment.center,
-                          child: Text(widget.icon, style: const TextStyle(fontSize: 14)),
+                          child: Text(widget.icon, style: TextStyle(fontSize: 14)),
                         ),
                         const SizedBox(width: 7),
                         Expanded(
@@ -139,8 +140,8 @@ class _QuadrantCardState extends State<QuadrantCard> {
                             padding: const EdgeInsets.only(top: 4, right: 33),
                             child: Text(
                               widget.title,
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
+                              style: TextStyle(
+                                fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.2,
@@ -159,7 +160,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                         child: Text(
                           widget.meta!,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
                             color: q == TaskEraQuadrant.q4
@@ -181,7 +182,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                         child: Text(
                           widget.badgeText!,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             color: _badgeFg(q),
@@ -229,8 +230,8 @@ class _QuadrantCardState extends State<QuadrantCard> {
                       const Spacer(),
                     Text(
                       '${widget.count}',
-                      style: const TextStyle(
-                        fontFamily: 'Fraunces',
+                      style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: [FontVariation('wght', 700)],
                         fontSize: 8,
                         color: Color(0xD9000000),

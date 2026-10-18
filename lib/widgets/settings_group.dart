@@ -68,7 +68,7 @@ class _SettingsGroupState extends State<SettingsGroup> {
                       child: Text(
                         widget.title,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: colors.ink,

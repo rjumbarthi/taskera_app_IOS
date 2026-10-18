@@ -155,7 +155,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                 color: colors.bdr2, borderRadius: BorderRadius.circular(2)),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // ── Task context — visible throughout the session ──────────────────
           Container(
@@ -169,7 +169,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
               children: [
                 Container(width: 10, height: 10,
                     decoration: BoxDecoration(color: qColor, shape: BoxShape.circle)),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,12 +177,12 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                       Text(
                         task?.title ?? 'Loading…',
                         maxLines: 2, overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                             fontWeight: FontWeight.w600, color: colors.ink, height: 1.25),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text('Q$quad · Now focusing',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                               fontWeight: FontWeight.w600, color: qColor, height: 1.2)),
                     ],
                   ),
@@ -190,17 +190,17 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
               ],
             ),
           ),
-          const SizedBox(height: 22),
+          SizedBox(height: 22),
 
           // ── Timer ──────────────────────────────────────────────────────────
           Text(
             _timerLabel,
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Fraunces',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                 fontVariations: const [FontVariation('wght', 300)],
                 fontSize: 64, color: colors.ink, height: 1),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(2),
             child: Container(
@@ -212,7 +212,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
               ),
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           // ── Duration pills (default suggested by quadrant) ─────────────────
           Row(
@@ -220,11 +220,11 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
             children: [
               for (final m in {15, 25, 50, _kQuadMins[quad] ?? 25}.toList()..sort()) ...[
                 _DurPill(label: '${m}m', value: m, selected: _mins, color: qColor, onTap: _setMins),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
               ],
             ],
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           // ── Controls ───────────────────────────────────────────────────────
           if (_done)
@@ -239,7 +239,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                     onTap: _startPause,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 GestureDetector(
                   onTap: _end,
                   child: Container(
@@ -249,8 +249,8 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                       border: Border.all(width: 1, color: TaskEraColors.warn.withValues(alpha: 0.4)),
                     ),
                     alignment: Alignment.center,
-                    child: const Text('End',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                    child: Text('End',
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                             fontWeight: FontWeight.w700, color: TaskEraColors.warn)),
                   ),
                 ),
@@ -287,7 +287,7 @@ class _DurPill extends StatelessWidget {
           border: Border.all(width: 0.5, color: active ? color.withValues(alpha: 0.4) : colors.bdr),
         ),
         child: Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
                 color: active ? color : colors.ink3)),
       ),
     );
@@ -309,7 +309,7 @@ class _PrimaryBtn extends StatelessWidget {
         decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
         alignment: Alignment.center,
         child: Text(label,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 14,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                 fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: 0.2)),
       ),
     );

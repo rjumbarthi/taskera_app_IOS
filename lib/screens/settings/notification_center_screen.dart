@@ -199,7 +199,7 @@ class _NotificationCenterScreenState
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: Text(AppL10n.of(context).clearAll,
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1)),
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1)),
                   ),
                 ),
             ],
@@ -272,14 +272,14 @@ class _NotifTile extends StatelessWidget {
             width: 28, height: 28,
             decoration: BoxDecoration(color: notif.iconBg, borderRadius: BorderRadius.circular(8)),
             alignment: Alignment.center,
-            child: Text(notif.emoji, style: const TextStyle(fontSize: 13)),
+            child: Text(notif.emoji, style: TextStyle(fontSize: 13)),
           ),
           const SizedBox(width: 9),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(notif.title,
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: colors.ink,
@@ -288,12 +288,12 @@ class _NotifTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(notif.sub,
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.35)),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.35)),
               ],
               const SizedBox(height: 3),
               Text(_relTime(notif.time),
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1)),
             ]),
           ),
           GestureDetector(
@@ -304,7 +304,7 @@ class _NotifTile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text('✕',
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1))),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1))),
           ),
         ]),
       ),
@@ -325,7 +325,7 @@ class _GroupLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(2, 4, 0, 6),
       child: Text(text,
           style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 9,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -349,7 +349,7 @@ class _EmptyState extends StatelessWidget {
         const SizedBox(height: 12),
         Text(AppL10n.of(context).allCaughtUp,
             style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: colors.ink,
@@ -357,7 +357,7 @@ class _EmptyState extends StatelessWidget {
         const SizedBox(height: 4),
         Text(AppL10n.of(context).noNewNotifications,
             style: TextStyle(
-                fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
       ]),
     );
   }

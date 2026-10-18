@@ -181,14 +181,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   padding: const EdgeInsets.fromLTRB(0, 6, 0, 16),
                   children: [
                     _WeekInsightBanner(colors: colors),
-                    const SizedBox(height: 7),
+                    SizedBox(height: 7),
                     _DayCard(
                       colors: colors,
                       selectedDate: selectedDate,
                       events: dayEvents,
                       conflictCount: conflictCount,
                     ),
-                    const SizedBox(height: 11),
+                    SizedBox(height: 11),
                     RemindersSection(colors: colors),
                   ],
                 ),
@@ -209,7 +209,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
               ),
-              child: const Icon(Icons.add, color: Colors.white, size: 24),
+              child: Icon(Icons.add, color: Colors.white, size: 24),
             ),
           ),
         ),
@@ -249,18 +249,18 @@ class _MonthNav extends StatelessWidget {
       child: Row(
         children: [
           _NavCircle(svg: _chevL, colors: colors, onTap: onPrev),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           SizedBox(
             width: 90,
             child: Text(
               '${_monthNames[month]} $year',
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink, height: 1),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink, height: 1),
             ),
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           _NavCircle(svg: _chevR, colors: colors, onTap: onNext),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           GestureDetector(
             onTap: onToday,
             child: Container(
@@ -271,7 +271,7 @@ class _MonthNav extends StatelessWidget {
                 border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
               ),
               child: Text(AppL10n.of(context).today,
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1)),
             ),
           ),
           const Spacer(),
@@ -284,10 +284,10 @@ class _MonthNav extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(width: 0.5, color: colors.bdr),
               ),
-              child: Text(AppL10n.of(context).connections, style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
+              child: Text(AppL10n.of(context).connections, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
             ),
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
@@ -298,7 +298,7 @@ class _MonthNav extends StatelessWidget {
             child: Row(
               children: [
                 _ViewBtn(label: 'Month', active: monthView,  colors: colors, onTap: () => onToggle(true)),
-                const SizedBox(width: 1),
+                SizedBox(width: 1),
                 _ViewBtn(label: 'Week',  active: !monthView, colors: colors, onTap: () => onToggle(false)),
               ],
             ),
@@ -347,7 +347,7 @@ class _ViewBtn extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Text(label, style: TextStyle(
-          fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600,
+          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600,
           color: active ? Colors.white : colors.ink3, height: 1,
         )),
       ),
@@ -371,7 +371,7 @@ class _WeekdayRow extends StatelessWidget {
         children: [
           for (final d in _labels)
             Expanded(child: Text(d, textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1))),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1))),
         ],
       ),
     );
@@ -425,7 +425,7 @@ class _WeekStrip extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text('${day.day}', style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 11,
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                           fontWeight: isToday ? FontWeight.w700 : FontWeight.w400,
                           color: isToday ? Colors.white : colors.ink,
                           height: 1,
@@ -440,7 +440,7 @@ class _WeekStrip extends StatelessWidget {
                           children: [
                             for (int j = 0; j < dayDots.length; j++) ...[
                               Container(width: 3, height: 3, decoration: BoxDecoration(color: dayDots[j], shape: BoxShape.circle)),
-                              if (j < dayDots.length - 1) const SizedBox(width: 1),
+                              if (j < dayDots.length - 1) SizedBox(width: 1),
                             ],
                           ],
                         ),
@@ -525,7 +525,7 @@ class _DayCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (day < 1 || day > daysInMonth) return const SizedBox(height: 28);
+    if (day < 1 || day > daysInMonth) return SizedBox(height: 28);
 
     return GestureDetector(
       onTap: () => onTap(day),
@@ -542,7 +542,7 @@ class _DayCell extends StatelessWidget {
               ),
               child: Center(
                 child: Text('$day', style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 11,
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   fontWeight: isToday ? FontWeight.w700 : FontWeight.w400,
                   color: isToday ? Colors.white : colors.ink,
                   height: 1,
@@ -557,7 +557,7 @@ class _DayCell extends StatelessWidget {
                   children: [
                     for (int i = 0; i < dots.length.clamp(0, 3); i++) ...[
                       Container(width: 3, height: 3, decoration: BoxDecoration(color: dots[i], shape: BoxShape.circle)),
-                      if (i < dots.length - 1) const SizedBox(width: 1),
+                      if (i < dots.length - 1) SizedBox(width: 1),
                     ],
                   ],
                 ),
@@ -616,10 +616,10 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
         TextSpan(
             text:
                 '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'} this week — '),
-        TextSpan(text: c.a.title, style: const TextStyle(color: TaskEraColors.acc2)),
-        const TextSpan(text: ' clashes with '),
-        TextSpan(text: c.b.title, style: const TextStyle(color: TaskEraColors.acc2)),
-        const TextSpan(text: '. '),
+        TextSpan(text: c.a.title, style: TextStyle(color: TaskEraColors.acc2)),
+        TextSpan(text: ' clashes with '),
+        TextSpan(text: c.b.title, style: TextStyle(color: TaskEraColors.acc2)),
+        TextSpan(text: '. '),
         TextSpan(
             text: c.overlap ? 'Move one to resolve.' : 'Add a buffer between them.',
             style: TextStyle(color: colors.ink3)),
@@ -657,7 +657,7 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
         spans = [
           TextSpan(text: '${_dayLabel(bestDay)} looks busy — '),
           TextSpan(text: parts.join(' + '), style: TextStyle(color: colors.ink2)),
-          const TextSpan(text: '. Consider shifting a Q2 task to a lighter day.'),
+          TextSpan(text: '. Consider shifting a Q2 task to a lighter day.'),
         ];
       }
     }
@@ -685,19 +685,19 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
                     gradient: LinearGradient(colors: [Color(0xFF0A84FF), Color(0xFFBF5AF2)]),
                   ),
                 ),
-                const SizedBox(width: 5),
-                const Text('This week', style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+                SizedBox(width: 5),
+                Text('This week', style: TextStyle(
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
                   color: TaskEraColors.acc2, letterSpacing: 0.3, height: 1,
                 )),
               ],
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             RichText(text: TextSpan(
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.5),
               children: spans,
             )),
-            const SizedBox(height: 7),
+            SizedBox(height: 7),
             Row(
               children: [
                 if (showMove) ...[
@@ -706,17 +706,17 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
                       decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
-                      child: Text(AppL10n.of(context).moveIt, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
+                      child: Text(AppL10n.of(context).moveIt, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  SizedBox(width: 5),
                 ],
                 GestureDetector(
                   onTap: () => setState(() => _dismissed = true),
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(9, 3, 9, 3),
                     decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(6), border: Border.all(width: 0.5, color: colors.bdr)),
-                    child: Text(AppL10n.of(context).dismiss, style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
+                    child: Text(AppL10n.of(context).dismiss, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
                   ),
                 ),
               ],
@@ -798,11 +798,11 @@ class _DayCard extends ConsumerWidget {
                       children: [
                         Text(
                           _formattedDate,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
-                        const SizedBox(height: 1),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
+                        SizedBox(height: 1),
                         Text(
                           totalEvents == 0 ? 'No events' : '$totalEvents event${totalEvents == 1 ? '' : 's'}',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
                       ],
                     ),
                   ),
@@ -817,7 +817,7 @@ class _DayCard extends ConsumerWidget {
                           border: Border.all(width: 0.5, color: const Color(0x40FF453A)),
                         ),
                         child: Text('⚠ $conflictCount conflict${conflictCount == 1 ? '' : 's'}',
-                            style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFF8080), height: 1)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFF8080), height: 1)),
                       ),
                     ),
                 ],
@@ -827,7 +827,7 @@ class _DayCard extends ConsumerWidget {
             if (slots.isEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
-                child: Text(AppL10n.of(context).nothingScheduled, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1)),
+                child: Text(AppL10n.of(context).nothingScheduled, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1)),
               )
             else
               Padding(
@@ -866,16 +866,16 @@ class _SlotRow extends StatelessWidget {
             width: 32,
             child: Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Text(slot.time, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+              child: Text(slot.time, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               children: [
                 for (int i = 0; i < slot.events.length; i++) ...[
                   _EventBlock(event: slot.events[i], colors: colors),
-                  if (i < slot.events.length - 1) const SizedBox(height: 4),
+                  if (i < slot.events.length - 1) SizedBox(height: 4),
                 ],
               ],
             ),
@@ -916,20 +916,20 @@ class _EventBlock extends ConsumerWidget {
               Row(
                 children: [
                   Container(width: 3, height: 32, decoration: BoxDecoration(color: event.color, borderRadius: BorderRadius.circular(2))),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(event.title, style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink, height: 1.2)),
+                        Text(event.title, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink, height: 1.2)),
                         if (event.subtitle.isNotEmpty)
-                          Text(event.subtitle, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+                          Text(event.subtitle, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3)),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
                   Navigator.of(sheetCtx).pop();
@@ -943,10 +943,10 @@ class _EventBlock extends ConsumerWidget {
                     border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                   ),
                   alignment: Alignment.center,
-                  child: Text(AppL10n.of(ctx).editEvent, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0A84FF))),
+                  child: Text(AppL10n.of(ctx).editEvent, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0A84FF))),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               GestureDetector(
                 onTap: () {
                   Navigator.of(sheetCtx).pop();
@@ -960,7 +960,7 @@ class _EventBlock extends ConsumerWidget {
                     border: Border.all(width: 0.5, color: const Color(0x40FF453A)),
                   ),
                   alignment: Alignment.center,
-                  child: Text(AppL10n.of(ctx).deleteEvent, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFFF8080))),
+                  child: Text(AppL10n.of(ctx).deleteEvent, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFFF8080))),
                 ),
               ),
             ],
@@ -987,33 +987,33 @@ class _EventBlock extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(event.title,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
                   if (event.isOverdue) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Container(
                       padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                       decoration: BoxDecoration(color: const Color(0x1AFF453A), borderRadius: BorderRadius.circular(3)),
-                      child: const Text('Q1 · Overdue', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: Color(0xFFFF8080), height: 1)),
+                      child: Text('Q1 · Overdue', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: Color(0xFFFF8080), height: 1)),
                     ),
                   ] else if (event.subtitle.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     event.isInvite
                         ? RichText(text: TextSpan(
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1),
                             children: [
                               TextSpan(text: '${event.subtitle} · '),
-                              const TextSpan(text: 'Invite', style: TextStyle(color: TaskEraColors.q4)),
+                              TextSpan(text: 'Invite', style: TextStyle(color: TaskEraColors.q4)),
                             ],
                           ))
                         : Text(event.subtitle,
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
                   ],
                 ],
               ),
             ),
           ),
           if (event.isInvite) ...[
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -1036,7 +1036,7 @@ class _EventBlock extends ConsumerWidget {
                     }
                   },
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 _InviteBtn(
                   label: 'Decline',
                   bg: Colors.transparent, border: colors.bdr, textColor: colors.ink3,
@@ -1076,7 +1076,7 @@ class _InviteBtn extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           border: Border.all(width: 0.5, color: border),
         ),
-        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: textColor, height: 1)),
+        child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: textColor, height: 1)),
       ),
     );
   }

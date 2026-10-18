@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/database.dart' show TasksCompanion, SubtasksCompanion;
 import '../../data/providers/database_provider.dart';
 import '../../l10n/app_l10n.dart';
+import '../../settings/taskera_settings.dart';
 import '../../util/taskera_dialogs.dart';
 import '../../theme/taskera_colors.dart';
 import '../../theme/taskera_theme.dart';
@@ -226,10 +227,11 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
     }
 
     // Label detection (#tag)
+    final knownLabels = {..._allLabels, ...ref.read(taskeraSettingsProvider).customLabels};
     final tagMatches = RegExp(r'#(\w+)').allMatches(lower);
     for (final m in tagMatches) {
       final tag = m.group(1)!;
-      if (_allLabels.contains(tag)) { _labels.add(tag); parts.add('#$tag'); }
+      if (knownLabels.contains(tag)) { _labels.add(tag); parts.add('#$tag'); }
     }
 
     final newResult = parts.isEmpty ? '' : parts.join(' · ');
@@ -297,7 +299,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
                 child: Text('Time Allocated',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                         fontWeight: FontWeight.w700, color: colors.ink)),
               ),
               Divider(height: 1, thickness: 0.5, color: colors.bdr),
@@ -328,7 +330,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                           ),
                           child: Text(label,
                               style: TextStyle(
-                                fontFamily: 'Inter', fontSize: 13,
+                                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                 fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                                 color: selected ? TaskEraColors.acc2 : colors.ink2,
                               )),
@@ -348,7 +350,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                           border: Border.all(width: 0.5, color: colors.bdr),
                         ),
                         child: Text('Custom…',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                       ),
                     ),
                   ],
@@ -370,11 +372,11 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text('Clear', style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                     ),
                   ),
                 ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
             ],
           ),
         ),
@@ -389,19 +391,19 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        title: const Text('Custom duration',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+        title: Text('Custom duration',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                 fontWeight: FontWeight.w700, color: Colors.white)),
         content: TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
           autofocus: true,
-          style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: Colors.white),
           decoration: InputDecoration(
             hintText: AppL10n.of(context).minutesHint,
-            hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF8E8E93)),
+            hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Color(0xFF8E8E93)),
             suffixText: 'min',
-            suffixStyle: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF8E8E93)),
+            suffixStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Color(0xFF8E8E93)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(width: 0.5, color: Color(0x40FFFFFF)),
@@ -417,11 +419,11 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(fontFamily: 'Inter', color: Color(0xFF8E8E93))),
+            child: Text('Cancel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: Color(0xFF8E8E93))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
-            child: const Text('Set', style: TextStyle(fontFamily: 'Inter',
+            child: Text('Set', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
           ),
         ],
@@ -433,6 +435,58 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
     if (parsed != null && parsed > 0) {
       setState(() => _timeAllocCtrl.text = result);
     }
+  }
+
+  Future<void> _addCustomLabel() async {
+    final ctrl = TextEditingController();
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: Text('New label',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
+                fontWeight: FontWeight.w700, color: Colors.white)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          textCapitalization: TextCapitalization.none,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'e.g. travel',
+            hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Color(0xFF8E8E93)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(width: 0.5, color: Color(0x40FFFFFF)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(width: 0.5, color: TaskEraColors.acc),
+            ),
+            isDense: true,
+            contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          ),
+          onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: Color(0xFF8E8E93))),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
+            child: Text('Add', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
+                fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+          ),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (!mounted || result == null) return;
+    final name = result.trim().toLowerCase();
+    if (name.isEmpty) return;
+    ref.read(taskeraSettingsProvider.notifier).addCustomLabel(name);
+    setState(() => _labels.add(name));
   }
 
   Future<void> _pickTime() async {
@@ -521,6 +575,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
   Widget build(BuildContext context) {
     final colors = TaskEraTheme.of(context).colors;
     final dueText = _selectedDueDate != null ? _formatDate(_selectedDueDate!) : '';
+    final allLabels = {..._allLabels, ...ref.watch(taskeraSettingsProvider).customLabels}.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -531,13 +586,13 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: _isNew
-                    ? Text(AppL10n.of(context).addTask, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink))
+                    ? Text(AppL10n.of(context).addTask, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink))
                     : RichText(
                         text: TextSpan(
-                          style: const TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, height: 1.1),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, height: 1.1),
                           children: [
                             TextSpan(text: _quadLabel, style: TextStyle(color: _quadColor)),
                             TextSpan(text: ' · ${AppL10n.of(context).edit}', style: TextStyle(color: colors.ink)),
@@ -554,8 +609,8 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: _loading
-                      ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
+                      ? SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      : Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
                 ),
               ),
             ],
@@ -589,10 +644,10 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               child: TextField(
                                 controller: _titleCtrl,
                                 onChanged: _parseTitle,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink),
                                 decoration: InputDecoration(
                                   hintText: "e.g. 'Call dentist Friday 3pm Q2'",
-                                  hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3),
+                                  hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3),
                                   isDense: true,
                                   contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
                                   border: InputBorder.none,
@@ -613,14 +668,14 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                                 decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
-                                child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                                child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   _parseResult.isEmpty ? 'Type to detect quad, priority, date…' : '✦ $_parseResult',
                                   style: TextStyle(
-                                    fontFamily: 'Inter', fontSize: 9,
+                                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                                     color: _parseResult.isEmpty ? colors.ink3 : TaskEraColors.acc2,
                                     fontWeight: _parseResult.isEmpty ? FontWeight.w400 : FontWeight.w600,
                                   ),
@@ -633,7 +688,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // QUADRANT
                 _FormRow(
@@ -647,7 +702,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     )).toList(),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // PRIORITY
                 _FormRow(
@@ -661,7 +716,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     )).toList(),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // LABELS
                 _FormRow(
@@ -670,7 +725,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                   child: Wrap(
                     spacing: 4, runSpacing: 4,
                     children: [
-                      ..._allLabels.map((l) {
+                      ...allLabels.map((l) {
                         final on = _labels.contains(l);
                         return GestureDetector(
                           onTap: () => setState(() => on ? _labels.remove(l) : _labels.add(l)),
@@ -678,14 +733,13 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                         );
                       }),
                       GestureDetector(
-                        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Custom labels coming soon'))),
+                        onTap: _addCustomLabel,
                         child: _HfChip(label: '+ New', on: false, overrideColor: TaskEraColors.acc2),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // DUE
                 _FormRow(
@@ -707,7 +761,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               child: Text(
                                 dueText.isEmpty ? 'Tap to pick date' : dueText,
                                 style: TextStyle(
-                                  fontFamily: 'Inter', fontSize: 13,
+                                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                   color: dueText.isEmpty ? colors.ink3 : colors.ink,
                                 ),
                               ),
@@ -730,7 +784,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // REMINDER
                 _FormRow(
@@ -751,7 +805,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                               child: Text(
                                 _selectedTime != null ? _reminderCtrl.text : '+ Add reminder',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                     color: _selectedTime != null ? colors.ink : colors.ink3),
                               ),
                             ),
@@ -770,7 +824,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // REMIND ME — schedules a real reminder/alarm that fires
                 _FormRow(
@@ -792,7 +846,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                               child: Text('+ Set reminder or alarm',
                                   style: TextStyle(
-                                      fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                             ),
                           ),
                           Padding(
@@ -804,7 +858,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // TIME ALLOCATED
                 _FormRow(
@@ -828,7 +882,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                                     ? _formatTimeAlloc(int.parse(_timeAllocCtrl.text))
                                     : 'Tap to set duration',
                                 style: TextStyle(
-                                  fontFamily: 'Inter', fontSize: 13,
+                                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                   color: _timeAllocCtrl.text.isNotEmpty ? colors.ink : colors.ink3,
                                 ),
                               ),
@@ -851,7 +905,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // SUBTASKS
                 _FormRow(
@@ -878,14 +932,14 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               width: 15, height: 15,
                               decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(width: 1.2, color: colors.bdr2)),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Expanded(
                               child: TextField(
                                 controller: _subtaskCtrl,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                                 decoration: InputDecoration(
                                   hintText: AppL10n.of(context).addSubtaskPlus,
-                                  hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                                  hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                                   border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero,
                                 ),
                                 textInputAction: TextInputAction.done,
@@ -902,7 +956,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
 
                 // NOTES
                 _FormRow(
@@ -911,7 +965,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                   child: _notesField(_notesCtrl, 'Add notes…', colors),
                 ),
                 if (!_isNew) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
                       final confirmed = await taskeraConfirmDelete(context);
@@ -928,7 +982,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                         border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                       ),
                       alignment: Alignment.center,
-                      child: const Text('Delete Task', style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                      child: Text('Delete Task', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
                     ),
                   ),
                 ],
@@ -946,10 +1000,10 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
       controller: ctrl,
       minLines: 4,
       maxLines: null,
-      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+        hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
         isDense: true,
         contentPadding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
         filled: true,
@@ -990,15 +1044,15 @@ class _SubtaskEditRow extends StatelessWidget {
                 color: sub.done ? const Color(0x337FBA00) : Colors.transparent,
                 border: Border.all(width: 1.5, color: sub.done ? TaskEraColors.q2 : colors.bdr2),
               ),
-              child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
+              child: sub.done ? Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               sub.text,
               style: TextStyle(
-                fontFamily: 'Inter', fontSize: 13,
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 color: sub.done ? colors.ink3 : colors.ink,
                 decoration: sub.done ? TextDecoration.lineThrough : null,
                 decorationColor: colors.ink3,
@@ -1028,8 +1082,8 @@ class _FormRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3, height: 1)),
-        const SizedBox(height: 4),
+        Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3, height: 1)),
+        SizedBox(height: 4),
         child,
       ],
     );
@@ -1056,7 +1110,7 @@ class _HfChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(width: 0.5, color: on ? const Color(0x660A84FF) : colors.bdr),
       ),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: on ? FontWeight.w700 : FontWeight.w400, color: textColor, height: 1)),
+      child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: on ? FontWeight.w700 : FontWeight.w400, color: textColor, height: 1)),
     );
   }
 }

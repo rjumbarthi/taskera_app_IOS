@@ -131,8 +131,8 @@ class _SubHeader extends StatelessWidget {
           const SizedBox(width: 2),
           Text(
             _title,
-            style: const TextStyle(
-              fontFamily: 'Fraunces',
+            style: TextStyle(
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontVariations: [FontVariation('wght', 600)],
               fontSize: 19,
               letterSpacing: -0.5,
@@ -207,7 +207,7 @@ class _Pill extends StatelessWidget {
         child: Text(
           '$label · $count',
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 11,
             fontWeight: FontWeight.w600,
             color: _active ? TaskEraColors.acc2 : colors.ink3,
@@ -296,7 +296,7 @@ class _TodayList extends StatelessWidget {
       return Center(
         child: Text(
           'Nothing planned',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
         ),
       );
     }
@@ -329,7 +329,7 @@ class _DayHeader extends StatelessWidget {
       child: Text(
         label.toUpperCase(),
         style: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 10,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.7,
@@ -358,12 +358,12 @@ class _HabitRow extends StatelessWidget {
             width: 54,
             child: Text(
               _fmtMinutes(habit.scheduledTime),
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4),
             ),
           ),
           const SizedBox(width: 8),
           // Type indicator (emoji)
-          SizedBox(width: 22, child: Center(child: Text(habit.emoji, style: const TextStyle(fontSize: 18)))),
+          SizedBox(width: 22, child: Center(child: Text(habit.emoji, style: TextStyle(fontSize: 18)))),
           const SizedBox(width: 10),
           // Details
           Expanded(
@@ -374,7 +374,7 @@ class _HabitRow extends StatelessWidget {
                 Text(
                   habit.name,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: colors.ink,
@@ -385,7 +385,7 @@ class _HabitRow extends StatelessWidget {
                 Text(
                   habit.frequencyLabel,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11,
                     color: colors.ink3,
                     height: 1.3,
@@ -399,8 +399,8 @@ class _HabitRow extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               habit.streakLabel,
-              style: const TextStyle(
-                fontFamily: 'Inter',
+              style: TextStyle(
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFFFF9500),
@@ -430,7 +430,7 @@ class _InviteRow extends StatelessWidget {
             width: 54,
             child: Text(
               event.timeSlot,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4),
             ),
           ),
           const SizedBox(width: 8),
@@ -457,7 +457,7 @@ class _InviteRow extends StatelessWidget {
                 Text(
                   event.title,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: colors.ink,
@@ -468,7 +468,7 @@ class _InviteRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     event.subtitle,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3),
                   ),
                 ],
               ],
@@ -485,7 +485,7 @@ class _InviteRow extends StatelessWidget {
             child: Text(
               'Invite',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
                 color: accent,
@@ -512,7 +512,7 @@ class _TaskList extends StatelessWidget {
       return Center(
         child: Text(
           'No tasks',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
         ),
       );
     }
@@ -581,7 +581,7 @@ class _TaskRow extends ConsumerWidget {
               child: Text(
                 _timeDisplay,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   color: colors.ink3,
                   height: 1.4,
@@ -609,7 +609,7 @@ class _TaskRow extends ConsumerWidget {
                   Text(
                     task.title,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: task.isDone ? colors.ink3 : colors.ink,
@@ -622,7 +622,7 @@ class _TaskRow extends ConsumerWidget {
                   Text(
                     _subtitle,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: task.isOverdue ? TaskEraColors.warn : colors.ink3,
                       height: 1.3,
@@ -643,7 +643,7 @@ class _TaskRow extends ConsumerWidget {
                     ..showSnackBar(SnackBar(
                       content: Text(
                         '✓  ${task.title}',
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
                         overflow: TextOverflow.ellipsis,
                       ),
                       backgroundColor: const Color(0xFF1C1C1E),

@@ -28,7 +28,7 @@ class GoalDetailScreen extends ConsumerWidget {
 
     return goalAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error:   (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
+      error:   (e, _) => Center(child: Text('Error: $e', style: TextStyle(color: Colors.white))),
       data: (goal) {
         if (goal == null) {
           return Center(child: Text('Goal not found', style: TextStyle(color: colors.ink3)));
@@ -69,8 +69,8 @@ class _Body extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
-                    style: const TextStyle(
-                      fontFamily: 'Fraunces',
+                    style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                       fontVariations: [FontVariation('wght', 600)],
                       fontSize: 19,
                       letterSpacing: -0.5,
@@ -98,7 +98,7 @@ class _Body extends StatelessWidget {
                     children: [
                       Icon(Icons.edit_rounded, size: 13, color: colors.ink2),
                       const SizedBox(width: 5),
-                      Text(AppL10n.of(context).edit, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink2)),
+                      Text(AppL10n.of(context).edit, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink2)),
                     ],
                   ),
                 ),
@@ -133,7 +133,7 @@ class _Body extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
-                            child: Text(goal.emoji, style: const TextStyle(fontSize: 20)),
+                            child: Text(goal.emoji, style: TextStyle(fontSize: 20)),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
@@ -142,8 +142,8 @@ class _Body extends StatelessWidget {
                               children: [
                                 Text(
                                   goal.title,
-                                  style: const TextStyle(
-                                    fontFamily: 'Fraunces',
+                                  style: TextStyle(
+                                    fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                                     fontVariations: [FontVariation('wght', 700)],
                                     fontSize: 16,
                                     color: Color(0xFFF2F2F7),
@@ -153,7 +153,7 @@ class _Body extends StatelessWidget {
                                 const SizedBox(height: 2),
                                 Text(
                                   goal.subtitle,
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.3),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.3),
                                 ),
                               ],
                             ),
@@ -164,10 +164,10 @@ class _Body extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppL10n.of(context).overallProgress, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                          Text(AppL10n.of(context).overallProgress, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                           Text(
                             '${(goal.progressPct * 100).round()}%',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.w700, color: accentColor),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, fontWeight: FontWeight.w700, color: accentColor),
                           ),
                         ],
                       ),
@@ -195,7 +195,7 @@ class _Body extends StatelessWidget {
                   colors: colors,
                   child: Text(
                     goal.subtitle.isNotEmpty ? goal.subtitle : 'No description added yet.',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2, height: 1.5),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2, height: 1.5),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -251,7 +251,7 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+          Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
           const SizedBox(height: 6),
           child,
         ],
@@ -280,11 +280,11 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         title: Text(AppL10n.of(context).addMilestone,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600, color: widget.colors.ink)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: widget.colors.ink)),
         content: TextField(
           controller: ctrl,
           autofocus: true,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: widget.colors.ink),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: widget.colors.ink),
           decoration: InputDecoration(
             hintText: AppL10n.of(context).milestoneTitle,
             hintStyle: TextStyle(color: widget.colors.ink3),
@@ -295,11 +295,11 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppL10n.of(context).cancel, style: TextStyle(fontFamily: 'Inter', color: widget.colors.ink3)),
+            child: Text(AppL10n.of(context).cancel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: widget.colors.ink3)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, ctrl.text.trim()),
-            child: Text(AppL10n.of(context).add, style: const TextStyle(fontFamily: 'Inter', color: TaskEraColors.acc2, fontWeight: FontWeight.w700)),
+            child: Text(AppL10n.of(context).add, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: TaskEraColors.acc2, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -346,7 +346,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(child: Text(e.value,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: widget.colors.ink, height: 1.3))),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: widget.colors.ink, height: 1.3))),
                 GestureDetector(
                   onTap: () => _removeMilestone(e.key),
                   child: Icon(Icons.close_rounded, size: 14, color: widget.colors.ink3),
@@ -359,7 +359,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
             GestureDetector(
               onTap: _addMilestone,
               child: Text('+ ${AppL10n.of(context).addMilestone}',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: TaskEraColors.acc2)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: TaskEraColors.acc2)),
             ),
         ],
       ),
@@ -411,11 +411,11 @@ class _LinkedTasksCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppL10n.of(context).linkedTasks.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+              Text(AppL10n.of(context).linkedTasks.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                   fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
               GestureDetector(
                 onTap: () => _showLinkPicker(context, ref),
-                child: Text('+ ${AppL10n.of(context).linkTask}', style: const TextStyle(fontFamily: 'Inter',
+                child: Text('+ ${AppL10n.of(context).linkTask}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11, color: TaskEraColors.acc2)),
               ),
             ],
@@ -423,7 +423,7 @@ class _LinkedTasksCard extends ConsumerWidget {
           if (linkedTasks.isEmpty) ...[
             const SizedBox(height: 8),
             Text(AppL10n.of(context).noLinkedTasksYet,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.5)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.5)),
           ] else ...[
             const SizedBox(height: 8),
             for (final task in linkedTasks)
@@ -447,14 +447,14 @@ class _LinkedTasksCard extends ConsumerWidget {
                     Expanded(
                       child: Text(task.title,
                           style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 13,
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                             color: task.isDone ? colors.ink3 : colors.ink,
                             decoration: task.isDone ? TextDecoration.lineThrough : null,
                             decorationColor: colors.ink3, height: 1.3,
                           )),
                     ),
                     Text('Q${task.quadrant}',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
                     const SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => ref.read(appDatabaseProvider).goalsDao.unlinkTask(goalId, task.id),
@@ -515,11 +515,11 @@ class _SupportingHabitsCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppL10n.of(context).supportingHabits.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+              Text(AppL10n.of(context).supportingHabits.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                   fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
               GestureDetector(
                 onTap: () => _showHabitPicker(context, ref),
-                child: Text('+ ${AppL10n.of(context).linkHabit}', style: const TextStyle(fontFamily: 'Inter',
+                child: Text('+ ${AppL10n.of(context).linkHabit}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11, color: TaskEraColors.acc2)),
               ),
             ],
@@ -527,7 +527,7 @@ class _SupportingHabitsCard extends ConsumerWidget {
           if (linkedHabits.isEmpty) ...[
             const SizedBox(height: 8),
             Text(AppL10n.of(context).noLinkedHabitsYet,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.5)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.5)),
           ] else ...[
             const SizedBox(height: 8),
             for (final habit in linkedHabits)
@@ -535,12 +535,12 @@ class _SupportingHabitsCard extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Row(
                   children: [
-                    Text(habit.emoji, style: const TextStyle(fontSize: 14)),
+                    Text(habit.emoji, style: TextStyle(fontSize: 14)),
                     const SizedBox(width: 8),
                     Expanded(child: Text(habit.name,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.3))),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.3))),
                     Text(habit.frequencyLabel,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
                     const SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => ref.read(appDatabaseProvider).goalsDao.unlinkHabit(goalId, habit.id),

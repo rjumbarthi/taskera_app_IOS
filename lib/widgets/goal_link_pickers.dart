@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/database.dart' show Task, Habit;
 import '../theme/taskera_colors.dart';
 import '../l10n/app_l10n.dart';
+import '../theme/taskera_theme.dart';
 
 /// Opens a bottom-sheet to pick which [tasks] are linked.
 /// Calls [onSave] with the final selected task-id set when the user taps Save.
@@ -85,7 +86,7 @@ class _SheetScaffold extends StatelessWidget {
             decoration: BoxDecoration(
                 color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2)),
           ),
-          Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+          Text(title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
               fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
           const SizedBox(height: 12),
           ConstrainedBox(constraints: const BoxConstraints(maxHeight: 320), child: body),
@@ -97,7 +98,7 @@ class _SheetScaffold extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 13),
               decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(11)),
               alignment: Alignment.center,
-              child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter',
+              child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white)),
             ),
           ),
@@ -155,7 +156,7 @@ class _TaskPickerSheetState extends State<_TaskPickerSheet> {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(AppL10n.of(context).noActiveTasksFound,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
             )
           : ListView(
               shrinkWrap: true,
@@ -171,9 +172,9 @@ class _TaskPickerSheetState extends State<_TaskPickerSheet> {
                       _checkbox(on),
                       const SizedBox(width: 10),
                       Expanded(child: Text(t.title,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
                       Text('Q${t.quadrant}',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
                     ]),
                   ),
                 );
@@ -218,7 +219,7 @@ class _HabitPickerSheetState extends State<_HabitPickerSheet> {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(AppL10n.of(context).noHabitsFound,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
             )
           : ListView(
               shrinkWrap: true,
@@ -233,12 +234,12 @@ class _HabitPickerSheetState extends State<_HabitPickerSheet> {
                     child: Row(children: [
                       _checkbox(on),
                       const SizedBox(width: 10),
-                      Text(h.emoji, style: const TextStyle(fontSize: 14)),
+                      Text(h.emoji, style: TextStyle(fontSize: 14)),
                       const SizedBox(width: 8),
                       Expanded(child: Text(h.name,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
                       Text(h.frequencyLabel,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
                     ]),
                   ),
                 );

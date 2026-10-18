@@ -33,7 +33,7 @@ class TaskEraFilterChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 9,
             fontWeight: FontWeight.w600,
             color: active ? TaskEraColors.acc2 : colors.ink3,

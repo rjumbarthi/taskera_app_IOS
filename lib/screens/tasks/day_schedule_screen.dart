@@ -55,24 +55,24 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Auto-schedule', style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('AI finds best slots for your tasks', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text('Auto-schedule', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text('AI finds best slots for your tasks', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
               GestureDetector(
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Auto-scheduling coming soon'))),
+                    SnackBar(content: Text('Auto-scheduling coming soon'))),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: const Text('Schedule all', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
+                  child: Text('Schedule all', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
                 ),
               ),
             ],
@@ -91,24 +91,24 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
                   hint: 'When should I tackle these today?',
                   margin: EdgeInsets.zero,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // NEEDS SCHEDULING
                 Row(
                   children: [
-                    Text('NEEDS SCHEDULING', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-                    const SizedBox(width: 6),
-                    Text('· ${_suggestions.length} TASKS', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                    Text('NEEDS SCHEDULING', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                    SizedBox(width: 6),
+                    Text('· ${_suggestions.length} TASKS', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 if (_suggestions.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
                       'No tasks need scheduling right now.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                     ),
                   )
                 else
@@ -119,25 +119,25 @@ class _DayScheduleScreenState extends ConsumerState<DayScheduleScreen> {
                       onConfirm: () => setState(() => _confirmed.add(i)),
                       colors: colors,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                   ],
 
                 // ALREADY SCHEDULED
-                const SizedBox(height: 8),
-                Text('ALREADY SCHEDULED · TODAY', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-                const SizedBox(height: 6),
+                SizedBox(height: 8),
+                Text('ALREADY SCHEDULED · TODAY', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                SizedBox(height: 6),
                 if (_scheduled.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
                       'Nothing scheduled for today yet.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                     ),
                   )
                 else
                   for (final s in _scheduled) ...[
                     _ScheduledRow(s: s, colors: colors),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                   ],
               ],
             ),
@@ -169,28 +169,28 @@ class _SuggestionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(suggestion.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: suggestion.quadColor)),
-          const SizedBox(height: 2),
-          Text(suggestion.meta, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-          const SizedBox(height: 8),
+          Text(suggestion.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: suggestion.quadColor)),
+          SizedBox(height: 2),
+          Text(suggestion.meta, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+          SizedBox(height: 8),
           // AI slot suggestion
           Row(
             children: [
-              const Text('✦ AI · ', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2)),
+              Text('✦ AI · ', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2)),
               Expanded(
-                child: Text(suggestion.slot, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
+                child: Text(suggestion.slot, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
               ),
               if (!confirmed)
                 Container(
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                   decoration: BoxDecoration(color: const Color(0x1F7FBA00), borderRadius: BorderRadius.circular(4)),
-                  child: Text('Best', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: colors.successFg)),
+                  child: Text('Best', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.successFg)),
                 ),
             ],
           ),
-          const SizedBox(height: 2),
-          Text(suggestion.slotDetail, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-          const SizedBox(height: 10),
+          SizedBox(height: 2),
+          Text(suggestion.slotDetail, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+          SizedBox(height: 10),
           // Buttons
           Row(
             children: [
@@ -209,21 +209,21 @@ class _SuggestionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (confirmed) Icon(Icons.check, size: 12, color: colors.successFg),
-                        if (confirmed) const SizedBox(width: 4),
+                        if (confirmed) SizedBox(width: 4),
                         Text(
                           confirmed ? 'Confirmed' : '✓ Confirm',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: confirmed ? colors.successFg : TaskEraColors.acc2),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: confirmed ? colors.successFg : TaskEraColors.acc2),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: GestureDetector(
                   onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Alternative slots coming soon'))),
+                      SnackBar(content: Text('Alternative slots coming soon'))),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
@@ -232,7 +232,7 @@ class _SuggestionCard extends StatelessWidget {
                       border: Border.all(width: 0.5, color: colors.bdr),
                     ),
                     alignment: Alignment.center,
-                    child: Text('Other slots', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                    child: Text('Other slots', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                   ),
                 ),
               ),
@@ -261,9 +261,9 @@ class _ScheduledRow extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.calendar_today_outlined, size: 12, color: colors.ink3),
-          const SizedBox(width: 8),
-          Expanded(child: Text(s.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink))),
-          Text(s.time, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+          SizedBox(width: 8),
+          Expanded(child: Text(s.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
+          Text(s.time, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
         ],
       ),
     );

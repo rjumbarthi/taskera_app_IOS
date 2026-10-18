@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/providers/auth_provider.dart';
+import '../theme/taskera_theme.dart';
 
 // Shared avatar colour palette — mirrors the picker in edit_profile_screen.dart.
 const kTaskEraAvatarColors = <Color>[
@@ -23,6 +24,7 @@ Widget buildTaskEraAvatarFace({
   required int? logoIdx,
   required String initials,
   required double size,
+  required String fontFamily,
 }) {
   final bgColor = kTaskEraAvatarColors[colorIdx.clamp(0, kTaskEraAvatarColors.length - 1)];
   // dart:io File is unavailable on web (image upload is gated off there too),
@@ -44,7 +46,7 @@ Widget buildTaskEraAvatarFace({
       width: size, height: size,
       decoration: const BoxDecoration(shape: BoxShape.circle),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset('assets/logo/taskera_logo.png',
+      child: Image.asset('assets/logo/taskera_icon_glass.png',
           width: size, height: size, fit: BoxFit.cover),
     );
   }
@@ -61,7 +63,7 @@ Widget buildTaskEraAvatarFace({
     }
   } else {
     inner = Text(initials.isEmpty ? '?' : initials,
-        style: TextStyle(fontFamily: 'Inter', fontSize: size * 0.38,
+        style: TextStyle(fontFamily: fontFamily, fontSize: size * 0.38,
             fontWeight: FontWeight.w700, color: Colors.white, height: 1));
   }
 
@@ -100,6 +102,7 @@ class TaskEraAvatar extends ConsumerWidget {
       logoIdx:   logoIdx,
       initials:  _initials(name),
       size:      size,
+      fontFamily: TaskEraTheme.of(context).fontFamily,
     );
   }
 }

@@ -55,36 +55,36 @@ class AnalyticsScreen extends ConsumerWidget {
           Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppL10n.of(context).taskAnalytics, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text(AppL10n.of(context).last7Days, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(AppL10n.of(context).taskAnalytics, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text(AppL10n.of(context).last7Days, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Stat cells
           Row(
             children: [
               _StatCell(value: '$completedCount', label: 'Completed',    colors: colors),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _StatCell(value: '$onTimePct%',     label: 'On-time rate', colors: colors),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _StatCell(value: _fmtTime(timeLogged), label: 'Time logged', colors: colors),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Daily completions chart
           _SectionLabel(label: 'DAILY COMPLETIONS', colors: colors),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             decoration: BoxDecoration(
@@ -105,21 +105,21 @@ class AnalyticsScreen extends ConsumerWidget {
                     size: Size.infinite,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(
-                    (d) => SizedBox(width: 28, child: Center(child: Text(d, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)))),
+                    (d) => SizedBox(width: 28, child: Center(child: Text(d, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)))),
                   ).toList(),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // By quadrant
           _SectionLabel(label: 'BY QUADRANT', colors: colors),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             decoration: BoxDecoration(
@@ -130,20 +130,20 @@ class AnalyticsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 _QuadBar(label: 'Q1 · Do Now',    value: quadFrac[0], count: qCounts[0], color: TaskEraColors.q1, colors: colors),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _QuadBar(label: 'Q2 · Schedule',  value: quadFrac[1], count: qCounts[1], color: TaskEraColors.q2, colors: colors),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _QuadBar(label: 'Q3 · Delegate',  value: quadFrac[2], count: qCounts[2], color: TaskEraColors.q3, colors: colors),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _QuadBar(label: 'Q4 · Eliminate', value: quadFrac[3], count: qCounts[3], color: TaskEraColors.q4, colors: colors),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // On-time vs Overdue
           _SectionLabel(label: 'ON-TIME VS OVERDUE', colors: colors),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
             decoration: BoxDecoration(
@@ -160,16 +160,17 @@ class AnalyticsScreen extends ConsumerWidget {
                       fraction: onTimeFrac,
                       fgColor: colors.successFg,
                       bgColor: const Color(0xFFFF6B6B),
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                     ),
                   ),
                 ),
-                const SizedBox(width: 20),
+                SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _LegendRow(color: const Color(0xFF9FCD44), label: 'On-time', value: '$onTimePct%', colors: colors),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       _LegendRow(color: const Color(0xFFFF6B6B), label: 'Overdue', value: '${100 - onTimePct}%', colors: colors),
                     ],
                   ),
@@ -177,7 +178,7 @@ class AnalyticsScreen extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // AI Insight
           Container(
@@ -190,11 +191,11 @@ class AnalyticsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('TASKERA AI · INSIGHT', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
-                const SizedBox(height: 5),
+                Text('TASKERA AI · INSIGHT', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
+                SizedBox(height: 5),
                 Text(
                   insight,
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1.5),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1.5),
                 ),
               ],
             ),
@@ -263,8 +264,8 @@ class _StatCell extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 22, fontWeight: FontWeight.w700, color: colors.ink, height: 1.1)),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 22, fontWeight: FontWeight.w700, color: colors.ink, height: 1.1)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
           ],
         ),
       ),
@@ -279,7 +280,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3));
+    return Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3));
   }
 }
 
@@ -297,9 +298,9 @@ class _QuadBar extends StatelessWidget {
       children: [
         SizedBox(
           width: 90,
-          child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2), overflow: TextOverflow.ellipsis),
+          child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2), overflow: TextOverflow.ellipsis),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(2),
@@ -314,8 +315,8 @@ class _QuadBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 8),
-        Text('$count done', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+        SizedBox(width: 8),
+        Text('$count done', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
       ],
     );
   }
@@ -332,9 +333,9 @@ class _LegendRow extends StatelessWidget {
     return Row(
       children: [
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
-        const SizedBox(width: 8),
-        Expanded(child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink))),
-        Text(value, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: color)),
+        SizedBox(width: 8),
+        Expanded(child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
+        Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: color)),
       ],
     );
   }
@@ -370,7 +371,8 @@ class _BarChartPainter extends CustomPainter {
 class _DonutPainter extends CustomPainter {
   final double fraction;
   final Color fgColor, bgColor;
-  const _DonutPainter({required this.fraction, required this.fgColor, required this.bgColor});
+  final String fontFamily;
+  const _DonutPainter({required this.fraction, required this.fgColor, required this.bgColor, required this.fontFamily});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -400,7 +402,7 @@ class _DonutPainter extends CustomPainter {
     final tp = TextPainter(
       text: TextSpan(
         text: '${(fraction * 100).round()}%',
-        style: const TextStyle(fontFamily: 'Fraunces', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+        style: TextStyle(fontFamily: fontFamily, fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
       ),
       textDirection: TextDirection.ltr,
     )..layout();

@@ -8,6 +8,7 @@ import '../../settings/app_launch_prefs.dart';
 import '../../settings/taskera_settings.dart';
 import '../../settings/prefs_provider.dart';
 import '../../theme/taskera_colors.dart';
+import '../../theme/taskera_theme.dart';
 
 // Screen: p-quote — Quote Splash
 //
@@ -101,7 +102,7 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                 decoration: const BoxDecoration(shape: BoxShape.circle),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
-                  'assets/logo/taskera_logo.png',
+                  'assets/logo/taskera_icon_glass.png',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -111,41 +112,41 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                 'TaskEra',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Fraunces',
+                  fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                   fontVariations: const [FontVariation('wght', 500)],
                   fontSize: 19,
                   color: const Color(0xE0FFFFFF), // rgba(255,255,255,.88)
                   height: 1,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
 
               // ── "FOCUS & TASK PLANNER" ─────────────────────────────────
-              const Text(
+              Text(
                 'FOCUS & TASK PLANNER',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   color: Color(0x33FFFFFF), // rgba(255,255,255,.20)
                   letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // ── "ON PRIORITIES" ────────────────────────────────────────
-              const Text(
+              Text(
                 'ON PRIORITIES',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   color: Color(0x2EFFFFFF), // rgba(255,255,255,.18)
                   letterSpacing: 0.7,
                 ),
               ),
-              const SizedBox(height: 11),
+              SizedBox(height: 11),
 
               // ── Accent underline ───────────────────────────────────────
               Container(
@@ -156,15 +157,15 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
-              const SizedBox(height: 14),
+              SizedBox(height: 14),
 
               // ── Quote main ─────────────────────────────────────────────
               // font-variation-settings:"opsz" 72,"SOFT" 50 from CSS
-              const Text(
+              Text(
                 '"Didn\'t plan this week? Q1 will plan it for you."',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Fraunces',
+                  fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                   fontVariations: [
                     FontVariation('wght', 500),
                     FontVariation('opsz', 72),
@@ -176,22 +177,22 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                   letterSpacing: -0.3,
                 ),
               ),
-              const SizedBox(height: 9),
+              SizedBox(height: 9),
 
               // ── Quote subtitle ─────────────────────────────────────────
-              const Text(
+              Text(
                 'Neglecting Q2 creates urgency everywhere.\n'
                 'The calendar fills with fire.\n'
                 'And the important work never gets done.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   color: Color(0x5CFFFFFF), // rgba(255,255,255,.36)
                   height: 1.6,
                 ),
               ),
-              const SizedBox(height: 18),
+              SizedBox(height: 18),
 
               // ── Progress bar ───────────────────────────────────────────
               // 170×2 px, track rgba(255,255,255,.10), fill accent, animates
@@ -218,14 +219,14 @@ class _QuoteSplashScreenState extends ConsumerState<QuoteSplashScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
 
               // ── "Opening app…" ─────────────────────────────────────────
-              const Text(
+              Text(
                 'Opening app…',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   color: Color(0x1FFFFFFF), // rgba(255,255,255,.12)
                   letterSpacing: 0.3,

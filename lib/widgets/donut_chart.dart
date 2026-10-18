@@ -46,7 +46,7 @@ class DonutChart extends StatelessWidget {
               Text(
                 centerText,
                 style: TextStyle(
-                  fontFamily: 'Fraunces',
+                  fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                   fontVariations: const [FontVariation('wght', 700)],
                   fontSize: 19,
                   color: colors.ink,
@@ -57,7 +57,7 @@ class DonutChart extends StatelessWidget {
                 Text(
                   centerLabel!,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 9,
                     color: colors.ink3,
                   ),

@@ -32,7 +32,7 @@ class _SvgLogo    extends _Logo { final String path; const _SvgLogo(this.path); 
 class _EmojiLogo  extends _Logo { final String emoji; const _EmojiLogo(this.emoji); }
 
 const _kLogos = <_Logo>[
-  _AssetLogo('assets/logo/taskera_logo.png'),
+  _AssetLogo('assets/logo/taskera_icon_glass.png'),
   _SvgLogo('assets/icons/focus_nav.svg'),
   _EmojiLogo('🎯'),
   _EmojiLogo('🔥'),
@@ -117,7 +117,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                       ),
                       child: Text(AppL10n.of(context).save,
-                          style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                               fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
                     ),
                   ),
@@ -184,7 +184,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         child: Text(
                           AppL10n.of(context).signOut,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: TaskEraColors.warn,
@@ -229,8 +229,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         alignment: Alignment.center,
                         child: Text(
                           'Delete account',
-                          style: const TextStyle(
-                            fontFamily: 'Inter',
+                          style: TextStyle(
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: Color(0xFFFF453A),
@@ -245,7 +245,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: Text(
                         'Permanently erases your account and data.',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 11,
                           color: colors.ink3,
                           height: 1.4,
@@ -299,7 +299,7 @@ class _AvatarHero extends StatelessWidget {
                 blurRadius: 16, offset: const Offset(0, 4))]),
         alignment: Alignment.center,
         child: Text(initials,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 26,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 26,
                 fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
       );
     }
@@ -430,7 +430,7 @@ class _TabChip extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                 color: selected ? TaskEraColors.acc2 : TaskEraTheme.of(context).colors.ink3,
                 height: 1)),
@@ -536,7 +536,7 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
             fontWeight: FontWeight.w700, letterSpacing: 0.5,
             color: colors.ink3, height: 1));
   }
@@ -562,11 +562,11 @@ class _GlassField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         textInputAction: TextInputAction.done,
-        style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
             color: colors.ink, height: 1.4),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 14,
+          hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
               color: colors.ink3, height: 1.4),
           contentPadding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
           border: InputBorder.none,
@@ -596,7 +596,7 @@ class _ReadonlyField extends StatelessWidget {
       child: Row(children: [
         Expanded(
           child: Text(value,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                   color: colors.ink3, height: 1.4)),
         ),
         Container(
@@ -607,7 +607,7 @@ class _ReadonlyField extends StatelessWidget {
             border: Border.all(width: 0.5, color: colors.bdr0),
           ),
           child: Text('locked',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   color: colors.ink3, height: 1)),
         ),
       ]),

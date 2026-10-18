@@ -169,9 +169,9 @@ class NotesScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Databases',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 14.5, fontWeight: FontWeight.w600, color: colors.ink)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14.5, fontWeight: FontWeight.w600, color: colors.ink)),
                         Text('Tables, boards & lists — Notion-style',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                       ],
                     ),
                   ),
@@ -242,7 +242,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       label.toUpperCase(),
       style: TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: TaskEraTheme.of(context).fontFamily,
         fontSize: 11,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.5,
@@ -303,7 +303,7 @@ class _NoteCard extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     note.title,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -312,18 +312,18 @@ class _NoteCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                     decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
-                    child: Text(note.aiLabel!, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2, height: 1)),
+                    child: Text(note.aiLabel!, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2, height: 1)),
                   ),
                 ],
                 const SizedBox(width: 6),
-                Text(note.time, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1)),
+                Text(note.time, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1)),
               ],
             ),
             const SizedBox(height: 5),
             // Preview body (2-line clamp)
             Text(
               note.preview,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.5),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.5),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -373,7 +373,7 @@ class _NoteMenuSheet extends StatelessWidget {
           Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
           Text(note.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
           const SizedBox(height: 14),
           _MenuItem(icon: Icons.edit_rounded, label: 'Edit note', colors: colors, onTap: onEdit),
           _MenuItem(
@@ -425,7 +425,7 @@ class _MenuItem extends StatelessWidget {
           children: [
             Icon(icon, size: 18, color: color),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: color, height: 1)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: color, height: 1)),
           ],
         ),
       ),
@@ -442,7 +442,7 @@ class _TagChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
       decoration: BoxDecoration(color: tag.bg, borderRadius: BorderRadius.circular(4)),
-      child: Text(tag.label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: tag.fg, height: 1)),
+      child: Text(tag.label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: tag.fg, height: 1)),
     );
   }
 }

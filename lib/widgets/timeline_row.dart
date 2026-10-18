@@ -24,7 +24,7 @@ class TimelineRow extends StatelessWidget {
           child: Text(
             time,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               color: colors.ink2,
               height: 1.4,

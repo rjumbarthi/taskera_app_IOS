@@ -82,11 +82,11 @@ class _GoogleAccessSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(info.title,
-                  style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 21, color: colors.ink)),
-              const SizedBox(height: 4),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: const [FontVariation('wght', 600)], fontSize: 21, color: colors.ink)),
+              SizedBox(height: 4),
               Text('TaskEra is asking Google for one read-only permission.',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
-              const SizedBox(height: 14),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
+              SizedBox(height: 14),
               // Permission Google will display
               Container(
                 padding: const EdgeInsets.all(12),
@@ -99,40 +99,40 @@ class _GoogleAccessSheet extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('PERMISSION',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.6, color: colors.ink3)),
-                    const SizedBox(height: 4),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.6, color: colors.ink3)),
+                    SizedBox(height: 4),
                     Text('Google will show: "${info.googleWording}"',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
-                    const SizedBox(height: 2),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                    SizedBox(height: 2),
                     Text('Scope: ${info.scope} (read-only)',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                   ],
                 ),
               ),
-              const SizedBox(height: 14),
+              SizedBox(height: 14),
               _Block(label: 'WHAT TASKERA DOES WITH IT', items: info.does, icon: Icons.check_rounded, color: colors.successFg, colors: colors),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _Block(label: 'WHAT TASKERA NEVER DOES', items: info.never, icon: Icons.close_rounded, color: const Color(0xFFFF6B6B), colors: colors),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 'TaskEra\'s use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. '
                 'You can disconnect at any time in Settings → Integrations.',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.4),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.4),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               GestureDetector(
                 onTap: () {
                   final router = GoRouter.of(context);
                   Navigator.of(context).pop(false);
                   router.push(TaskEraRoutes.legal);
                 },
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 6),
                   child: Text('Read the Privacy Policy',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -146,11 +146,11 @@ class _GoogleAccessSheet extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(width: 0.5, color: colors.bdr0),
                         ),
-                        child: Text('Cancel', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2)),
+                        child: Text('Cancel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2)),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     flex: 2,
                     child: GestureDetector(
@@ -159,8 +159,8 @@ class _GoogleAccessSheet extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(10)),
-                        child: const Text('Continue to Google',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                        child: Text('Continue to Google',
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                       ),
                     ),
                   ),
@@ -188,8 +188,8 @@ class _Block extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.6, color: colors.ink3)),
-        const SizedBox(height: 6),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.6, color: colors.ink3)),
+        SizedBox(height: 6),
         for (final t in items)
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
@@ -197,8 +197,8 @@ class _Block extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(padding: const EdgeInsets.only(top: 1), child: Icon(icon, size: 14, color: color)),
-                const SizedBox(width: 8),
-                Expanded(child: Text(t, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink2, height: 1.35))),
+                SizedBox(width: 8),
+                Expanded(child: Text(t, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink2, height: 1.35))),
               ],
             ),
           ),

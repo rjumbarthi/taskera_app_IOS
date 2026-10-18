@@ -153,62 +153,62 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         Text(
           'Welcome to TaskEra',
           style: TextStyle(
-            fontFamily: 'Fraunces',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontVariations: const [FontVariation('wght', 700)],
             fontSize: 26,
             color: colors.ink,
             height: 1.15,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(
           'Set yourself up in a few taps — or skip and dive straight in.',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.5),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.5),
         ),
-        const SizedBox(height: 22),
+        SizedBox(height: 22),
 
         // ── Language ──────────────────────────────────────────────────────
         _SectionHeader('Language', colors),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         _languageBlock(colors),
-        const SizedBox(height: 22),
+        SizedBox(height: 22),
 
         // ── Who are you ───────────────────────────────────────────────────
         _SectionHeader('Who are you?', colors, sub: 'TaskEra adapts to your workflow'),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         for (var i = 0; i < _roleOpts.length; i++) ...[
-          if (i > 0) const SizedBox(height: 6),
+          if (i > 0) SizedBox(height: 6),
           _ObOpt(emoji: _roleOpts[i].$1, title: _roleOpts[i].$2, subtitle: _roleOpts[i].$3,
               selected: _role == i, onTap: () => setState(() => _role = i), colors: colors),
         ],
-        const SizedBox(height: 22),
+        SizedBox(height: 22),
 
         // ── Focus style ───────────────────────────────────────────────────
         _SectionHeader('Your focus style', colors, sub: 'How do you work best?'),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         for (var i = 0; i < _focusOpts.length; i++) ...[
-          if (i > 0) const SizedBox(height: 6),
+          if (i > 0) SizedBox(height: 6),
           _ObOpt(emoji: _focusOpts[i].$1, title: _focusOpts[i].$2, subtitle: _focusOpts[i].$3,
               selected: _focus == i, onTap: () => setState(() => _focus = i), colors: colors),
         ],
-        const SizedBox(height: 22),
+        SizedBox(height: 22),
 
         // ── Peak hours ────────────────────────────────────────────────────
         _SectionHeader('Your peak hours', colors, sub: 'When are you most productive?'),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         for (var i = 0; i < _peakOpts.length; i++) ...[
-          if (i > 0) const SizedBox(height: 6),
+          if (i > 0) SizedBox(height: 6),
           _ObOpt(emoji: _peakOpts[i].$1, title: _peakOpts[i].$2, subtitle: _peakOpts[i].$3,
               selected: _peak == i, onTap: () => setState(() => _peak = i), colors: colors),
         ],
-        const SizedBox(height: 22),
+        SizedBox(height: 22),
 
         // ── First task ────────────────────────────────────────────────────
         _SectionHeader('Your first task', colors, sub: "What's one thing you want to get done?"),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         TextField(
           controller: _taskCtrl,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
           decoration: InputDecoration(
             hintText: 'e.g. Finish the project proposal',
             hintStyle: TextStyle(fontSize: 13, color: colors.ink3),
@@ -224,33 +224,33 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
                 borderSide: const BorderSide(width: 1.5, color: TaskEraColors.acc)),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text('Which quadrant does this belong to?',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-        const SizedBox(height: 6),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+        SizedBox(height: 6),
         Row(children: [
           Expanded(child: _QuadBtn(quad: _quads[0], selected: _quadrant == 0, onTap: () => setState(() => _quadrant = 0))),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           Expanded(child: _QuadBtn(quad: _quads[1], selected: _quadrant == 1, onTap: () => setState(() => _quadrant = 1))),
         ]),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Row(children: [
           Expanded(child: _QuadBtn(quad: _quads[2], selected: _quadrant == 2, onTap: () => setState(() => _quadrant = 2))),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           Expanded(child: _QuadBtn(quad: _quads[3], selected: _quadrant == 3, onTap: () => setState(() => _quadrant = 3))),
         ]),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         // ── Age / terms consent ───────────────────────────────────────────
         Text.rich(
           TextSpan(
-            style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1.6),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1.6),
             children: [
-              const TextSpan(text: 'By continuing you confirm you are 13 or older and agree to our '),
-              const TextSpan(text: 'Terms', style: TextStyle(color: TaskEraColors.acc2)),
-              const TextSpan(text: ' and '),
-              const TextSpan(text: 'Privacy Policy', style: TextStyle(color: TaskEraColors.acc2)),
-              const TextSpan(text: '.'),
+              TextSpan(text: 'By continuing you confirm you are 13 or older and agree to our '),
+              TextSpan(text: 'Terms', style: TextStyle(color: TaskEraColors.acc2)),
+              TextSpan(text: ' and '),
+              TextSpan(text: 'Privacy Policy', style: TextStyle(color: TaskEraColors.acc2)),
+              TextSpan(text: '.'),
             ],
           ),
           textAlign: TextAlign.center,
@@ -281,7 +281,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
           border: Border.all(width: 0.5, color: sel ? const Color(0x4D0A84FF) : colors.bdr0),
         ),
         child: Text(label, style: TextStyle(
-          fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
+          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500,
           color: sel ? TaskEraColors.acc2 : colors.ink2, height: 1)),
       ),
     );
@@ -302,11 +302,11 @@ class _SectionHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: TextStyle(
-          fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 700)],
+          fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: const [FontVariation('wght', 700)],
           fontSize: 18, color: colors.ink, height: 1.2)),
         if (sub != null) ...[
-          const SizedBox(height: 3),
-          Text(sub!, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+          SizedBox(height: 3),
+          Text(sub!, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
         ],
       ],
     );
@@ -347,19 +347,19 @@ class _ActionBar extends StatelessWidget {
                 boxShadow: const [BoxShadow(color: Color(0x4D0A84FF), blurRadius: 14, offset: Offset(0, 3))],
               ),
               child: saving
-                  ? const SizedBox(width: 18, height: 18,
+                  ? SizedBox(width: 18, height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Start using TaskEra →', style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
+                  : Text('Start using TaskEra →', style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           GestureDetector(
             onTap: saving ? null : onSkip,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Text('Skip for now', style: TextStyle(
-                fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink3)),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink3)),
             ),
           ),
         ],
@@ -398,17 +398,17 @@ class _ObOpt extends StatelessWidget {
           border: Border.all(width: 1, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
         child: Row(children: [
-          Text(emoji, style: const TextStyle(fontSize: 15)),
-          const SizedBox(width: 10),
+          Text(emoji, style: TextStyle(fontSize: 15)),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 1),
-                  Text(subtitle!, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  SizedBox(height: 1),
+                  Text(subtitle!, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                 ],
               ],
             ),
@@ -442,10 +442,10 @@ class _QuadBtn extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(quad.label, textAlign: TextAlign.center, style: TextStyle(
-                fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: quad.color)),
-            const SizedBox(height: 2),
-            Text(quad.sub, textAlign: TextAlign.center, style: const TextStyle(
-                fontFamily: 'Inter', fontSize: 9, color: Color(0xFF7A7A86))),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: quad.color)),
+            SizedBox(height: 2),
+            Text(quad.sub, textAlign: TextAlign.center, style: TextStyle(
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: Color(0xFF7A7A86))),
           ],
         ),
       ),

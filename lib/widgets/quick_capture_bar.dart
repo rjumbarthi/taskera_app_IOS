@@ -91,33 +91,33 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
         children: [
           Row(
             children: [
-              const Text('⚡', style: TextStyle(fontSize: 15)),
-              const SizedBox(width: 7),
+              Text('⚡', style: TextStyle(fontSize: 15)),
+              SizedBox(width: 7),
               Text('Quick capture',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink2)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink2)),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           TextField(
             controller: _ctrl,
             maxLines: null,
             minLines: 1,
             inputFormatters: maxLen(kMaxLongText),
             textInputAction: TextInputAction.newline,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink, height: 1.4),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink, height: 1.4),
             decoration: InputDecoration(
               hintText: 'Capture a thought, task, or idea…',
-              hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink3),
+              hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3),
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(vertical: 6),
               border: InputBorder.none,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Row(
             children: [
               _typeToggle(colors, 'Note', !_asTask, () => setState(() => _asTask = false)),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               _typeToggle(colors, 'Task', _asTask, () => setState(() => _asTask = true)),
               const Spacer(),
               GestureDetector(
@@ -125,8 +125,8 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: const Text('Capture',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+                  child: Text('Capture',
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
             ],
@@ -147,7 +147,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
           border: Border.all(width: 0.5, color: active ? TaskEraColors.acc : colors.bdr),
         ),
         child: Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: active ? Colors.white : colors.ink2, height: 1)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: active ? Colors.white : colors.ink2, height: 1)),
       ),
     );
   }

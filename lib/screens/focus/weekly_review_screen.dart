@@ -62,8 +62,8 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
     await p.setString('taskera.wr.drain.$k',    _drainCtrl.text.trim());
     await p.setString('taskera.wr.priority.$k', _priorityCtrl.text.trim());
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Review saved ✓', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Review saved ✓', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
       backgroundColor: Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
       duration: Duration(seconds: 2),
@@ -139,14 +139,14 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 2),
+              SizedBox(width: 2),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     l.weeklyReviewLabel,
                     style: TextStyle(
-                      fontFamily: 'Fraunces',
+                      fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                       fontVariations: [FontVariation('wght', 600)],
                       fontSize: 19,
                       letterSpacing: -0.5,
@@ -157,7 +157,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                   Text(
                     dateRange,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: colors.ink3,
                       height: 1.3,
@@ -185,7 +185,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                       Text(
                         '🏆 BIGGEST WIN',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
@@ -193,7 +193,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                           height: 1,
                         ),
                       ),
-                      const SizedBox(height: 7),
+                      SizedBox(height: 7),
                       _ExpandingField(
                         controller: _biggestWinCtrl,
                         hint: l.weeklyWinHint,
@@ -202,7 +202,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Week Summary
                 _SectionCard(
@@ -214,7 +214,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                       Text(
                         'WEEK SUMMARY',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
@@ -222,30 +222,30 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                           height: 1,
                         ),
                       ),
-                      const SizedBox(height: 9),
+                      SizedBox(height: 9),
                       Row(
                         children: [
                           Expanded(child: _StatBox(value: '$doneCount',   label: 'Done',   valueColor: TaskEraColors.q2,           colors: colors)),
-                          const SizedBox(width: 5),
+                          SizedBox(width: 5),
                           Expanded(child: _StatBox(value: '$missedCount', label: 'Missed', valueColor: TaskEraColors.q1,           colors: colors)),
-                          const SizedBox(width: 5),
+                          SizedBox(width: 5),
                           Expanded(child: _StatBox(value: '$habitsHit/$habitsTotal', label: 'Habits', valueColor: const Color(0xFFBF5AF2), colors: colors)),
-                          const SizedBox(width: 5),
+                          SizedBox(width: 5),
                           Expanded(child: _StatBox(value: loggedStr, label: 'Logged', valueColor: TaskEraColors.acc2,         colors: colors)),
                         ],
                       ),
-                      const SizedBox(height: 9),
+                      SizedBox(height: 9),
                       _QuadBar(label: 'Q1', color: TaskEraColors.q1, fraction: qs[0].frac, count: '${qs[0].count}', colors: colors),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5),
                       _QuadBar(label: 'Q2', color: TaskEraColors.q2, fraction: qs[1].frac, count: '${qs[1].count}', colors: colors),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5),
                       _QuadBar(label: 'Q3', color: TaskEraColors.q3, fraction: qs[2].frac, count: '${qs[2].count}', colors: colors),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5),
                       _QuadBar(label: 'Q4', color: TaskEraColors.q4, fraction: qs[3].frac, count: '${qs[3].count}', colors: colors),
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // What drained energy?
                 _SectionCard(
@@ -254,10 +254,10 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         '⚡ WHAT DRAINED ENERGY?',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
@@ -265,7 +265,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                           height: 1,
                         ),
                       ),
-                      const SizedBox(height: 7),
+                      SizedBox(height: 7),
                       _ExpandingField(
                         controller: _drainCtrl,
                         hint: l.weeklyBlockerHint,
@@ -274,7 +274,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Next week's #1 priority
                 _SectionCard(
@@ -283,10 +283,10 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         '🎯 NEXT WEEK\'S #1 PRIORITY',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
@@ -294,7 +294,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                           height: 1,
                         ),
                       ),
-                      const SizedBox(height: 7),
+                      SizedBox(height: 7),
                       _ExpandingField(
                         controller: _priorityCtrl,
                         hint: l.weeklySuccessHint,
@@ -303,7 +303,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // TaskEra AI insight — on-demand, real LLM
                 AiInsightCard(
@@ -311,7 +311,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                   hint: 'Reflect on my week with TaskEra AI',
                   margin: EdgeInsets.zero,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Save button
                 GestureDetector(
@@ -327,7 +327,7 @@ class _WeeklyReviewScreenState extends ConsumerState<WeeklyReviewScreen> {
                     child: Text(
                       'Save review ✓',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: colors.successFg,
@@ -390,10 +390,10 @@ class _ExpandingField extends StatelessWidget {
     return TextField(
       controller: controller,
       maxLines: null,
-      style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.5),
+      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.5),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.5),
+        hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.5),
         border: InputBorder.none,
         isDense: true,
         contentPadding: EdgeInsets.zero,
@@ -432,17 +432,17 @@ class _StatBox extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontFamily: 'Fraunces',
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: valueColor,
               height: 1,
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1.2),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1.2),
           ),
         ],
       ),
@@ -475,10 +475,10 @@ class _QuadBar extends StatelessWidget {
           width: 18,
           child: Text(
             label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: color, height: 1),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: color, height: 1),
           ),
         ),
-        const SizedBox(width: 7),
+        SizedBox(width: 7),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(3),
@@ -502,12 +502,12 @@ class _QuadBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 7),
+        SizedBox(width: 7),
         SizedBox(
           width: 20,
           child: Text(
             count,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1),
           ),
         ),
       ],

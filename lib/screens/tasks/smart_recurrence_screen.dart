@@ -191,7 +191,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
                   children: [
                     Text('Smart recurrence',
                         style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -199,7 +199,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
                             height: 1.1)),
                     Text('Adapts to your completion patterns',
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -222,7 +222,7 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
             if (suggestions.isNotEmpty) ...[
               Text('FREQUENCY SUGGESTIONS',
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
@@ -245,14 +245,14 @@ class _SmartRecurrenceScreenState extends ConsumerState<SmartRecurrenceScreen> {
               children: [
                 Text('ALL RECURRING',
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                         color: colors.ink3)),
                 const SizedBox(width: 6),
                 Text('· ${stats.length} HABIT${stats.length == 1 ? '' : 'S'}',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
               ],
             ),
             const SizedBox(height: 6),
@@ -305,7 +305,7 @@ class _SuggestionCard extends StatelessWidget {
               Expanded(
                   child: Text(stat.habit.name,
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: stat.badge.color))),
@@ -314,16 +314,16 @@ class _SuggestionCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text('Current: ${stat.freqShort} · Completion: ${stat.pct}%',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
           Text('Suggestion: $actionLabel',
-              style: const TextStyle(
-                  fontFamily: 'Inter',
+              style: TextStyle(
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: TaskEraColors.acc2)),
           const SizedBox(height: 6),
           Text(body,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.5)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.5)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -338,8 +338,8 @@ class _SuggestionCard extends StatelessWidget {
                         border: Border.all(width: 0.5, color: const Color(0x660A84FF))),
                     alignment: Alignment.center,
                     child: Text(actionLabel,
-                        style: const TextStyle(
-                            fontFamily: 'Inter',
+                        style: TextStyle(
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             color: TaskEraColors.acc2)),
@@ -358,7 +358,7 @@ class _SuggestionCard extends StatelessWidget {
                         border: Border.all(width: 0.5, color: colors.bdr)),
                     alignment: Alignment.center,
                     child: Text('Keep as is',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                   ),
                 ),
               ),
@@ -396,22 +396,22 @@ class _RecurRow extends StatelessWidget {
               children: [
                 Text(stat.habit.name,
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: stat.badge.color)),
                 Row(
                   children: [
                     Text(stat.freqShort,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                     const SizedBox(width: 5),
                     Text('· ${stat.pct}%',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                     if (showStreak) ...[
                       const SizedBox(width: 5),
                       Text('· $streak',
                           style: TextStyle(
-                              fontFamily: 'Inter', fontSize: 11, color: colors.successFg)),
+                              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.successFg)),
                     ],
                   ],
                 ),
@@ -436,7 +436,7 @@ class _BadgePill extends StatelessWidget {
       decoration: BoxDecoration(color: badge.bg, borderRadius: BorderRadius.circular(5)),
       child: Text(badge.label,
           style: TextStyle(
-              fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: badge.color)),
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: badge.color)),
     );
   }
 }
@@ -455,14 +455,14 @@ class _Empty extends StatelessWidget {
           const SizedBox(height: 10),
           Text('No habits to analyse yet',
               style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: colors.ink2)),
           const SizedBox(height: 4),
           Text('Create a few habits and TaskEra will suggest smarter frequencies as you log them.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
         ],
       ),
     );

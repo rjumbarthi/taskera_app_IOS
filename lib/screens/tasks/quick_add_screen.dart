@@ -220,16 +220,16 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
-                child: Text(AppL10n.of(context).addTask, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
+                child: Text(AppL10n.of(context).addTask, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
               ),
               GestureDetector(
                 onTap: _addTask,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+                  child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
             ],
@@ -245,7 +245,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
               children: [
                 // TITLE with AI parser
                 _SectionLabel(label: 'TITLE', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.transparent,
@@ -261,10 +261,10 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                             child: TextField(
                               controller: _titleCtrl,
                               onChanged: _parseTitle,
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                               decoration: InputDecoration(
                                 hintText: "e.g. 'Call dentist Friday 3pm Q2 remind'",
-                                hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3),
+                                hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3),
                                 isDense: true,
                                 contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
                                 border: InputBorder.none,
@@ -287,16 +287,16 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                             Container(
                               padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                               decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
-                              child: const Text('AI PARSER', style: TextStyle(fontFamily: 'Inter', fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                              child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Expanded(
                               child: Text(
                                 _parseResult.isEmpty
                                     ? 'Type a task — AI extracts date, time, quad, score…'
                                     : '✦ $_parseResult',
                                 style: TextStyle(
-                                  fontFamily: 'Inter', fontSize: 9,
+                                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                                   color: _parseResult.isEmpty ? colors.ink3 : TaskEraColors.acc2,
                                   fontWeight: _parseResult.isEmpty ? FontWeight.w400 : FontWeight.w600,
                                 ),
@@ -308,11 +308,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // QUADRANT
                 _SectionLabel(label: 'QUADRANT', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Wrap(
                   spacing: 4, runSpacing: 4,
                   children: _quads.map((q) => GestureDetector(
@@ -320,11 +320,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     child: _HfChip(label: q.$2, on: _quad == q.$1, onColor: q.$3),
                   )).toList(),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // PRIORITY
                 _SectionLabel(label: 'PRIORITY', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Wrap(
                   spacing: 4, runSpacing: 4,
                   children: _priorities.map((p) => GestureDetector(
@@ -332,11 +332,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     child: _HfChip(label: p.$2, on: _priority == p.$1, onColor: p.$3),
                   )).toList(),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // LABELS
                 _SectionLabel(label: 'LABELS', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Wrap(
                   spacing: 4, runSpacing: 4,
                   children: [
@@ -350,11 +350,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     const _HfChip(label: '+ New', on: false, overrideColor: TaskEraColors.acc2),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // DUE
                 _SectionLabel(label: 'DUE', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 GestureDetector(
                   onTap: _pickDue,
                   child: Container(
@@ -369,7 +369,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                         Expanded(
                           child: Text(
                             _dueDate != null ? _formatDue() : 'mm/dd/yyyy',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                 color: _dueDate != null ? colors.ink : colors.ink3),
                           ),
                         ),
@@ -386,11 +386,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // REMINDER
                 _SectionLabel(label: 'REMINDER', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 GestureDetector(
                   onTap: _pickReminder,
                   child: Container(
@@ -405,7 +405,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                         Expanded(
                           child: Text(
                             _reminderTime != null ? _formatReminder() : '--:-- --',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                                 color: _reminderTime != null ? colors.ink : colors.ink3),
                           ),
                         ),
@@ -422,11 +422,11 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // REPEAT
                 _SectionLabel(label: 'REPEAT', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Wrap(
                   spacing: 4, runSpacing: 4,
                   children: _repeats.map((r) => GestureDetector(
@@ -434,14 +434,14 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     child: _HfChip(label: r.$2, on: _repeat == r.$1, onColor: TaskEraColors.acc2),
                   )).toList(),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // SUBTASKS
                 _SectionLabel(label: 'SUBTASKS', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 for (final sub in _subtasks) ...[
                   _SubtaskRow(sub: sub, colors: colors, onToggle: () => setState(() => sub.done = !sub.done)),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                 ],
                 if (_addingSubtask) ...[
                   Row(
@@ -456,10 +456,10 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                           child: TextField(
                             controller: _newSubCtrl,
                             autofocus: true,
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                             decoration: InputDecoration(
                               hintText: AppL10n.of(context).subtaskTitleHint,
-                              hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                              hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                               isDense: true,
                               contentPadding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                               border: InputBorder.none,
@@ -468,16 +468,16 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       GestureDetector(
                         onTap: _confirmSubtask,
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
-                          child: const Icon(Icons.check, size: 14, color: Colors.white),
+                          child: Icon(Icons.check, size: 14, color: Colors.white),
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       GestureDetector(
                         onTap: () => setState(() { _addingSubtask = false; _newSubCtrl.clear(); }),
                         child: Container(
@@ -492,16 +492,16 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                 ] else
                   GestureDetector(
                     onTap: () => setState(() => _addingSubtask = true),
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
+                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
                     ),
                   ),
-                const SizedBox(height: 80),
+                SizedBox(height: 80),
               ],
             ),
           ),
@@ -538,15 +538,15 @@ class _SubtaskRow extends StatelessWidget {
               color: sub.done ? const Color(0x337FBA00) : Colors.transparent,
               border: Border.all(width: 1.5, color: sub.done ? TaskEraColors.q2 : colors.bdr2),
             ),
-            child: sub.done ? const Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
+            child: sub.done ? Center(child: Icon(Icons.check, size: 8, color: TaskEraColors.q2)) : null,
           ),
         ),
-        const SizedBox(width: 9),
+        SizedBox(width: 9),
         Expanded(
           child: Text(
             sub.text,
             style: TextStyle(
-              fontFamily: 'Inter', fontSize: 13, color: sub.done ? colors.ink3 : colors.ink,
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: sub.done ? colors.ink3 : colors.ink,
               decoration: sub.done ? TextDecoration.lineThrough : null,
             ),
           ),
@@ -563,7 +563,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3, height: 1));
+    return Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3, height: 1));
   }
 }
 
@@ -585,7 +585,7 @@ class _HfChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(width: 0.5, color: on ? const Color(0x660A84FF) : colors.bdr),
       ),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: on ? FontWeight.w700 : FontWeight.w400, color: textColor, height: 1)),
+      child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: on ? FontWeight.w700 : FontWeight.w400, color: textColor, height: 1)),
     );
   }
 }

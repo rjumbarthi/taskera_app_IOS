@@ -39,7 +39,7 @@ class SizeChips extends StatelessWidget {
               child: Text(
                 _kSizes[i],
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
                   color: i == selectedIndex ? TaskEraColors.acc : colors.ink3,

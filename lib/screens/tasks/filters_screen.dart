@@ -73,7 +73,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                   children: [
                     Text('Filters',
                         style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -89,7 +89,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                             height: 1.1)),
                     Text('Custom task views',
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -106,12 +106,12 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                 // PRESETS
                 Text('PRESETS',
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                         color: colors.ink3)),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 for (int i = 0; i < presets.length; i++) ...[
                   _PresetRow(
                     preset: presets[i],
@@ -119,56 +119,56 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                     active: sel == i,
                     onTap: () => setState(() => _selected = sel == i ? null : i),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                 ],
 
                 // RESULTS for the selected preset
                 if (sel != null) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text('${presets[sel].name.toUpperCase()} · ${results!.length}',
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
                           color: presets[sel].quadColor)),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   if (results.isEmpty)
                     Text('No tasks match this filter right now.',
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 12, color: colors.ink3))
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3))
                   else
                     for (final t in results) ...[
                       _ResultRow(task: t, colors: colors),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                     ],
                 ],
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // BUILD A FILTER
                 Text('BUILD A FILTER',
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                         color: colors.ink3)),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
 
                 _ConditionRow(
                     prefix: 'When', field: 'Quadrant', op: 'is', value: 'Q2', colors: colors),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 _ConditionRow(
                     prefix: 'And', field: 'Score', op: '≥', value: '7.0', colors: colors),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 GestureDetector(
                   onTap: () => _snack('Custom conditions coming soon'),
-                  child: const Text('+ Add condition',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc)),
+                  child: Text('+ Add condition',
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Run + Focus — both run the built filter (Q2 · Score ≥ 7 = preset 1)
                 Row(
@@ -181,16 +181,16 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                           decoration: BoxDecoration(
                               color: TaskEraColors.acc, borderRadius: BorderRadius.circular(9)),
                           alignment: Alignment.center,
-                          child: const Text('Run',
+                          child: Text('Run',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: TaskEraTheme.of(context).fontFamily,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white)),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: GestureDetector(
                         onTap: () => setState(() => _selected = 1),
@@ -202,9 +202,9 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                             border: Border.all(width: 0.5, color: TaskEraColors.acc),
                           ),
                           alignment: Alignment.center,
-                          child: const Text('Focus',
+                          child: Text('Focus',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: TaskEraTheme.of(context).fontFamily,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: TaskEraColors.acc2)),
@@ -213,7 +213,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 GestureDetector(
                   onTap: () => _snack('Saved filters coming soon'),
@@ -225,8 +225,8 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                       border: Border.all(width: 0.5, color: colors.bdr),
                     ),
                     alignment: Alignment.center,
-                    child: const Text('+ Save as Filter',
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: TaskEraColors.acc)),
+                    child: Text('+ Save as Filter',
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: TaskEraColors.acc)),
                   ),
                 ),
               ],
@@ -273,13 +273,13 @@ class _PresetRow extends StatelessWidget {
                 children: [
                   Text(preset.name,
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: preset.quadColor)),
                   Text(preset.sub,
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                 ],
               ),
             ),
@@ -290,20 +290,20 @@ class _PresetRow extends StatelessWidget {
                   const BoxDecoration(color: TaskEraColors.accBg, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text('$count',
-                  style: const TextStyle(
-                      fontFamily: 'Inter',
+                  style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
                       color: TaskEraColors.acc2)),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
               decoration: BoxDecoration(
                   color: TaskEraColors.acc, borderRadius: BorderRadius.circular(6)),
               child: Text(active ? 'Hide' : 'View',
-                  style: const TextStyle(
-                      fontFamily: 'Inter',
+                  style: TextStyle(
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       color: Colors.white)),
@@ -346,13 +346,13 @@ class _ResultRow extends StatelessWidget {
                 children: [
                   Text(task.title,
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: colors.ink)),
                   Text(meta,
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                 ],
               ),
             ),
@@ -391,16 +391,16 @@ class _ConditionRow extends StatelessWidget {
             width: 36,
             child: Text(prefix,
                 style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: colors.ink3)),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           _Pill(label: field, colors: colors),
-          const SizedBox(width: 6),
-          Text(op, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
+          Text(op, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+          SizedBox(width: 6),
           _Pill(label: value, colors: colors, active: true),
         ],
       ),
@@ -426,7 +426,7 @@ class _Pill extends StatelessWidget {
       ),
       child: Text(label,
           style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: active ? TaskEraColors.acc2 : colors.ink2)),

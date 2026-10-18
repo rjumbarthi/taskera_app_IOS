@@ -69,8 +69,8 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppL10n.of(context).inbox, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text(AppL10n.of(context).unreviewedCaptures, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(AppL10n.of(context).inbox, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text(AppL10n.of(context).unreviewedCaptures, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -95,10 +95,10 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
                 Expanded(
                   child: TextField(
                     controller: _captureCtrl,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                     decoration: InputDecoration(
                       hintText: AppL10n.of(context).captureThought,
-                      hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                      hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -124,13 +124,13 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
               Expanded(
                 child: Text(
                   '✦ AI suggests quadrant — tap to confirm',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2),
                 ),
               ),
               GestureDetector(
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('AI auto-sort coming soon'))),
-                child: Text(AppL10n.of(context).sortAll, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                child: Text(AppL10n.of(context).sortAll, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
               ),
             ],
           ),
@@ -174,12 +174,12 @@ class _EmptyInbox extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Inbox is clear',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink2),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink2),
           ),
           const SizedBox(height: 4),
           Text(
             'Capture a thought above to get started',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3),
           ),
         ],
       ),
@@ -239,9 +239,9 @@ class _CaptureRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(task.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500, color: colors.ink)),
+                    Text(task.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: colors.ink)),
                     const SizedBox(height: 2),
-                    Text(when, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                    Text(when, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                   ],
                 ),
               ),
@@ -265,7 +265,7 @@ class _CaptureRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 0.5, color: colors.bdr),
                     ),
-                    child: Text(lbl, style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: clr)),
+                    child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: clr)),
                   ),
                 ),
                 const SizedBox(width: 4),

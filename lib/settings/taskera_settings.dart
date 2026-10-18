@@ -16,11 +16,15 @@ class TaskEraSettingsState {
   final int theme;
   final int accent;
   final int font;
+  final int numberFont;
   final int fontSize;
   final int lineSpacing;
   final int layout;
   final int qnames;
   final int lang;
+  // User-created task labels (beyond the fixed work/personal/health/finance/
+  // learning presets in edit_task_screen.dart), added via the "+ New" chip.
+  final List<String> customLabels;
 
   // Sensible per-theme brightness defaults: dark stays heavily dimmed, glass
   // medium, light barely washed so the wallpaper reads bright and airy.
@@ -50,14 +54,16 @@ class TaskEraSettingsState {
       // opt-in, since it changes what buttons appear on existing notifications.
       'notifQuickActions': false,
     },
-    this.theme = 2,
+    this.theme = 3, // System — follows OS light/dark
     this.accent = 0,
     this.font = 0,
+    this.numberFont = 0,
     this.fontSize = 1,
     this.lineSpacing = 1,
     this.layout = 0,
     this.qnames = 0,
     this.lang = 0,
+    this.customLabels = const [],
   });
 
   bool sw(String key) => toggles[key] ?? true;
@@ -85,15 +91,16 @@ class TaskEraSettingsState {
     wallpaperIndex: wallpaperIndex,
     dimDark: dimDark, dimLight: dimLight, dimGlass: dimGlass,
     toggles: {...toggles, key: value},
-    theme: theme, accent: accent, font: font,
+    theme: theme, accent: accent, font: font, numberFont: numberFont,
     fontSize: fontSize, lineSpacing: lineSpacing,
-    layout: layout, qnames: qnames, lang: lang,
+    layout: layout, qnames: qnames, lang: lang, customLabels: customLabels,
   );
 
   TaskEraSettingsState copyWith({
     int? wallpaperIndex, double? dimDark, double? dimLight, double? dimGlass,
-    int? theme, int? accent, int? font,
+    int? theme, int? accent, int? font, int? numberFont,
     int? fontSize, int? lineSpacing, int? layout, int? qnames, int? lang,
+    List<String>? customLabels,
   }) => TaskEraSettingsState(
     wallpaperIndex: wallpaperIndex ?? this.wallpaperIndex,
     dimDark:  dimDark  ?? this.dimDark,
@@ -103,11 +110,13 @@ class TaskEraSettingsState {
     theme: theme ?? this.theme,
     accent: accent ?? this.accent,
     font: font ?? this.font,
+    numberFont: numberFont ?? this.numberFont,
     fontSize: fontSize ?? this.fontSize,
     lineSpacing: lineSpacing ?? this.lineSpacing,
     layout: layout ?? this.layout,
     qnames: qnames ?? this.qnames,
     lang: lang ?? this.lang,
+    customLabels: customLabels ?? this.customLabels,
   );
 }
 
@@ -122,11 +131,13 @@ class _K {
   static const theme        = 'taskera.theme';
   static const accent      = 'taskera.accent';
   static const font        = 'taskera.font';
+  static const numberFont  = 'taskera.numberFont';
   static const fontSize    = 'taskera.fontSize';
   static const lineSpacing = 'taskera.lineSpacing';
   static const layout      = 'taskera.layout';
   static const qnames      = 'taskera.qnames';
   static const lang        = 'taskera.lang';
+  static const customLabels = 'taskera.customLabels';
   static String toggle(String k) => 'taskera.toggle.$k';
 }
 
@@ -159,11 +170,13 @@ class TaskEraSettingsNotifier extends Notifier<TaskEraSettingsState> {
       theme:          p.getInt(_K.theme)        ?? d.theme,
       accent:         p.getInt(_K.accent)       ?? d.accent,
       font:           p.getInt(_K.font)         ?? d.font,
+      numberFont:     p.getInt(_K.numberFont)   ?? d.numberFont,
       fontSize:       p.getInt(_K.fontSize)     ?? d.fontSize,
       lineSpacing:    p.getInt(_K.lineSpacing)  ?? d.lineSpacing,
       layout:         p.getInt(_K.layout)       ?? d.layout,
       qnames:         p.getInt(_K.qnames)       ?? d.qnames,
       lang:           p.getInt(_K.lang)         ?? d.lang,
+      customLabels:   p.getStringList(_K.customLabels) ?? d.customLabels,
     );
   }
 
@@ -176,11 +189,13 @@ class TaskEraSettingsNotifier extends Notifier<TaskEraSettingsState> {
       ..setInt(_K.theme,           s.theme)
       ..setInt(_K.accent,      s.accent)
       ..setInt(_K.font,        s.font)
+      ..setInt(_K.numberFont,  s.numberFont)
       ..setInt(_K.fontSize,    s.fontSize)
       ..setInt(_K.lineSpacing, s.lineSpacing)
       ..setInt(_K.layout,      s.layout)
       ..setInt(_K.qnames,      s.qnames)
-      ..setInt(_K.lang,        s.lang);
+      ..setInt(_K.lang,        s.lang)
+      ..setStringList(_K.customLabels, s.customLabels);
     for (final e in s.toggles.entries) {
       _p.setBool(_K.toggle(e.key), e.value);
     }
@@ -206,8 +221,22 @@ class TaskEraSettingsNotifier extends Notifier<TaskEraSettingsState> {
     _persist(state);
   }
 
+  // Adds a user-typed label (trimmed, lowercased) to the reusable set offered
+  // in the task editor's label picker. No-ops on blank/duplicate input.
+  void addCustomLabel(String name) {
+    final n = name.trim().toLowerCase();
+    if (n.isEmpty || state.customLabels.contains(n)) return;
+    state = state.copyWith(customLabels: [...state.customLabels, n]);
+    _persist(state);
+  }
+
   void setFont(int i) {
     state = state.copyWith(font: i);
+    _persist(state);
+  }
+
+  void setNumberFont(int i) {
+    state = state.copyWith(numberFont: i);
     _persist(state);
   }
 

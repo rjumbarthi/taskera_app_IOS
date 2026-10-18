@@ -133,7 +133,7 @@ class _TaskRowState extends State<TaskRow> with SingleTickerProviderStateMixin {
                   child: Text(
                     widget.title,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w400,
                       color: widget.completed ? colors.ink3 : colors.ink,

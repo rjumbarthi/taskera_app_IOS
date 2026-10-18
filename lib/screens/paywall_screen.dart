@@ -181,12 +181,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               padding: EdgeInsets.fromLTRB(16, 8, 16, safeBot + 16),
               children: [
                 _HeroSection(colors: colors),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 _FeaturesList(colors: colors),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 _PlanToggle(annual: _annual, colors: colors,
                     onChanged: (v) => setState(() => _annual = v)),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 _PriceHero(
                   colors: colors,
                   loadState: _loadState,
@@ -199,7 +199,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 // exactly what the store query returned (every offer/base-plan
                 // entry per product id). Remove once the root cause is confirmed.
                 if (_products.isNotEmpty) _RawPriceDebugDump(products: _products),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 _SubscribeButton(
                   onTap: (_loadState == _LoadState.ok && !busy) ? _subscribe : null,
                   busy: busy,
@@ -208,10 +208,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 // Indian users inside its own checkout. On iOS this must not
                 // exist: TaskEra Pro digital content is App Store IAP only.
                 if (defaultTargetPlatform == TargetPlatform.android) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   _UpiButton(colors: colors, onTap: _payWithUpi),
                 ],
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
                   'Auto-renewing subscription. Payment is charged to your '
                   '${defaultTargetPlatform == TargetPlatform.iOS ? "Apple ID" : "Google Play"} '
@@ -220,10 +220,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   'current period. Manage or cancel anytime in your '
                   '${defaultTargetPlatform == TargetPlatform.iOS ? "App Store" : "Play Store"} account settings.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                       color: colors.ink3, height: 1.5),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 GestureDetector(
                   onTap: leave,
                   child: Padding(
@@ -234,7 +234,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             : (postOnboard
                                 ? 'Continue with free plan'
                                 : AppL10n.of(context).maybeLater),
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 13,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                             color: TaskEraColors.acc2, height: 1))),
                   ),
                 ),
@@ -243,13 +243,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(child: Text(AppL10n.of(context).restorePurchase,
-                        style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                             color: TaskEraColors.acc2, height: 1))),
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 _LegalLinksRow(colors: colors),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 _ReferralNudge(colors: colors),
               ],
             ),
@@ -264,7 +264,7 @@ void _toast(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message,
-          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
       backgroundColor: const Color(0xFF1C1C1E),
       duration: const Duration(seconds: 3),
       behavior: SnackBarBehavior.floating,
@@ -282,17 +282,17 @@ class _HeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       Text('✦',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 28,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 28,
               color: colors.ink, height: 1.2)),
-      const SizedBox(height: 8),
+      SizedBox(height: 8),
       Text('TaskEra Pro',
-          style: TextStyle(fontFamily: 'Fraunces', fontSize: 24,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 24,
               fontVariations: const [FontVariation('wght', 700)],
               color: colors.ink, height: 1.2)),
-      const SizedBox(height: 4),
+      SizedBox(height: 4),
       Text('Unlock unlimited AI + all premium features',
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
               color: colors.ink3, height: 1.5)),
     ]);
   }
@@ -324,7 +324,7 @@ class _FeaturesList extends StatelessWidget {
           trailLabel: '∞',
           trailColor: TaskEraColors.q2,
         ),
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x240A84FF), Color(0x240A84FF)]),
           iconSvgPath: Icons.grid_view_rounded,
@@ -334,7 +334,7 @@ class _FeaturesList extends StatelessWidget {
           trailLabel: '✓',
           trailColor: TaskEraColors.q2,
         ),
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x1F7FBA00), Color(0x1F7FBA00)]),
           iconSvgPath: Icons.upload_rounded,
@@ -344,7 +344,7 @@ class _FeaturesList extends StatelessWidget {
           trailLabel: '✓',
           trailColor: TaskEraColors.q2,
         ),
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x1FFFB900), Color(0x1FFFB900)]),
           iconSvgPath: Icons.email_rounded,
@@ -354,7 +354,7 @@ class _FeaturesList extends StatelessWidget {
           trailLabel: '✓',
           trailColor: TaskEraColors.q2,
         ),
-        const SizedBox(height: 9),
+        SizedBox(height: 9),
         _FeatureRow(
           iconBg: const LinearGradient(colors: [Color(0x1FBF5AF2), Color(0x1FBF5AF2)]),
           iconSvgPath: Icons.star_outline_rounded,
@@ -393,19 +393,19 @@ class _FeatureRow extends StatelessWidget {
         ),
         child: Icon(iconSvgPath, color: iconColor, size: 12),
       ),
-      const SizedBox(width: 9),
+      SizedBox(width: 9),
       Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
           Text(sub,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   color: colors.ink3, height: 1.3)),
         ]),
       ),
       Text(trailLabel,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
               fontWeight: FontWeight.w700, color: trailColor, height: 1)),
     ]);
   }
@@ -456,7 +456,7 @@ class _PlanTab extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: selected ? Colors.white : colors.ink2, height: 1.2)),
         ),
@@ -490,9 +490,9 @@ class _PriceHero extends StatelessWidget {
         children: [
           SizedBox(width: 16, height: 16,
               child: CircularProgressIndicator(strokeWidth: 2, color: colors.ink3)),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Text('Loading price…',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
         ],
       ));
     }
@@ -507,13 +507,13 @@ class _PriceHero extends StatelessWidget {
       };
       return _Card(colors: colors, child: Column(children: [
         Text(message, textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.4)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1.4)),
         if (loadState != _LoadState.unsupported) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           GestureDetector(
             onTap: onRetry,
             child: Text('Retry',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
           ),
         ],
@@ -527,29 +527,29 @@ class _PriceHero extends StatelessWidget {
 
     return _Card(colors: colors, child: Column(children: [
       Text(annual ? 'ANNUAL' : 'MONTHLY',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
               letterSpacing: 1.2, color: colors.ink3)),
-      const SizedBox(height: 6),
+      SizedBox(height: 6),
       RichText(textAlign: TextAlign.center, text: TextSpan(children: [
         TextSpan(text: billed.label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 30, fontWeight: FontWeight.w800,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 30, fontWeight: FontWeight.w800,
                 color: colors.ink, height: 1)),
         TextSpan(text: ' / $periodLabel',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600,
                 color: colors.ink3, height: 1)),
       ])),
-      const SizedBox(height: 4),
+      SizedBox(height: 4),
       Text(billedLabel,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.3)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.3)),
       if (annual) ...[
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         // Subordinate to the billed amount above — smaller, muted, computed
         // only from the real store price (never a hardcoded conversion).
         Text('Equivalent to ${billed.currencySymbol}${(billed.raw / 12).toStringAsFixed(2)}/month',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3)),
       ],
       if (intro != null) ...[
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
@@ -558,7 +558,7 @@ class _PriceHero extends StatelessWidget {
           ),
           child: Text(
               '${intro.priceLabel} for ${intro.periodLabel}, then ${billed.label}/$periodLabel',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.3)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.3)),
         ),
       ],
     ]));
@@ -589,7 +589,7 @@ class _RawPriceDebugDump extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text('DEBUG store query:\n$lines',
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 9, color: Colors.greenAccent)),
+            style: TextStyle(fontFamily: 'monospace', fontSize: 9, color: Colors.greenAccent)),
       ),
     );
   }
@@ -736,10 +736,10 @@ class _SubscribeButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: busy
-            ? const SizedBox(width: 18, height: 18,
+            ? SizedBox(width: 18, height: 18,
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-            : const Text('Subscribe',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+            : Text('Subscribe',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                     fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
       ),
     );
@@ -773,13 +773,13 @@ class _UpiButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
-            child: const Text('UPI',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 7,
+            child: Text('UPI',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 7,
                     fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text('Pay with UPI (India)',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                   fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
         ]),
       ),
@@ -798,7 +798,7 @@ class _LegalLinksRow extends StatelessWidget {
     Widget link(String label, VoidCallback onTap) => GestureDetector(
           onTap: onTap,
           child: Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   color: colors.ink3, decoration: TextDecoration.underline,
                   decorationColor: colors.ink3, height: 1)),
         );
@@ -829,9 +829,9 @@ class _ReferralNudge extends StatelessWidget {
       child: Column(children: [
         Text("Know someone who'd love TaskEra?",
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 color: colors.ink3, height: 1.4)),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         GestureDetector(
           onTap: () => context.push(TaskEraRoutes.referral),
           child: Container(
@@ -840,8 +840,8 @@ class _ReferralNudge extends StatelessWidget {
               color: colors.surf2,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text('🎁 Invite → both get 1 month free',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            child: Text('🎁 Invite → both get 1 month free',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                     fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
           ),
         ),

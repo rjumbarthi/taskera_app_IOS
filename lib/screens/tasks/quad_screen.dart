@@ -20,7 +20,7 @@ void _showTaskDoneSnack(BuildContext context, WidgetRef ref, int taskId, String 
   messenger.hideCurrentSnackBar();
   final controller = messenger.showSnackBar(SnackBar(
     content: Text('✓  $title',
-        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
         overflow: TextOverflow.ellipsis),
     backgroundColor: const Color(0xFF1C1C1E),
     behavior: SnackBarBehavior.floating,
@@ -85,11 +85,11 @@ class QuadScreen extends ConsumerWidget {
           Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(label,
                     style: TextStyle(
-                        fontFamily: 'Fraunces',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 19,
                         letterSpacing: -0.5,
@@ -100,40 +100,40 @@ class QuadScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                     color: TaskEraColors.accBg,
                     borderRadius: BorderRadius.circular(6)),
-                child: const Text('✦ TaskEra AI',
+                child: Text('✦ TaskEra AI',
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
                         color: TaskEraColors.acc2)),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           if (featured != null) ...[
             _FeaturedCard(task: featured, color: color, colors: colors),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ] else ...[
             _EmptyFeaturedCard(color: color, colors: colors),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
 
           // Tasks section header
           Text(
             '${tasks.length} TASKS',
             style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
                 color: colors.ink3),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
 
           for (final task in tasks) ...[
             _QuadTaskRow(task: task, qColor: color, colors: colors),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
           ],
 
           if (tasks.isEmpty)
@@ -142,11 +142,11 @@ class QuadScreen extends ConsumerWidget {
               child: Center(
                 child: Text('No tasks yet',
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
               ),
             ),
 
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           // Add task row
           GestureDetector(
             onTap: () => context.push('/tasks/edittask?quad=$qi'),
@@ -161,10 +161,10 @@ class QuadScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.add, size: 14, color: color),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Text('Add task',
                       style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: color)),
@@ -210,46 +210,46 @@ class _FeaturedCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'SUGGESTED FOCUS',
             style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
                 color: TaskEraColors.acc2),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             task.title,
             style: TextStyle(
-                fontFamily: 'Fraunces',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: colors.ink,
                 height: 1.2),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(meta,
               style:
-                  TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
           if (hasScore) ...[
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Row(
               children: [
                 Text('Priority',
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                 const Spacer(),
                 Text(scoreStr,
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
                         color: color)),
               ],
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: SizedBox(
@@ -267,7 +267,7 @@ class _FeaturedCard extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           GestureDetector(
             onTap: () => showFocusSession(context, taskId: task.id),
             child: Container(
@@ -275,9 +275,9 @@ class _FeaturedCard extends StatelessWidget {
               decoration: BoxDecoration(
                   color: color, borderRadius: BorderRadius.circular(10)),
               alignment: Alignment.center,
-              child: const Text('Start This Task',
+              child: Text('Start This Task',
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: Colors.white)),
@@ -307,7 +307,7 @@ class _EmptyFeaturedCard extends StatelessWidget {
       child: Text('Add your first task to get AI recommendations',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
     );
   }
 }
@@ -337,16 +337,16 @@ class _QuadTaskRow extends ConsumerWidget {
             Expanded(
                 child: Text(task.title,
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 13, color: colors.ink))),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
             if (task.dueLabel != null) ...[
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(task.dueLabel!,
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: task.isOverdue ? TaskEraColors.warn : colors.ink3)),
             ],
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             GestureDetector(
               onTap: () {
                 final nowDone = !task.isDone;

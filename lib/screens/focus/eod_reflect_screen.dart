@@ -76,11 +76,11 @@ class _EodReflectScreenState extends ConsumerState<EodReflectScreen> {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.go(TaskEraRoutes.focus)),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'EOD Reflect',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
@@ -153,14 +153,14 @@ class _ReflectCard extends StatelessWidget {
             child: GestureDetector(
               onTap: () => context.go(TaskEraRoutes.focus),
               behavior: HitTestBehavior.opaque,
-              child: const SizedBox(
+              child: SizedBox(
                 width: 28,
                 height: 28,
                 child: Center(
                   child: Text(
                     '×',
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 22,
                       color: Color(0x66FFFFFF),
                       height: 1,
@@ -170,14 +170,14 @@ class _ReflectCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 2),
-          const Text('🌙', textAlign: TextAlign.center, style: TextStyle(fontSize: 30, height: 1)),
-          const SizedBox(height: 9),
+          SizedBox(height: 2),
+          Text('🌙', textAlign: TextAlign.center, style: TextStyle(fontSize: 30, height: 1)),
+          SizedBox(height: 9),
           Text(
             dateLabel,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'Inter',
+            style: TextStyle(
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 9,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -185,7 +185,7 @@ class _ReflectCard extends StatelessWidget {
               height: 1.3,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -198,30 +198,30 @@ class _ReflectCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Text(
             '"Did you do meaningful work today?"',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Fraunces',
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontSize: 19,
               fontWeight: FontWeight.w500,
               color: colors.ink,
               height: 1.45,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           Text(
             'Not urgent tasks — important ones. The Q2 work that moves your life forward.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               color: colors.ink3,
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
             decoration: BoxDecoration(
@@ -235,7 +235,7 @@ class _ReflectCard extends StatelessWidget {
                 Text(
                   'BEST MOMENT TODAY',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.4,
@@ -243,14 +243,14 @@ class _ReflectCard extends StatelessWidget {
                     height: 1,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 TextField(
                   controller: controller,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1.4),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1.4),
                   decoration: InputDecoration(
                     hintText: 'e.g. "Shipped the new onboarding flow"',
                     hintStyle: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       color: colors.ink3,
                       height: 1.4,
@@ -263,7 +263,7 @@ class _ReflectCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 11),
+          SizedBox(height: 11),
           Row(
             children: [
               Expanded(
@@ -276,10 +276,10 @@ class _ReflectCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
-                    child: const Text(
+                    child: Text(
                       'Yes ✓',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -289,7 +289,7 @@ class _ReflectCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 7),
+              SizedBox(width: 7),
               Expanded(
                 child: GestureDetector(
                   onTap: () => context.go(TaskEraRoutes.focus),
@@ -303,7 +303,7 @@ class _ReflectCard extends StatelessWidget {
                     child: Text(
                       'Not really',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: colors.ink2,
@@ -315,18 +315,18 @@ class _ReflectCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 11),
+          SizedBox(height: 11),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Current streak: ',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1),
               ),
               Text(
                 '$streak day${streak == 1 ? '' : 's'} 🔥',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: colors.ink,
@@ -335,14 +335,14 @@ class _ReflectCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           GestureDetector(
             onTap: () => context.go(TaskEraRoutes.focus),
             child: Text(
               'Skip for tonight',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 color: colors.ink3,
                 height: 1.3,
@@ -378,18 +378,18 @@ class _StatItem extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontFamily: 'Fraunces',
+              fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontSize: 19,
               fontWeight: FontWeight.w700,
               color: valueColor,
               height: 1,
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(
-              fontFamily: 'Inter',
+            style: TextStyle(
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 9,
               color: Color(0xFF5A5A62),
               height: 1.2,

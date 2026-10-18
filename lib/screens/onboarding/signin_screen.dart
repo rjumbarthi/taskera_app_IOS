@@ -265,7 +265,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         decoration: const BoxDecoration(shape: BoxShape.circle),
                         clipBehavior: Clip.antiAlias,
                         child: Image.asset(
-                          'assets/logo/taskera_logo.png',
+                          'assets/logo/taskera_icon_glass.png',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -273,26 +273,26 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         'TaskEra',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Fraunces',
+                          fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                           fontVariations: const [FontVariation('wght', 500)],
                           fontSize: 26,
                           color: colors.ink,
                           height: 1,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         'Focus & Task Planner',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 12,
                           color: colors.ink2,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: 14),
 
                   // ── EMAIL ─────────────────────────────────────────────────
                   _Flbl('EMAIL', colors),
@@ -305,13 +305,13 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                     onChanged: _otpMode ? null : (_) => setState(() {}),
                   ),
                   if (_emailTouched && !_emailValid) ...[
-                    const SizedBox(height: 4),
-                    const Text(
+                    SizedBox(height: 4),
+                    Text(
                       'Enter a valid email address',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Color(0xFFFF453A)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: Color(0xFFFF453A)),
                     ),
                   ],
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // ── PASSWORD / OTP ────────────────────────────────────────
                   _Flbl(_otpMode ? 'ONE-TIME PASSWORD' : 'PASSWORD', colors),
@@ -331,7 +331,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           colors: colors,
                           onChanged: (_) => setState(() {}),
                         ),
-                  const SizedBox(height: 3),
+                  SizedBox(height: 3),
 
                   // ── Forgot password (left) | New here? (right) ────────────
                   Row(
@@ -346,7 +346,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                           child: Text(
                             _otpMode ? resendLabel() : 'Forgot password?',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 12,
                               color: (_otpMode && otpOnCooldown)
                                   ? TaskEraColors.acc.withAlpha(0x80)
@@ -366,15 +366,15 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                 Text(
                                   'New here? ',
                                   style: TextStyle(
-                                    fontFamily: 'Inter',
+                                    fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 12,
                                     color: colors.ink2,
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   'Create account',
                                   style: TextStyle(
-                                    fontFamily: 'Inter',
+                                    fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 12,
                                     color: TaskEraColors.acc,
                                   ),
@@ -385,30 +385,30 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // ── Sign in | Email OTP  (two-col) or OTP-only (full) ─────
                   // ── Error message ─────────────────────────────────────────
                   if (_error != null) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       _error!,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
+                      style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 12,
                         color: Color(0xFFFF453A),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                   ],
 
                   if (_otpMode) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'Check your email — enter the 6-digit code or click the sign-in link',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                   ],
                   if (_otpMode)
                     Opacity(
@@ -423,11 +423,11 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: _loading
-                              ? const SizedBox(width: 16, height: 16,
+                              ? SizedBox(width: 16, height: 16,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : const Text(
+                              : Text(
                                   'Sign in with email OTP',
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                                       fontWeight: FontWeight.w600, color: Colors.white),
                                 ),
                         ),
@@ -449,18 +449,18 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: _loading
-                                    ? const SizedBox(width: 16, height: 16,
+                                    ? SizedBox(width: 16, height: 16,
                                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                                    : const Text(
+                                    : Text(
                                         'Sign in',
-                                        style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                                             fontWeight: FontWeight.w600, color: Colors.white),
                                       ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Opacity(
                             opacity: (_emailValid && !_loading) ? 1.0 : 0.4,
@@ -476,12 +476,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                     color: TaskEraColors.acc.withValues(alpha: 0.5),
                                   ),
                                 ),
-                                child: const FittedBox(
+                                child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
                                     'Sign in with email OTP',
                                     style: TextStyle(
-                                      fontFamily: 'Inter',
+                                      fontFamily: TaskEraTheme.of(context).fontFamily,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: TaskEraColors.acc,
@@ -494,7 +494,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         ),
                       ],
                     ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
                   // ── "or continue with" ────────────────────────────────────
                   Row(
@@ -508,7 +508,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                         child: Text(
                           'or continue with',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             color: colors.ink3,
                           ),
@@ -519,7 +519,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // ── Google | Apple (same row) ─────────────────────────────
                   Row(
@@ -539,7 +539,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   : _googleSignIn,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Expanded(
                         child: _SocialBtn(
                           label: 'Apple',
@@ -556,7 +556,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  SizedBox(height: 5),
 
                   // ── Microsoft | Skip (same row) ───────────────────────────
                   Row(
@@ -572,7 +572,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                               : () => _comingSoon(context, 'Microsoft sign-in'),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
@@ -601,7 +601,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                               child: Text(
                                 'Skip — use local storage',
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: TaskEraTheme.of(context).fontFamily,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: colors.ink2,
@@ -613,7 +613,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // ── Info card ─────────────────────────────────────────────
                   Container(
@@ -630,12 +630,12 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SvgPicture.string(_kLockSvg, width: 18, height: 18),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Text.rich(
                             TextSpan(
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 11,
                                 color: colors.ink2,
                                 height: 1.5,
@@ -658,7 +658,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   // ── Terms & Privacy — required consent checkbox ───────────
                   GestureDetector(
@@ -675,29 +675,29 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(width: 1.2, color: _accepted ? TaskEraColors.acc : colors.ink3),
                           ),
-                          child: _accepted ? const Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
+                          child: _accepted ? Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
                         ),
-                        const SizedBox(width: 9),
+                        SizedBox(width: 9),
                         Expanded(
                           child: Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Text('I agree to the ',
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
                                 onTap: () => context.push(TaskEraRoutes.legal),
-                                child: const Text('Terms of Service',
-                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                child: Text('Terms of Service',
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
                               ),
                               Text(' and ',
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
                                 onTap: () => context.push('${TaskEraRoutes.legal}?tab=privacy'),
-                                child: const Text('Privacy Policy',
-                                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                child: Text('Privacy Policy',
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
                               ),
                               Text('.',
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2, height: 1.45)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),
                             ],
                           ),
                         ),
@@ -728,7 +728,7 @@ class _Flbl extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 11,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.5,
@@ -765,11 +765,11 @@ class _FinputField extends StatelessWidget {
       keyboardType: keyboardType,
       readOnly: readOnly,
       onChanged: onChanged,
-      style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink),
+      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 14,
           color: colors.ink3,
         ),
@@ -802,7 +802,7 @@ class _FinputField extends StatelessWidget {
 void _comingSoon(BuildContext context, String what) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text('$what — coming soon',
-        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
     backgroundColor: const Color(0xFF1C1C1E),
     behavior: SnackBarBehavior.floating,
     duration: const Duration(seconds: 2),
@@ -840,11 +840,11 @@ class _SocialBtn extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(width: 18, height: 18, child: icon),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: colors.ink,

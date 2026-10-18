@@ -37,11 +37,11 @@ class ReferralScreen extends ConsumerWidget {
               padding: EdgeInsets.fromLTRB(14, 0, 14, safeBot + 24),
               children: [
                 _HeroSection(colors: colors),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 _ReferralLinkCard(colors: colors, code: code),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 _ShareButtons(colors: colors, code: code),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _StatsCard(colors: colors),
               ],
             ),
@@ -74,17 +74,17 @@ class _HeroSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 16, 0, 20),
       child: Column(children: [
-        const Text('🎁', style: TextStyle(fontSize: 44)),
-        const SizedBox(height: 8),
+        Text('🎁', style: TextStyle(fontSize: 44)),
+        SizedBox(height: 8),
         Text('Give a month, get a month',
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Fraunces', fontSize: 22,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 22,
                 fontVariations: const [FontVariation('wght', 700)],
                 color: colors.ink, height: 1.2)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text('Invite a friend. When they subscribe to TaskEra Pro, you both get\n1 month free.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 color: colors.ink3, height: 1.5)),
       ]),
     );
@@ -126,9 +126,9 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('Your referral link',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                 color: c.ink3, height: 1)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Row(children: [
           Expanded(
             child: Container(
@@ -143,7 +143,7 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
                       fontSize: 12, color: widget.code != null ? TaskEraColors.acc2 : c.ink3, height: 1)),
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           GestureDetector(
             onTap: _copy,
             child: Container(
@@ -153,7 +153,7 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(_copied ? 'Copied!' : 'Copy',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                       fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
             ),
           ),
@@ -183,9 +183,9 @@ class _ShareButtons extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: _invite));
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Invite link copied — paste it anywhere to share',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white)),
           backgroundColor: Color(0xFF1C1C1E),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
@@ -226,7 +226,7 @@ class _ShareBtn extends StatelessWidget {
         decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
         alignment: Alignment.center,
         child: Text(label,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                 fontWeight: FontWeight.w600, color: textColor, height: 1)),
       ),
     );
@@ -250,17 +250,17 @@ class _StatsCard extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('YOUR REFERRALS',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 fontWeight: FontWeight.w700, letterSpacing: 0.5,
                 color: colors.ink3, height: 1)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(children: [
           _StatCell(value: '0', label: 'Invited',
               bg: colors.surf2, valueColor: TaskEraColors.acc2),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           _StatCell(value: '0', label: 'Joined',
               bg: colors.surf2, valueColor: TaskEraColors.q2),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           _StatCell(value: '0', label: 'Earned',
               bg: const Color(0x14127000), valueColor: TaskEraColors.q2),
         ]),
@@ -285,12 +285,12 @@ class _StatCell extends StatelessWidget {
         decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
         child: Column(children: [
           Text(value,
-              style: TextStyle(fontFamily: 'Fraunces', fontSize: 18,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18,
                   fontVariations: const [FontVariation('wght', 600)],
                   color: valueColor, height: 1)),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   color: Colors.white54, height: 1.2)),
         ]),
       ),

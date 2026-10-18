@@ -72,7 +72,7 @@ class _SectionLabel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 2, 0, 0),
       child: Text(text.toUpperCase(),
-          style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               fontWeight: FontWeight.w700, letterSpacing: 0.5,
               color: colors.ink3, height: 1)),
     );
@@ -117,11 +117,11 @@ class _AddExamCard extends StatelessWidget {
         painter: _DashedBorderPainter(color: colors.bdr2),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text('+',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 20,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 20,
                   color: colors.ink3, height: 1)),
           const SizedBox(height: 4),
           Text('Add exam',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   color: colors.ink3, height: 1.2)),
         ]),
       ),
@@ -180,11 +180,11 @@ class _StudyPlanCard extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Today's study plan",
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                 fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
         const SizedBox(height: 9),
         Text('No study plan yet — add subjects and schedule tasks to build one.',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 color: colors.ink3, height: 1.4)),
       ]),
     );
@@ -211,7 +211,7 @@ class _SubjectGroups extends ConsumerWidget {
             border: Border.all(width: 0.5, color: colors.bdr),
           ),
           child: Text('Create a list to track a subject.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
         )
       else
         for (final l in lists) ...[
@@ -233,7 +233,7 @@ class _SubjectGroups extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 9),
             child: Text('+ Add subject',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                     fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
           ),
         ),
@@ -296,21 +296,21 @@ class _SubjectRow extends StatelessWidget {
           width: 28, height: 28,
           decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(8)),
           alignment: Alignment.center,
-          child: Text(emoji, style: const TextStyle(fontSize: 13)),
+          child: Text(emoji, style: TextStyle(fontSize: 13)),
         ),
         const SizedBox(width: 9),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(label,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
             Text(sub,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                     color: colors.ink3, height: 1.3)),
           ]),
         ),
         Text(quadLabel,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 fontWeight: FontWeight.w600, color: quadColor, height: 1)),
         const SizedBox(width: 6),
         Text('›',
@@ -363,7 +363,7 @@ class _WeekStatsCard extends ConsumerWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('This week',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 fontWeight: FontWeight.w700, color: colors.ink, height: 1)),
         const SizedBox(height: 8),
         Row(children: [
@@ -397,12 +397,12 @@ class _WeekCell extends StatelessWidget {
         decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(9)),
         child: Column(children: [
           Text(value,
-              style: TextStyle(fontFamily: 'Fraunces', fontSize: 18,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18,
                   fontVariations: const [FontVariation('wght', 700)],
                   color: valueColor, height: 1)),
           const SizedBox(height: 1),
           Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   color: Colors.white54, height: 1.3)),
         ]),
       ),

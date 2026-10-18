@@ -37,7 +37,7 @@ class TimeTrackBody extends ConsumerWidget {
   const TimeTrackBody({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => const SingleChildScrollView(
+  Widget build(BuildContext context, WidgetRef ref) => SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(12, 8, 12, 16),
         child: TimeTrackContent(),
       );
@@ -143,18 +143,18 @@ class TimeTrackContent extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
-                const SizedBox(height: 6),
-                Text(tracker.taskTitle ?? '—', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
-                Text('Started $startLabel', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-                const SizedBox(height: 14),
+                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
+                SizedBox(height: 6),
+                Text(tracker.taskTitle ?? '—', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                Text('Started $startLabel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+                SizedBox(height: 14),
                 Center(
                   child: Text(
                     tracker.displayTime,
-                    style: TextStyle(fontFamily: 'Fraunces', fontSize: 42, fontWeight: FontWeight.w700, color: colors.ink, letterSpacing: -1, height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 42, fontWeight: FontWeight.w700, color: colors.ink, letterSpacing: -1, height: 1),
                   ),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 Row(
                   children: [
                     Expanded(
@@ -172,14 +172,14 @@ class TimeTrackContent extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(tracker.running ? Icons.pause : Icons.play_arrow, size: 14, color: colors.ink),
-                              const SizedBox(width: 5),
-                              Text(tracker.running ? 'Pause' : 'Resume', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                              SizedBox(width: 5),
+                              Text(tracker.running ? 'Pause' : 'Resume', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                             ],
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: GestureDetector(
                         onTap: notifier.stop,
@@ -191,12 +191,12 @@ class TimeTrackContent extends ConsumerWidget {
                             border: Border.all(width: 0.5, color: const Color(0xFFFF6B6B).withAlpha(0x60)),
                           ),
                           alignment: Alignment.center,
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.stop, size: 14, color: Color(0xFFFF6B6B)),
                               SizedBox(width: 5),
-                              Text('Stop', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFFF6B6B))),
+                              Text('Stop', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFFF6B6B))),
                             ],
                           ),
                         ),
@@ -207,23 +207,23 @@ class TimeTrackContent extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // TODAY'S LOG
-          Text("TODAY'S LOG", style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-          const SizedBox(height: 6),
+          Text("TODAY'S LOG", style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+          SizedBox(height: 6),
           if (todayLog.isEmpty)
             _Placeholder('No sessions logged today yet.', colors)
           else
             for (final entry in todayLog) ...[
               _LogRow(entry: entry, colors: colors),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
             ],
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // THIS WEEK chart
-          Text('THIS WEEK', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-          const SizedBox(height: 8),
+          Text('THIS WEEK', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+          SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             decoration: BoxDecoration(
@@ -240,31 +240,31 @@ class TimeTrackContent extends ConsumerWidget {
                     size: Size.infinite,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: _weekDays.map(
-                    (d) => SizedBox(width: 28, child: Center(child: Text(d, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)))),
+                    (d) => SizedBox(width: 28, child: Center(child: Text(d, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)))),
                   ).toList(),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   children: [
                     _LegendDot(color: TaskEraColors.q1, label: 'Q1'),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     _LegendDot(color: TaskEraColors.q2, label: 'Q2'),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     _LegendDot(color: TaskEraColors.acc, label: 'Other'),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // EST. VS ACTUAL
-          Text('EST. VS ACTUAL', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
-          const SizedBox(height: 6),
+          Text('EST. VS ACTUAL', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+          SizedBox(height: 6),
           if (estShown.isEmpty)
             _Placeholder('Track time on tasks that have a duration estimate to compare here.', colors)
           else
@@ -279,18 +279,18 @@ class TimeTrackContent extends ConsumerWidget {
                 children: [
                   for (final row in estShown) ...[
                     _EstVsActualRow(row: row, colors: colors),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                   ],
                   if (estInsight != null) ...[
                     Divider(height: 1, thickness: 0.5, color: colors.bdr),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Row(
                       children: [
-                        const Text('✦ ', style: TextStyle(color: TaskEraColors.acc2)),
+                        Text('✦ ', style: TextStyle(color: TaskEraColors.acc2)),
                         Expanded(
                           child: Text(
                             estInsight,
-                            style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1.4),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1.4),
                           ),
                         ),
                       ],
@@ -322,20 +322,20 @@ class TimeTrackScreen extends ConsumerWidget {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Time tracking', style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('Today: ${_fmtDuration(tracker.elapsedSeconds)} tracked', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text('Time tracking', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text('Today: ${_fmtDuration(tracker.elapsedSeconds)} tracked', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
               GestureDetector(
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Grouping by task coming soon'))),
+                    SnackBar(content: Text('Grouping by task coming soon'))),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
                   decoration: BoxDecoration(
@@ -343,13 +343,13 @@ class TimeTrackScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(7),
                     border: Border.all(width: 0.5, color: colors.bdr),
                   ),
-                  child: Text('By task', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  child: Text('By task', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                 ),
               ),
             ],
           ),
         ),
-        const Expanded(child: TimeTrackBody()),
+        Expanded(child: TimeTrackBody()),
       ],
     );
   }
@@ -396,7 +396,7 @@ class _Placeholder extends StatelessWidget {
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Text(text,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
     );
   }
 }
@@ -421,22 +421,22 @@ class _LogRow extends StatelessWidget {
       child: Row(
         children: [
           Container(width: 4, height: 4, decoration: BoxDecoration(shape: BoxShape.circle, color: entry.quadColor)),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500, color: entry.quadColor)),
-                Text(entry.timeRange, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                Text(entry.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: entry.quadColor)),
+                Text(entry.timeRange, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(entry.duration, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: running ? TaskEraColors.acc : colors.ink)),
+              Text(entry.duration, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: running ? TaskEraColors.acc : colors.ink)),
               if (running)
-                const Text('Running', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: TaskEraColors.acc2)),
+                Text('Running', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2)),
             ],
           ),
         ],
@@ -456,8 +456,8 @@ class _LegendDot extends StatelessWidget {
     return Row(
       children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
-        const SizedBox(width: 4),
-        Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+        SizedBox(width: 4),
+        Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
       ],
     );
   }
@@ -472,12 +472,12 @@ class _EstVsActualRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(row.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink))),
-        Text(row.est, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
-        const SizedBox(width: 8),
+        Expanded(child: Text(row.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
+        Text(row.est, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
+        SizedBox(width: 8),
         Text('·', style: TextStyle(color: colors.ink3)),
-        const SizedBox(width: 8),
-        Text(row.actual, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFF6B6B))),
+        SizedBox(width: 8),
+        Text(row.actual, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFF6B6B))),
       ],
     );
   }
@@ -534,11 +534,11 @@ class _IdleTimerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('NO ACTIVE TIMER',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                   letterSpacing: 0.4, color: colors.ink3)),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text('Start a task from Focus or its detail screen to track time here.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.4)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1.4)),
         ],
       ),
     );

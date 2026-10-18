@@ -198,7 +198,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             onToggle: () => setState(() => _q1Open = !_q1Open),
             colors: colors,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q2,
             bgColor: quadColorsOn ? TaskEraColors.q2.withAlpha(0x12) : Colors.transparent,
@@ -211,7 +211,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             onToggle: () => setState(() => _q2Open = !_q2Open),
             colors: colors,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q3,
             bgColor: quadColorsOn ? TaskEraColors.q3.withAlpha(0x12) : Colors.transparent,
@@ -224,7 +224,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             onToggle: () => setState(() => _q3Open = !_q3Open),
             colors: colors,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           _QuadSection(
             quadColor: TaskEraColors.q4,
             bgColor: quadColorsOn ? TaskEraColors.q4.withAlpha(0x12) : Colors.transparent,
@@ -237,7 +237,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             onToggle: () => setState(() => _q4Open = !_q4Open),
             colors: colors,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           _CompletedSection(
             isOpen: _compOpen,
             onToggle: () => setState(() => _compOpen = !_compOpen),
@@ -245,14 +245,14 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             colors: colors,
           ),
           if (_pruneVisible) ...[
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             _PruneCard(
               onDismiss: () => setState(() => _pruneVisible = false),
               colors: colors,
             ),
           ],
           if (showLists && lists.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             _ListsInTasksSection(lists: lists, colors: colors),
           ],
         ],
@@ -295,18 +295,18 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Expanded(child: _QuadCard(quadColor: TaskEraColors.q1, name: qn[1]!, quadKey: 'q1', count: q1.length, fraction: frac(1, q1.length), tasks: q1, colors: colors)),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Expanded(child: _QuadCard(quadColor: TaskEraColors.q2, name: qn[2]!, quadKey: 'q2', count: q2.length, fraction: frac(2, q2.length), tasks: q2, colors: colors)),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Expanded(child: _QuadCard(quadColor: TaskEraColors.q3, name: qn[3]!, quadKey: 'q3', count: q3.length, fraction: frac(3, q3.length), tasks: q3, colors: colors)),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Expanded(child: _QuadCard(quadColor: TaskEraColors.q4, name: qn[4]!, quadKey: 'q4', count: q4.length, fraction: frac(4, q4.length), tasks: q4, colors: colors)),
                           ],
                         ),
@@ -315,7 +315,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                   ),
                 ),
                 // ── Completed panel — visible at bottom of viewport ──────────
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 _CompletedSection(
                   isOpen: _compOpen,
                   onToggle: () => setState(() => _compOpen = !_compOpen),
@@ -324,7 +324,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                 ),
                 // ── Checklists — appear on scroll when setting is on ─────────
                 if (showLists && lists.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   _ListsInTasksSection(lists: lists, colors: colors),
                 ],
               ],
@@ -354,7 +354,7 @@ class _ViewChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: colors.ink3,
@@ -412,7 +412,7 @@ class _FilterChips extends StatelessWidget {
                         border: const Color(0x330A84FF),
                         onTap: () => context.push(TaskEraRoutes.tasksInbox),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       _Chip(
                         label: '📌 ${AppL10n.of(context).board}',
                         textColor: const Color(0xFF5856D6),
@@ -420,7 +420,7 @@ class _FilterChips extends StatelessWidget {
                         border: const Color(0x335856D6),
                         onTap: () => context.push(TaskEraRoutes.tasksBoard),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       _Chip(
                         label: '🏷 ${AppL10n.of(context).labels}',
                         textColor: const Color(0xFFFF375F),
@@ -428,7 +428,7 @@ class _FilterChips extends StatelessWidget {
                         border: const Color(0x33FF375F),
                         onTap: () => context.push(TaskEraRoutes.tasksLabels),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       _Chip(
                         icon: SvgPicture.string(_filterSvg, width: 10, height: 10,
                             colorFilter: const ColorFilter.mode(Color(0xFF00BCD4), BlendMode.srcIn)),
@@ -438,7 +438,7 @@ class _FilterChips extends StatelessWidget {
                         border: const Color(0x3300BCD4),
                         onTap: () => context.push(TaskEraRoutes.tasksFilters),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                     ],
                   ),
                 ),
@@ -448,16 +448,16 @@ class _FilterChips extends StatelessWidget {
                 colors: colors,
                 onTap: () => onToggle(!isListView),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 _Chip(label: '⚡ ${AppL10n.of(context).auto}', textColor: const Color(0xFFFFB900), bg: const Color(0x1AFFB900), border: const Color(0x33FFB900), onTap: () => context.push(TaskEraRoutes.tasksSchedule)),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 _Chip(
                   icon: SvgPicture.string(_goalsIconSvg, width: 10, height: 10),
                   label: AppL10n.of(context).goals,
@@ -466,7 +466,7 @@ class _FilterChips extends StatelessWidget {
                   border: const Color(0x337FBA00),
                   onTap: () => context.push(TaskEraRoutes.goals),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 _Chip(
                   label: '📋 ${AppL10n.of(context).checklist}',
                   textColor: const Color(0xFFBF5AF2),
@@ -474,9 +474,9 @@ class _FilterChips extends StatelessWidget {
                   border: const Color(0x33BF5AF2),
                   onTap: () => context.push(TaskEraRoutes.tasksLists),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 _Chip(label: '▶ ${AppL10n.of(context).timer}', textColor: const Color(0xFFFF6B35), bg: const Color(0x14FF6B35), border: const Color(0x33FF6B35), onTap: () => context.push(TaskEraRoutes.tasksPomodoro)),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 _Chip(
                   icon: SvgPicture.string(_clockSvg, width: 10, height: 10,
                       colorFilter: const ColorFilter.mode(Color(0xFF6264A7), BlendMode.srcIn)),
@@ -486,7 +486,7 @@ class _FilterChips extends StatelessWidget {
                   border: const Color(0x336264A7),
                   onTap: () => context.push('/tasks/logs'),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
               ],
             ),
           ),
@@ -531,8 +531,8 @@ class _Chip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[icon!, const SizedBox(width: 3)],
-          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: tc, height: 1)),
+          if (icon != null) ...[icon!, SizedBox(width: 3)],
+          Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: tc, height: 1)),
         ],
       ),
       ),
@@ -594,29 +594,29 @@ class _QuadSection extends StatelessWidget {
                       width: 7, height: 7,
                       decoration: BoxDecoration(color: quadColor, shape: BoxShape.circle),
                     ),
-                    const SizedBox(width: 7),
+                    SizedBox(width: 7),
                     GestureDetector(
                       onTap: () => context.push('/tasks/quad/$quadKey'),
                       child: Text(
                         name,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: quadColor, height: 1),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: quadColor, height: 1),
                       ),
                     ),
-                    if (aiBadge != null) ...[const SizedBox(width: 6), aiBadge!],
+                    if (aiBadge != null) ...[SizedBox(width: 6), aiBadge!],
                     const Spacer(),
                     Text(
                       '${tasks.length}',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
                     ),
                     Text(
                       ' active',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     AnimatedRotation(
                       turns: isOpen ? 0.25 : 0,
                       duration: const Duration(milliseconds: 200),
-                      child: const Icon(Icons.chevron_right_rounded, size: 16, color: Color(0xFF636366)),
+                      child: Icon(Icons.chevron_right_rounded, size: 16, color: Color(0xFF636366)),
                     ),
                   ],
                 ),
@@ -674,7 +674,7 @@ class _HeaderBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(4)),
-      child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: col, height: 1)),
+      child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: col, height: 1)),
     );
   }
 }
@@ -706,7 +706,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
               child: Text(
                 task.title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1.3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1.3),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -726,8 +726,8 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
               child: Row(
                 children: [
-                  Text(AppL10n.of(ctx).moveTo, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1)),
-                  const SizedBox(width: 10),
+                  Text(AppL10n.of(ctx).moveTo, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: colors.ink3, height: 1)),
+                  SizedBox(width: 10),
                   for (final (lbl, quad, clr) in [('Q1', 1, TaskEraColors.q1), ('Q2', 2, TaskEraColors.q2), ('Q3', 3, TaskEraColors.q3), ('Q4', 4, TaskEraColors.q4)])
                     GestureDetector(
                       onTap: () {
@@ -743,7 +743,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 0.5, color: clr.withAlpha(0x66)),
                         ),
-                        child: Text(lbl, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: clr, height: 1)),
+                        child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: clr, height: 1)),
                       ),
                     ),
                 ],
@@ -756,7 +756,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
                 ref.logActivity('Task "${task.title}" deleted');
               }, colors: colors),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
           ],
         ),
           ),
@@ -784,8 +784,8 @@ class _ContextItem extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, size: 16, color: color),
-            const SizedBox(width: 12),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: color, height: 1)),
+            SizedBox(width: 12),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: color, height: 1)),
           ],
         ),
       ),
@@ -851,7 +851,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
     final controller = messenger.showSnackBar(SnackBar(
       content: Text(
         '✓  $taskTitle',
-        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
         overflow: TextOverflow.ellipsis,
       ),
       backgroundColor: const Color(0xFF1C1C1E),
@@ -911,9 +911,9 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                     children: [
                       Text(
                         task.title,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500, color: quadColor, height: 1.3),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: quadColor, height: 1.3),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Wrap(
                         spacing: 4,
                         runSpacing: 2,
@@ -922,7 +922,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                           Text(
                             _localizeDue(task.due, l10n),
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 11,
                               color: task.isOverdue ? const Color(0xFFFF8080) : colors.ink3,
                               height: 1.3,
@@ -935,7 +935,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                                 color: const Color(0x26FFB900),
                                 borderRadius: BorderRadius.circular(3),
                               ),
-                              child: const Text('AI', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFFFB900), height: 1.2)),
+                              child: Text('AI', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFFFB900), height: 1.2)),
                             ),
                           if (task.recLabel != null)
                             Container(
@@ -945,7 +945,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                                 borderRadius: BorderRadius.circular(3),
                                 border: Border.all(width: 0.5, color: const Color(0x24FFFFFF)),
                               ),
-                              child: Text(_localizeRec(task.recLabel!, l10n), style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1.2)),
+                              child: Text(_localizeRec(task.recLabel!, l10n), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1.2)),
                             ),
                           if (task.hasPomo)
                             GestureDetector(
@@ -961,8 +961,8 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     SvgPicture.string(_pomoClock, width: 7, height: 7),
-                                    const SizedBox(width: 3),
-                                    Text('${task.pomoMin} min', style: const TextStyle(fontFamily: 'Inter', fontSize: 9, color: Color(0xFFFF8080), height: 1.2)),
+                                    SizedBox(width: 3),
+                                    Text('${task.pomoMin} min', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: Color(0xFFFF8080), height: 1.2)),
                                   ],
                                 ),
                               ),
@@ -970,13 +970,13 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                         ],
                       ),
                       if (task.subs.isNotEmpty) ...[
-                        const SizedBox(height: 5),
+                        SizedBox(height: 5),
                         ...task.subs.map((s) => _SubItemRow(sub: s, quadColor: quadColor, colors: colors)),
                       ],
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 // Dead-zone buffer: taps in the padding around the checkbox are
                 // absorbed (never open task details); only the icon completes.
                 GestureDetector(
@@ -1038,11 +1038,11 @@ class _SubItemRow extends StatelessWidget {
                 ? Icon(Icons.check, size: 8, color: quadColor)
                 : null,
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           Text(
             sub.title,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               color: sub.isDone ? colors.ink3 : quadColor,
               decoration: sub.isDone ? TextDecoration.lineThrough : null,
@@ -1082,7 +1082,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
               child: Text(task.title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: task.qColor, height: 1.3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: task.qColor, height: 1.3),
                 maxLines: 2, overflow: TextOverflow.ellipsis),
             ),
             Container(height: 0.5, color: colors.bdr),
@@ -1099,7 +1099,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
                 ref.logActivity('Task "${task.title}" permanently deleted');
               }, colors: colors),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
           ],
         ),
           ),
@@ -1148,12 +1148,12 @@ class _CompletedSection extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_rounded, size: 18, color: Color(0xFF636366)),
-                    const SizedBox(width: 8),
+                    Icon(Icons.check_rounded, size: 18, color: Color(0xFF636366)),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         AppL10n.of(context).done,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1),
                       ),
                     ),
                     Container(
@@ -1163,13 +1163,13 @@ class _CompletedSection extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(width: 0.5, color: colors.bdr),
                       ),
-                      child: Text('${tasks.length} ${AppL10n.of(context).tasks.toLowerCase()}', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1)),
+                      child: Text('${tasks.length} ${AppL10n.of(context).tasks.toLowerCase()}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1)),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     AnimatedRotation(
                       turns: isOpen ? 0.25 : 0,
                       duration: const Duration(milliseconds: 200),
-                      child: const Icon(Icons.chevron_right_rounded, size: 14, color: Color(0xFF636366)),
+                      child: Icon(Icons.chevron_right_rounded, size: 14, color: Color(0xFF636366)),
                     ),
                   ],
                 ),
@@ -1194,8 +1194,8 @@ class _CompletedSection extends ConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            const SizedBox(width: 5),
-                            Text(entry.key, style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
+                            SizedBox(width: 5),
+                            Text(entry.key, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
                           ],
                         ),
                       ),
@@ -1209,15 +1209,15 @@ class _CompletedSection extends ConsumerWidget {
                                 Container(
                                   width: 14, height: 14,
                                   decoration: BoxDecoration(color: t.qColor, shape: BoxShape.circle),
-                                  child: const Icon(Icons.check, size: 8, color: Colors.white),
+                                  child: Icon(Icons.check, size: 8, color: Colors.white),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(t.title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, decoration: TextDecoration.lineThrough, decorationColor: colors.ink3, height: 1.3)),
-                                      Text(t.doneText, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                                      Text(t.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, decoration: TextDecoration.lineThrough, decorationColor: colors.ink3, height: 1.3)),
+                                      Text(t.doneText, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                                     ],
                                   ),
                                 ),
@@ -1237,7 +1237,7 @@ class _CompletedSection extends ConsumerWidget {
                                     child: Icon(Icons.restore_rounded, size: 15, color: colors.ink),
                                   ),
                                 ),
-                                const SizedBox(width: 6),
+                                SizedBox(width: 6),
                                 GestureDetector(
                                   onTap: () {
                                     ref.read(appDatabaseProvider).tasksDao.deleteTask(t.id);
@@ -1251,7 +1251,7 @@ class _CompletedSection extends ConsumerWidget {
                                       border: Border.all(width: 0.5, color: colors.bdr2),
                                     ),
                                     alignment: Alignment.center,
-                                    child: const Icon(Icons.delete_outline_rounded, size: 15, color: Color(0xFFFF3B30)),
+                                    child: Icon(Icons.delete_outline_rounded, size: 15, color: Color(0xFFFF3B30)),
                                   ),
                                 ),
                               ],
@@ -1271,7 +1271,7 @@ class _CompletedSection extends ConsumerWidget {
                           ),
                           child: Text(
                             'View all completed →',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1),
                           ),
                         ),
                       ),
@@ -1317,30 +1317,30 @@ class _PruneCardState extends State<_PruneCard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('🧹', style: TextStyle(fontSize: 16, height: 1.2)),
-              const SizedBox(width: 8),
+              Text('🧹', style: TextStyle(fontSize: 16, height: 1.2)),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${visible.length} tasks haven\'t moved in 7+ days',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: widget.colors.ink, height: 1.3),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: widget.colors.ink, height: 1.3),
                     ),
                     Text(
                       'Keep, move, or cut — your list, your call.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: widget.colors.ink3, height: 1.4),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: widget.colors.ink3, height: 1.4),
                     ),
                   ],
                 ),
               ),
               GestureDetector(
                 onTap: widget.onDismiss,
-                child: Text('×', style: TextStyle(fontFamily: 'Inter', fontSize: 18, color: widget.colors.ink3, height: 1)),
+                child: Text('×', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18, color: widget.colors.ink3, height: 1)),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ...visible.map((e) => _PruneItemRow(
             item: e.value,
             colors: widget.colors,
@@ -1365,27 +1365,27 @@ class _PruneItemRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(item.title, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1.3)),
+            child: Text(item.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: colors.ink, height: 1.3)),
           ),
-          const SizedBox(width: 6),
-          Text(item.age, style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
+          Text(item.age, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1)),
+          SizedBox(width: 6),
           GestureDetector(
             onTap: () => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('${item.moveLabel} — coming soon'))),
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(6)),
-              child: Text(item.moveLabel, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+              child: Text(item.moveLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
             ),
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: 5),
           GestureDetector(
             onTap: onDel,
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: const Color(0x14FF453A), borderRadius: BorderRadius.circular(6)),
-              child: Text(AppL10n.of(context).delete, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.warn, height: 1)),
+              child: Text(AppL10n.of(context).delete, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.warn, height: 1)),
             ),
           ),
         ],
@@ -1443,15 +1443,15 @@ class _QuadCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(width: 6, height: 6, decoration: BoxDecoration(color: quadColor, shape: BoxShape.circle)),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     Expanded(
-                      child: Text(name, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1), overflow: TextOverflow.ellipsis),
+                      child: Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1), overflow: TextOverflow.ellipsis),
                     ),
-                    Text('$count', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: quadColor, height: 1)),
+                    Text('$count', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: quadColor, height: 1)),
                   ],
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               ClipRRect(
                 borderRadius: BorderRadius.circular(2),
                 child: SizedBox(
@@ -1468,7 +1468,7 @@ class _QuadCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 7),
+              SizedBox(height: 7),
               // Task rows — each taps to task detail
               Expanded(
                 child: Column(
@@ -1482,11 +1482,11 @@ class _QuadCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Container(width: 5, height: 5, decoration: BoxDecoration(color: quadColor, shape: BoxShape.circle)),
-                              const SizedBox(width: 5),
+                              SizedBox(width: 5),
                               Expanded(
                                 child: Text(
                                   tasks[i].title,
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: quadColor, height: 1.3),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: quadColor, height: 1.3),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
@@ -1524,14 +1524,14 @@ class _ListsInTasksSection extends ConsumerWidget {
             Expanded(
               child: Text(AppL10n.of(context).myChecklists,
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600,
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600,
                       color: colors.ink3, letterSpacing: 0.5, height: 1)),
             ),
             GestureDetector(
               onTap: () => context.push(TaskEraRoutes.tasksLists),
               child: Text('${AppL10n.of(context).seeAll} ›',
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 11, color: TaskEraColors.acc2, height: 1)),
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1)),
             ),
           ]),
         ),
@@ -1570,12 +1570,12 @@ class _ListCardInTasks extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
               child: Row(children: [
-                Text(list.emoji, style: const TextStyle(fontSize: 16)),
-                const SizedBox(width: 8),
+                Text(list.emoji, style: TextStyle(fontSize: 16)),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(list.title,
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 13,
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                           fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
                 ),
                 if (items.isNotEmpty) ...[
@@ -1596,14 +1596,14 @@ class _ListCardInTasks extends ConsumerWidget {
                     ),
                     child: Text('$doneCount/${items.length}',
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 10,
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: doneCount == items.length
                                 ? const Color(0xFF30D158)
                                 : colors.ink3,
                             height: 1)),
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                 ],
                 Icon(Icons.chevron_right_rounded, size: 16, color: colors.ink3),
               ]),
@@ -1630,7 +1630,7 @@ class _ListCardInTasks extends ConsumerWidget {
                       ),
                       child: Text('$doneCount ${AppL10n.of(context).done.toLowerCase()}',
                           style: TextStyle(
-                              fontFamily: 'Inter', fontSize: 11,
+                              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                               color: colors.ink3, height: 1)),
                     ),
                 ],
@@ -1671,10 +1671,10 @@ class _ListItemChip extends StatelessWidget {
                 border: Border.all(width: 1, color: colors.bdr2),
               ),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(item.content,
                 style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 12,
+                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                     color: colors.ink, height: 1)),
           ],
         ),
@@ -1699,7 +1699,7 @@ class _Fab extends StatelessWidget {
           boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
         ),
         alignment: Alignment.center,
-        child: const Icon(Icons.add, color: Colors.white, size: 24),
+        child: Icon(Icons.add, color: Colors.white, size: 24),
       ),
     );
   }
@@ -1726,7 +1726,7 @@ void _showFabChooser(BuildContext ctx) {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-              child: Text(AppL10n.of(ctx).addNew, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1.3)),
+              child: Text(AppL10n.of(ctx).addNew, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1.3)),
             ),
             Container(height: 0.5, color: colors.bdr),
             _ContextItem(
@@ -1764,7 +1764,7 @@ void _showFabChooser(BuildContext ctx) {
               onTap: () { Navigator.of(sheetCtx).pop(); },
               colors: colors,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
           ],
         ),
       ),

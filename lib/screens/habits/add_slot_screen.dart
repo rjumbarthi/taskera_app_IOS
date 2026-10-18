@@ -159,14 +159,14 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
               AddBackButton(onTap: () => context.pop()),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(_isEdit ? 'Edit time block' : 'Add time block', style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                child: Text(_isEdit ? 'Edit time block' : 'Add time block', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
               ),
               GestureDetector(
                 onTap: _save,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: Text(AppL10n.of(context).save, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
+                  child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
                 ),
               ),
             ],
@@ -179,10 +179,10 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
               // Title
               _FormRow(label: 'Title', colors: colors, child: TextField(
                 controller: _titleCtrl,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                 decoration: InputDecoration(
                   hintText: 'e.g. Deep work session',
-                  hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                  hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                   filled: false,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
@@ -203,7 +203,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: colors.bdr)),
-                  child: Text(_startTime != null ? _fmt(_startTime!) : 'Tap to set', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: _startTime != null ? colors.ink : colors.ink3)),
+                  child: Text(_startTime != null ? _fmt(_startTime!) : 'Tap to set', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: _startTime != null ? colors.ink : colors.ink3)),
                 ),
               )),
               // End time
@@ -212,7 +212,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: colors.bdr)),
-                  child: Text(_endTime != null ? _fmt(_endTime!) : 'Tap to set', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: _endTime != null ? colors.ink : colors.ink3)),
+                  child: Text(_endTime != null ? _fmt(_endTime!) : 'Tap to set', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: _endTime != null ? colors.ink : colors.ink3)),
                 ),
               )),
               // Date
@@ -221,7 +221,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(width: 0.5, color: colors.bdr)),
-                  child: Text(dateStr, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink)),
+                  child: Text(dateStr, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink)),
                 ),
               )),
               // Repeat block
@@ -250,10 +250,10 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                 controller: _notesCtrl,
                 minLines: 2,
                 maxLines: 4,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink),
                 decoration: InputDecoration(
                   hintText: 'e.g. Prepare 3 talking points',
-                  hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                  hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3),
                   filled: false,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
@@ -273,7 +273,7 @@ class _AddSlotScreenState extends ConsumerState<AddSlotScreen> {
                       border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                     ),
                     alignment: Alignment.center,
-                    child: Text(AppL10n.of(context).deleteEvent, style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                    child: Text(AppL10n.of(context).deleteEvent, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
                   ),
                 ),
               ],
@@ -301,7 +301,7 @@ class _FormRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(label.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
+          Text(label.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4, height: 1)),
           const SizedBox(height: 7),
           child,
         ],
@@ -328,7 +328,7 @@ class _Chip extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(width: 0.5, color: selected ? TaskEraColors.acc : colors.bdr),
         ),
-        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+        child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
           color: selected ? Colors.white : colors.ink2, height: 1)),
       ),
     );

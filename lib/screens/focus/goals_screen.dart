@@ -117,7 +117,7 @@ class GoalsScreen extends ConsumerWidget {
                       child: Text(
                         '"Goals without Q2 tasks are just wishes. Map every goal to at least one scheduled action."',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           color: colors.successFg,
                           height: 1.6,
@@ -165,7 +165,7 @@ class GoalsScreen extends ConsumerWidget {
                               Text(
                                 'Add a new goal (max 5)',
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: TaskEraTheme.of(context).fontFamily,
                                   fontSize: 14,
                                   color: colors.ink3,
                                 ),
@@ -226,7 +226,7 @@ class _SubHeader extends StatelessWidget {
               Text(
                 'Goals',
                 style: TextStyle(
-                  fontFamily: 'Fraunces',
+                  fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                   fontVariations: [FontVariation('wght', 600)],
                   fontSize: 19,
                   letterSpacing: -0.5,
@@ -237,7 +237,7 @@ class _SubHeader extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 12,
                   color: colors.ink3,
                   height: 1.3,
@@ -312,7 +312,7 @@ class _GoalCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 alignment: Alignment.center,
-                child: Text(goal.emoji, style: const TextStyle(fontSize: 18)),
+                child: Text(goal.emoji, style: TextStyle(fontSize: 18)),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -321,8 +321,8 @@ class _GoalCard extends ConsumerWidget {
                   children: [
                     Text(
                       goal.title,
-                      style: const TextStyle(
-                        fontFamily: 'Fraunces',
+                      style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 14,
                         color: Color(0xFFF2F2F7),
@@ -333,7 +333,7 @@ class _GoalCard extends ConsumerWidget {
                     Text(
                       goal.sub,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 12,
                         color: colors.ink3,
                         height: 1.3,
@@ -346,7 +346,7 @@ class _GoalCard extends ConsumerWidget {
               Text(
                 '${(goal.pct * 100).round()}%',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   color: goal.pctColor,
@@ -386,7 +386,7 @@ class _GoalCard extends ConsumerWidget {
             goalId: goalId,
             isHabit: goal.linkType == _LinkType.habit,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               fontWeight: FontWeight.w400,
               color: colors.ink3,
@@ -409,7 +409,7 @@ class _GoalCard extends ConsumerWidget {
                     child: Text(
                       '+$hidden more',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         color: colors.ink3,
                       ),
@@ -513,7 +513,7 @@ class _LinkBtn extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: fg,
@@ -557,7 +557,7 @@ class _LinkedRow extends StatelessWidget {
             child: Text(
               item.title,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
                 color: item.done ? colors.ink3 : item.color,
                 decoration: item.done ? TextDecoration.lineThrough : null,
@@ -571,7 +571,7 @@ class _LinkedRow extends StatelessWidget {
             Text(
               item.badge!,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 color: item.badgeColor,
                 height: 1.3,

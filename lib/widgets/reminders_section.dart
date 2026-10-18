@@ -89,7 +89,7 @@ class RemindersSection extends ConsumerWidget {
                     children: [
                       Text('Reminders & Alarms',
                           style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: colors.ink,
@@ -97,7 +97,7 @@ class RemindersSection extends ConsumerWidget {
                       const SizedBox(height: 2),
                       Text(reminders.isEmpty ? 'None set' : '${reminders.length} set',
                           style: TextStyle(
-                              fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                     ],
                   ),
                 ),
@@ -112,7 +112,7 @@ class RemindersSection extends ConsumerWidget {
                     ),
                     child: Text('+ Add',
                         style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: colors.ink2,
@@ -160,7 +160,7 @@ class _InlineReminderRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Text(reminder.isAlarm ? '⏰' : '🔔', style: const TextStyle(fontSize: 14)),
+          Text(reminder.isAlarm ? '⏰' : '🔔', style: TextStyle(fontSize: 14)),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -173,7 +173,7 @@ class _InlineReminderRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: past ? colors.ink3 : colors.ink,
@@ -185,7 +185,7 @@ class _InlineReminderRow extends StatelessWidget {
                   '${reminder.repeat != ReminderRepeat.none ? ' · ${reminder.repeatLabel}' : ''}'
                   '${past ? ' · passed' : ''}',
                   style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       color: past ? colors.ink4 : accent,
                       height: 1.2),
@@ -303,7 +303,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
                 const SizedBox(height: 16),
                 Text('New reminder',
                     style: TextStyle(
-                        fontFamily: 'Fraunces',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontVariations: const [FontVariation('wght', 600)],
                         fontSize: 18,
                         color: colors.ink,
@@ -334,10 +334,10 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
                       border: Border.all(width: 0.5, color: colors.bdr0)),
                   child: TextField(
                     controller: _ctrl,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink),
                     decoration: InputDecoration(
                       hintText: _isAlarm ? 'Alarm label (e.g. Wake up)' : 'Reminder (e.g. Call the bank)',
-                      hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink3),
+                      hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3),
                       contentPadding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
                       border: InputBorder.none,
                       isDense: true,
@@ -395,7 +395,7 @@ class _AddReminderSheetState extends State<_AddReminderSheet> {
                     child: Text(
                         valid ? 'Set ${_isAlarm ? 'alarm' : 'reminder'}' : 'Pick a future time',
                         style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: valid ? Colors.white : colors.ink3,
@@ -446,7 +446,7 @@ class _TypeBtn extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(label,
               style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: selected ? TaskEraColors.acc2 : colors.ink3,
@@ -482,7 +482,7 @@ class _PickField extends StatelessWidget {
               child: Text(label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink, height: 1))),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
         ]),
       ),
     );

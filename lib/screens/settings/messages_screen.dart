@@ -54,7 +54,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text('Message from Founder',
-                    style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
               ),
               GestureDetector(
                 onTap: () => ref.invalidate(announcementsProvider),
@@ -100,7 +100,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
         children: [
           Row(
             children: [
-              Text(a.emoji, style: const TextStyle(fontSize: 16)),
+              Text(a.emoji, style: TextStyle(fontSize: 16)),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
@@ -110,22 +110,22 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
                   border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                 ),
                 child: Text(a.kindLabel,
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
               ),
               const Spacer(),
               Text(_ago(a.createdAt),
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
             ],
           ),
           if (a.title.isNotEmpty) ...[
             const SizedBox(height: 9),
             Text(a.title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 14.5, fontWeight: FontWeight.w700, color: colors.ink, height: 1.25)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14.5, fontWeight: FontWeight.w700, color: colors.ink, height: 1.25)),
           ],
           if (a.body.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(a.body,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.5)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2, height: 1.5)),
           ],
         ],
       ),
@@ -142,12 +142,12 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
             children: [
               const Text('📭', style: TextStyle(fontSize: 42)),
               const SizedBox(height: 12),
-              Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
+              Text(title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
               const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(sub, textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.4)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.4)),
               ),
             ],
           ),

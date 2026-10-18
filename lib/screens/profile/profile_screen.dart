@@ -60,29 +60,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       children: [
         _HeroCard(colors: colors, onTap: () => context.push(TaskEraRoutes.profileEdit)),
         _PersonaCard(colors: colors), // self-spaces / hides when no onboarding data
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         _StreakBanner(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _ReviewAchievementsStats(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _LifetimeStatsCard(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _QuadrantBalanceCard(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _FocusCard(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _GoalsList(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _HabitsThisWeek(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _CalendarThisWeek(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _NotesSection(colors: colors),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _AccountCard(colors: colors),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         _InviteButton(colors: colors, onTap: () => context.push(TaskEraRoutes.referral)),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         _SignOutButton(busy: _signingOut, onTap: _signOut),
       ],
     );
@@ -117,13 +117,13 @@ class _HeroCard extends ConsumerWidget {
         onTap: onTap,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           const TaskEraAvatar(size: 44),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(display,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                     fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
             Text(memberSince,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3)),
           ]),
         ]),
       ),
@@ -135,8 +135,8 @@ class _HeroCard extends ConsumerWidget {
             gradient: const LinearGradient(colors: [Color(0xFF5856D6), TaskEraColors.acc]),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Text('✦ PRO',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+          child: Text('✦ PRO',
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                   fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
         )
       else
@@ -149,7 +149,7 @@ class _HeroCard extends ConsumerWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(AppL10n.of(context).goPro,
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     fontWeight: FontWeight.w700, color: Colors.white, height: 1)),
           ),
         ),
@@ -227,20 +227,20 @@ class _ReviewAchievementsStats extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(children: [
-              Text(l.weeklyReviewLabel.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              Text(l.weeklyReviewLabel.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.weeklyReview),
-                child: Text(l.startLabel, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                child: Text(l.startLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Text('${l.week} $weekNum · $weekLabel',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                     fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(children: [
               _StatCell('$weekDone', l.completedLabel, colors.ink, colors),
               _StatCell('$carriedOv', l.carriedOver, TaskEraColors.q4, colors),
@@ -252,11 +252,11 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(width: 0.5, color: const Color(0x337FBA00)),
                 ),
-                child: Text('$weekRate%', style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                child: Text('$weekRate%', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
               ),
             ]),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             GestureDetector(
               onTap: () => context.push(TaskEraRoutes.weeklyReview),
               child: Container(
@@ -268,7 +268,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(l.startWeeklyReview,
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 12,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                         fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
               ),
             ),
@@ -282,16 +282,16 @@ class _ReviewAchievementsStats extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(children: [
-              Text(l.achievementsLabel.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              Text(l.achievementsLabel.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.habitsAchievements),
-                child: Text(l.viewAllArrow, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                child: Text(l.viewAllArrow, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -311,11 +311,11 @@ class _ReviewAchievementsStats extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           child: Row(children: [
             _StatCard(streakStr, l.streak, TaskEraColors.q4, colors),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             _StatCard(q2RateStr, l.q2RateLabel, TaskEraColors.q2, colors),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             _StatCard('$done', l.done, TaskEraColors.acc, colors),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             _StatCard('$todayDone', l.today, TaskEraColors.acc2, colors),
           ]),
         ),
@@ -345,12 +345,12 @@ class _AchieveBadge extends StatelessWidget {
             border: Border.all(width: 1, color: earned ? color.withValues(alpha: 0.4) : colors.bdr),
           ),
           alignment: Alignment.center,
-          child: Text(earned ? emoji : '🔒', style: const TextStyle(fontSize: 18)),
+          child: Text(earned ? emoji : '🔒', style: TextStyle(fontSize: 18)),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(label,
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 color: colors.ink3, height: 1.3)),
       ]),
     );
@@ -375,9 +375,9 @@ class _StatCard extends StatelessWidget {
           border: Border.all(width: 0.5, color: accent.withValues(alpha: 0.3)),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(value, style: TextStyle(fontFamily: 'Inter', fontSize: 16,
+          Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
               fontWeight: FontWeight.w700, color: accent, height: 1.2)),
-          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+          Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               color: colors.ink3, height: 1.3)),
         ]),
       ),
@@ -482,7 +482,7 @@ class _FocusCard extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           child: Text(l.tasks.toUpperCase(),
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
         ),
         // Peak Hours + DTN
@@ -498,20 +498,20 @@ class _FocusCard extends ConsumerWidget {
                   border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(l.peakHours.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  Text(l.peakHours.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.4, height: 1)),
-                  const SizedBox(height: 4),
-                  Text(peakHoursStr, style: const TextStyle(fontFamily: 'Inter', fontSize: 16,
+                  SizedBox(height: 4),
+                  Text(peakHoursStr, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
                       fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1.2)),
                   Text(activeDays > 0
                       ? '${l.basedOnLabel} $activeDays ${l.daysLabel}'
                       : '—',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                           color: colors.ink3, height: 1.3)),
                 ]),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -521,14 +521,14 @@ class _FocusCard extends ConsumerWidget {
                   border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('DTN RATE', style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  Text('DTN RATE', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.4, height: 1)),
-                  const SizedBox(height: 4),
-                  Text(dtnRateStr, style: const TextStyle(fontFamily: 'Inter', fontSize: 16,
+                  SizedBox(height: 4),
+                  Text(dtnRateStr, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
                       fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2), height: 1.2)),
                   Text(dtnTotal > 0 ? '$dtnDone/$dtnTotal ${l.done.toLowerCase()}' : '—',
                       maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                           color: colors.ink3, height: 1.3)),
                 ]),
               ),
@@ -541,13 +541,13 @@ class _FocusCard extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(children: [
-              Text(l.tasksThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+              Text(l.tasksThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                   fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
-              Text('$totalActive ${l.total}', style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+              Text('$totalActive ${l.total}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                   color: colors.ink3, height: 1)),
             ]),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             SizedBox(
               height: 44,
               child: Row(
@@ -572,8 +572,8 @@ class _FocusCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 3),
-                            Text(dayLabels[i], style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                            SizedBox(height: 3),
+                            Text(dayLabels[i], style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                                 color: colors.ink3, height: 1)),
                           ],
                         ),
@@ -582,11 +582,11 @@ class _FocusCard extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Row(children: [
-              _QuadBit('Q1', '$q1Active', q1c), const SizedBox(width: 6),
-              _QuadBit('Q2', '$q2Active', q2c), const SizedBox(width: 6),
-              _QuadBit('Q3', '$q3Active', q3c), const SizedBox(width: 6),
+              _QuadBit('Q1', '$q1Active', q1c), SizedBox(width: 6),
+              _QuadBit('Q2', '$q2Active', q2c), SizedBox(width: 6),
+              _QuadBit('Q3', '$q3Active', q3c), SizedBox(width: 6),
               _QuadBit('Q4', '$q4Active', q4c),
             ]),
           ]),
@@ -596,9 +596,9 @@ class _FocusCard extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Text(l.quadrantCompletion.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+            Text(l.quadrantCompletion.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: quads.map((q) => _QuadDonut(q.$1, q.$2, q.$3, q.$4, colors)).toList(),
@@ -621,9 +621,9 @@ class _QuadBit extends StatelessWidget {
     return Row(mainAxisSize: MainAxisSize.min, children: [
       Container(width: 8, height: 8,
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
-      const SizedBox(width: 3),
+      SizedBox(width: 3),
       Text('$label: $value',
-          style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
               color: color, fontWeight: FontWeight.w600, height: 1)),
     ]);
   }
@@ -655,13 +655,13 @@ class _QuadDonut extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(color),
               ),
             ),
-            Text(quad, style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+            Text(quad, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                 fontWeight: FontWeight.w700, color: color, height: 1)),
           ],
         ),
       ),
-      const SizedBox(height: 4),
-      Text(sub, style: TextStyle(fontFamily: 'Inter', fontSize: 8,
+      SizedBox(height: 4),
+      Text(sub, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
           color: colors.ink3, height: 1.3), textAlign: TextAlign.center),
     ]);
   }
@@ -689,12 +689,12 @@ class _GoalsList extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
             child: Row(children: [
-              Text(l.goals.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 9,
+              Text(l.goals.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700, fontSize: 9,
                   color: colors.ink3, letterSpacing: 0.5, height: 1)),
               const Spacer(),
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.goals),
-                child: Text(l.viewAllArrow, style: const TextStyle(fontFamily: 'Inter', fontSize: 11,
+                child: Text(l.viewAllArrow, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: TaskEraColors.acc2, height: 1)),
               ),
             ]),
@@ -703,7 +703,7 @@ class _GoalsList extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Text(l.noGoalsYet,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1.5)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1.5)),
             )
           else
             for (int i = 0; i < goals.length; i++) ...[
@@ -713,13 +713,13 @@ class _GoalsList extends ConsumerWidget {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                   Row(children: [
                     Expanded(child: Text('${goals[i].emoji} ${goals[i].title}',
-                        style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w500, fontSize: 12,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w500, fontSize: 12,
                             color: colors.ink, height: 1.2))),
                     Text('${(goals[i].progressPct * 100).round()}%',
-                        style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700,
                             fontSize: 12, color: Color(goals[i].accentColorValue), height: 1)),
                   ]),
-                  const SizedBox(height: 5),
+                  SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(2),
                     child: LinearProgressIndicator(
@@ -729,10 +729,10 @@ class _GoalsList extends ConsumerWidget {
                       minHeight: 3,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   GoalCountsLabel(
                     goalId: goals[i].id,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                         color: colors.ink3, height: 1.3),
                   ),
                 ]),
@@ -768,7 +768,7 @@ class _HabitsThisWeek extends ConsumerWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
-          Text(AppL10n.of(context).habitsThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700, fontSize: 9,
+          Text(AppL10n.of(context).habitsThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700, fontSize: 9,
               color: colors.ink3, letterSpacing: 0.5, height: 1)),
           const Spacer(),
           if (maxStreak > 0)
@@ -778,31 +778,31 @@ class _HabitsThisWeek extends ConsumerWidget {
                 color: const Color(0x1F7FBA00),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Text('$maxStreak${AppL10n.of(context).dStreakSuffix}', style: TextStyle(fontFamily: 'Inter',
+              child: Text('$maxStreak${AppL10n.of(context).dStreakSuffix}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 9, color: colors.successFg, height: 1)),
             ),
         ]),
         if (habits.isEmpty) ...[
-          const SizedBox(height: 8),
-          Text(AppL10n.of(context).noHabitsYet, style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+          SizedBox(height: 8),
+          Text(AppL10n.of(context).noHabitsYet, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
               color: colors.ink3, height: 1.5)),
         ] else ...[
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           for (int i = 0; i < habits.take(3).length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
+            if (i > 0) SizedBox(height: 8),
             Row(children: [
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('${habits[i].emoji} ${habits[i].name}',
-                      style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w500, fontSize: 12,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w500, fontSize: 12,
                           color: colors.ink, height: 1.2)),
                   Text(habits[i].frequencyLabel,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                           color: colors.ink3, height: 1.3)),
                 ]),
               ),
               Text('${habits[i].weeklyFilledCount}/7',
-                  style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 12,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w600, fontSize: 12,
                       color: colors.successFg, height: 1)),
             ]),
           ],
@@ -839,9 +839,9 @@ class _CalendarThisWeek extends ConsumerWidget {
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Text(l.calendarThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+        Text(l.calendarThisWeekLabel.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
             fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Row(children: [
           _StatCell('$totalEvents', l.eventsLabel, colors.ink, colors),
           _StatCell('—', l.deepWorkLabel, TaskEraColors.acc, colors),
@@ -873,9 +873,9 @@ class _NotesSection extends ConsumerWidget {
         border: Border.all(width: 0.5, color: colors.bdr),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Text(l.notes.toUpperCase(), style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+        Text(l.notes.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
             fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.5, height: 1)),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Row(children: [
           _StatCell('$total', l.total, colors.ink, colors),
           _StatCell('$ai', l.aiActionsLabel, TaskEraColors.acc2, colors),
@@ -899,9 +899,9 @@ class _StatCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(value, style: TextStyle(fontFamily: 'Inter', fontSize: 15,
+        Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
             fontWeight: FontWeight.w700, color: valueColor, height: 1.2)),
-        Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+        Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
             color: colors.ink3, height: 1.3)),
       ]),
     );
@@ -928,7 +928,7 @@ class _InviteButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text('🎁 ${AppL10n.of(context).inviteFriends}',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                 fontWeight: FontWeight.w600, color: colors.accent2, height: 1)),
       ),
     );
@@ -955,12 +955,12 @@ class _SignOutButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: busy
-            ? const SizedBox(
+            ? SizedBox(
                 width: 16, height: 16,
                 child: CircularProgressIndicator(
                     strokeWidth: 2, color: Color(0xFFFF453A)))
             : Text(AppL10n.of(context).signOut,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 14,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
                     fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
       ),
     );
@@ -1014,21 +1014,21 @@ class _PersonaCard extends ConsumerWidget {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Text('YOUR STYLE',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5, color: colors.ink3, height: 1)),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           for (int i = 0; i < rows.length; i++) ...[
-            if (i > 0) const SizedBox(height: 9),
+            if (i > 0) SizedBox(height: 9),
             Row(children: [
-              Text(rows[i].$2.$1, style: const TextStyle(fontSize: 15, height: 1)),
-              const SizedBox(width: 9),
+              Text(rows[i].$2.$1, style: TextStyle(fontSize: 15, height: 1)),
+              SizedBox(width: 9),
               Expanded(
                 child: Text(rows[i].$2.$2,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500,
                         color: colors.ink, height: 1.1)),
               ),
               Text(rows[i].$1,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1)),
             ]),
           ],
         ]),
@@ -1086,19 +1086,19 @@ class _StreakBanner extends ConsumerWidget {
         border: Border.all(width: 0.5, color: const Color(0x33FF6B35)),
       ),
       child: Row(children: [
-        const Text('🔥', style: TextStyle(fontSize: 26, height: 1)),
-        const SizedBox(width: 12),
+        Text('🔥', style: TextStyle(fontSize: 26, height: 1)),
+        SizedBox(width: 12),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('$current day${current == 1 ? '' : 's'} streak',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 16,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
                     fontWeight: FontWeight.w700, color: colors.ink, height: 1.1)),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
                 current > 0
                     ? 'Best $best d · $activeMonth active this month'
                     : 'Complete a task today to start a streak',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3)),
           ]),
         ),
       ]),
@@ -1139,9 +1139,9 @@ class _LifetimeStatsCard extends ConsumerWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text('AT A GLANCE',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                 letterSpacing: 0.5, color: colors.ink3, height: 1)),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(children: [
           _StatCell('$totalDone', 'Tasks done', colors.successFg, colors),
           _StatCell(focusLabel, 'Focus time', TaskEraColors.acc2, colors),
@@ -1187,16 +1187,16 @@ class _QuadrantBalanceCard extends ConsumerWidget {
         Row(children: [
           Expanded(
             child: Text('QUADRANT BALANCE',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                     letterSpacing: 0.5, color: colors.ink3, height: 1)),
           ),
           Text('lifetime',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink3, height: 1)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1)),
         ]),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         if (total == 0)
           Text('No completed tasks yet',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3))
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3))
         else ...[
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -1209,19 +1209,19 @@ class _QuadrantBalanceCard extends ConsumerWidget {
               ]),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Row(children: [
             for (final q in [1, 2, 3, 4]) ...[
-              if (q > 1) const SizedBox(width: 8),
+              if (q > 1) SizedBox(width: 8),
               Expanded(
                 child: Row(children: [
                   Container(width: 7, height: 7,
                       decoration: BoxDecoration(color: _qc(q), shape: BoxShape.circle)),
-                  const SizedBox(width: 5),
+                  SizedBox(width: 5),
                   Expanded(
                     child: Text('Q$q ${(counts[q]! / total * 100).round()}%',
                         maxLines: 1, overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: colors.ink2, height: 1)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink2, height: 1)),
                   ),
                 ]),
               ),
@@ -1280,9 +1280,9 @@ class _AccountCard extends ConsumerWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text('ACCOUNT',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
                 letterSpacing: 0.5, color: colors.ink3, height: 1)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         _AccountRow(label: 'Email', value: email, colors: colors),
         _AccountRow(label: 'Sign-in', value: signIn, colors: colors),
         _AccountRow(label: 'Member since', value: memberSince, colors: colors),
@@ -1305,12 +1305,12 @@ class _AccountRow extends StatelessWidget {
         SizedBox(
           width: 96,
           child: Text(label,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.2)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.2)),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.right,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500,
                   color: colors.ink, height: 1.2)),
         ),
       ]),

@@ -87,8 +87,8 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppL10n.of(context).calendarSync, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('One-way · Google Calendar → TaskEra (read-only)', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(AppL10n.of(context).calendarSync, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text('One-way · Google Calendar → TaskEra (read-only)', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -126,10 +126,10 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Google Calendar', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                              Text('Google Calendar', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                               Text(
                                 _connected ? '● Connected · Syncs every 15 min · 5 min in-app' : '○ Not connected',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                                     color: _connected ? colors.successFg : colors.ink3)),
                             ],
                           ),
@@ -140,7 +140,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                               decoration: BoxDecoration(color: const Color(0x1AFF453A), borderRadius: BorderRadius.circular(6)),
-                              child: Text(AppL10n.of(context).disconnect, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: Color(0xFFFF6B6B))),
+                              child: Text(AppL10n.of(context).disconnect, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: Color(0xFFFF6B6B))),
                             ),
                           ),
                       ],
@@ -164,7 +164,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                               ? const SizedBox(width: 14, height: 14,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                               : Text(AppL10n.of(context).connectGoogleCal,
-                                  style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
                       ),
                     ],
@@ -175,7 +175,7 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
               // Event → task suggestions — only when connected; no fake previews.
               if (_connected) ...[
                 Text(AppL10n.of(context).eventsToTaskSugg.toUpperCase(),
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
@@ -186,13 +186,13 @@ class _CalSyncScreenState extends ConsumerState<CalSyncScreen> {
                     border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                   ),
                   child: Text('Synced events will appear here after your next sync.',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
                 ),
                 const SizedBox(height: 14),
               ],
               // Sync settings
               Text(AppL10n.of(context).syncSettings.toUpperCase(),
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
@@ -237,9 +237,9 @@ class _CountCell extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
             const SizedBox(height: 2),
-            Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.labelMuted)),
+            Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted)),
           ],
         ),
       ),
@@ -265,7 +265,7 @@ class _SettingRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2))),
+          Expanded(child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2))),
           _Toggle(value: value, onChanged: onChanged),
         ],
       ),

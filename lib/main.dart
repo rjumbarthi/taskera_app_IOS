@@ -288,8 +288,11 @@ const _kAccents = [
   (Color(0xFF155EEF), Color(0xFF168BFF), Color(0x1F155EEF)), // cobalt (glass theme)
 ];
 
-const _kFontFamilies  = ['Inter', 'Fraunces', 'Inter', 'Inter'];
+const _kFontFamilies  = ['Inter', 'Fraunces', 'Inter', 'Inter', 'Caveat Brush', 'Finger Paint'];
 const _kFontSizeScales = [0.85, 1.0, 1.15, 1.3];
+// Numbers font (stat counts, streaks, timer digits) — picked independently
+// of the general UI font above.
+const _kNumberFontFamilies = ['Fraunces', 'Inter', 'Caveat Brush', 'Finger Paint'];
 
 class TaskEraApp extends ConsumerStatefulWidget {
   final GoRouter router;
@@ -388,12 +391,14 @@ class _TaskEraAppState extends ConsumerState<TaskEraApp> with WidgetsBindingObse
     };
     final ac  = _kAccents[s.accent.clamp(0, _kAccents.length - 1)];
     final fam = _kFontFamilies[s.font.clamp(0, _kFontFamilies.length - 1)];
+    final numFam = _kNumberFontFamilies[s.numberFont.clamp(0, _kNumberFontFamilies.length - 1)];
     final scale = _kFontSizeScales[s.fontSize.clamp(0, _kFontSizeScales.length - 1)];
 
     final themeData = TaskEraThemeData.fromMode(
       themeMode,
       accent: ac.$1, accent2: ac.$2, accentBg: ac.$3,
       fontFamily: fam,
+      numberFontFamily: numFam,
       fontSizeScale: scale,
     );
 

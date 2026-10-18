@@ -69,7 +69,7 @@ class LabelsScreen extends ConsumerWidget {
                   children: [
                     Text('Labels',
                         style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -80,7 +80,7 @@ class LabelsScreen extends ConsumerWidget {
                             ? 'No labels yet'
                             : '${names.length} label${names.length == 1 ? '' : 's'} · tap to expand',
                         style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                            fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -122,18 +122,18 @@ class _Empty extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('#', style: TextStyle(fontFamily: 'Fraunces', fontSize: 36, color: colors.ink3)),
+            Text('#', style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 36, color: colors.ink3)),
             const SizedBox(height: 10),
             Text('No labels yet',
                 style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: colors.ink2)),
             const SizedBox(height: 4),
             Text('Add labels to a task from its editor and they\'ll be grouped here.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
           ],
         ),
       ),
@@ -192,13 +192,13 @@ class _LabelRowState extends State<_LabelRow> {
                     children: [
                       Text('#${widget.name}',
                           style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: widget.color)),
                       Text('$count task${count == 1 ? '' : 's'}',
                           style: TextStyle(
-                              fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                     ],
                   ),
                 ),
@@ -257,7 +257,7 @@ class _LabelTaskRow extends StatelessWidget {
             Expanded(
                 child: Text(task.title,
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 12,
                         color: task.isDone ? colors.ink3 : colors.ink))),
           ],

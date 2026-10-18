@@ -46,7 +46,7 @@ class SettingsRow extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                   color: colors.ink2,
@@ -58,7 +58,7 @@ class SettingsRow extends StatelessWidget {
               Text(
                 value!,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   color: colors.ink3,
                 ),

@@ -5,6 +5,7 @@ import '../../data/models/note_block.dart';
 import '../../theme/taskera_colors.dart';
 import '../../util/input_limits.dart';
 import 'block_types.dart';
+import '../../theme/taskera_theme.dart';
 
 /// A Notion-style block editor.
 ///
@@ -348,7 +349,7 @@ class _BlockEditorState extends State<BlockEditor> {
                     ? Padding(
                         padding: const EdgeInsets.all(14),
                         child: Text('No matches',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                       )
                     : ListView(
                         padding: const EdgeInsets.symmetric(vertical: 6),
@@ -524,7 +525,7 @@ class _BlockEditorState extends State<BlockEditor> {
             contentPadding: const EdgeInsets.symmetric(vertical: 3),
             hintText: i == 0 && _ctls.length == 1 ? widget.hintText : null,
             hintStyle: TextStyle(
-                fontFamily: 'Inter', fontSize: 14, color: colors.ink3, height: 1.5),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3, height: 1.5),
           ),
         ),
       ),
@@ -599,7 +600,7 @@ class _BlockEditorState extends State<BlockEditor> {
         return Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Text('${_numberFor(i)}.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2, height: 1.5)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2, height: 1.5)),
         );
       case BlockType.todo:
         return Padding(
@@ -703,7 +704,7 @@ class _BlockEditorState extends State<BlockEditor> {
           children: [
             const SizedBox(height: 10),
             Text('Turn into',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink3)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink3)),
             const SizedBox(height: 6),
             Flexible(
               child: ListView(
@@ -733,7 +734,7 @@ class _BlockEditorState extends State<BlockEditor> {
           children: [
             Icon(icon, size: 19, color: color),
             const SizedBox(width: 14),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: color)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: color)),
           ],
         ),
       ),
@@ -788,9 +789,9 @@ class _SlashItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(desc.label,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13.5, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13.5, fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
                 Text(desc.hint,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.3)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.3)),
               ],
             ),
           ],

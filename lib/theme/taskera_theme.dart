@@ -33,11 +33,12 @@ class TaskEraThemeData {
 
   factory TaskEraThemeData.fromMode(
     TaskEraThemeMode mode, {
-    Color  accent        = const Color(0xFF0A84FF),
-    Color  accent2       = const Color(0xFF409CFF),
-    Color  accentBg      = const Color(0x1F0A84FF),
-    String fontFamily    = 'Inter',
-    double fontSizeScale = 1.0,
+    Color  accent           = const Color(0xFF0A84FF),
+    Color  accent2          = const Color(0xFF409CFF),
+    Color  accentBg         = const Color(0x1F0A84FF),
+    String fontFamily       = 'Inter',
+    String numberFontFamily = 'Fraunces',
+    double fontSizeScale    = 1.0,
   }) {
     final base = switch (mode) {
       TaskEraThemeMode.glass => TaskEraColors.glass,
@@ -54,7 +55,7 @@ class TaskEraThemeData {
     );
     return TaskEraThemeData(
       colors: colors,
-      type:   const TaskEraType(),
+      type:   TaskEraType(fontFamily: fontFamily, numberFontFamily: numberFontFamily),
       shape:  const TaskEraShape(),
       motion: const TaskEraMotion(),
       mode:   mode,
@@ -81,8 +82,9 @@ class TaskEraTheme extends InheritedWidget {
 
   @override
   bool updateShouldNotify(TaskEraTheme oldWidget) =>
-      data.mode           != oldWidget.data.mode ||
-      data.colors.accent  != oldWidget.data.colors.accent ||
-      data.fontFamily     != oldWidget.data.fontFamily ||
-      data.fontSizeScale  != oldWidget.data.fontSizeScale;
+      data.mode              != oldWidget.data.mode ||
+      data.colors.accent     != oldWidget.data.colors.accent ||
+      data.fontFamily        != oldWidget.data.fontFamily ||
+      data.type.numberFontFamily != oldWidget.data.type.numberFontFamily ||
+      data.fontSizeScale     != oldWidget.data.fontSizeScale;
 }

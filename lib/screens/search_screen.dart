@@ -187,7 +187,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: Center(
               child: Text(
                 'Search tasks, notes, habits & databases',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     color: colors.ink3, height: 1.6),
                 textAlign: TextAlign.center,
               ),
@@ -199,7 +199,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: Center(
               child: Text(
                 'No results for "$_query"',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     color: colors.ink3, height: 1.6),
                 textAlign: TextAlign.center,
               ),
@@ -251,11 +251,11 @@ class _SearchInput extends StatelessWidget {
               inputFormatters: maxLen(kMaxSearch),
               onChanged: onChange,
               style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 14, color: colors.ink, height: 1),
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink, height: 1),
               decoration: InputDecoration(
                 hintText: AppL10n.of(context).search,
                 hintStyle: TextStyle(
-                    fontFamily: 'Inter', fontSize: 14, color: colors.ink3, height: 1),
+                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink3, height: 1),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -267,7 +267,7 @@ class _SearchInput extends StatelessWidget {
               onTap: onClear,
               child: Text('×',
                   style: TextStyle(
-                      fontFamily: 'Inter', fontSize: 18, color: colors.ink3, height: 1)),
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 18, color: colors.ink3, height: 1)),
             ),
         ],
       ),
@@ -312,7 +312,7 @@ class _FilterRow extends StatelessWidget {
                   child: Text(
                     filters[i],
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: selected == i ? Colors.white : colors.ink3,
@@ -364,7 +364,7 @@ class _ResultTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(result.kind,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                       fontWeight: FontWeight.w700, color: kindColor, height: 1)),
             ),
             const SizedBox(width: 8),
@@ -373,13 +373,13 @@ class _ResultTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(result.title,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                           fontWeight: FontWeight.w600, color: colors.ink, height: 1.2),
                       overflow: TextOverflow.ellipsis),
                   if (result.sub.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text(result.sub,
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                             color: colors.ink3, height: 1.3),
                         overflow: TextOverflow.ellipsis),
                   ],

@@ -140,7 +140,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
         // Before the habit existed → dim date number, no miss marker.
         cell = Center(
           child: Text('$day',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 8,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
               color: colors.ink3.withAlpha(0x28), height: 1)),
         );
       } else if (isToday) {
@@ -152,7 +152,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
           ),
           child: Center(
             child: Text('$day',
-              style: const TextStyle(fontFamily: 'Inter', fontSize: 8,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
                 color: TaskEraColors.acc, height: 1)),
           ),
         );
@@ -163,7 +163,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
         // Future date — dim number.
         cell = Center(
           child: Text('$day',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 8,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
               color: colors.ink3.withAlpha(0x55), height: 1)),
         );
       }
@@ -282,8 +282,8 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(name, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text('$meta · $streak', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text('$meta · $streak', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -312,11 +312,11 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                 ),
                 child: Column(
                   children: [
-                    Text(emoji, style: const TextStyle(fontSize: 36, height: 1)),
+                    Text(emoji, style: TextStyle(fontSize: 36, height: 1)),
                     const SizedBox(height: 6),
-                    Text(name, style: TextStyle(fontFamily: 'Fraunces', fontSize: 18, fontWeight: FontWeight.w600, color: colors.ink, height: 1.1)),
+                    Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w600, color: colors.ink, height: 1.1)),
                     const SizedBox(height: 3),
-                    Text(meta, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                    Text(meta, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -378,7 +378,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('${_monthNames[_month - 1]} $_year',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                         Row(
                           children: [
                             _NavBtn(icon: Icons.chevron_left, colors: colors, onTap: _prevMonth),
@@ -392,7 +392,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     Row(
                       children: ['M','T','W','T','F','S','S'].map((d) => Expanded(
                         child: Text(d, textAlign: TextAlign.center,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink3)),
                       )).toList(),
                     ),
                     const SizedBox(height: 3),
@@ -425,8 +425,8 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(AppL10n.of(context).last8Weeks, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
-                        Text(weekAvgPct, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: colors.successFg)),
+                        Text(AppL10n.of(context).last8Weeks, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                        Text(weekAvgPct, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: colors.successFg)),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -455,7 +455,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 3),
-                                  Text(weekLabels[i], style: TextStyle(fontFamily: 'Inter', fontSize: 8, color: colors.ink3)),
+                                  Text(weekLabels[i], style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, color: colors.ink3)),
                                 ],
                               ),
                             ),
@@ -474,15 +474,15 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('30-day trend', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                    Text('30-day trend', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                     const SizedBox(height: 8),
                     SizedBox(height: 52, child: CustomPaint(painter: _TrendPainter(points: trendPts))),
                     const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('30 days ago', style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
-                        Text(AppL10n.of(context).today, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                        Text('30 days ago', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
+                        Text(AppL10n.of(context).today, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                       ],
                     ),
                   ],
@@ -495,7 +495,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(AppL10n.of(context).reminder, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                    Text(AppL10n.of(context).reminder, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -505,10 +505,10 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                           children: [
                             Text(
                                 habit?.scheduledTime != null ? _fmtReminder(habit!.scheduledTime!) : 'Not set',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w500, color: colors.ink)),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w500, color: colors.ink)),
                             Text(
                                 habit?.frequencyLabel.isNotEmpty == true ? habit!.frequencyLabel : AppL10n.of(context).everyWeekday,
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                           ],
                         ),
                         _ToggleWidget(initial: habit?.scheduledTime != null),
@@ -524,7 +524,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(AppL10n.of(context).allTimeStats, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                    Text(AppL10n.of(context).allTimeStats, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -561,7 +561,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                   ),
                   alignment: Alignment.center,
-                  child: Text('${AppL10n.of(context).delete} Habit', style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFFFF453A), height: 1)),
+                  child: Text('${AppL10n.of(context).delete} Habit', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFFFF453A), height: 1)),
                 ),
               ),
             ],
@@ -612,10 +612,10 @@ class _HeroStat extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 17, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 17, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
             const SizedBox(height: 3),
             Text(label, textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.labelMuted, height: 1.2)),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted, height: 1.2)),
           ],
         ),
       ),
@@ -655,7 +655,7 @@ class _LegendIcon extends StatelessWidget {
     children: [
       Icon(icon, size: 11, color: iconColor),
       const SizedBox(width: 3),
-      Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+      Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
     ],
   );
 }
@@ -679,9 +679,9 @@ class _StatCell2 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.labelMuted)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted)),
             const SizedBox(height: 3),
-            Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
           ],
         ),
       ),
@@ -802,7 +802,7 @@ class _SubHabitRow extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(title, style: TextStyle(
-                fontFamily: 'Inter', fontSize: 12,
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 color: isDone ? colors.ink3 : colors.ink,
                 decoration: isDone ? TextDecoration.lineThrough : null,
                 decorationColor: colors.ink3,
@@ -842,7 +842,7 @@ class _AddStepRow extends StatelessWidget {
               Icon(Icons.add_rounded, size: 15, color: accent),
               const SizedBox(width: 6),
               Text('Add step', style: TextStyle(
-                fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: accent)),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: accent)),
             ],
           ),
         ),
@@ -856,13 +856,13 @@ class _AddStepRow extends StatelessWidget {
             child: TextField(
               controller: controller,
               autofocus: true,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink),
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => onSubmit(),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: 'New step…',
-                hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3),
+                hintStyle: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide(width: 0.5, color: colors.bdr)),
                 focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide(width: 0.5, color: accent)),
@@ -901,10 +901,10 @@ class _HabitSkipCard extends StatelessWidget {
             border: Border.all(width: 0.5, color: colors.bdr),
           ),
           child: Column(children: [
-            Text(emoji, style: const TextStyle(fontSize: 11, height: 1)),
+            Text(emoji, style: TextStyle(fontSize: 11, height: 1)),
             const SizedBox(height: 2),
             Text(label, textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink2, height: 1)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: colors.ink2, height: 1)),
           ]),
         ),
       ),
@@ -918,10 +918,10 @@ class _HabitSkipCard extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text(l.somethingCameUp,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, height: 1)),
         const SizedBox(height: 1),
         Text(l.rescheduleHabit,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3.withAlpha(0xB3), height: 1.3)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3.withAlpha(0xB3), height: 1.3)),
         const SizedBox(height: 7),
         Row(children: [
           btn('📅', l.tomorrow), const SizedBox(width: 5),

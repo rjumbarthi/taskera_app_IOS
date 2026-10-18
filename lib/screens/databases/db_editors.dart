@@ -106,13 +106,13 @@ Future<String?> _editTextValue(
     context: context,
     builder: (ctx) => AlertDialog(
       backgroundColor: colors.surf,
-      title: Text(prop.name, style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: colors.ink)),
+      title: Text(prop.name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, color: colors.ink)),
       content: TextField(
         controller: ctrl,
         autofocus: true,
         inputFormatters: maxLen(kMaxCell),
         keyboardType: number ? const TextInputType.numberWithOptions(decimal: true) : null,
-        style: TextStyle(fontFamily: 'Inter', color: colors.ink),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: colors.ink),
         decoration: InputDecoration(
           hintText: 'Enter ${prop.name.toLowerCase()}…',
           hintStyle: TextStyle(color: colors.ink3),
@@ -141,7 +141,7 @@ Future<void> _pickSelect(BuildContext context, WidgetRef ref, TaskEraColors colo
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _sheetTitle(colors, prop.name),
+            _sheetTitle(ctx, colors, prop.name),
             ...cfg.options.map((o) => _OptionRow(
                   option: o, colors: colors,
                   selected: current == o.name,
@@ -178,7 +178,7 @@ Future<void> _pickMultiSelect(BuildContext context, WidgetRef ref, TaskEraColors
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _sheetTitle(colors, prop.name),
+            _sheetTitle(ctx, colors, prop.name),
             ...cfg.options.map((o) => _OptionRow(
                   option: o, colors: colors,
                   selected: selected.contains(o.name),
@@ -206,10 +206,10 @@ Future<void> _pickMultiSelect(BuildContext context, WidgetRef ref, TaskEraColors
   );
 }
 
-Widget _sheetTitle(TaskEraColors colors, String title) => Padding(
+Widget _sheetTitle(BuildContext context, TaskEraColors colors, String title) => Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
       child: Row(children: [
-        Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink3)),
+        Text(title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink3)),
       ]),
     );
 
@@ -225,7 +225,7 @@ Widget _addOptionRow(BuildContext context, WidgetRef ref, TaskEraColors colors,
       child: Row(children: [
         Icon(Icons.add_rounded, size: 18, color: colors.ink3),
         const SizedBox(width: 12),
-        Text('Add option', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2)),
+        Text('Add option', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2)),
       ]),
     ),
   );
@@ -270,7 +270,7 @@ class OptionChip extends StatelessWidget {
         border: Border.all(width: 0.5, color: c.withAlpha(0x66)),
       ),
       child: Text(option.name,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: c)),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: c)),
     );
   }
 }
@@ -321,7 +321,7 @@ class _RowEditorSheet extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 6),
               child: Row(children: [
-                Text('Edit row', style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
+                Text('Edit row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink)),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
@@ -360,7 +360,7 @@ class _RowEditorSheet extends ConsumerWidget {
             Icon(type.icon, size: 14, color: colors.ink3),
             const SizedBox(width: 6),
             Text(p.name.toUpperCase(),
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.ink3, letterSpacing: 0.4)),
           ]),
           const SizedBox(height: 6),
           GestureDetector(
@@ -374,7 +374,7 @@ class _RowEditorSheet extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(width: 0.5, color: colors.bdr),
               ),
-              child: _valuePreview(colors, p, type, value),
+              child: _valuePreview(context, colors, p, type, value),
             ),
           ),
         ],
@@ -382,13 +382,13 @@ class _RowEditorSheet extends ConsumerWidget {
     );
   }
 
-  Widget _valuePreview(TaskEraColors colors, DbProperty p, DbPropType type, dynamic value) {
+  Widget _valuePreview(BuildContext context, TaskEraColors colors, DbProperty p, DbPropType type, dynamic value) {
     if (type == DbPropType.checkbox) {
       return Row(children: [
         Icon(value == true ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
             size: 20, color: value == true ? TaskEraColors.acc : colors.ink3),
         const SizedBox(width: 8),
-        Text(value == true ? 'Checked' : 'Unchecked', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2)),
+        Text(value == true ? 'Checked' : 'Unchecked', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink2)),
       ]);
     }
     if (type == DbPropType.select && value is String && value.isNotEmpty) {
@@ -405,6 +405,6 @@ class _RowEditorSheet extends ConsumerWidget {
     }
     final disp = cellDisplay(value, type);
     return Text(disp.isEmpty ? 'Empty' : disp,
-        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: disp.isEmpty ? colors.ink3 : colors.ink));
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: disp.isEmpty ? colors.ink3 : colors.ink));
   }
 }

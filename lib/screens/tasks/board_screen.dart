@@ -46,8 +46,8 @@ class BoardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppL10n.of(context).board, style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
-                    Text(AppL10n.of(context).kanbanView, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1.2)),
+                    Text(AppL10n.of(context).board, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink, height: 1.1)),
+                    Text(AppL10n.of(context).kanbanView, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1.2)),
                   ],
                 ),
               ),
@@ -109,12 +109,12 @@ class _BoardColumn extends StatelessWidget {
                 Container(width: 7, height: 7, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: color), overflow: TextOverflow.ellipsis),
+                  child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: color), overflow: TextOverflow.ellipsis),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                   decoration: BoxDecoration(color: color.withAlpha(0x33), borderRadius: BorderRadius.circular(4)),
-                  child: Text('${tasks.length}', style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+                  child: Text('${tasks.length}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: color)),
                 ),
               ],
             ),
@@ -132,7 +132,7 @@ class _BoardColumn extends StatelessWidget {
             child: tasks.isEmpty
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-                    child: Text(AppL10n.of(context).noTasks, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3), textAlign: TextAlign.center),
+                    child: Text(AppL10n.of(context).noTasks, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3), textAlign: TextAlign.center),
                   )
                 : Column(
                     children: tasks.map((task) => _BoardTaskCard(task: task, quadColor: color, colors: colors)).toList(),
@@ -150,7 +150,7 @@ class _BoardColumn extends StatelessWidget {
                 border: Border.all(width: 0.5, color: colors.bdr),
               ),
               alignment: Alignment.center,
-              child: Text('+ Add', style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+              child: Text('+ Add', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
             ),
           ),
         ],
@@ -195,9 +195,9 @@ class _BoardTaskCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(task.title, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: quadColor, height: 1.3)),
+            Text(task.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: quadColor, height: 1.3)),
             const SizedBox(height: 3),
-            Text(_meta, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+            Text(_meta, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
           ],
         ),
       ),

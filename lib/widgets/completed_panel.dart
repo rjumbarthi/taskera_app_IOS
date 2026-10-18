@@ -56,7 +56,7 @@ class CompletedPanel extends StatelessWidget {
                 Text(
                   '✓ $title',
                   style: TextStyle(
-                    fontFamily: 'Fraunces',
+                    fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                     fontVariations: const [FontVariation('wght', 600)],
                     fontSize: 23,
                     color: colors.ink,

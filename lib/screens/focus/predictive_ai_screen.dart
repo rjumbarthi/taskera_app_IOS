@@ -81,7 +81,7 @@ class PredictiveAiScreen extends ConsumerWidget {
                 ? 'Based on $activeDays ${activeDays == 1 ? 'day' : 'days'} of data'
                 : 'Complete a few tasks to unlock insights',
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           if (!hasEnough)
             _EmptyState(colors: colors, completions: completions)
@@ -100,11 +100,11 @@ class PredictiveAiScreen extends ConsumerWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               'INSIGHTS',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
@@ -112,7 +112,7 @@ class PredictiveAiScreen extends ConsumerWidget {
                 height: 1,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             ..._buildRecommendations(
               colors: colors,
               done: done,
@@ -122,7 +122,7 @@ class PredictiveAiScreen extends ConsumerWidget {
               weekdayCounts: weekdayCounts,
               hourQuad: hourQuad,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _FooterCard(
               colors: colors,
               activeDays: activeDays,
@@ -190,7 +190,7 @@ class PredictiveAiScreen extends ConsumerWidget {
 
     return [
       for (int i = 0; i < recs.length; i++) ...[
-        if (i > 0) const SizedBox(height: 6),
+        if (i > 0) SizedBox(height: 6),
         recs[i],
       ],
     ];
@@ -210,7 +210,7 @@ class _PageHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AddBackButton(onTap: () => context.go(TaskEraRoutes.focus)),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -218,7 +218,7 @@ class _PageHeader extends StatelessWidget {
             Text(
               'Peak insights',
               style: TextStyle(
-                fontFamily: 'Fraunces',
+                fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                 fontVariations: const [FontVariation('wght', 600)],
                 fontSize: 19,
                 letterSpacing: -0.5,
@@ -229,7 +229,7 @@ class _PageHeader extends StatelessWidget {
             Text(
               subtitle,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 color: colors.ink3,
                 letterSpacing: 0.1,
@@ -266,23 +266,23 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '✦ Not enough data yet',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 13,
               fontWeight: FontWeight.w700,
               color: TaskEraColors.acc2,
               height: 1.2,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             completions == 0
                 ? 'Complete a few tasks and TaskEra will learn when you do your best work — your peak focus windows, best days and patterns appear here.'
                 : 'You\'ve logged $completions ${completions == 1 ? 'completion' : 'completions'}. A handful more and your peak focus windows will appear here.',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 13,
               color: colors.ink2,
               height: 1.5,
@@ -319,10 +319,10 @@ class _PeakWindowsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
+          Text(
             '✦ Your peak focus windows',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.4,
@@ -330,11 +330,11 @@ class _PeakWindowsCard extends StatelessWidget {
               height: 1,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Column(
             children: [
               for (int i = 0; i < windows.length; i++) ...[
-                if (i > 0) const SizedBox(height: 6),
+                if (i > 0) SizedBox(height: 6),
                 Builder(builder: (_) {
                   final w = windows[i];
                   final (badge, color) = PredictiveAiScreen._quadInfo(w.quad);
@@ -382,7 +382,7 @@ class _TimeRow extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: colors.ink,
@@ -390,7 +390,7 @@ class _TimeRow extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 9),
+        SizedBox(width: 9),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -414,11 +414,11 @@ class _TimeRow extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 9),
+        SizedBox(width: 9),
         Text(
           badge,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 11,
             fontWeight: FontWeight.w700,
             color: badgeColor,
@@ -462,18 +462,18 @@ class _RecommendCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: titleColor,
               height: 1.2,
             ),
           ),
-          const SizedBox(height: 3),
+          SizedBox(height: 3),
           Text(
             body,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 13,
               color: colors.ink2,
               height: 1.5,
@@ -509,23 +509,23 @@ class _FooterCard extends StatelessWidget {
       child: RichText(
         text: TextSpan(
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 11,
             color: colors.ink3,
             height: 1.6,
           ),
           children: [
-            const TextSpan(text: 'Based on '),
+            TextSpan(text: 'Based on '),
             TextSpan(
               text: '$activeDays ${activeDays == 1 ? 'day' : 'days'}',
               style: TextStyle(color: colors.ink2, fontWeight: FontWeight.w600),
             ),
-            const TextSpan(text: ' of data · '),
+            TextSpan(text: ' of data · '),
             TextSpan(
               text: '$completions ${completions == 1 ? 'completion' : 'completions'}',
               style: TextStyle(color: colors.successFg, fontWeight: FontWeight.w600),
             ),
-            const TextSpan(text: ' logged · Confidence improves after 30 days'),
+            TextSpan(text: ' logged · Confidence improves after 30 days'),
           ],
         ),
       ),

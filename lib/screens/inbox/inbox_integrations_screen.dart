@@ -29,7 +29,7 @@ class InboxIntegrationsScreen extends ConsumerWidget {
               Text(
                 'Integrations',
                 style: TextStyle(
-                  fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19,
+                  fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19,
                   letterSpacing: -0.5, color: colors.ink,
                 ),
               ),
@@ -136,7 +136,7 @@ class _SectionLabel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 4, 0, 0),
       child: Text(text.toUpperCase(),
-          style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               fontWeight: FontWeight.w700, letterSpacing: 0.5,
               color: colors.ink3, height: 1)),
     );
@@ -171,16 +171,16 @@ class _IntegrationRow extends StatelessWidget {
           width: 32, height: 32,
           decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(9)),
           alignment: Alignment.center,
-          child: Text(emoji, style: const TextStyle(fontSize: 16)),
+          child: Text(emoji, style: TextStyle(fontSize: 16)),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                     fontWeight: FontWeight.w600, color: colors.ink, height: 1.2)),
             Text(sub,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 11,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                     color: colors.ink3, height: 1.3)),
           ]),
         ),
@@ -194,7 +194,7 @@ class _IntegrationRow extends StatelessWidget {
               border: Border.all(width: 0.5, color: const Color(0x337FBA00)),
             ),
             child: Text(AppL10n.of(context).connected,
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 10,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                     fontWeight: FontWeight.w600, color: TaskEraColors.q2, height: 1)),
           )
         else
@@ -206,7 +206,7 @@ class _IntegrationRow extends StatelessWidget {
               border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
             ),
             child: Text(AppL10n.of(context).connect,
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 10,
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                     fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
           ),
       ]),
@@ -240,7 +240,7 @@ class _HowItWorksCard extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(AppL10n.of(context).aiPoweredInboxParsing,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
                   fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
         ]),
         const SizedBox(height: 10),
@@ -273,13 +273,13 @@ class _Step extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(n,
-            style: const TextStyle(fontFamily: 'Inter', fontSize: 9,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                 fontWeight: FontWeight.w700, color: TaskEraColors.acc, height: 1)),
       ),
       const SizedBox(width: 8),
       Expanded(
         child: Text(text,
-            style: TextStyle(fontFamily: 'Inter', fontSize: 12,
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                 color: colors.ink2, height: 1.4)),
       ),
     ]);

@@ -750,7 +750,7 @@ class _SyncPill extends ConsumerWidget {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Inter', fontSize: 11,
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
               fontWeight: FontWeight.w600, color: color, height: 1,
             ),
           ),

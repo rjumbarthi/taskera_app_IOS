@@ -31,7 +31,7 @@ class NoteRow extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: colors.ink,
@@ -43,7 +43,7 @@ class NoteRow extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
                 color: colors.ink3,
                 height: 1.4,
@@ -62,7 +62,7 @@ class NoteRow extends StatelessWidget {
                     child: Text(
                       tag!,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 9,
                         color: colors.ink3,
                       ),
@@ -73,7 +73,7 @@ class NoteRow extends StatelessWidget {
                 Text(
                   timestamp,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 9,
                     color: colors.ink4,
                   ),

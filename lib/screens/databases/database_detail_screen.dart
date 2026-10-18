@@ -58,7 +58,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: colors.surf,
-        title: Text('Rename database', style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: colors.ink)),
+        title: Text('Rename database', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, color: colors.ink)),
         content: TextField(
           controller: ctrl, autofocus: true,
           style: TextStyle(color: colors.ink),
@@ -66,7 +66,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
         ],
       ),
     );
@@ -83,12 +83,12 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
       builder: (ctx) => SafeArea(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _menuRow(ctx, colors, Icons.edit_rounded, 'Rename', 'rename'),
           _menuRow(ctx, colors, Icons.swap_horiz_rounded, 'Change type (now: ${propTypeOf(prop).label})', 'type'),
           if (propCount > 1)
             _menuRow(ctx, colors, Icons.delete_outline_rounded, 'Delete property', 'delete', danger: true),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ]),
       ),
     );
@@ -113,11 +113,11 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: colors.surf,
-        title: Text('Property name', style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: colors.ink)),
+        title: Text('Property name', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, color: colors.ink)),
         content: TextField(controller: ctrl, autofocus: true, style: TextStyle(color: colors.ink), onSubmitted: (x) => Navigator.pop(ctx, x)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
         ],
       ),
     );
@@ -137,7 +137,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
       builder: (ctx) => SafeArea(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           for (final t in DbPropType.values)
             InkWell(
               onTap: () => Navigator.pop(ctx, t),
@@ -145,14 +145,14 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                 child: Row(children: [
                   Icon(t.icon, size: 18, color: colors.ink2),
-                  const SizedBox(width: 14),
-                  Text(t.label, style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: colors.ink)),
+                  SizedBox(width: 14),
+                  Text(t.label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: colors.ink)),
                   const Spacer(),
-                  if (t == propTypeOf(prop)) const Icon(Icons.check_rounded, size: 18, color: TaskEraColors.acc),
+                  if (t == propTypeOf(prop)) Icon(Icons.check_rounded, size: 18, color: TaskEraColors.acc),
                 ]),
               ),
             ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ]),
       ),
     );
@@ -173,8 +173,8 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         child: Row(children: [
           Icon(icon, size: 19, color: color),
-          const SizedBox(width: 14),
-          Expanded(child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 15, color: color))),
+          SizedBox(width: 14),
+          Expanded(child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, color: color))),
         ]),
       ),
     );
@@ -190,7 +190,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     final rows = ref.watch(dbRowsProvider(_id)).value ?? const <DbRow>[];
 
     return dbAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2)),
       error: (e, _) => Center(child: Text('$e', style: TextStyle(color: colors.ink3))),
       data: (db) {
         if (db == null) {
@@ -220,15 +220,15 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       padding: const EdgeInsets.fromLTRB(8, 8, 12, 4),
       child: Row(children: [
         AddBackButton(onTap: () => context.pop()),
-        const SizedBox(width: 4),
-        Text(db.icon, style: const TextStyle(fontSize: 20)),
-        const SizedBox(width: 8),
+        SizedBox(width: 4),
+        Text(db.icon, style: TextStyle(fontSize: 20)),
+        SizedBox(width: 8),
         Expanded(
           child: GestureDetector(
             onTap: () => _renameDatabase(db),
             child: Text(db.name.isEmpty ? 'Untitled' : db.name,
                 maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
           ),
         ),
         GestureDetector(
@@ -236,10 +236,10 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
           child: Container(
             padding: const EdgeInsets.fromLTRB(11, 6, 13, 6),
             decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-            child: const Row(mainAxisSize: MainAxisSize.min, children: [
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.add_rounded, size: 15, color: Colors.white),
               SizedBox(width: 2),
-              Text('Row', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white)),
+              Text('Row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white)),
             ]),
           ),
         ),
@@ -264,8 +264,8 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
           ),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(icon, size: 14, color: active ? TaskEraColors.acc2 : colors.ink3),
-            const SizedBox(width: 5),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? TaskEraColors.acc2 : colors.ink3)),
+            SizedBox(width: 5),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? TaskEraColors.acc2 : colors.ink3)),
           ]),
         ),
       );
@@ -275,9 +275,9 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
       padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
       child: Row(children: [
         seg('table', Icons.grid_on_rounded, 'Table'),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         seg('board', Icons.view_kanban_rounded, 'Board'),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         seg('list', Icons.view_agenda_rounded, 'List'),
       ]),
     );
@@ -308,9 +308,9 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.5, color: colors.bdr))),
                     child: Row(children: [
                       Icon(propTypeOf(props[i]).icon, size: 13, color: colors.ink3),
-                      const SizedBox(width: 5),
+                      SizedBox(width: 5),
                       Flexible(child: Text(props[i].name, maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink2))),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink2))),
                     ]),
                   ),
                 ),
@@ -328,7 +328,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
               Row(children: [
                 for (var i = 0; i < props.length; i++)
                   _tableCell(colors, props[i], row, widthFor(i), isTitle: i == 0),
-                const SizedBox(width: 44),
+                SizedBox(width: 44),
               ]),
             // Add row
             GestureDetector(
@@ -337,8 +337,8 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Row(children: [
                   Icon(Icons.add_rounded, size: 15, color: colors.ink3),
-                  const SizedBox(width: 5),
-                  Text('New row', style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, color: colors.ink3)),
+                  SizedBox(width: 5),
+                  Text('New row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, color: colors.ink3)),
                 ]),
               ),
             ),
@@ -388,10 +388,10 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     }
     final disp = cellDisplay(value, type);
     if (disp.isEmpty) {
-      return Text(isTitle ? 'Untitled' : '', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3));
+      return Text(isTitle ? 'Untitled' : '', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3));
     }
     return Text(disp, maxLines: 2, overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontFamily: 'Inter', fontSize: 13,
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
             fontWeight: isTitle ? FontWeight.w600 : FontWeight.w400,
             color: type == DbPropType.url ? TaskEraColors.acc2 : colors.ink));
   }
@@ -449,10 +449,10 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
             child: Row(children: [
               Container(width: 8, height: 8, decoration: BoxDecoration(color: col.color, shape: BoxShape.circle)),
-              const SizedBox(width: 7),
-              Text(col.label, style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
-              const SizedBox(width: 6),
-              Text('${colRows.length}', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+              SizedBox(width: 7),
+              Text(col.label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
+              SizedBox(width: 6),
+              Text('${colRows.length}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
             ]),
           ),
           for (final row in colRows)
@@ -465,8 +465,8 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
               margin: const EdgeInsets.only(top: 2),
               child: Row(children: [
                 Icon(Icons.add_rounded, size: 15, color: colors.ink3),
-                const SizedBox(width: 5),
-                Text('New', style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, color: colors.ink3)),
+                SizedBox(width: 5),
+                Text('New', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, color: colors.ink3)),
               ]),
             ),
           ),
@@ -501,9 +501,9 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title.isEmpty ? 'Untitled' : title,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13.5, fontWeight: FontWeight.w600, color: title.isEmpty ? colors.ink3 : colors.ink)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13.5, fontWeight: FontWeight.w600, color: title.isEmpty ? colors.ink3 : colors.ink)),
             if (chips.isNotEmpty) ...[
-              const SizedBox(height: 7),
+              SizedBox(height: 7),
               Wrap(spacing: 5, runSpacing: 5, children: chips),
             ],
           ],
@@ -528,7 +528,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(color: colors.surf, borderRadius: BorderRadius.circular(5), border: Border.all(width: 0.5, color: colors.bdr)),
-      child: Text(cellDisplay(value, type), style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink2)),
+      child: Text(cellDisplay(value, type), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2)),
     );
   }
 
@@ -541,7 +541,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
       itemCount: rows.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 8),
+      separatorBuilder: (_, _) => SizedBox(height: 8),
       itemBuilder: (context, i) {
         final row = rows[i];
         final cells = decodeCells(row);
@@ -566,9 +566,9 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title.isEmpty ? 'Untitled' : title,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14.5, fontWeight: FontWeight.w600, color: title.isEmpty ? colors.ink3 : colors.ink)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14.5, fontWeight: FontWeight.w600, color: title.isEmpty ? colors.ink3 : colors.ink)),
                 if (chips.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Wrap(spacing: 5, runSpacing: 5, children: chips),
                 ],
               ],
@@ -583,14 +583,14 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   Widget _needProperty(TaskEraColors colors) => Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('No properties', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2)),
-          const SizedBox(height: 10),
+          Text('No properties', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2)),
+          SizedBox(height: 10),
           GestureDetector(
             onTap: _addProperty,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: const Text('+ Add property', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+              child: Text('+ Add property', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ]),
@@ -598,14 +598,14 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
 
   Widget _emptyRows(TaskEraColors colors) => Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('No rows yet', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: colors.ink2)),
-          const SizedBox(height: 10),
+          Text('No rows yet', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2)),
+          SizedBox(height: 10),
           GestureDetector(
             onTap: () => _addRow(),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: const Text('+ New row', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+              child: Text('+ New row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ]),

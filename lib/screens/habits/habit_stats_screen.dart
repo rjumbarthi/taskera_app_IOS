@@ -177,7 +177,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(AppL10n.of(context).habitStatistics,
-                  style: TextStyle(fontFamily: 'Fraunces', fontVariations: [FontVariation('wght', 600)], fontSize: 19,
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: [FontVariation('wght', 600)], fontSize: 19,
                     letterSpacing: -0.5, color: colors.ink, height: 1.1)),
               ),
             ],
@@ -206,7 +206,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                               border: _tabIdx == i ? Border.all(width: 0.5, color: const Color(0x330A84FF)) : null,
                             ),
                             child: Text(_tabs[i], textAlign: TextAlign.center,
-                              style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600,
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
                                 color: _tabIdx == i ? colors.ink : colors.ink3, height: 1)),
                           ),
                         ),
@@ -220,7 +220,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _RoundBtn(icon: Icons.chevron_left, colors: colors, onTap: _prev),
-                  Text(_periodLabel(), style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                  Text(_periodLabel(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                   _RoundBtn(icon: Icons.chevron_right, colors: colors, onTap: _next),
                 ],
               ),
@@ -235,10 +235,10 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                 ),
                 child: Column(
                   children: [
-                    Text(AppL10n.of(context).completionRate, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3)),
+                    Text(AppL10n.of(context).completionRate, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
                     const SizedBox(height: 4),
                     Text('$completionPct%',
-                      style: TextStyle(fontFamily: 'Fraunces', fontSize: 42, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 42, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
                     const SizedBox(height: 10),
                     SizedBox(height: 44, child: CustomPaint(painter: _SparkPainter(points: sparkPts))),
                     const SizedBox(height: 2),
@@ -246,9 +246,9 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(_periodLabel().split('–').first.trim(),
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                         Text('Now',
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                       ],
                     ),
                   ],
@@ -284,7 +284,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(AppL10n.of(context).habitCompletion, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                      Text(AppL10n.of(context).habitCompletion, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                       const SizedBox(height: 10),
                       for (final row in habitBars) ...[
                         _HabitBar(emoji: row.$1, name: row.$2, pct: row.$3, barColor: row.$4, colors: colors),
@@ -302,7 +302,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                     border: Border.all(width: 0.5, color: colors.bdr0),
                   ),
                   child: Text(AppL10n.of(context).noHabitsFound, textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                 ),
               const SizedBox(height: 8),
               // Best days bar chart
@@ -316,7 +316,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(AppL10n.of(context).bestDays, style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
+                    Text(AppL10n.of(context).bestDays, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.ink)),
                     const SizedBox(height: 8),
                     SizedBox(
                       height: 54,
@@ -343,7 +343,7 @@ class _HabitStatsScreenState extends ConsumerState<HabitStatsScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 3),
-                                  Text(_dayLabels[i], style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                                  Text(_dayLabels[i], style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                                 ],
                               ),
                             ),
@@ -401,9 +401,9 @@ class _StatTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
             const SizedBox(height: 3),
-            Text(value, style: TextStyle(fontFamily: 'Fraunces', fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
           ],
         ),
       ),
@@ -425,10 +425,10 @@ class _HabitBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 13, height: 1)),
+            Text(emoji, style: TextStyle(fontSize: 13, height: 1)),
             const SizedBox(width: 6),
-            Expanded(child: Text(name, style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink), overflow: TextOverflow.ellipsis)),
-            Text('${(pct * 100).round()}%', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: barColor)),
+            Expanded(child: Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink), overflow: TextOverflow.ellipsis)),
+            Text('${(pct * 100).round()}%', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w700, color: barColor)),
           ],
         ),
         const SizedBox(height: 4),

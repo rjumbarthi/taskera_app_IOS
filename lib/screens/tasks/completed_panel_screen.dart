@@ -110,7 +110,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
                     const SizedBox(width: 6),
                     Text('Completed',
                         style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -134,7 +134,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
                       Text(
                         '${done.length} TASK${done.length == 1 ? '' : 'S'} COMPLETED',
                         style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.5,
@@ -182,8 +182,8 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
                   },
                   child: Text(
                     _confirmClear ? 'Tap again to confirm' : 'Clear all',
-                    style: const TextStyle(
-                        fontFamily: 'Inter',
+                    style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFFFF6B6B)),
@@ -193,7 +193,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
                   onTap: () => _export(done),
                   child: Text('Export',
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
                 ),
               ],
             ),
@@ -221,7 +221,7 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 10),
             Text('No completed tasks yet',
                 style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: colors.ink2)),
@@ -229,7 +229,7 @@ class _EmptyState extends StatelessWidget {
             Text('Tasks you complete will be collected here.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 12, color: colors.ink3, height: 1.4)),
+                    fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3, height: 1.4)),
           ],
         ),
       ),
@@ -254,7 +254,7 @@ class _GroupLabel extends StatelessWidget {
         const SizedBox(width: 6),
         Text(label,
             style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
@@ -305,7 +305,7 @@ class _CompRow extends StatelessWidget {
               children: [
                 Text(task.title,
                     style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         color: c,
                         decoration: TextDecoration.lineThrough,
@@ -313,7 +313,7 @@ class _CompRow extends StatelessWidget {
                 const SizedBox(height: 1),
                 Text(_whenLabel(task.doneAt),
                     style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
               ],
             ),
           ),
@@ -333,7 +333,7 @@ class _CompRow extends StatelessWidget {
                   const SizedBox(width: 3),
                   Text('Restore',
                       style: TextStyle(
-                          fontFamily: 'Inter', fontSize: 9, color: colors.ink3)),
+                          fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
                 ],
               ),
             ),

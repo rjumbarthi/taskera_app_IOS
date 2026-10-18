@@ -74,20 +74,20 @@ class DatabasesListScreen extends ConsumerWidget {
           child: Row(
             children: [
               AddBackButton(onTap: () => context.pop()),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text('Databases',
-                    style: TextStyle(fontFamily: 'Fraunces', fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontVariations: const [FontVariation('wght', 600)], fontSize: 19, letterSpacing: -0.5, color: colors.ink)),
               ),
               GestureDetector(
                 onTap: () => _create(context, ref),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(12, 6, 14, 6),
                   decoration: BoxDecoration(color: TaskEraColors.acc, borderRadius: BorderRadius.circular(8)),
-                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.add_rounded, size: 16, color: Colors.white),
                     SizedBox(width: 3),
-                    Text('New', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
+                    Text('New', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
                   ]),
                 ),
               ),
@@ -96,14 +96,14 @@ class DatabasesListScreen extends ConsumerWidget {
         ),
         Expanded(
           child: dbs.when(
-            loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2)),
             error: (e, _) => Center(child: Text('$e', style: TextStyle(color: colors.ink3))),
             data: (list) {
               if (list.isEmpty) return _empty(context, ref, colors);
               return ListView.separated(
                 padding: const EdgeInsets.fromLTRB(12, 4, 12, 20),
                 itemCount: list.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                separatorBuilder: (_, _) => SizedBox(height: 8),
                 itemBuilder: (context, i) => _DbCard(
                   db: list[i], colors: colors,
                   onTap: () => context.push('${TaskEraRoutes.databases}/${list[i].id}'),
@@ -125,14 +125,14 @@ class DatabasesListScreen extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('🗂️', style: const TextStyle(fontSize: 44)),
-          const SizedBox(height: 12),
+          Text('🗂️', style: TextStyle(fontSize: 44)),
+          SizedBox(height: 12),
           Text('No databases yet',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
-          const SizedBox(height: 4),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
+          SizedBox(height: 4),
           Text('Tables, boards & lists for anything.',
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3)),
-          const SizedBox(height: 16),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
+          SizedBox(height: 16),
           GestureDetector(
             onTap: () => _create(context, ref),
             child: Container(
@@ -142,8 +142,8 @@ class DatabasesListScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
               ),
-              child: const Text('+ New database',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+              child: Text('+ New database',
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
             ),
           ),
         ],
@@ -174,18 +174,18 @@ class _DbCard extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            Text(db.icon, style: const TextStyle(fontSize: 22)),
-            const SizedBox(width: 12),
+            Text(db.icon, style: TextStyle(fontSize: 22)),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(db.name.isEmpty ? 'Untitled' : db.name,
                       maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
-                  const SizedBox(height: 2),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: colors.ink)),
+                  SizedBox(height: 2),
                   Text('${rows.length} ${rows.length == 1 ? 'row' : 'rows'}',
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                 ],
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../util/platform_layout.dart';
+import '../theme/taskera_theme.dart';
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -189,8 +190,8 @@ class _MenuSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 2, 20, 10),
                   child: Text(title!,
-                      style: const TextStyle(
-                        fontFamily: 'Inter', fontSize: 11,
+                      style: TextStyle(
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                         color: Color(0x80FFFFFF), height: 1,
                       )),
                 ),
@@ -206,7 +207,7 @@ class _MenuSheet extends StatelessWidget {
                   children: [
                     for (int i = 0; i < actions.length; i++) ...[
                       if (i > 0)
-                        const Divider(height: 0, thickness: 0.5,
+                        Divider(height: 0, thickness: 0.5,
                             indent: 48, color: Color(0x1AFFFFFF)),
                       _ActionRow(action: actions[i]),
                     ],
@@ -214,7 +215,7 @@ class _MenuSheet extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Cancel
               GestureDetector(
@@ -227,9 +228,9 @@ class _MenuSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                   ),
                   alignment: Alignment.center,
-                  child: const Text('Cancel',
+                  child: Text('Cancel',
                       style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 16,
+                        fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white, height: 1,
                       )),
@@ -280,11 +281,11 @@ class _ActionRowState extends State<_ActionRow> {
         ),
         child: Row(children: [
           Icon(widget.action.icon, color: fg.withAlpha(204), size: 20),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Text(widget.action.label,
                 style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 15,
+                  fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: fg, height: 1,
                 )),

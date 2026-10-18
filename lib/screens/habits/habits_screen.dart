@@ -261,7 +261,7 @@ class _DayCell extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter', fontSize: 9,
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               color: isToday ? TaskEraColors.acc : colors.ink3, height: 1,
             ),
           ),
@@ -346,13 +346,13 @@ class _StatCell extends StatelessWidget {
             Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Fraunces', fontSize: 15, fontWeight: FontWeight.w700, color: valueColor, height: 1),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: valueColor, height: 1),
             ),
             const SizedBox(height: 2),
             Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1),
             ),
           ],
         ),
@@ -395,12 +395,12 @@ class _StreakBanner extends ConsumerWidget {
                 children: [
                   Text(
                     '$maxFill-day streak!',
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     AppL10n.of(context).keepGoingLabel,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: colors.ink3, height: 1.3),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1.3),
                   ),
                 ],
               ),
@@ -414,7 +414,7 @@ class _StreakBanner extends ConsumerWidget {
               ),
               child: Text(
                 '🔔 ${AppL10n.of(context).remindLabel}',
-                style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
               ),
             ),
           ],
@@ -476,7 +476,7 @@ class _HabitCard extends StatelessWidget {
           children: [
             Text(
               habit.name,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1),
             ),
             const SizedBox(height: 7),
             // Icon + meta row
@@ -486,20 +486,20 @@ class _HabitCard extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(color: ac.withAlpha(0x1A), borderRadius: BorderRadius.circular(8)),
-                  child: Center(child: Text(habit.emoji, style: const TextStyle(fontSize: 16, height: 1))),
+                  child: Center(child: Text(habit.emoji, style: TextStyle(fontSize: 16, height: 1))),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     habit.meta,
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: colors.ink3, height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3, height: 1),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   habit.streak,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: habit.streakColor, height: 1),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: habit.streakColor, height: 1),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(6, 2, 2, 2),
@@ -585,7 +585,7 @@ class _HabitCard extends StatelessWidget {
                     Text(
                       habit.subLabel.toUpperCase(),
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: colors.ink3,
@@ -621,7 +621,7 @@ class _HabitCard extends StatelessWidget {
                                 child: Text(
                                   sub.title,
                                   style: TextStyle(
-                                    fontFamily: 'Inter',
+                                    fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 13,
                                     color: colors.ink2,
                                     height: 1,
@@ -669,7 +669,7 @@ Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, TaskEr
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
               child: Text(
                 '${habit.emoji}  ${habit.name}',
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600,
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
                     color: Color(habit.accentColorValue), height: 1.3),
                 maxLines: 2, overflow: TextOverflow.ellipsis,
               ),
@@ -740,14 +740,14 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
             const SizedBox(height: 12),
             Text(
               AppL10n.of(ctx).streakProtect,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 17, fontWeight: FontWeight.w700,
+              style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 17, fontWeight: FontWeight.w700,
                   color: const Color(0xFFFFB900)),
             ),
             const SizedBox(height: 8),
             Text(
               AppL10n.of(ctx).streakProtectBody,
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink2, height: 1.5),
+              style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: colors.ink2, height: 1.5),
             ),
             const SizedBox(height: 20),
             GestureDetector(
@@ -761,7 +761,7 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
                 alignment: Alignment.center,
                 child: Text(
                   AppL10n.of(ctx).enableStreakProtect,
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black),
                 ),
               ),
             ),
@@ -770,7 +770,7 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
               onTap: () => Navigator.of(dialogCtx).pop(),
               child: Text(
                 AppL10n.of(ctx).notNow,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: colors.ink3),
               ),
             ),
           ],
@@ -799,7 +799,7 @@ class _HabitMenuItem extends StatelessWidget {
           children: [
             Icon(icon, size: 16, color: color),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: color, height: 1)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: color, height: 1)),
           ],
         ),
       ),
@@ -829,7 +829,7 @@ class _AddHabitRow extends StatelessWidget {
               const SizedBox(width: 7),
               Text(
                 AppL10n.of(context).addHabit,
-                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: colors.ink3, height: 1),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3, height: 1),
               ),
             ],
           ),

@@ -54,7 +54,7 @@ class TaskEraBarChart extends StatelessWidget {
                   Text(
                     bars[i].label!,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 9,
                       color: colors.ink3,
                     ),

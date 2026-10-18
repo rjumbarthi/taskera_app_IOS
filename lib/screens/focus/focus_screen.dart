@@ -68,9 +68,9 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
     final controller = messenger.showSnackBar(SnackBar(
-      content: const Text(
+      content: Text(
         '🧠 Brain Dump ↓  empty your head — TaskEra AI sorts it into tasks & goals',
-        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
       ),
       backgroundColor: const Color(0xFF1C1C1E),
       behavior: SnackBarBehavior.floating,
@@ -104,15 +104,15 @@ class _FocusDashboardScreenState extends ConsumerState<FocusDashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _GoalsStrip(),
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           const TaskMetaRow(),
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           const _DoThisNowCard(),
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           const _QuadGrid(),
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           utilGrid,
-          const SizedBox(height: 5),
+          SizedBox(height: 5),
           const _ProgressCard(),
         ],
       ),
@@ -150,21 +150,21 @@ class _GoalsStrip extends ConsumerWidget {
                 children: [
                   Text(
                     AppL10n.of(context).goals.toUpperCase(),
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                         fontWeight: FontWeight.w700, letterSpacing: 0.5,
                         color: colors.ink3, height: 1),
                   ),
                   const Spacer(),
                   Text(
                     '${goals.length} ${AppL10n.of(context).active.toLowerCase()}  ›',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 9,
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
                         color: colors.ink3, height: 1),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // Goal columns — each taps to that goal's detail
           if (shown.isEmpty)
             GestureDetector(
@@ -174,7 +174,7 @@ class _GoalsStrip extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                 child: Text(
                   AppL10n.of(context).noGoalsTapAdd,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: colors.ink3),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3),
                 ),
               ),
             )
@@ -222,17 +222,17 @@ class _GoalCol extends StatelessWidget {
         Text(
           pct,
           style: TextStyle(
-            fontFamily: 'Fraunces',
+            fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
             fontVariations: const [FontVariation('wght', 700)],
             fontSize: 16,
             color: color,
             height: 1,
           ),
         ),
-        const SizedBox(height: 3),
+        SizedBox(height: 3),
         Text(
           label,
-          style: TextStyle(fontFamily: 'Inter', fontSize: 10,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
               color: colors.ink3, height: 1.2),
           textAlign: TextAlign.center,
           maxLines: 1,
@@ -323,7 +323,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
     final controller = messenger.showSnackBar(SnackBar(
       content: Text(
         '✓  ${task.title}',
-        style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white),
+        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white),
         overflow: TextOverflow.ellipsis,
       ),
       backgroundColor: const Color(0xFF1C1C1E),
@@ -442,7 +442,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                       AppL10n.of(context).doThisNow,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: TaskEraType.xl,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.45,
@@ -484,7 +484,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                       t.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: TaskEraType.lg,
                         fontWeight: FontWeight.w600,
                         color: colors.ink,
@@ -507,7 +507,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                     textAlign: TextAlign.center,
                     style: _started
                         ? TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             color: th.color,
@@ -515,14 +515,14 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                             fontFeatures: const [FontFeature.tabularFigures()],
                           )
                         : TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: TaskEraType.sm,
                             fontWeight: FontWeight.w500,
                             color: th.color,
                             height: 1,
                           ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Row(
                     children: [
                       SizedBox(
@@ -545,7 +545,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                               : null,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Expanded(
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
@@ -569,12 +569,12 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                           alignment: Alignment.center,
                                           child: Text(
                                             _paused ? AppL10n.of(context).resume : AppL10n.of(context).pauseLabel,
-                                            style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w600, color: colors.ink2, height: 1),
+                                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: TaskEraType.sm, fontWeight: FontWeight.w600, color: colors.ink2, height: 1),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 5),
+                                    SizedBox(width: 5),
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
@@ -591,7 +591,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                           ),
                                           alignment: Alignment.center,
                                           child: Text(AppL10n.of(context).done,
-                                              style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
+                                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: colors.successFg, height: 1)),
                                         ),
                                       ),
                                     ),
@@ -610,13 +610,13 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       AppL10n.of(context).startNow,
-                                      style: TextStyle(fontFamily: 'Inter', fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: th.color, height: 1),
+                                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: th.color, height: 1),
                                     ),
                                   ),
                                 ),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       SizedBox(
                         width: 82,
                         child: _DtnSideBtn(
@@ -659,7 +659,7 @@ class _DtnSideBtn extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: colors.ink2,
@@ -691,7 +691,7 @@ class _DtnEmpty extends StatelessWidget {
           Text(
             AppL10n.of(context).doThisNow,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 17,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -699,11 +699,11 @@ class _DtnEmpty extends StatelessWidget {
               height: 1,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             AppL10n.of(context).noTasksDueToday,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 15,
               color: colors.ink3,
               height: 1.35,
@@ -763,7 +763,7 @@ class _QuadGrid extends ConsumerWidget {
               coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q1'),
             )),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
               quadrant: TaskEraQuadrant.q2, action: action2, emoji: '🎯',
               count: q2.length, today: dueToday(q2),
@@ -774,7 +774,7 @@ class _QuadGrid extends ConsumerWidget {
             )),
           ]),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(child: _FocusQuadCard(
@@ -784,7 +784,7 @@ class _QuadGrid extends ConsumerWidget {
               coloredStyle: quadColorsOn,
               onTap: () => context.push('/tasks/quad/q3'),
             )),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Expanded(child: _FocusQuadCard(
               quadrant: TaskEraQuadrant.q4, action: action4, emoji: '🗑',
               count: q4.length,
@@ -919,9 +919,9 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                     Padding(
                       padding: const EdgeInsets.only(top: 1),
                       child: Text(widget.emoji,
-                          style: const TextStyle(fontSize: 20, height: 1)),
+                          style: TextStyle(fontSize: 20, height: 1)),
                     ),
-                    const SizedBox(width: 7),
+                    SizedBox(width: 7),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -930,18 +930,18 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                           Text(
                             '$qNum · ${widget.action}',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: TaskEraType.md,
                               fontWeight: FontWeight.w800,
                               color: flat ? accentColor : const Color(0xE6000000),
                               height: 1,
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          SizedBox(height: 5),
                           Text(
                             metaText,
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: TaskEraType.sm,
                               fontWeight: FontWeight.w700,
                               color: flat ? colors.ink3 : const Color(0xCC000000),
@@ -965,7 +965,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                       Text(
                         chipLabel,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: TaskEraType.sm,
                           fontWeight: FontWeight.w700,
                           color: flat ? colors.ink3 : const Color(0xCC000000),
@@ -976,7 +976,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                     Text(
                       '${widget.count}',
                       style: TextStyle(
-                        fontFamily: 'Fraunces',
+                        fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: const [FontVariation('wght', 700)],
                         fontSize: TaskEraType.md,
                         color: flat ? colors.ink : const Color(0xD9000000),
@@ -1011,7 +1011,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 40),
+                    SizedBox(width: 40),
                   ],
                 ),
               ),
@@ -1044,7 +1044,7 @@ class _UtilGrid extends StatelessWidget {
           compact: true,
           onTap: () => context.go(TaskEraRoutes.predictive),
         ))),
-        if (showPeak && showBrain) const SizedBox(width: 6),
+        if (showPeak && showBrain) SizedBox(width: 6),
         if (showBrain) Expanded(child: Builder(builder: (context) => _UtilCard(
           emoji: '🧠', label: AppL10n.of(context).brainDump, meta: AppL10n.of(context).dumpSortLater,
           accentColor: const Color(0xFFBF5AF2),
@@ -1129,9 +1129,9 @@ class _UtilCardState extends State<_UtilCard> {
                             borderRadius: TaskEraShape.sgrpIcon,
                           ),
                           alignment: Alignment.center,
-                          child: Text(widget.emoji, style: const TextStyle(fontSize: 14)),
+                          child: Text(widget.emoji, style: TextStyle(fontSize: 14)),
                         ),
-                        const SizedBox(width: 7),
+                        SizedBox(width: 7),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(
@@ -1140,7 +1140,7 @@ class _UtilCardState extends State<_UtilCard> {
                             child: Text(
                               widget.label,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.2,
@@ -1157,7 +1157,7 @@ class _UtilCardState extends State<_UtilCard> {
                     Text(
                       widget.meta,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 11,
                         color: colors.ink3,
                         height: 1.2,
@@ -1213,7 +1213,7 @@ class _ProgressCard extends ConsumerWidget {
               Text(
                 l.todaysProgress.toUpperCase(),
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.4,
@@ -1225,7 +1225,7 @@ class _ProgressCard extends ConsumerWidget {
                 child: Text(
                   '$doneToday / $total ${l.tasks.toLowerCase()}',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: colors.ink,
@@ -1237,7 +1237,7 @@ class _ProgressCard extends ConsumerWidget {
               Text(
                 '${(pct * 100).round()}%',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: colors.successFg,
@@ -1246,7 +1246,7 @@ class _ProgressCard extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(2),
             child: SizedBox(

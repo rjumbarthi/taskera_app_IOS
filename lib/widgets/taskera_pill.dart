@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/taskera_shape.dart';
+import '../theme/taskera_theme.dart';
 
 /// Tiny metadata badge — "Q1 · Overdue", schedule tags, etc.
 class TaskEraPill extends StatelessWidget {
@@ -25,7 +26,7 @@ class TaskEraPill extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 9,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.2,

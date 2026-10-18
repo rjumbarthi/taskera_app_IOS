@@ -105,8 +105,8 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
       SnackBar(
         content: Text(
           m,
-          style: const TextStyle(
-            fontFamily: 'Inter',
+          style: TextStyle(
+            fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 13,
             color: Colors.white,
           ),
@@ -197,7 +197,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                         child: Text(
                           'Report · Request',
                           style: TextStyle(
-                            fontFamily: 'Fraunces',
+                            fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                             fontVariations: const [FontVariation('wght', 600)],
                             fontSize: 19,
                             letterSpacing: -0.5,
@@ -288,7 +288,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                             minLines: 4,
                             maxLines: 8,
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 13,
                               color: colors.ink,
                               height: 1.5,
@@ -298,7 +298,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                                   ? 'Steps to reproduce, what you expected vs. what you saw…'
                                   : 'What would help you, and why?',
                               hintStyle: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 13,
                                 color: colors.ink3,
                                 height: 1.5,
@@ -312,7 +312,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                         Text(
                           'Sent to the TaskEra team with “$_where” · your email · app $_appVersion',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 10,
                             color: colors.ink3,
                             height: 1.4,
@@ -342,8 +342,8 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
                                     _isBug
                                         ? 'Send bug report'
                                         : 'Send feature request',
-                                    style: const TextStyle(
-                                      fontFamily: 'Inter',
+                                    style: TextStyle(
+                                      fontFamily: TaskEraTheme.of(context).fontFamily,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
@@ -368,7 +368,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
     child: Text(
       t,
       style: TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: TaskEraTheme.of(context).fontFamily,
         fontSize: 10,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.5,
@@ -398,7 +398,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
       child: Text(
         label,
         style: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 13,
           fontWeight: FontWeight.w600,
           color: on ? TaskEraColors.acc2 : colors.ink2,
@@ -423,7 +423,7 @@ class _ReportFeedbackScreenState extends ConsumerState<ReportFeedbackScreen> {
           child: Text(
             label,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 12,
               fontWeight: on ? FontWeight.w600 : FontWeight.w400,
               color: on ? TaskEraColors.acc2 : colors.ink2,
