@@ -311,6 +311,9 @@ class _TaskEraAppState extends ConsumerState<TaskEraApp> with WidgetsBindingObse
     // every screen view + back-navigation through the router.
     AnalyticsService.instance.setEnabled(ref.read(taskeraSettingsProvider).sw('analytics'));
     AnalyticsService.instance.capture('app_open');
+    AnalyticsService.instance.captureSettingsSnapshot(
+        settingsAnalyticsProps(ref.read(taskeraSettingsProvider)),
+        immediate: true);
     AnalyticsService.instance.attachToRouter(widget.router);
     // Pull the server Pro entitlement (Razorpay webhook / store validators) when
     // a session was restored on launch.

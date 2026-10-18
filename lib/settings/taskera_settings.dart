@@ -1,8 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/analytics_service.dart';
 import '../widgets/wallpaper_background.dart';
 import 'prefs_provider.dart';
+
+/// Flattens a settings snapshot into PostHog person properties — shared by
+/// the launch-time capture (main.dart) and every in-session change
+/// (TaskEraSettingsNotifier._persist) so both stay in sync automatically.
+/// Only setting *choices* (indices/booleans/counts) go out, never user
+/// content — e.g. customLabels is a count, not the label text.
+Map<String, dynamic> settingsAnalyticsProps(TaskEraSettingsState s) => {
+      'theme': s.theme,
+      'accent': s.accent,
+      'font': s.font,
+      'numberFont': s.numberFont,
+      'fontSize': s.fontSize,
+      'lineSpacing': s.lineSpacing,
+      'layout': s.layout,
+      'qnames': s.qnames,
+      'lang': s.lang,
+      'wallpaperIndex': s.wallpaperIndex,
+      'customLabelsCount': s.customLabels.length,
+      for (final e in s.toggles.entries) 'toggle_${e.key}': e.value,
+    };
 
 class TaskEraSettingsState {
   final int wallpaperIndex;
@@ -199,6 +220,10 @@ class TaskEraSettingsNotifier extends Notifier<TaskEraSettingsState> {
     for (final e in s.toggles.entries) {
       _p.setBool(_K.toggle(e.key), e.value);
     }
+    // Debounced so a slider drag or rapid toggling sends one snapshot, not
+    // one request per tick; respects the analytics opt-out via capture()'s
+    // own _enabled gate.
+    AnalyticsService.instance.captureSettingsSnapshot(settingsAnalyticsProps(s));
   }
 
   void toggle(String key, bool value) {

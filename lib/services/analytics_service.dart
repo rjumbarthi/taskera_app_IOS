@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -29,6 +30,7 @@ class AnalyticsService {
   bool _enabled = true;
   bool _initialised = false;
   bool _routerAttached = false;
+  Timer? _settingsDebounce;
 
   bool get _configured =>
       AppConfig.posthogApiKey.isNotEmpty &&
@@ -83,6 +85,26 @@ class AnalyticsService {
     } catch (_) {
       // Analytics must never crash or block the app.
     }
+  }
+
+  /// Records the user's current settings as PostHog *person* properties (via
+  /// `$set`), not just a one-off event — so later you can query "what % of
+  /// users have quadColors on" / "least-picked accent" etc. across the whole
+  /// user base to decide what to prune, rather than digging through a stream
+  /// of change events. Call once per launch (immediate) via [captureSettingsSnapshot].
+  Future<void> _setPersonProperties(Map<String, dynamic> props) =>
+      capture('settings_snapshot', props: {r'$set': props});
+
+  /// Same as above but fired on every settings change — debounced so a
+  /// slider drag (wallpaper dim) or rapid toggling doesn't spam a request
+  /// per tick; only the settled state after 2s of inactivity is sent.
+  void captureSettingsSnapshot(Map<String, dynamic> props, {bool immediate = false}) {
+    _settingsDebounce?.cancel();
+    if (immediate) {
+      _setPersonProperties(props);
+      return;
+    }
+    _settingsDebounce = Timer(const Duration(seconds: 2), () => _setPersonProperties(props));
   }
 
   /// A screen / route view. [isBack] marks a pop (user navigated back).
