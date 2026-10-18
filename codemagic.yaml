@@ -50,9 +50,10 @@ workflows:
       - name: Compute next build number
         script: |
           set -e
-          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo "0")
-          NEXT=$(( ${LATEST:-0} + 1 ))
-          echo "Next build number: $NEXT (latest on TestFlight: ${LATEST:-0})"
+          # APP_STORE_APP_ID is still the unfilled placeholder, so the API lookup
+          # below can't resolve the real app — hardcoded to 30 until that's fixed.
+          NEXT=30
+          echo "Next build number: $NEXT (hardcoded — fix APP_STORE_APP_ID to restore auto-increment)"
           echo "BUILD_NUMBER=$NEXT" >> "$CM_ENV"
 
       - name: Apply provisioning profiles to Xcode project
