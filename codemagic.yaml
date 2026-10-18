@@ -51,8 +51,9 @@ workflows:
         script: |
           set -e
           # APP_STORE_APP_ID is still the unfilled placeholder, so the API lookup
-          # below can't resolve the real app — hardcoded to 30 until that's fixed.
-          NEXT=30
+          # below can't resolve the real app — hardcoded until that's fixed.
+          # Bump this by 1 on every push (30 was already shipped to TestFlight).
+          NEXT=31
           echo "Next build number: $NEXT (hardcoded — fix APP_STORE_APP_ID to restore auto-increment)"
           echo "BUILD_NUMBER=$NEXT" >> "$CM_ENV"
 
