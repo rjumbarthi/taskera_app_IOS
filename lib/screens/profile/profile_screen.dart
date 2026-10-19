@@ -376,7 +376,7 @@ class _StatCard extends StatelessWidget {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
-              fontWeight: FontWeight.w700, color: accent, height: 1.2)),
+              fontWeight: FontWeight.w700, color: colors.textOrPlain(accent), height: 1.2)),
           Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
               color: colors.ink3, height: 1.3)),
         ]),
@@ -525,7 +525,7 @@ class _FocusCard extends ConsumerWidget {
                       fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.4, height: 1)),
                   SizedBox(height: 4),
                   Text(dtnRateStr, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
-                      fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2), height: 1.2)),
+                      fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFBF5AF2)), height: 1.2)),
                   Text(dtnTotal > 0 ? '$dtnDone/$dtnTotal ${l.done.toLowerCase()}' : '—',
                       maxLines: 1, overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
@@ -624,7 +624,7 @@ class _QuadBit extends StatelessWidget {
       SizedBox(width: 3),
       Text('$label: $value',
           style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-              color: color, fontWeight: FontWeight.w600, height: 1)),
+              color: TaskEraTheme.of(context).colors.textOrPlain(color), fontWeight: FontWeight.w600, height: 1)),
     ]);
   }
 }
@@ -656,7 +656,7 @@ class _QuadDonut extends StatelessWidget {
               ),
             ),
             Text(quad, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                fontWeight: FontWeight.w700, color: color, height: 1)),
+                fontWeight: FontWeight.w700, color: colors.textOrPlain(color), height: 1)),
           ],
         ),
       ),
@@ -717,7 +717,7 @@ class _GoalsList extends ConsumerWidget {
                             color: colors.ink, height: 1.2))),
                     Text('${(goals[i].progressPct * 100).round()}%',
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700,
-                            fontSize: 12, color: Color(goals[i].accentColorValue), height: 1)),
+                            fontSize: 12, color: colors.textOrPlain(Color(goals[i].accentColorValue)), height: 1)),
                   ]),
                   SizedBox(height: 5),
                   ClipRRect(
@@ -961,7 +961,7 @@ class _SignOutButton extends StatelessWidget {
                     strokeWidth: 2, color: Color(0xFFFF453A)))
             : Text(AppL10n.of(context).signOut,
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
-                    fontWeight: FontWeight.w600, color: Color(0xFFFF453A), height: 1)),
+                    fontWeight: FontWeight.w600, color: TaskEraTheme.of(context).colors.textOrPlain(const Color(0xFFFF453A)), height: 1)),
       ),
     );
   }

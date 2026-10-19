@@ -183,7 +183,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
                     style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
-                      color: Color(0xFFBF5AF2),
+                      color: colors.textOrPlain(const Color(0xFFBF5AF2)),
                       height: 1.55,
                     ),
                   ),
@@ -355,12 +355,12 @@ class _SuggestionsPanel extends StatelessWidget {
             border: Border.all(width: 0.5, color: const Color(0x33BF5AF2)),
           ),
           child: Row(children: [
-            Text('✦ ', style: TextStyle(color: Color(0xFFBF5AF2), fontSize: 13)),
+            Text('✦ ', style: TextStyle(color: colors.textOrPlain(const Color(0xFFBF5AF2)), fontSize: 13)),
             Expanded(
               child: Text('TaskEra detected: $ctx',
                   style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
-                      color: Color(0xFFBF5AF2), height: 1.3)),
+                      color: colors.textOrPlain(const Color(0xFFBF5AF2)), height: 1.3)),
             ),
           ]),
         ),
@@ -709,7 +709,7 @@ class _ResultsSection extends StatelessWidget {
               style: TextStyle(
                 fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
-                color: Color(0xFFBF5AF2),
+                color: colors.textOrPlain(const Color(0xFFBF5AF2)),
                 height: 1.5,
               ),
             ),

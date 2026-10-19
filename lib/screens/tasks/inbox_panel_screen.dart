@@ -265,7 +265,7 @@ class _CaptureRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 0.5, color: colors.bdr),
                     ),
-                    child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: clr)),
+                    child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(clr))),
                   ),
                 ),
                 const SizedBox(width: 4),

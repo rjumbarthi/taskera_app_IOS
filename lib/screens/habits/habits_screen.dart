@@ -395,7 +395,7 @@ class _StreakBanner extends ConsumerWidget {
                 children: [
                   Text(
                     '$maxFill-day streak!',
-                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFFFB900)), height: 1),
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -414,7 +414,7 @@ class _StreakBanner extends ConsumerWidget {
               ),
               child: Text(
                 '🔔 ${AppL10n.of(context).remindLabel}',
-                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFFFFB900), height: 1),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFFFB900)), height: 1),
               ),
             ),
           ],
@@ -499,7 +499,7 @@ class _HabitCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   habit.streak,
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: habit.streakColor, height: 1),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: colors.textOrPlain(habit.streakColor), height: 1),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(6, 2, 2, 2),
@@ -743,7 +743,7 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
             Text(
               AppL10n.of(ctx).streakProtect,
               style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 17, fontWeight: FontWeight.w700,
-                  color: const Color(0xFFFFB900)),
+                  color: colors.plainText ? Colors.white : const Color(0xFFFFB900)),
             ),
             const SizedBox(height: 8),
             Text(
@@ -802,7 +802,7 @@ class _HabitMenuItem extends StatelessWidget {
           children: [
             Icon(icon, size: 16, color: color),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: color, height: 1)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.plainText ? Colors.white : color, height: 1)),
           ],
         ),
       ),

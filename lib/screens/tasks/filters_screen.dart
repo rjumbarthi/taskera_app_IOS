@@ -131,7 +131,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
-                          color: presets[sel].quadColor)),
+                          color: colors.textOrPlain(presets[sel].quadColor))),
                   SizedBox(height: 6),
                   if (results.isEmpty)
                     Text('No tasks match this filter right now.',

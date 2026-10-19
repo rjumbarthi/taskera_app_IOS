@@ -77,7 +77,7 @@ class _Body extends StatelessWidget {
                       height: 1.3,
                     ),
                     children: [
-                      TextSpan(text: '${AppL10n.of(context).goals} · ', style: TextStyle(color: accentColor)),
+                      TextSpan(text: '${AppL10n.of(context).goals} · ', style: TextStyle(color: colors.textOrPlain(accentColor))),
                       TextSpan(text: goal.title, style: TextStyle(color: colors.ink)),
                     ],
                   ),
@@ -167,7 +167,7 @@ class _Body extends StatelessWidget {
                           Text(AppL10n.of(context).overallProgress, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.ink3)),
                           Text(
                             '${(goal.progressPct * 100).round()}%',
-                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, fontWeight: FontWeight.w700, color: accentColor),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16, fontWeight: FontWeight.w700, color: colors.textOrPlain(accentColor)),
                           ),
                         ],
                       ),

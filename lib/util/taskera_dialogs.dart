@@ -19,14 +19,15 @@ Future<bool> taskeraConfirmDelete(BuildContext context, {String? message}) async
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(false),
           child: Text(str.cancel,
-              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: Color(0xFF0A84FF))),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
+                  color: TaskEraTheme.of(context).colors.plainText ? Colors.white : const Color(0xFF0A84FF))),
         ),
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(true),
           child: Text(str.delete,
               style: TextStyle(
                   fontFamily: TaskEraTheme.of(context).fontFamily,
-                  color: Color(0xFFFF453A),
+                  color: TaskEraTheme.of(context).colors.plainText ? Colors.white : const Color(0xFFFF453A),
                   fontWeight: FontWeight.w700)),
         ),
       ],

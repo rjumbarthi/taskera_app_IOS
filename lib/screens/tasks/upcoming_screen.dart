@@ -285,7 +285,7 @@ class _UpTaskRow extends ConsumerWidget {
                     fontFamily: TaskEraTheme.of(context).fontFamily,
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFFFF6B6B),
+                    color: colors.textOrPlain(const Color(0xFFFF6B6B)),
                   ),
                 ),
               ),

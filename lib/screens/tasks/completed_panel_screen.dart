@@ -186,7 +186,7 @@ class _CompletedPanelScreenState extends ConsumerState<CompletedPanelScreen> {
                         fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFFFF6B6B)),
+                        color: colors.textOrPlain(const Color(0xFFFF6B6B))),
                   ),
                 ),
                 GestureDetector(

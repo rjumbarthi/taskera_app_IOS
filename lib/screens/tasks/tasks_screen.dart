@@ -911,7 +911,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                     children: [
                       Text(
                         task.title,
-                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: quadColor, height: 1.3),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: colors.textOrPlain(quadColor), height: 1.3),
                       ),
                       SizedBox(height: 2),
                       Wrap(
@@ -935,7 +935,7 @@ class _TaskRowState extends ConsumerState<_TaskRow> with SingleTickerProviderSta
                                 color: const Color(0x26FFB900),
                                 borderRadius: BorderRadius.circular(3),
                               ),
-                              child: Text('AI', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFFFB900), height: 1.2)),
+                              child: Text('AI', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w600, color: colors.textOrPlain(const Color(0xFFFFB900)), height: 1.2)),
                             ),
                           if (task.recLabel != null)
                             Container(
@@ -1044,7 +1044,7 @@ class _SubItemRow extends StatelessWidget {
             style: TextStyle(
               fontFamily: TaskEraTheme.of(context).fontFamily,
               fontSize: 11,
-              color: sub.isDone ? colors.ink3 : quadColor,
+              color: sub.isDone ? colors.ink3 : colors.textOrPlain(quadColor),
               decoration: sub.isDone ? TextDecoration.lineThrough : null,
               decorationColor: colors.ink3,
               height: 1.3,
@@ -1486,7 +1486,7 @@ class _QuadCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   tasks[i].title,
-                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: quadColor, height: 1.3),
+                                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.textOrPlain(quadColor), height: 1.3),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
@@ -1531,7 +1531,7 @@ class _ListsInTasksSection extends ConsumerWidget {
               onTap: () => context.push(TaskEraRoutes.tasksLists),
               child: Text('${AppL10n.of(context).seeAll} ›',
                   style: TextStyle(
-                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1)),
+                      fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
             ),
           ]),
         ),

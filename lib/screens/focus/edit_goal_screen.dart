@@ -642,7 +642,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                             ),
                             child: Text('＋ ${AppL10n.of(context).linkHabit}',
                                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                                    fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2))),
+                                    fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFBF5AF2)))),
                           ),
                         ),
                       ),

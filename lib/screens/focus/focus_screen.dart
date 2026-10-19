@@ -225,7 +225,7 @@ class _GoalCol extends StatelessWidget {
             fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
             fontVariations: const [FontVariation('wght', 700)],
             fontSize: 16,
-            color: color,
+            color: colors.textOrPlain(color),
             height: 1,
           ),
         ),

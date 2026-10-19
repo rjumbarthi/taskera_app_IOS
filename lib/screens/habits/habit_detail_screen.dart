@@ -569,7 +569,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     border: Border.all(width: 0.5, color: const Color(0x33FF453A)),
                   ),
                   alignment: Alignment.center,
-                  child: Text('${AppL10n.of(context).delete} Habit', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFFFF453A), height: 1)),
+                  child: Text('${AppL10n.of(context).delete} Habit', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFFF453A)), height: 1)),
                 ),
               ),
             ],
@@ -850,7 +850,7 @@ class _AddStepRow extends StatelessWidget {
               Icon(Icons.add_rounded, size: 15, color: accent),
               const SizedBox(width: 6),
               Text('Add step', style: TextStyle(
-                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: accent)),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: colors.textOrPlain(accent))),
             ],
           ),
         ),

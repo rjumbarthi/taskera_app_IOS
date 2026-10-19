@@ -943,7 +943,7 @@ class _EventBlock extends ConsumerWidget {
                     border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                   ),
                   alignment: Alignment.center,
-                  child: Text(AppL10n.of(ctx).editEvent, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0A84FF))),
+                  child: Text(AppL10n.of(ctx).editEvent, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(const Color(0xFF0A84FF)))),
                 ),
               ),
               SizedBox(height: 8),

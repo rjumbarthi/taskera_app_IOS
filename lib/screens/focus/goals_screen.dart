@@ -349,7 +349,7 @@ class _GoalCard extends ConsumerWidget {
                   fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: goal.pctColor,
+                  color: colors.textOrPlain(goal.pctColor),
                 ),
               ),
               const SizedBox(width: 4),
@@ -559,7 +559,7 @@ class _LinkedRow extends StatelessWidget {
               style: TextStyle(
                 fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 13,
-                color: item.done ? colors.ink3 : item.color,
+                color: item.done ? colors.ink3 : colors.textOrPlain(item.color),
                 decoration: item.done ? TextDecoration.lineThrough : null,
                 decorationColor: colors.ink3,
                 height: 1.3,
@@ -573,7 +573,7 @@ class _LinkedRow extends StatelessWidget {
               style: TextStyle(
                 fontFamily: TaskEraTheme.of(context).fontFamily,
                 fontSize: 11,
-                color: item.badgeColor,
+                color: colors.textOrPlain(item.badgeColor!),
                 height: 1.3,
               ),
             ),

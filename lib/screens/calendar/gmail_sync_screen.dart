@@ -138,7 +138,7 @@ class _GmailSyncScreenState extends ConsumerState<GmailSyncScreen> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                               decoration: BoxDecoration(color: const Color(0x1AFF453A), borderRadius: BorderRadius.circular(6)),
-                              child: Text(AppL10n.of(context).disconnect, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: Color(0xFFFF6B6B))),
+                              child: Text(AppL10n.of(context).disconnect, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(const Color(0xFFFF6B6B)))),
                             ),
                           ),
                       ],

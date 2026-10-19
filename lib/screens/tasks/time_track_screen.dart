@@ -196,7 +196,7 @@ class TimeTrackContent extends ConsumerWidget {
                             children: [
                               Icon(Icons.stop, size: 14, color: Color(0xFFFF6B6B)),
                               SizedBox(width: 5),
-                              Text('Stop', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFFF6B6B))),
+                              Text('Stop', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(const Color(0xFFFF6B6B)))),
                             ],
                           ),
                         ),
@@ -477,7 +477,7 @@ class _EstVsActualRow extends StatelessWidget {
         SizedBox(width: 8),
         Text('·', style: TextStyle(color: colors.ink3)),
         SizedBox(width: 8),
-        Text(row.actual, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFFF6B6B))),
+        Text(row.actual, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: colors.textOrPlain(const Color(0xFFFF6B6B)))),
       ],
     );
   }

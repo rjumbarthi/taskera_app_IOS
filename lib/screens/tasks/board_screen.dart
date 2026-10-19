@@ -114,7 +114,7 @@ class _BoardColumn extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                   decoration: BoxDecoration(color: color.withAlpha(0x33), borderRadius: BorderRadius.circular(4)),
-                  child: Text('${tasks.length}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+                  child: Text('${tasks.length}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(color))),
                 ),
               ],
             ),
@@ -195,7 +195,7 @@ class _BoardTaskCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(task.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: quadColor, height: 1.3)),
+            Text(task.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w500, color: colors.textOrPlain(quadColor), height: 1.3)),
             const SizedBox(height: 3),
             Text(_meta, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3)),
           ],

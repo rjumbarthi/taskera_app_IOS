@@ -175,7 +175,7 @@ class _UnlockedCard extends StatelessWidget {
           Text(emoji, style: TextStyle(fontSize: 28, height: 1)),
           const SizedBox(height: 5),
           Text(title, textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFF2F2F7), height: 1.2)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink, height: 1.2)),
           const SizedBox(height: 3),
           Text(desc, textAlign: TextAlign.center,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.labelMuted, height: 1.4)),

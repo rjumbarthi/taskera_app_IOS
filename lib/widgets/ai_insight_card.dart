@@ -209,7 +209,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
         onTap: _generate,
         behavior: HitTestBehavior.opaque,
         child: Text('$_error · tap to retry',
-            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: Color(0xFFFF6B6B), height: 1.4)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.textOrPlain(const Color(0xFFFF6B6B)), height: 1.4)),
       );
     }
     if (!_generated) {
