@@ -402,6 +402,7 @@ class _TaskEraAppState extends ConsumerState<TaskEraApp> with WidgetsBindingObse
       fontFamily: fam,
       numberFontFamily: numFam,
       fontSizeScale: scale,
+      plainText: s.sw('plainText'),
     );
 
     return TaskEraTheme(

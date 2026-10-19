@@ -701,6 +701,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ]),
               ),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
+              _SwRow(settingKey: 'plainText', label: 'Plain text (no color)', colors: colors),
+              Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
               SizedBox(
                 height: 108,
                 child: ListView.separated(

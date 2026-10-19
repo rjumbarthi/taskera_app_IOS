@@ -74,6 +74,10 @@ class TaskEraSettingsState {
       // paired Apple Watch / Wear OS via notification mirroring). Default OFF —
       // opt-in, since it changes what buttons appear on existing notifications.
       'notifQuickActions': false,
+      // Forces accent/success/muted text to the theme's plain ink color
+      // (black on light, white on dark) instead of accent tints — see
+      // TaskEraThemeData.fromMode.
+      'plainText': false,
     },
     this.theme = 3, // System — follows OS light/dark
     this.accent = 0,

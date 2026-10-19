@@ -1696,7 +1696,6 @@ class _Fab extends StatelessWidget {
         decoration: const BoxDecoration(
           color: TaskEraColors.acc,
           shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: Color(0x8C000000), blurRadius: 12, offset: Offset(0, 4))],
         ),
         alignment: Alignment.center,
         child: Icon(Icons.add, color: Colors.white, size: 24),
