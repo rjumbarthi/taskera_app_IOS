@@ -249,6 +249,7 @@ class _PreviewNote extends StatelessWidget {
 class _ActiveFocusHomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 170, height: 130,
       padding: const EdgeInsets.all(12),
@@ -266,7 +267,7 @@ class _ActiveFocusHomeWidget extends StatelessWidget {
           SizedBox(width: 5),
           Text('TASKERA LIVE',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                  fontWeight: FontWeight.w700, color: Color(0xFF409CFF), height: 1)),
+                  fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF409CFF), height: 1)),
           const Spacer(),
           Container(
             padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
@@ -276,7 +277,7 @@ class _ActiveFocusHomeWidget extends StatelessWidget {
             ),
             child: Text('HABIT',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                    fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
+                    fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
           ),
         ]),
         SizedBox(height: 7),
@@ -409,6 +410,7 @@ class _TopTaskSmall extends StatelessWidget {
 class _HabitStreakSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 130, height: 130,
       padding: const EdgeInsets.all(12),
@@ -427,7 +429,7 @@ class _HabitStreakSmall extends StatelessWidget {
           SizedBox(width: 4),
           Text('Habits',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: Color(0xFFBF5AF2), height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : Color(0xFFBF5AF2), height: 1)),
         ]),
         SizedBox(height: 6),
         Text('14🔥',
@@ -583,6 +585,7 @@ class _TaskLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Row(children: [
       Container(width: 10, height: 10,
         decoration: BoxDecoration(
@@ -603,7 +606,7 @@ class _TaskLine extends StatelessWidget {
         decoration: BoxDecoration(color: badgeBg, borderRadius: BorderRadius.circular(3)),
         child: Text(badge,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                color: badgeFg, height: 1)),
+                color: plainText ? Colors.white : badgeFg, height: 1)),
       ),
     ]);
   }
@@ -612,6 +615,7 @@ class _TaskLine extends StatelessWidget {
 class _GoalsProgressMedium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -629,7 +633,7 @@ class _GoalsProgressMedium extends StatelessWidget {
           SizedBox(width: 5),
           Text('Goals · April',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                  fontWeight: FontWeight.w600, color: Color(0xFF9FCD44), height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
         ]),
         SizedBox(height: 10),
         _GoalBar(label: 'Launch MVP', percent: 0.60,
@@ -655,6 +659,7 @@ class _GoalBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Column(children: [
       Row(children: [
         Expanded(child: Text(label,
@@ -662,7 +667,7 @@ class _GoalBar extends StatelessWidget {
                 color: Colors.white, height: 1.2))),
         Text('${(percent * 100).round()}%',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                fontWeight: FontWeight.w700, color: pctColor, height: 1)),
+                fontWeight: FontWeight.w700, color: plainText ? Colors.white : pctColor, height: 1)),
       ]),
       SizedBox(height: 3),
       ClipRRect(
@@ -737,6 +742,7 @@ class _QuadMiniCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
       decoration: BoxDecoration(
@@ -747,7 +753,7 @@ class _QuadMiniCell extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(label.toUpperCase(),
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
-                fontWeight: FontWeight.w700, color: labelColor,
+                fontWeight: FontWeight.w700, color: plainText ? Colors.white : labelColor,
                 letterSpacing: 0.3, height: 1)),
         Text(count,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18,
@@ -796,6 +802,7 @@ class _DailyQuoteMedium extends StatelessWidget {
 class _ActiveFocusLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       height: 245,
       padding: const EdgeInsets.all(16),
@@ -814,7 +821,7 @@ class _ActiveFocusLarge extends StatelessWidget {
           Text('TASKERA LIVE',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                   fontWeight: FontWeight.w800, letterSpacing: 0.6,
-                  color: Color(0xFF409CFF), height: 1)),
+                  color: plainText ? Colors.white : Color(0xFF409CFF), height: 1)),
           const Spacer(),
           Container(
             padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
@@ -824,7 +831,7 @@ class _ActiveFocusLarge extends StatelessWidget {
             ),
             child: Text('HABIT',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                    fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
+                    fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
           ),
         ]),
         SizedBox(height: 12),
@@ -886,6 +893,7 @@ class _ActiveFocusLarge extends StatelessWidget {
 class _TodayCommandLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       height: 245,
       padding: const EdgeInsets.all(16),
@@ -906,7 +914,7 @@ class _TodayCommandLarge extends StatelessWidget {
           ),
           Text('25% done',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
+                  fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
         ]),
         SizedBox(height: 8),
         ClipRRect(
@@ -949,6 +957,7 @@ class _CommandQuadCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -959,7 +968,7 @@ class _CommandQuadCell extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(label,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                fontWeight: FontWeight.w800, color: color, height: 1)),
+                fontWeight: FontWeight.w800, color: plainText ? Colors.white : color, height: 1)),
         Text(count,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 28,
                 fontVariations: [FontVariation('wght', 700)],
@@ -996,6 +1005,7 @@ class _LargeLine extends StatelessWidget {
 class _TodayCardLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       height: 245,
       padding: const EdgeInsets.all(16),
@@ -1035,7 +1045,7 @@ class _TodayCardLarge extends StatelessWidget {
           const Spacer(),
           Text('25%',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
+                  fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
         ]),
         SizedBox(height: 10),
         _TodayCardLine(dot: TaskEraColors.q1, text: 'Submit assignment before deadline',
@@ -1067,6 +1077,7 @@ class _TodayCardLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Row(children: [
       Container(width: 9, height: 9,
           decoration: BoxDecoration(shape: BoxShape.circle,
@@ -1080,7 +1091,7 @@ class _TodayCardLine extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
         decoration: BoxDecoration(color: badgeBg, borderRadius: BorderRadius.circular(3)),
         child: Text(badge, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-            color: badgeFg, height: 1)),
+            color: plainText ? Colors.white : badgeFg, height: 1)),
       ),
     ]);
   }
@@ -1089,6 +1100,7 @@ class _TodayCardLine extends StatelessWidget {
 class _TodayCardLock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.fromLTRB(13, 10, 13, 10),
       decoration: BoxDecoration(
@@ -1119,7 +1131,7 @@ class _TodayCardLock extends StatelessWidget {
         ),
         Text('25%',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                fontWeight: FontWeight.w700, color: Color(0xFF9FCD44), height: 1)),
+                fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFF9FCD44), height: 1)),
       ]),
     );
   }
@@ -1128,6 +1140,7 @@ class _TodayCardLock extends StatelessWidget {
 class _DoThisNowLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       height: 245,
       padding: const EdgeInsets.all(16),
@@ -1146,7 +1159,7 @@ class _DoThisNowLarge extends StatelessWidget {
           Text('DO THIS NOW',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
                   fontWeight: FontWeight.w800, letterSpacing: 0.6,
-                  color: TaskEraColors.q1, height: 1)),
+                  color: plainText ? Colors.white : TaskEraColors.q1, height: 1)),
           const Spacer(),
           Container(
             padding: const EdgeInsets.fromLTRB(7, 2, 7, 2),
@@ -1156,7 +1169,7 @@ class _DoThisNowLarge extends StatelessWidget {
             ),
             child: Text('Q1 · URGENT',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                    fontWeight: FontWeight.w700, color: TaskEraColors.q1, height: 1)),
+                    fontWeight: FontWeight.w700, color: plainText ? Colors.white : TaskEraColors.q1, height: 1)),
           ),
         ]),
         const Spacer(),
@@ -1237,6 +1250,7 @@ class _DoThisNowLock extends StatelessWidget {
 class _NextEventSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 130, height: 130,
       padding: const EdgeInsets.all(12),
@@ -1255,7 +1269,7 @@ class _NextEventSmall extends StatelessWidget {
           SizedBox(width: 4),
           Text('Calendar',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: TaskEraColors.q3, height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : TaskEraColors.q3, height: 1)),
         ]),
         const Spacer(),
         Text('Next · 11:00 AM',
@@ -1321,6 +1335,7 @@ class _ScheduleLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Row(children: [
       SizedBox(
         width: 36,
@@ -1339,7 +1354,7 @@ class _ScheduleLine extends StatelessWidget {
           ),
           child: Text(label, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: labelColor, height: 1.2)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : labelColor, height: 1.2)),
         ),
       ),
     ]);
@@ -1349,6 +1364,7 @@ class _ScheduleLine extends StatelessWidget {
 class _HabitCheckSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 130, height: 130,
       padding: const EdgeInsets.all(12),
@@ -1367,7 +1383,7 @@ class _HabitCheckSmall extends StatelessWidget {
           SizedBox(width: 4),
           Text('Habits',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: Color(0xFFBF5AF2), height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : Color(0xFFBF5AF2), height: 1)),
         ]),
         SizedBox(height: 4),
         Text('Today · 1 of 4 done',
@@ -1413,6 +1429,7 @@ class _HabitCheckLine extends StatelessWidget {
 class _HabitsTodayMedium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1430,7 +1447,7 @@ class _HabitsTodayMedium extends StatelessWidget {
                   fontWeight: FontWeight.w600, color: Colors.white, height: 1))),
           Text('14🔥',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w700, color: Color(0xFFBF5AF2), height: 1)),
+                  fontWeight: FontWeight.w700, color: plainText ? Colors.white : Color(0xFFBF5AF2), height: 1)),
         ]),
         SizedBox(height: 8),
         ClipRRect(
@@ -1482,6 +1499,7 @@ class _HabitMediumLine extends StatelessWidget {
 class _LastNoteSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 130, height: 130,
       padding: const EdgeInsets.all(12),
@@ -1500,7 +1518,7 @@ class _LastNoteSmall extends StatelessWidget {
           SizedBox(width: 4),
           Text('Notes',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: TaskEraColors.q4, height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : TaskEraColors.q4, height: 1)),
         ]),
         SizedBox(height: 8),
         Expanded(
@@ -1519,6 +1537,7 @@ class _LastNoteSmall extends StatelessWidget {
 class _RecentNotesMedium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1536,7 +1555,7 @@ class _RecentNotesMedium extends StatelessWidget {
                   fontWeight: FontWeight.w600, color: Colors.white, height: 1))),
           Text('TaskEra',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  color: Color(0x99FFB900), height: 1)),
+                  color: plainText ? Colors.white : Color(0x99FFB900), height: 1)),
         ]),
         SizedBox(height: 8),
         Container(
@@ -1591,6 +1610,7 @@ class _NoteRow extends StatelessWidget {
 class _InboxSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       width: 130, height: 130,
       padding: const EdgeInsets.all(12),
@@ -1609,7 +1629,7 @@ class _InboxSmall extends StatelessWidget {
           SizedBox(width: 4),
           Text('Inbox',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                  fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
+                  fontWeight: FontWeight.w600, color: plainText ? Colors.white : TaskEraColors.acc, height: 1)),
         ]),
         SizedBox(height: 6),
         Text('3',
@@ -1622,7 +1642,7 @@ class _InboxSmall extends StatelessWidget {
         const Spacer(),
         Text('Review →',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
+                fontWeight: FontWeight.w600, color: plainText ? Colors.white : TaskEraColors.acc, height: 1)),
       ]),
     );
   }
@@ -1631,6 +1651,7 @@ class _InboxSmall extends StatelessWidget {
 class _InboxMedium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final plainText = TaskEraTheme.of(context).colors.plainText;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1654,7 +1675,7 @@ class _InboxMedium extends StatelessWidget {
             ),
             child: Text('New',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                    fontWeight: FontWeight.w700, color: TaskEraColors.acc, height: 1)),
+                    fontWeight: FontWeight.w700, color: plainText ? Colors.white : TaskEraColors.acc, height: 1)),
           ),
         ]),
         SizedBox(height: 8),
