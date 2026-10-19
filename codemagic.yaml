@@ -28,8 +28,8 @@ workflows:
         distribution_type: app_store          # TestFlight / App Store signing
         bundle_identifier: com.port443.taskera
       vars:
-        # App Store Connect numeric Apple ID of the app record (fill this in).
-        APP_STORE_APP_ID: 0000000000
+        # App Store Connect numeric Apple ID of the app record.
+        APP_STORE_APP_ID: 6815404327
         BUNDLE_ID: "com.port443.taskera"
       flutter: stable
       xcode: latest
@@ -50,11 +50,9 @@ workflows:
       - name: Compute next build number
         script: |
           set -e
-          # APP_STORE_APP_ID is still the unfilled placeholder, so the API lookup
-          # below can't resolve the real app — hardcoded until that's fixed.
-          # Bump this by 1 on every push (33 was already shipped to TestFlight).
-          NEXT=34
-          echo "Next build number: $NEXT (hardcoded — fix APP_STORE_APP_ID to restore auto-increment)"
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo "0")
+          NEXT=$(( ${LATEST:-0} + 1 ))
+          echo "Next build number: $NEXT (latest on TestFlight: ${LATEST:-0})"
           echo "BUILD_NUMBER=$NEXT" >> "$CM_ENV"
 
       - name: Apply provisioning profiles to Xcode project
