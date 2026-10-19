@@ -24,7 +24,7 @@ class AppConfig {
   // This is a write-only client key — safe to ship, like the Supabase anon key.
   // Host: https://us.i.posthog.com (US cloud) or https://eu.i.posthog.com (EU).
   // Until a real key is set, analytics is a silent no-op.
-  static const posthogApiKey = 'YOUR_POSTHOG_PROJECT_API_KEY';
+  static const posthogApiKey = 'phc_nEcKaahQ8LNtcWA7dorcT62aosSuSUHVq4wwj9kzeTTW';
   static const posthogHost   = 'https://us.i.posthog.com';
 
   // ── Payments ──────────────────────────────────────────────────────────────
