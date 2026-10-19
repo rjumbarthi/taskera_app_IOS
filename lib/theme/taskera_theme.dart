@@ -59,6 +59,7 @@ class TaskEraThemeData {
       accent:   plainText ? base.ink  : accent,
       accent2:  plainText ? base.ink2 : accent2,
       accentBg: plainText ? Colors.transparent : accentBg,
+      plainText: plainText,
     );
     return TaskEraThemeData(
       colors: colors,

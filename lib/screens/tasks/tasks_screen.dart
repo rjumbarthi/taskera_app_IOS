@@ -599,7 +599,7 @@ class _QuadSection extends StatelessWidget {
                       onTap: () => context.push('/tasks/quad/$quadKey'),
                       child: Text(
                         name,
-                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: quadColor, height: 1),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.textOrPlain(quadColor), height: 1),
                       ),
                     ),
                     if (aiBadge != null) ...[SizedBox(width: 6), aiBadge!],
@@ -1082,7 +1082,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
               child: Text(task.title,
-                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: task.qColor, height: 1.3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(task.qColor), height: 1.3),
                 maxLines: 2, overflow: TextOverflow.ellipsis),
             ),
             Container(height: 0.5, color: colors.bdr),
@@ -1445,9 +1445,9 @@ class _QuadCard extends StatelessWidget {
                     Container(width: 6, height: 6, decoration: BoxDecoration(color: quadColor, shape: BoxShape.circle)),
                     SizedBox(width: 5),
                     Expanded(
-                      child: Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1), overflow: TextOverflow.ellipsis),
+                      child: Text(name, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(quadColor), height: 1), overflow: TextOverflow.ellipsis),
                     ),
-                    Text('$count', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: quadColor, height: 1)),
+                    Text('$count', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: colors.textOrPlain(quadColor), height: 1)),
                   ],
                 ),
               ),
@@ -1717,7 +1717,11 @@ void _showFabChooser(BuildContext ctx) {
         decoration: BoxDecoration(
           color: const Color(0xFF1C1C24),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(width: 0.5, color: colors.bdr),
+          // Fixed-dark surface regardless of app theme (like the long-press
+          // action sheet) — so its contents must be fixed-light too, never
+          // colors.ink/colors.bdr, which flip to near-black on light theme and
+          // disappear against this background.
+          border: Border.all(width: 0.5, color: const Color(0x1AFFFFFF)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1725,41 +1729,41 @@ void _showFabChooser(BuildContext ctx) {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-              child: Text(AppL10n.of(ctx).addNew, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink, height: 1.3)),
+              child: Text(AppL10n.of(ctx).addNew, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white, height: 1.3)),
             ),
-            Container(height: 0.5, color: colors.bdr),
+            Container(height: 0.5, color: const Color(0x1AFFFFFF)),
             _ContextItem(
               icon: Icons.check_box_outline_blank_rounded,
               label: 'Task',
-              color: colors.ink,
+              color: Colors.white,
               onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.tasksQuickAdd); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.repeat_rounded,
               label: 'Habit',
-              color: colors.ink,
+              color: Colors.white,
               onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.habitsAddHabit); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.sticky_note_2_outlined,
               label: 'Note',
-              color: colors.ink,
+              color: Colors.white,
               onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.notesEditor); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.checklist_rounded,
               label: 'Checklist',
-              color: colors.ink,
+              color: Colors.white,
               onTap: () { Navigator.of(sheetCtx).pop(); ctx.push(TaskEraRoutes.tasksLists); },
               colors: colors,
             ),
             _ContextItem(
               icon: Icons.person_add_outlined,
               label: 'Invite',
-              color: colors.ink,
+              color: Colors.white,
               onTap: () { Navigator.of(sheetCtx).pop(); },
               colors: colors,
             ),

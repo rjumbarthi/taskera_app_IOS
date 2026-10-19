@@ -24,6 +24,11 @@ class TaskEraColors {
   final Color accent2;
   final Color accentBg;
 
+  // Settings → Display → "Plain text": when true, screens that color text by
+  // a semantic color (quadrant color, etc.) should render that text in [ink]
+  // instead — colored dots/backgrounds elsewhere are unaffected.
+  final bool plainText;
+
   // Static accent/semantic — used as fallbacks and in const contexts
   static const Color acc     = Color(0xFF0A84FF);
   static const Color acc2    = Color(0xFF409CFF);
@@ -53,7 +58,13 @@ class TaskEraColors {
     this.accent     = const Color(0xFF0A84FF),
     this.accent2    = const Color(0xFF409CFF),
     this.accentBg   = const Color(0x1F0A84FF),
+    this.plainText  = false,
   });
+
+  // Convenience for "plain text" mode: callers that color a Text by a
+  // semantic color (quadrant color, priority color, etc.) should wrap it as
+  // `colors.textOrPlain(quadColor)` so the toggle reaches every such spot.
+  Color textOrPlain(Color semantic) => plainText ? ink : semantic;
 
   // Glass theme — wallpaper shows through translucent surfaces
   static const glass = TaskEraColors(
