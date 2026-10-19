@@ -146,7 +146,7 @@ class _Body extends StatelessWidget {
                                     fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                                     fontVariations: [FontVariation('wght', 700)],
                                     fontSize: 16,
-                                    color: Color(0xFFF2F2F7),
+                                    color: colors.ink,
                                     height: 1.25,
                                   ),
                                 ),

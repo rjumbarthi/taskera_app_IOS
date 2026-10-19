@@ -325,7 +325,7 @@ class _GoalCard extends ConsumerWidget {
                         fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 14,
-                        color: Color(0xFFF2F2F7),
+                        color: colors.ink,
                         height: 1.3,
                       ),
                     ),

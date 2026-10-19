@@ -272,6 +272,7 @@ class _TimerSubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = TaskEraTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 12, 6),
       child: Row(
@@ -285,7 +286,7 @@ class _TimerSubHeader extends StatelessWidget {
               fontVariations: [FontVariation('wght', 600)],
               fontSize: 19,
               letterSpacing: -0.5,
-              color: Color(0xFFF2F2F7),
+              color: colors.ink,
               height: 1.1,
             ),
           ),
@@ -398,7 +399,7 @@ class _ActiveCard extends StatelessWidget {
               fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontVariations: [FontVariation('wght', 300)],
               fontSize: 58,
-              color: Color(0xFFF2F2F7),
+              color: colors.ink,
               height: 1,
             ),
           ),
@@ -679,7 +680,7 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
                     fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                     fontVariations: [FontVariation('wght', 300)],
                     fontSize: 52,
-                    color: Color(0xFFF2F2F7),
+                    color: colors.ink,
                     height: 1,
                   ),
                   decoration: const InputDecoration(
