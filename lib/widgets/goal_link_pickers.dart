@@ -86,8 +86,9 @@ class _SheetScaffold extends StatelessWidget {
             decoration: BoxDecoration(
                 color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2)),
           ),
+          // Fixed-dark sheet — never colors.ink (near-black on light theme).
           Text(title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
-              fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+              fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
           const SizedBox(height: 12),
           ConstrainedBox(constraints: const BoxConstraints(maxHeight: 320), child: body),
           const SizedBox(height: 12),
@@ -156,8 +157,9 @@ class _TaskPickerSheetState extends State<_TaskPickerSheet> {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(AppL10n.of(context).noActiveTasksFound,
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: const Color(0xB3FFFFFF))),
             )
+          // Fixed-dark sheet — rows use fixed-light colors, never colors.ink*/bdr0.
           : ListView(
               shrinkWrap: true,
               children: widget.tasks.map((t) {
@@ -167,14 +169,14 @@ class _TaskPickerSheetState extends State<_TaskPickerSheet> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                     decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 0.5, color: colors.bdr0))),
+                        border: Border(bottom: BorderSide(width: 0.5, color: const Color(0x1AFFFFFF)))),
                     child: Row(children: [
                       _checkbox(on),
                       const SizedBox(width: 10),
                       Expanded(child: Text(t.title,
-                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white, height: 1))),
                       Text('Q${t.quadrant}',
-                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: const Color(0xB3FFFFFF))),
                     ]),
                   ),
                 );
@@ -219,8 +221,9 @@ class _HabitPickerSheetState extends State<_HabitPickerSheet> {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(AppL10n.of(context).noHabitsFound,
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink3)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: const Color(0xB3FFFFFF))),
             )
+          // Fixed-dark sheet — rows use fixed-light colors, never colors.ink*/bdr0.
           : ListView(
               shrinkWrap: true,
               children: widget.habits.map((h) {
@@ -230,16 +233,16 @@ class _HabitPickerSheetState extends State<_HabitPickerSheet> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                     decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 0.5, color: colors.bdr0))),
+                        border: Border(bottom: BorderSide(width: 0.5, color: const Color(0x1AFFFFFF)))),
                     child: Row(children: [
                       _checkbox(on),
                       const SizedBox(width: 10),
                       Text(h.emoji, style: TextStyle(fontSize: 14)),
                       const SizedBox(width: 8),
                       Expanded(child: Text(h.name,
-                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink, height: 1))),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: Colors.white, height: 1))),
                       Text(h.frequencyLabel,
-                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3)),
+                          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: const Color(0xB3FFFFFF))),
                     ]),
                   ),
                 );

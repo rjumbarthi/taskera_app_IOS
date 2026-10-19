@@ -333,7 +333,8 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
       duration: const Duration(milliseconds: 2000),
       action: SnackBarAction(
         label: AppL10n.of(context).undo,
-        textColor: TaskEraTheme.of(context).colors.textOrPlain(TaskEraColors.acc2),
+        // Fixed-dark snackbar — never colors.textOrPlain here.
+        textColor: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2,
         onPressed: () {
           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
         },

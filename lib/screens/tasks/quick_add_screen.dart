@@ -287,7 +287,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                             Container(
                               padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                               decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
-                              child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                              child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2))),
                             ),
                             SizedBox(width: 6),
                             Expanded(
@@ -498,7 +498,7 @@ class _QuickAddScreenState extends ConsumerState<QuickAddScreen> {
                     onTap: () => setState(() => _addingSubtask = true),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
+                      child: Text('＋ Add subtask', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc))),
                     ),
                   ),
                 SizedBox(height: 80),

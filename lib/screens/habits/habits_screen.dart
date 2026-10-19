@@ -670,15 +670,17 @@ Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, TaskEr
               child: Text(
                 '${habit.emoji}  ${habit.name}',
                 style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
-                    color: Color(habit.accentColorValue), height: 1.3),
+                    color: colors.plainText ? Colors.white : Color(habit.accentColorValue), height: 1.3),
                 maxLines: 2, overflow: TextOverflow.ellipsis,
               ),
             ),
             Container(height: 0.5, color: colors.bdr),
+            // Fixed-dark sheet — colors.ink flips near-black on light theme
+            // and disappears here, so these items use a fixed light color.
             _HabitMenuItem(
               icon: Icons.skip_next_outlined,
               label: AppL10n.of(ctx).skipToday,
-              color: colors.ink,
+              color: Colors.white,
               colors: colors,
               onTap: () {
                 Navigator.of(sheetCtx).pop();
@@ -689,14 +691,14 @@ Future<void> _showHabitMenu(BuildContext ctx, WidgetRef ref, Habit habit, TaskEr
             _HabitMenuItem(
               icon: Icons.calendar_today_outlined,
               label: AppL10n.of(ctx).reschedule,
-              color: colors.ink,
+              color: Colors.white,
               colors: colors,
               onTap: () => Navigator.of(sheetCtx).pop(),
             ),
             _HabitMenuItem(
               icon: Icons.edit_outlined,
               label: AppL10n.of(ctx).editHabit,
-              color: colors.ink,
+              color: Colors.white,
               colors: colors,
               onTap: () {
                 Navigator.of(sheetCtx).pop();
@@ -747,7 +749,8 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
             Text(
               AppL10n.of(ctx).streakProtectBody,
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: colors.ink2, height: 1.5),
+              // Fixed-dark dialog — never colors.ink2 (too low-contrast on light theme).
+              style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: const Color(0xCCFFFFFF), height: 1.5),
             ),
             const SizedBox(height: 20),
             GestureDetector(
@@ -770,7 +773,7 @@ void _showStreakProtectDialog(BuildContext ctx, TaskEraColors colors) {
               onTap: () => Navigator.of(dialogCtx).pop(),
               child: Text(
                 AppL10n.of(ctx).notNow,
-                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: colors.ink3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, color: const Color(0xB3FFFFFF)),
               ),
             ),
           ],

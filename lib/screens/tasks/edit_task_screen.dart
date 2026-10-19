@@ -423,8 +423,10 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
+            // Fixed-dark dialog — never colors.textOrPlain (resolves to ink).
             child: Text('Set', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                fontWeight: FontWeight.w700,
+                color: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -476,7 +478,8 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
             child: Text('Add', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                fontWeight: FontWeight.w700,
+                color: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -668,7 +671,7 @@ class _EditTaskScreenState extends ConsumerState<EditTaskScreen> {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                                 decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(3)),
-                                child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                                child: Text('AI PARSER', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8, fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2))),
                               ),
                               SizedBox(width: 6),
                               Expanded(

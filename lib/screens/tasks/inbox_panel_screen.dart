@@ -124,7 +124,7 @@ class _InboxPanelScreenState extends ConsumerState<InboxPanelScreen> {
               Expanded(
                 child: Text(
                   '✦ AI suggests quadrant — tap to confirm',
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2)),
                 ),
               ),
               GestureDetector(

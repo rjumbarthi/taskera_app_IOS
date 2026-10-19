@@ -29,7 +29,8 @@ void _showTaskDoneSnack(BuildContext context, WidgetRef ref, int taskId, String 
     duration: const Duration(milliseconds: 2000),
     action: SnackBarAction(
       label: 'Undo',
-      textColor: TaskEraColors.acc2,
+      // Fixed-dark snackbar — never colors.textOrPlain here.
+      textColor: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2,
       onPressed: () => ref.read(appDatabaseProvider).tasksDao.toggleDone(taskId, false),
     ),
   ));
@@ -93,7 +94,7 @@ class QuadScreen extends ConsumerWidget {
                         fontVariations: [FontVariation('wght', 600)],
                         fontSize: 19,
                         letterSpacing: -0.5,
-                        color: color)),
+                        color: colors.textOrPlain(color))),
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
@@ -105,7 +106,7 @@ class QuadScreen extends ConsumerWidget {
                         fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
-                        color: TaskEraColors.acc2)),
+                        color: colors.textOrPlain(TaskEraColors.acc2))),
               ),
             ],
           ),
@@ -167,7 +168,7 @@ class QuadScreen extends ConsumerWidget {
                           fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: color)),
+                          color: colors.textOrPlain(color))),
                 ],
               ),
             ),
@@ -217,7 +218,7 @@ class _FeaturedCard extends StatelessWidget {
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
-                color: TaskEraColors.acc2),
+                color: colors.textOrPlain(TaskEraColors.acc2)),
           ),
           SizedBox(height: 6),
           Text(
@@ -246,7 +247,7 @@ class _FeaturedCard extends StatelessWidget {
                         fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
-                        color: color)),
+                        color: colors.textOrPlain(color))),
               ],
             ),
             SizedBox(height: 4),
@@ -344,7 +345,7 @@ class _QuadTaskRow extends ConsumerWidget {
                   style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
-                      color: task.isOverdue ? TaskEraColors.warn : colors.ink3)),
+                      color: task.isOverdue ? colors.textOrPlain(TaskEraColors.warn) : colors.ink3)),
             ],
             SizedBox(width: 8),
             GestureDetector(

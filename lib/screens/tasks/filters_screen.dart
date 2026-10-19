@@ -166,7 +166,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                 GestureDetector(
                   onTap: () => _snack('Custom conditions coming soon'),
                   child: Text('+ Add condition',
-                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc))),
                 ),
                 SizedBox(height: 12),
 
@@ -207,7 +207,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                                   fontFamily: TaskEraTheme.of(context).fontFamily,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: TaskEraColors.acc2)),
+                                  color: colors.textOrPlain(TaskEraColors.acc2))),
                         ),
                       ),
                     ),
@@ -226,7 +226,7 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text('+ Save as Filter',
-                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: TaskEraColors.acc)),
+                        style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.textOrPlain(TaskEraColors.acc))),
                   ),
                 ),
               ],
@@ -276,7 +276,7 @@ class _PresetRow extends StatelessWidget {
                           fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: preset.quadColor)),
+                          color: colors.textOrPlain(preset.quadColor))),
                   Text(preset.sub,
                       style: TextStyle(
                           fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
@@ -294,7 +294,7 @@ class _PresetRow extends StatelessWidget {
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 9,
                       fontWeight: FontWeight.w700,
-                      color: TaskEraColors.acc2)),
+                      color: colors.textOrPlain(TaskEraColors.acc2))),
             ),
             SizedBox(width: 8),
             Container(

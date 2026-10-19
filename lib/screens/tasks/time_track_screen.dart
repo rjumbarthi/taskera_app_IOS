@@ -143,7 +143,7 @@ class TimeTrackContent extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
+                Text(tracker.running ? 'ACTIVE NOW' : 'PAUSED', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: colors.textOrPlain(TaskEraColors.acc2))),
                 SizedBox(height: 6),
                 Text(tracker.taskTitle ?? '—', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink)),
                 Text('Started $startLabel', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
@@ -286,11 +286,11 @@ class TimeTrackContent extends ConsumerWidget {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Text('✦ ', style: TextStyle(color: TaskEraColors.acc2)),
+                        Text('✦ ', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2))),
                         Expanded(
                           child: Text(
                             estInsight,
-                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1.4),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2), height: 1.4),
                           ),
                         ),
                       ],
@@ -426,7 +426,7 @@ class _LogRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: entry.quadColor)),
+                Text(entry.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w500, color: colors.textOrPlain(entry.quadColor))),
                 Text(entry.timeRange, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
               ],
             ),
@@ -434,9 +434,9 @@ class _LogRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(entry.duration, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: running ? TaskEraColors.acc : colors.ink)),
+              Text(entry.duration, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: running ? colors.textOrPlain(TaskEraColors.acc) : colors.ink)),
               if (running)
-                Text('Running', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2)),
+                Text('Running', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.textOrPlain(TaskEraColors.acc2))),
             ],
           ),
         ],

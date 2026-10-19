@@ -191,11 +191,11 @@ class AnalyticsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('TASKERA AI · INSIGHT', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: TaskEraColors.acc2)),
+                Text('TASKERA AI · INSIGHT', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: colors.textOrPlain(TaskEraColors.acc2))),
                 SizedBox(height: 5),
                 Text(
                   insight,
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1.5),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2), height: 1.5),
                 ),
               ],
             ),
@@ -335,7 +335,7 @@ class _LegendRow extends StatelessWidget {
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
         SizedBox(width: 8),
         Expanded(child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.ink))),
-        Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: color)),
+        Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700, color: colors.textOrPlain(color))),
       ],
     );
   }

@@ -114,8 +114,9 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                 decoration: BoxDecoration(
                     color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2)),
               ),
+              // Fixed-dark sheet — never colors.ink (near-black on light theme).
               Text('Choose an icon', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14,
-                  fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+                  fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
               SizedBox(height: 14),
               Wrap(
                 spacing: 8,

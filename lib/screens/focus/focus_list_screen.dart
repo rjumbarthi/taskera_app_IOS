@@ -653,7 +653,8 @@ class _TaskRow extends ConsumerWidget {
                       duration: const Duration(milliseconds: 2000),
                       action: SnackBarAction(
                         label: 'Undo',
-                        textColor: colors.textOrPlain(TaskEraColors.acc2),
+                        // Fixed-dark snackbar — never colors.textOrPlain here.
+                        textColor: colors.plainText ? Colors.white : TaskEraColors.acc2,
                         onPressed: () {
                           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
                         },

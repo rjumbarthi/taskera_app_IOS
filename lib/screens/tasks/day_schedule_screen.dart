@@ -169,14 +169,14 @@ class _SuggestionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(suggestion.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: suggestion.quadColor)),
+          Text(suggestion.title, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(suggestion.quadColor))),
           SizedBox(height: 2),
           Text(suggestion.meta, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),
           SizedBox(height: 8),
           // AI slot suggestion
           Row(
             children: [
-              Text('✦ AI · ', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2)),
+              Text('✦ AI · ', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2))),
               Expanded(
                 child: Text(suggestion.slot, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
               ),

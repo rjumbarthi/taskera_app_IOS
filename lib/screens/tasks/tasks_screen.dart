@@ -706,7 +706,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
               child: Text(
                 task.title,
-                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: quadColor, height: 1.3),
+                style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(quadColor), height: 1.3),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -714,7 +714,7 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
             Container(height: 0.5, color: colors.bdr),
             _ContextItem(icon: Icons.edit_outlined, label: AppL10n.of(ctx).editTask, color: colors.ink,
               onTap: () { Navigator.of(sheetCtx).pop(); ctx.push('/tasks/edittask/${task.id}'); }, colors: colors),
-            _ContextItem(icon: Icons.check_circle_outline, label: AppL10n.of(ctx).completeTask, color: const Color(0xFF30D158),
+            _ContextItem(icon: Icons.check_circle_outline, label: AppL10n.of(ctx).completeTask, color: colors.textOrPlain(const Color(0xFF30D158)),
               onTap: () {
                 Navigator.of(sheetCtx).pop();
                 ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, true);
@@ -743,14 +743,14 @@ Future<void> _showTaskMenu(BuildContext ctx, WidgetRef ref, _Task task, Color qu
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 0.5, color: clr.withAlpha(0x66)),
                         ),
-                        child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: clr, height: 1)),
+                        child: Text(lbl, style: TextStyle(fontFamily: TaskEraTheme.of(ctx).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: colors.textOrPlain(clr), height: 1)),
                       ),
                     ),
                 ],
               ),
             ),
             Container(height: 0.5, color: colors.bdr),
-            _ContextItem(icon: Icons.delete_outline, label: AppL10n.of(ctx).deleteTask, color: TaskEraColors.warn,
+            _ContextItem(icon: Icons.delete_outline, label: AppL10n.of(ctx).deleteTask, color: colors.textOrPlain(TaskEraColors.warn),
               onTap: () {
                 Navigator.of(sheetCtx).pop();
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
@@ -1093,7 +1093,7 @@ Future<void> _showCompletedMenu(BuildContext ctx, WidgetRef ref, _DoneTask task,
                 ref.logActivity('Task "${task.title}" restored from completed');
               }, colors: colors),
             Container(height: 0.5, color: colors.bdr),
-            _ContextItem(icon: Icons.delete_forever_outlined, label: AppL10n.of(ctx).deletePermanently, color: TaskEraColors.warn,
+            _ContextItem(icon: Icons.delete_forever_outlined, label: AppL10n.of(ctx).deletePermanently, color: colors.textOrPlain(TaskEraColors.warn),
               onTap: () {
                 Navigator.of(sheetCtx).pop();
                 ref.read(appDatabaseProvider).tasksDao.deleteTask(task.id);
@@ -1271,7 +1271,7 @@ class _CompletedSection extends ConsumerWidget {
                           ),
                           child: Text(
                             'View all completed →',
-                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc2, height: 1),
+                            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2), height: 1),
                           ),
                         ),
                       ),
@@ -1376,7 +1376,7 @@ class _PruneItemRow extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(6)),
-              child: Text(item.moveLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+              child: Text(item.moveLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
             ),
           ),
           SizedBox(width: 5),
@@ -1385,7 +1385,7 @@ class _PruneItemRow extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               decoration: BoxDecoration(color: const Color(0x14FF453A), borderRadius: BorderRadius.circular(6)),
-              child: Text(AppL10n.of(context).delete, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.warn, height: 1)),
+              child: Text(AppL10n.of(context).delete, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.warn), height: 1)),
             ),
           ),
         ],

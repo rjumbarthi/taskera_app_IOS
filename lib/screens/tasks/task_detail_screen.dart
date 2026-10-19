@@ -181,7 +181,9 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, int.tryParse(ctrl.text.trim())),
-            child: Text('Save', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+            // Fixed-dark dialog — never colors.textOrPlain here.
+            child: Text('Save', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontWeight: FontWeight.w700,
+                color: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2)),
           ),
         ],
       ),
@@ -470,7 +472,7 @@ class _Body extends StatelessWidget {
                       behavior: HitTestBehavior.opaque,
                       child: Padding(
                         padding: EdgeInsets.all(4),
-                        child: Text('+', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 19, color: TaskEraColors.acc, height: 1)),
+                        child: Text('+', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 19, color: colors.textOrPlain(TaskEraColors.acc), height: 1)),
                       ),
                     ),
                   ],

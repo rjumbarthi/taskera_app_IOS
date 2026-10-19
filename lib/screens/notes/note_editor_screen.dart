@@ -90,7 +90,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         duration: const Duration(seconds: 4),
         action: SnackBarAction(
           label: 'Upgrade',
-          textColor: TaskEraColors.acc2,
+          // Fixed-dark snackbar — never colors.textOrPlain here.
+          textColor: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2,
           onPressed: () => context.push(TaskEraRoutes.paywall),
         ),
       ));
@@ -361,7 +362,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
                             ),
-                            child: Text('✦ AI scan', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: TaskEraColors.acc2)),
+                            child: Text('✦ AI scan', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: colors.textOrPlain(TaskEraColors.acc2))),
                           ),
                         ),
                       ],
@@ -426,7 +427,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         child: Text(
                           linkedTasks.isEmpty ? '+ Link tasks' : '+ Edit linked tasks',
                           style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                              fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1),
+                              fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2), height: 1),
                         ),
                       ),
                     ),

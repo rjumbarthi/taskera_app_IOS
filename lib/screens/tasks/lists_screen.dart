@@ -715,7 +715,7 @@ class _ListCardState extends ConsumerState<_ListCard> {
                     children: [
                       Icon(Icons.add, size: 16, color: TaskEraColors.acc2),
                       SizedBox(width: 4),
-                      Text('Add item', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: TaskEraColors.acc2)),
+                      Text('Add item', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: colors.textOrPlain(TaskEraColors.acc2))),
                     ],
                   ),
                 ),

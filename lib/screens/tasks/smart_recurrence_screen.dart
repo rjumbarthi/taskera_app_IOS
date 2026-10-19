@@ -308,7 +308,7 @@ class _SuggestionCard extends StatelessWidget {
                           fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: stat.badge.color))),
+                          color: colors.textOrPlain(stat.badge.color)))),
               _BadgePill(badge: stat.badge),
             ],
           ),
@@ -320,7 +320,7 @@ class _SuggestionCard extends StatelessWidget {
                   fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: TaskEraColors.acc2)),
+                  color: colors.textOrPlain(TaskEraColors.acc2))),
           const SizedBox(height: 6),
           Text(body,
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.5)),
@@ -342,7 +342,7 @@ class _SuggestionCard extends StatelessWidget {
                             fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: TaskEraColors.acc2)),
+                            color: colors.textOrPlain(TaskEraColors.acc2))),
                   ),
                 ),
               ),
@@ -431,12 +431,13 @@ class _BadgePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = TaskEraTheme.of(context).colors;
     return Container(
       padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
       decoration: BoxDecoration(color: badge.bg, borderRadius: BorderRadius.circular(5)),
       child: Text(badge.label,
           style: TextStyle(
-              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: badge.color)),
+              fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(badge.color))),
     );
   }
 }

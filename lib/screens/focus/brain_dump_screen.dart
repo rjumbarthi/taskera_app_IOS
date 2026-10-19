@@ -110,7 +110,8 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
       duration: const Duration(seconds: 4),
       action: SnackBarAction(
         label: 'Upgrade',
-        textColor: TaskEraTheme.of(context).colors.textOrPlain(TaskEraColors.acc2),
+        // Fixed-dark snackbar — never colors.textOrPlain here.
+        textColor: TaskEraTheme.of(context).colors.plainText ? Colors.white : TaskEraColors.acc2,
         onPressed: () => context.push(TaskEraRoutes.paywall),
       ),
     ));

@@ -109,7 +109,7 @@ class _BoardColumn extends StatelessWidget {
                 Container(width: 7, height: 7, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: color), overflow: TextOverflow.ellipsis),
+                  child: Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700, color: colors.textOrPlain(color)), overflow: TextOverflow.ellipsis),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),

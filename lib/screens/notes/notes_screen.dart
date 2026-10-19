@@ -312,7 +312,7 @@ class _NoteCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(5, 1.5, 5, 1.5),
                     decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
-                    child: Text(note.aiLabel!, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2, height: 1)),
+                    child: Text(note.aiLabel!, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
                   ),
                 ],
                 const SizedBox(width: 6),
@@ -373,7 +373,8 @@ class _NoteMenuSheet extends StatelessWidget {
           Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(color: const Color(0x40FFFFFF), borderRadius: BorderRadius.circular(2))),
           Text(note.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: colors.ink, height: 1)),
+              // Fixed-dark sheet — never colors.ink (near-black on light theme).
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, height: 1)),
           const SizedBox(height: 14),
           _MenuItem(icon: Icons.edit_rounded, label: 'Edit note', colors: colors, onTap: onEdit),
           _MenuItem(
@@ -414,7 +415,8 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = textColor ?? colors.ink2;
+    // Fixed-dark sheet (_NoteMenuSheet) — never colors.ink2 here.
+    final color = textColor ?? const Color(0xCCFFFFFF);
     return GestureDetector(
       onTap: onTap,
       child: Container(
