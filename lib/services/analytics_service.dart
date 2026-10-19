@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,9 +10,9 @@ import '../config/app_config.dart';
 
 /// Lightweight, vendor-agnostic product analytics over PostHog's HTTP capture
 /// API. Works on every target (Android / iOS / Windows) with no native SDK, so
-/// there's no platform gap. It auto-captures screen views and back-navigation
-/// (see [attachToRouter]) plus any explicit [capture] events; PostHog turns the
-/// `$screen` stream into Paths / Funnels / drop-off.
+/// there's no platform gap. Deliberately coarse-grained: no per-screen/nav
+/// tracking (too noisy, and not something we act on) — just explicit [capture]
+/// events plus a settings snapshot throttled to ~once/day per user.
 ///
 /// Privacy: disabled when the user opts out (Settings → Privacy), and a no-op
 /// until a real PostHog key is set in [AppConfig]. It never throws into the app
@@ -23,13 +22,19 @@ class AnalyticsService {
   static final AnalyticsService instance = AnalyticsService._();
 
   static const _anonKey = 'taskera.analytics.anonId';
+  // Last snapshot actually sent (its JSON encoding) and when — together these
+  // let us send only on a real change, or at most once/day as a heartbeat if
+  // nothing changed in that time. No change + <24h since last send = no event.
+  static const _lastSnapshotJsonKey = 'taskera.analytics.lastSettingsSnapshotJson';
+  static const _lastSnapshotAtKey = 'taskera.analytics.lastSettingsSnapshotAt';
+  static const _snapshotHeartbeat = Duration(days: 1);
 
   final _client = http.Client();
+  SharedPreferences? _prefs;
   String _anonId = '';
   String _distinctId = '';
   bool _enabled = true;
   bool _initialised = false;
-  bool _routerAttached = false;
   Timer? _settingsDebounce;
 
   bool get _configured =>
@@ -40,6 +45,7 @@ class AnalyticsService {
   Future<void> init(SharedPreferences prefs) async {
     if (_initialised) return;
     _initialised = true;
+    _prefs = prefs;
     var anon = prefs.getString(_anonKey);
     if (anon == null || anon.isEmpty) {
       anon = _randomId();
@@ -88,56 +94,41 @@ class AnalyticsService {
   }
 
   /// Records the user's current settings as PostHog *person* properties (via
-  /// `$set`), not just a one-off event — so later you can query "what % of
-  /// users have quadColors on" / "least-picked accent" etc. across the whole
-  /// user base to decide what to prune, rather than digging through a stream
-  /// of change events. Call once per launch (immediate) via [captureSettingsSnapshot].
-  Future<void> _setPersonProperties(Map<String, dynamic> props) =>
-      capture('settings_snapshot', props: {r'$set': props});
+  /// `$set`) — so later you can query "what % of users have quadColors on" /
+  /// "least-picked accent" etc. across the whole user base to decide what to
+  /// prune. Sends only when [props] differs from the last snapshot actually
+  /// sent, or it's been at least [_snapshotHeartbeat] since that last send
+  /// (so a user with unchanged settings still refreshes ~once/day, but a
+  /// quiet session between changes produces zero events).
+  Future<void> _maybeSendSnapshot(Map<String, dynamic> props) async {
+    final prefs = _prefs;
+    final json = jsonEncode(props);
+    if (prefs != null) {
+      final lastJson = prefs.getString(_lastSnapshotJsonKey);
+      final lastAtMs = prefs.getInt(_lastSnapshotAtKey);
+      final changed = lastJson != json;
+      final stale = lastAtMs == null ||
+          DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastAtMs)) >=
+              _snapshotHeartbeat;
+      if (!changed && !stale) return;
+      await prefs.setString(_lastSnapshotJsonKey, json);
+      await prefs.setInt(_lastSnapshotAtKey, DateTime.now().millisecondsSinceEpoch);
+    }
+    await capture('settings_snapshot', props: {r'$set': props});
+  }
 
-  /// Same as above but fired on every settings change — debounced so a
-  /// slider drag (wallpaper dim) or rapid toggling doesn't spam a request
-  /// per tick; only the settled state after 2s of inactivity is sent.
+  /// Entry point for both the launch-time snapshot and every in-session
+  /// settings change. Debounced so a slider drag (wallpaper dim) or rapid
+  /// toggling doesn't spam a request per tick — only the settled state after
+  /// 2s of inactivity is considered; [_maybeSendSnapshot] then decides
+  /// whether it's actually worth sending.
   void captureSettingsSnapshot(Map<String, dynamic> props, {bool immediate = false}) {
     _settingsDebounce?.cancel();
     if (immediate) {
-      _setPersonProperties(props);
+      _maybeSendSnapshot(props);
       return;
     }
-    _settingsDebounce = Timer(const Duration(seconds: 2), () => _setPersonProperties(props));
-  }
-
-  /// A screen / route view. [isBack] marks a pop (user navigated back).
-  Future<void> screen(String route, {String? from, bool isBack = false}) =>
-      capture('\$screen', props: {
-        '\$screen_name': route,
-        'route': route,
-        'from': from,
-        'direction': isBack ? 'back' : 'forward',
-      });
-
-  /// Listens to the router and emits a [screen] event on every navigation,
-  /// inferring forward vs. back from a small location history. Idempotent.
-  void attachToRouter(GoRouter router) {
-    if (_routerAttached) return;
-    _routerAttached = true;
-    final history = <String>[];
-    String? last;
-    void onChange() {
-      final loc = router.routerDelegate.currentConfiguration.uri.path;
-      if (loc.isEmpty || loc == last) return;
-      final isBack = history.length >= 2 && history[history.length - 2] == loc;
-      screen(loc, from: last, isBack: isBack);
-      if (isBack) {
-        history.removeLast();
-      } else {
-        history.add(loc);
-      }
-      last = loc;
-    }
-
-    router.routerDelegate.addListener(onChange);
-    onChange(); // capture the launch screen
+    _settingsDebounce = Timer(const Duration(seconds: 2), () => _maybeSendSnapshot(props));
   }
 
   String _randomId() {
