@@ -110,7 +110,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
                   border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
                 ),
                 child: Text(a.kindLabel,
-                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2))),
               ),
               const Spacer(),
               Text(_ago(a.createdAt),

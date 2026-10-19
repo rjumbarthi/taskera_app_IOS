@@ -152,7 +152,14 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
 
   Future<void> _save() async {
     final title = _nameCtrl.text.trim();
-    if (title.isEmpty) return;
+    if (title.isEmpty) {
+      // Previously a silent no-op — tapping Save with milestones/other fields
+      // filled in but no goal name did nothing with zero feedback, which
+      // looks exactly like the screen being stuck.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Give this goal a name before saving')));
+      return;
+    }
     // Flush a milestone typed into the field but not yet committed with the
     // "+Add" button — otherwise it's silently lost on save.
     final pendingMilestone = _milestoneCtrl.text.trim();
@@ -197,6 +204,13 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
       for (final id in _habitIds.difference(current)) { await db.goalsDao.linkHabit(gid, id); }
       for (final id in current.difference(_habitIds)) { await db.goalsDao.unlinkHabit(gid, id); }
       if (mounted) context.pop();
+    } catch (e) {
+      // A DB error here used to propagate silently (no catch, only finally) —
+      // the screen just sat there with no indication the save failed.
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not save: $e')));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }

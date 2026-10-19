@@ -233,7 +233,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.weeklyReview),
                 child: Text(l.startLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                    color: TaskEraColors.acc2, height: 1)),
+                    color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
               ),
             ]),
             SizedBox(height: 6),
@@ -269,7 +269,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
                 alignment: Alignment.center,
                 child: Text(l.startWeeklyReview,
                     style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                        fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+                        fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
               ),
             ),
           ]),
@@ -288,7 +288,7 @@ class _ReviewAchievementsStats extends ConsumerWidget {
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.habitsAchievements),
                 child: Text(l.viewAllArrow, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                    color: TaskEraColors.acc2, height: 1)),
+                    color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
               ),
             ]),
             SizedBox(height: 10),
@@ -502,7 +502,7 @@ class _FocusCard extends ConsumerWidget {
                       fontWeight: FontWeight.w700, color: colors.ink3, letterSpacing: 0.4, height: 1)),
                   SizedBox(height: 4),
                   Text(peakHoursStr, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 16,
-                      fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1.2)),
+                      fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2), height: 1.2)),
                   Text(activeDays > 0
                       ? '${l.basedOnLabel} $activeDays ${l.daysLabel}'
                       : '—',
@@ -695,7 +695,7 @@ class _GoalsList extends ConsumerWidget {
               GestureDetector(
                 onTap: () => context.push(TaskEraRoutes.goals),
                 child: Text(l.viewAllArrow, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                    color: TaskEraColors.acc2, height: 1)),
+                    color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
               ),
             ]),
           ),
@@ -900,7 +900,7 @@ class _StatCell extends StatelessWidget {
     return Expanded(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15,
-            fontWeight: FontWeight.w700, color: valueColor, height: 1.2)),
+            fontWeight: FontWeight.w700, color: colors.textOrPlain(valueColor), height: 1.2)),
         Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
             color: colors.ink3, height: 1.3)),
       ]),

@@ -235,7 +235,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                                 ? 'Continue with free plan'
                                 : AppL10n.of(context).maybeLater),
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
-                            color: TaskEraColors.acc2, height: 1))),
+                            color: colors.textOrPlain(TaskEraColors.acc2), height: 1))),
                   ),
                 ),
                 GestureDetector(
@@ -244,7 +244,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(child: Text(AppL10n.of(context).restorePurchase,
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                            color: TaskEraColors.acc2, height: 1))),
+                            color: colors.textOrPlain(TaskEraColors.acc2), height: 1))),
                   ),
                 ),
                 SizedBox(height: 4),
@@ -514,7 +514,7 @@ class _PriceHero extends StatelessWidget {
             onTap: onRetry,
             child: Text('Retry',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
-                    fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+                    fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2))),
           ),
         ],
       ]));
@@ -842,7 +842,7 @@ class _ReferralNudge extends StatelessWidget {
             ),
             child: Text('🎁 Invite → both get 1 month free',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                    fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+                    fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
           ),
         ),
       ]),

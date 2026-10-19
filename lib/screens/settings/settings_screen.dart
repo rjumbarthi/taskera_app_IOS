@@ -440,7 +440,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       titleWidget: Text('TaskEra Pro',
           style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600,
-              color: TaskEraColors.acc2, height: 1)),
+              color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
       // "✦ PRO" badge only for actual subscribers; free users see "Upgrade".
       badge: isPro
           ? Container(
@@ -461,7 +461,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               child: Text('Upgrade',
                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700,
-                      color: TaskEraColors.acc2, height: 1)),
+                      color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
             ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -491,7 +491,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   children: [
                     Text('✦ TaskEra Pro',
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
-                            color: TaskEraColors.acc2, height: 1)),
+                            color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
                     const Spacer(),
                     Text('Monthly or annual',
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w600,
@@ -534,7 +534,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     alignment: Alignment.center,
                     child: Text('🎁 Invite → both get 1 month free',
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600,
-                            color: TaskEraColors.acc2, height: 1)),
+                            color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
                   ),
                 ),
               ],
@@ -556,7 +556,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       Row(children: [
         Text('✦ TaskEra Pro — active',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w700,
-                color: TaskEraColors.acc2, height: 1.3)),
+                color: colors.textOrPlain(TaskEraColors.acc2), height: 1.3)),
         const Spacer(),
         Text('Thanks for your support',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w600,
@@ -593,7 +593,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           alignment: Alignment.center,
           child: Text('Restore purchase',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600,
-                  color: TaskEraColors.acc2, height: 1)),
+                  color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
         ),
       ),
     ];
@@ -997,7 +997,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                    color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
+                    // Fixed-dark dialog — never colors.textOrPlain (resolves to
+                    // near-black ink on light theme and disappears here).
+                    color: colors.plainText ? Colors.white : TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -1058,7 +1060,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text('Connect',
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                    color: TaskEraColors.acc2, fontWeight: FontWeight.w600)),
+                    // Fixed-dark dialog — never colors.textOrPlain here either.
+                    color: colors.plainText ? Colors.white : TaskEraColors.acc2, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -1966,7 +1969,7 @@ class _IntHowCard extends StatelessWidget {
         Text('✦ How integrations work',
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
                 fontWeight: FontWeight.w700, letterSpacing: 0.4,
-                color: TaskEraColors.acc2, height: 1)),
+                color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
         SizedBox(height: 10),
         for (int i = 0; i < steps.length; i++) ...[
           if (i > 0) SizedBox(height: 8),
