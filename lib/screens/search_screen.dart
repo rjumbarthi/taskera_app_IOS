@@ -365,7 +365,7 @@ class _ResultTile extends StatelessWidget {
               ),
               child: Text(result.kind,
                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                      fontWeight: FontWeight.w700, color: kindColor, height: 1)),
+                      fontWeight: FontWeight.w700, color: colors.textOrPlain(kindColor), height: 1)),
             ),
             const SizedBox(width: 8),
             Expanded(

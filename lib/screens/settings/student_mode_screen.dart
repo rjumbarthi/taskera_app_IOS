@@ -371,10 +371,10 @@ class _WeekStatsCard extends ConsumerWidget {
               bg: colors.surf2, valueColor: colors.ink),
           const SizedBox(width: 6),
           _WeekCell(value: '$doneThisWeek', label: 'Done',
-              bg: colors.surf2, valueColor: TaskEraColors.q2),
+              bg: colors.surf2, valueColor: colors.textOrPlain(TaskEraColors.q2)),
           const SizedBox(width: 6),
           _WeekCell(value: '$streak🔥', label: 'Day streak',
-              bg: const Color(0x14FFB900), valueColor: TaskEraColors.q4),
+              bg: const Color(0x14FFB900), valueColor: colors.textOrPlain(TaskEraColors.q4)),
         ]),
       ]),
     );

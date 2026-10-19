@@ -171,7 +171,7 @@ class _UpcomingScreenState extends ConsumerState<UpcomingScreen> {
                             fontSize: 9,
                             color: sel
                                 ? Colors.white.withAlpha(0xCC)
-                                : TaskEraColors.acc2,
+                                : colors.textOrPlain(TaskEraColors.acc2),
                             height: 1.1,
                           ),
                         ),
@@ -254,7 +254,7 @@ class _UpTaskRow extends ConsumerWidget {
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: qc,
+                      color: colors.textOrPlain(qc),
                     ),
                   ),
                   const SizedBox(height: 2),

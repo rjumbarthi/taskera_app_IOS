@@ -258,7 +258,7 @@ class _GroupLabel extends StatelessWidget {
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.4,
-                color: color)),
+                color: colors.textOrPlain(color))),
       ],
     );
   }
@@ -307,7 +307,7 @@ class _CompRow extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
-                        color: c,
+                        color: colors.textOrPlain(c),
                         decoration: TextDecoration.lineThrough,
                         decorationColor: c.withAlpha(0x80))),
                 const SizedBox(height: 1),

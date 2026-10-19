@@ -189,15 +189,8 @@ class _Body extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
 
-                // Why this matters
-                _SectionCard(
-                  label: 'WHY THIS MATTERS',
-                  colors: colors,
-                  child: Text(
-                    goal.subtitle.isNotEmpty ? goal.subtitle : 'No description added yet.',
-                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: colors.ink2, height: 1.5),
-                  ),
-                ),
+                // Why this matters — tap to add/edit
+                _WhyMattersCard(goal: goal, colors: colors),
                 const SizedBox(height: 10),
 
                 // Milestones
@@ -237,7 +230,10 @@ class _SectionCard extends StatelessWidget {
   final String label;
   final Widget child;
   final TaskEraColors colors;
-  const _SectionCard({required this.label, required this.child, required this.colors});
+  // Right-aligned action next to the label — e.g. "+ Add milestone", to match
+  // the Linked Tasks / Supporting Habits cards' "+ Link task" placement.
+  final Widget? trailing;
+  const _SectionCard({required this.label, required this.child, required this.colors, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -251,10 +247,91 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+          trailing == null
+              ? Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3))
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: colors.ink3)),
+                    trailing!,
+                  ],
+                ),
           const SizedBox(height: 6),
           child,
         ],
+      ),
+    );
+  }
+}
+
+// ── Why this matters card ─────────────────────────────────────────────────────
+
+class _WhyMattersCard extends ConsumerStatefulWidget {
+  final Goal goal;
+  final TaskEraColors colors;
+  const _WhyMattersCard({required this.goal, required this.colors});
+
+  @override
+  ConsumerState<_WhyMattersCard> createState() => _WhyMattersCardState();
+}
+
+class _WhyMattersCardState extends ConsumerState<_WhyMattersCard> {
+  Future<void> _edit() async {
+    final ctrl = TextEditingController(text: widget.goal.subtitle);
+    final result = await showDialog<String>(
+      context: context,
+      // Use the dialog's OWN context to pop (not the outer screen context) —
+      // the earlier milestone-dialog bug popped the whole screen instead of
+      // just the dialog because it reused the outer context here.
+      builder: (dialogCtx) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: Text('Why this matters',
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          maxLines: 4,
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: 'Why does this goal matter to you?',
+            hintStyle: TextStyle(color: Color(0xB3FFFFFF)),
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0x4DFFFFFF))),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: TaskEraColors.acc)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx),
+            child: Text(AppL10n.of(context).cancel, style: const TextStyle(color: Color(0xB3FFFFFF))),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx, ctrl.text.trim()),
+            child: Text(AppL10n.of(context).save, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
+                color: widget.colors.plainText ? Colors.white : TaskEraColors.acc2, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (result == null || !mounted || result == widget.goal.subtitle) return;
+    await ref.read(appDatabaseProvider).goalsDao.updateGoal(
+      widget.goal.id,
+      GoalsCompanion(subtitle: Value(result)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _edit,
+      child: _SectionCard(
+        label: 'WHY THIS MATTERS',
+        colors: widget.colors,
+        child: Text(
+          widget.goal.subtitle.isNotEmpty ? widget.goal.subtitle : 'Tap to add why this goal matters to you.',
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: widget.colors.ink2, height: 1.5),
+        ),
       ),
     );
   }
@@ -276,7 +353,14 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
     final ctrl = TextEditingController();
     final result = await showDialog<String>(
       context: context,
-      builder: (_) => AlertDialog(
+      // showDialog pushes onto the ROOT navigator by default. The action
+      // buttons below used to call Navigator.pop(context) with the OUTER
+      // (screen) context instead of this dialog's own — Navigator.pop then
+      // resolved to the nearest ancestor navigator relative to THAT context,
+      // which is this screen's nested shell-branch navigator, not the root.
+      // So "Add"/"Cancel" popped the whole Goal Detail screen off its tab
+      // (landing back on Focus) instead of just closing the dialog.
+      builder: (dialogCtx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         // Fixed-dark surface regardless of app theme — its text must be fixed
@@ -298,11 +382,11 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogCtx),
             child: Text(AppL10n.of(context).cancel, style: const TextStyle(color: Color(0xB3FFFFFF))),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, ctrl.text.trim()),
+            onPressed: () => Navigator.pop(dialogCtx, ctrl.text.trim()),
             child: Text(AppL10n.of(context).add, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
                 color: widget.colors.plainText ? Colors.white : TaskEraColors.acc2, fontWeight: FontWeight.w700)),
           ),
@@ -335,6 +419,14 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
     return _SectionCard(
       label: 'MILESTONES',
       colors: widget.colors,
+      // Rightmost, matching "+ Link task" / "+ Link habit" placement.
+      trailing: milestones.length < 5
+          ? GestureDetector(
+              onTap: _addMilestone,
+              child: Text('+ ${AppL10n.of(context).addMilestone}',
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: widget.colors.textOrPlain(TaskEraColors.acc2))),
+            )
+          : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -359,13 +451,9 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
               ],
             ),
           )),
-          if (milestones.isNotEmpty) Divider(height: 12, thickness: 0.5, color: widget.colors.bdr),
-          if (milestones.length < 5)
-            GestureDetector(
-              onTap: _addMilestone,
-              child: Text('+ ${AppL10n.of(context).addMilestone}',
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: widget.colors.textOrPlain(TaskEraColors.acc2))),
-            ),
+          if (milestones.isEmpty)
+            Text('No milestones yet.',
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, color: widget.colors.ink3, height: 1.5)),
         ],
       ),
     );

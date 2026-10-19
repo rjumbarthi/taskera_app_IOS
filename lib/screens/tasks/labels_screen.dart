@@ -195,7 +195,7 @@ class _LabelRowState extends State<_LabelRow> {
                               fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.color)),
+                              color: colors.textOrPlain(widget.color))),
                       Text('$count task${count == 1 ? '' : 's'}',
                           style: TextStyle(
                               fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink3)),

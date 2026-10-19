@@ -140,7 +140,7 @@ class _ReferralLinkCardState extends State<_ReferralLinkCard> {
               child: Text(
                   widget.code != null ? 'taskera.app/join/${widget.code}' : 'Sign in to get your link',
                   style: TextStyle(fontFamily: 'ui-monospace, monospace',
-                      fontSize: 12, color: widget.code != null ? TaskEraColors.acc2 : c.ink3, height: 1)),
+                      fontSize: 12, color: widget.code != null ? c.textOrPlain(TaskEraColors.acc2) : c.ink3, height: 1)),
             ),
           ),
           SizedBox(width: 6),
@@ -256,13 +256,13 @@ class _StatsCard extends StatelessWidget {
         SizedBox(height: 8),
         Row(children: [
           _StatCell(value: '0', label: 'Invited',
-              bg: colors.surf2, valueColor: TaskEraColors.acc2),
+              bg: colors.surf2, valueColor: colors.textOrPlain(TaskEraColors.acc2)),
           SizedBox(width: 5),
           _StatCell(value: '0', label: 'Joined',
-              bg: colors.surf2, valueColor: TaskEraColors.q2),
+              bg: colors.surf2, valueColor: colors.textOrPlain(TaskEraColors.q2)),
           SizedBox(width: 5),
           _StatCell(value: '0', label: 'Earned',
-              bg: const Color(0x14127000), valueColor: TaskEraColors.q2),
+              bg: const Color(0x14127000), valueColor: colors.textOrPlain(TaskEraColors.q2)),
         ]),
       ]),
     );

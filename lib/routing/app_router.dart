@@ -724,6 +724,7 @@ class _SyncPill extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = TaskEraTheme.of(context).colors;
     final signedIn = ref.watch(isSignedInProvider);
     final color  = signedIn ? TaskEraColors.success : const Color(0xFF8E8E93);
     final bgColor = signedIn ? const Color(0x1F7FBA00) : const Color(0x1A8E8E93);
@@ -751,7 +752,7 @@ class _SyncPill extends ConsumerWidget {
             label,
             style: TextStyle(
               fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-              fontWeight: FontWeight.w600, color: color, height: 1,
+              fontWeight: FontWeight.w600, color: colors.textOrPlain(color), height: 1,
             ),
           ),
         ],
