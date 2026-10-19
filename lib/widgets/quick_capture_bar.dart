@@ -70,7 +70,7 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
       behavior: SnackBarBehavior.floating,
       action: SnackBarAction(
         label: 'Open',
-        textColor: TaskEraColors.acc2,
+        textColor: TaskEraTheme.of(context).colors.textOrPlain(TaskEraColors.acc2),
         onPressed: () => context.push(route),
       ),
     ));

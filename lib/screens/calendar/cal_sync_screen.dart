@@ -237,7 +237,7 @@ class _CountCell extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 18, fontWeight: FontWeight.w700, color: colors.textOrPlain(valueColor), height: 1)),
             const SizedBox(height: 2),
             Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted)),
           ],

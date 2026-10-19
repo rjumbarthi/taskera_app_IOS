@@ -411,7 +411,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1))
               : (_loading
                   ? Text('↻ Syncing…',
-                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: TaskEraColors.acc2, height: 1))
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.textOrPlain(TaskEraColors.acc2), height: 1))
                   : null),
         ),
         SizedBox(height: 4),
@@ -699,7 +699,11 @@ class _AddItemSheetState extends State<_AddItemSheet> {
                       child: Text(_quads[i].n,
                           style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: _quad == i + 1 ? _quads[i].color : colors.ink3, height: 1)),
+                              // Fixed-dark sheet (see backgroundColor above) — never colors.ink/textOrPlain here.
+                              color: _quad == i + 1
+                                  ? (colors.plainText ? Colors.white : _quads[i].color)
+                                  : const Color(0xB3FFFFFF),
+                              height: 1)),
                     ),
                   ),
                 ),
@@ -1129,7 +1133,7 @@ class _EmailDetailSheetState extends ConsumerState<_EmailDetailSheet> {
                   padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
                   decoration: BoxDecoration(color: TaskEraColors.accBg, borderRadius: BorderRadius.circular(4)),
                   child: Text('SUGGESTED', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                      fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                      fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2))),
                 ),
                 SizedBox(width: 6),
                 Text('Suggested — add to TaskEra', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
@@ -1230,7 +1234,7 @@ class _SuggestionCard extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
                   decoration: BoxDecoration(color: m.color.withAlpha(0x26), borderRadius: BorderRadius.circular(3)),
                   child: Text(m.label.toUpperCase(), style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
-                      fontWeight: FontWeight.w700, color: m.color)),
+                      fontWeight: FontWeight.w700, color: colors.textOrPlain(m.color))),
                 ),
                 SizedBox(height: 3),
                 Text(s.title, maxLines: 2, overflow: TextOverflow.ellipsis,
@@ -1252,7 +1256,7 @@ class _SuggestionCard extends StatelessWidget {
                 border: Border.all(width: 0.5, color: m.color.withAlpha(added ? 0x33 : 0x66)),
               ),
               child: Text(added ? '✓ Added' : '+ Add', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                  fontWeight: FontWeight.w700, color: added ? colors.ink3 : m.color)),
+                  fontWeight: FontWeight.w700, color: added ? colors.ink3 : colors.textOrPlain(m.color))),
             ),
           ),
         ],
@@ -1328,7 +1332,7 @@ class _ActionCard extends StatelessWidget {
                   border: Border.all(width: 0.5, color: item.btnBorder),
                 ),
                 child: Text(item.quadLabel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                    color: item.btnText, height: 1)),
+                    color: colors.textOrPlain(item.btnText), height: 1)),
               ),
             ),
         ],

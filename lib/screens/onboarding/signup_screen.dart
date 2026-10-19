@@ -345,7 +345,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                                   style: TextStyle(
                                     fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 12,
-                                    color: TaskEraColors.acc,
+                                    color: colors.textOrPlain(TaskEraColors.acc),
                                   ),
                                 ),
                               ],
@@ -481,7 +481,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                                     fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: TaskEraColors.acc,
+                                    color: colors.textOrPlain(TaskEraColors.acc),
                                   ),
                                 ),
                               ),
@@ -588,13 +588,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                                 color: colors.ink2,
                                 height: 1.5,
                               ),
-                              children: const [
-                                TextSpan(text: 'Your data saves '),
+                              children: [
+                                const TextSpan(text: 'Your data saves '),
                                 TextSpan(
                                   text: 'locally on this device',
-                                  style: TextStyle(color: TaskEraColors.acc),
+                                  style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc)),
                                 ),
-                                TextSpan(text: '. Create an account for cloud sync across devices.'),
+                                const TextSpan(text: '. Create an account for cloud sync across devices.'),
                               ],
                             ),
                           ),
@@ -631,14 +631,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                               GestureDetector(
                                 onTap: () => context.push(TaskEraRoutes.legal),
                                 child: Text('Terms of Service',
-                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc), height: 1.45)),
                               ),
                               Text(' and ',
                                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
                                 onTap: () => context.push('${TaskEraRoutes.legal}?tab=privacy'),
                                 child: Text('Privacy Policy',
-                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc), height: 1.45)),
                               ),
                               Text('.',
                                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),

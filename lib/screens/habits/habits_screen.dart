@@ -262,7 +262,7 @@ class _DayCell extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-              color: isToday ? TaskEraColors.acc : colors.ink3, height: 1,
+              color: isToday ? colors.textOrPlain(TaskEraColors.acc) : colors.ink3, height: 1,
             ),
           ),
           const SizedBox(height: 2),
@@ -346,7 +346,7 @@ class _StatCell extends StatelessWidget {
             Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: valueColor, height: 1),
+              style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 15, fontWeight: FontWeight.w700, color: colors.textOrPlain(valueColor), height: 1),
             ),
             const SizedBox(height: 2),
             Text(

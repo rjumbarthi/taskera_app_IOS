@@ -187,7 +187,7 @@ class _InlineReminderRow extends StatelessWidget {
                   style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
-                      color: past ? colors.ink4 : accent,
+                      color: past ? colors.ink4 : colors.textOrPlain(accent),
                       height: 1.2),
                 ),
               ],
@@ -449,7 +449,7 @@ class _TypeBtn extends StatelessWidget {
                   fontFamily: TaskEraTheme.of(context).fontFamily,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: selected ? TaskEraColors.acc2 : colors.ink3,
+                  color: selected ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3,
                   height: 1)),
         ),
       ),

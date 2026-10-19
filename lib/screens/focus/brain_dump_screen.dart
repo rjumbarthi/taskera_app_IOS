@@ -110,7 +110,7 @@ class _BrainDumpScreenState extends ConsumerState<BrainDumpScreen> {
       duration: const Duration(seconds: 4),
       action: SnackBarAction(
         label: 'Upgrade',
-        textColor: TaskEraColors.acc2,
+        textColor: TaskEraTheme.of(context).colors.textOrPlain(TaskEraColors.acc2),
         onPressed: () => context.push(TaskEraRoutes.paywall),
       ),
     ));
@@ -452,7 +452,7 @@ class _SuggestionsPanel extends StatelessWidget {
                         fontFamily: TaskEraTheme.of(context).fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: listCreated ? const Color(0xFF30D158) : TaskEraColors.acc2,
+                        color: listCreated ? const Color(0xFF30D158) : colors.textOrPlain(TaskEraColors.acc2),
                         height: 1,
                       ),
                     ),

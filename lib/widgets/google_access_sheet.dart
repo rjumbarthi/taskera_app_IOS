@@ -129,7 +129,7 @@ class _GoogleAccessSheet extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 6),
                   child: Text('Read the Privacy Policy',
-                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: TaskEraColors.acc)),
+                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc))),
                 ),
               ),
               SizedBox(height: 10),

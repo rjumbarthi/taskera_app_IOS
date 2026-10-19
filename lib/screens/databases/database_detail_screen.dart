@@ -66,7 +66,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2)))),
         ],
       ),
     );
@@ -117,7 +117,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
         content: TextField(controller: ctrl, autofocus: true, style: TextStyle(color: colors.ink), onSubmitted: (x) => Navigator.pop(ctx, x)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
+          TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2)))),
         ],
       ),
     );
@@ -265,7 +265,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(icon, size: 14, color: active ? TaskEraColors.acc2 : colors.ink3),
             SizedBox(width: 5),
-            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? TaskEraColors.acc2 : colors.ink3)),
+            Text(label, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600, color: active ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3)),
           ]),
         ),
       );
@@ -393,7 +393,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
     return Text(disp, maxLines: 2, overflow: TextOverflow.ellipsis,
         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
             fontWeight: isTitle ? FontWeight.w600 : FontWeight.w400,
-            color: type == DbPropType.url ? TaskEraColors.acc2 : colors.ink));
+            color: type == DbPropType.url ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink));
   }
 
   // ── Board view ───────────────────────────────────────────────────────────
@@ -590,7 +590,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: Text('+ Add property', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+              child: Text('+ Add property', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2))),
             ),
           ),
         ]),
@@ -605,7 +605,7 @@ class _DatabaseDetailScreenState extends ConsumerState<DatabaseDetailScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(color: const Color(0x120A84FF), borderRadius: BorderRadius.circular(9), border: Border.all(width: 0.5, color: const Color(0x330A84FF))),
-              child: Text('+ New row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+              child: Text('+ New row', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2))),
             ),
           ),
         ]),

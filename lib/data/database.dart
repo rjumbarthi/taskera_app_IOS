@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 
 import 'db_connection.dart';
@@ -146,6 +148,48 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
 
   Stream<Habit?> watchHabit(int id) =>
       (select(habits)..where((h) => h.id.equals(id))).watchSingleOrNull();
+
+  // Habits with weeklyFilledCount recomputed from the actual last-7-calendar-
+  // day log history, replacing the stored column — which only changes on an
+  // explicit check/uncheck and never decays as days roll past, so a habit
+  // checked 7 times would show a permanently-full bar even weeks later.
+  Stream<List<Habit>> watchAllWithWeeklyFill() {
+    final controller = StreamController<List<Habit>>.broadcast();
+    List<Habit>? latestHabits;
+    List<HabitLog>? latestLogs;
+
+    void emit() {
+      final habitsRows = latestHabits;
+      final logsRows = latestLogs;
+      if (habitsRows == null || logsRows == null) return;
+      final counts = <int, int>{};
+      for (final log in logsRows) {
+        if (log.isSkipped) continue;
+        counts[log.habitId] = (counts[log.habitId] ?? 0) + 1;
+      }
+      controller.add([
+        for (final h in habitsRows)
+          h.copyWith(weeklyFilledCount: counts[h.id] ?? 0),
+      ]);
+    }
+
+    final today = DateTime.now();
+    final start = DateTime(today.year, today.month, today.day)
+        .subtract(const Duration(days: 6));
+    final end = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: 1));
+
+    late final StreamSubscription habitsSub;
+    late final StreamSubscription logsSub;
+    habitsSub = watchAll().listen((rows) { latestHabits = rows; emit(); });
+    logsSub = watchWeekLogs(start, end).listen((rows) { latestLogs = rows; emit(); });
+
+    controller.onCancel = () {
+      habitsSub.cancel();
+      logsSub.cancel();
+    };
+    return controller.stream;
+  }
 
   Future<Habit?> getHabit(int id) =>
       (select(habits)..where((h) => h.id.equals(id))).getSingleOrNull();

@@ -123,7 +123,7 @@ Future<String?> _editTextValue(
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel', style: TextStyle(color: colors.ink3))),
-        TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save', style: TextStyle(color: TaskEraColors.acc2))),
+        TextButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: Text('Save', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2)))),
       ],
     ),
   );

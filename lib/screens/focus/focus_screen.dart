@@ -333,7 +333,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
       duration: const Duration(milliseconds: 2000),
       action: SnackBarAction(
         label: AppL10n.of(context).undo,
-        textColor: TaskEraColors.acc2,
+        textColor: TaskEraTheme.of(context).colors.textOrPlain(TaskEraColors.acc2),
         onPressed: () {
           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
         },
@@ -446,7 +446,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                         fontSize: TaskEraType.xl,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.45,
-                        color: th.color,
+                        color: colors.textOrPlain(th.color),
                         height: 1,
                       ),
                     ),
@@ -510,7 +510,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                             fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
-                            color: th.color,
+                            color: colors.textOrPlain(th.color),
                             height: 1,
                             fontFeatures: const [FontFeature.tabularFigures()],
                           )
@@ -518,7 +518,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                             fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: TaskEraType.sm,
                             fontWeight: FontWeight.w500,
-                            color: th.color,
+                            color: colors.textOrPlain(th.color),
                             height: 1,
                           ),
                   ),
@@ -610,7 +610,7 @@ class _DoThisNowCardState extends ConsumerState<_DoThisNowCard> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       AppL10n.of(context).startNow,
-                                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: th.color, height: 1),
+                                      style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: TaskEraType.sm, fontWeight: FontWeight.w700, color: colors.textOrPlain(th.color), height: 1),
                                     ),
                                   ),
                                 ),
@@ -933,7 +933,7 @@ class _FocusQuadCardState extends State<_FocusQuadCard> {
                               fontFamily: TaskEraTheme.of(context).fontFamily,
                               fontSize: TaskEraType.md,
                               fontWeight: FontWeight.w800,
-                              color: flat ? accentColor : const Color(0xE6000000),
+                              color: flat ? colors.textOrPlain(accentColor) : const Color(0xE6000000),
                               height: 1,
                             ),
                           ),

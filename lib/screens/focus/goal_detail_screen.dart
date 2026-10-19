@@ -279,27 +279,32 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
       builder: (_) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        // Fixed-dark surface regardless of app theme — its text must be fixed
+        // light too. widget.colors.ink/.ink3 flip to near-black on light theme,
+        // which made the typed text invisible against this background (you
+        // could type, you just couldn't see it — looked like input was dead).
         title: Text(AppL10n.of(context).addMilestone,
-            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: widget.colors.ink)),
+            style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
         content: TextField(
           controller: ctrl,
           autofocus: true,
-          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: widget.colors.ink),
+          style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, color: Colors.white),
           decoration: InputDecoration(
             hintText: AppL10n.of(context).milestoneTitle,
-            hintStyle: TextStyle(color: widget.colors.ink3),
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.colors.bdr2)),
+            hintStyle: const TextStyle(color: Color(0xB3FFFFFF)),
+            enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Color(0x4DFFFFFF))),
             focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: TaskEraColors.acc)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppL10n.of(context).cancel, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: widget.colors.ink3)),
+            child: Text(AppL10n.of(context).cancel, style: const TextStyle(color: Color(0xB3FFFFFF))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, ctrl.text.trim()),
-            child: Text(AppL10n.of(context).add, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, color: TaskEraColors.acc2, fontWeight: FontWeight.w700)),
+            child: Text(AppL10n.of(context).add, style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
+                color: widget.colors.plainText ? Colors.white : TaskEraColors.acc2, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -359,7 +364,7 @@ class _MilestonesCardState extends ConsumerState<_MilestonesCard> {
             GestureDetector(
               onTap: _addMilestone,
               child: Text('+ ${AppL10n.of(context).addMilestone}',
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: TaskEraColors.acc2)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, color: widget.colors.textOrPlain(TaskEraColors.acc2))),
             ),
         ],
       ),
@@ -416,7 +421,7 @@ class _LinkedTasksCard extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _showLinkPicker(context, ref),
                 child: Text('+ ${AppL10n.of(context).linkTask}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                    fontSize: 11, color: TaskEraColors.acc2)),
+                    fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2))),
               ),
             ],
           ),
@@ -520,7 +525,7 @@ class _SupportingHabitsCard extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _showHabitPicker(context, ref),
                 child: Text('+ ${AppL10n.of(context).linkHabit}', style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily,
-                    fontSize: 11, color: TaskEraColors.acc2)),
+                    fontSize: 11, color: colors.textOrPlain(TaskEraColors.acc2))),
               ),
             ],
           ),

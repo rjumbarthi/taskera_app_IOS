@@ -143,7 +143,7 @@ class DatabasesListScreen extends ConsumerWidget {
                 border: Border.all(width: 0.5, color: const Color(0x330A84FF)),
               ),
               child: Text('+ New database',
-                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: TaskEraColors.acc2)),
+                  style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 14, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2))),
             ),
           ),
         ],

@@ -234,7 +234,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                     fontVariations: [FontVariation('wght', 600)],
                     fontSize: 19,
                     letterSpacing: -0.5,
-                    color: Color(0xFFF2F2F7),
+                    color: colors.ink,
                     height: 1.1,
                   ),
                 ),
@@ -519,7 +519,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                 ),
                                 child: Text('＋ ${AppL10n.of(context).add}',
                                     style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                                        fontWeight: FontWeight.w700, color: TaskEraColors.acc2)),
+                                        fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2))),
                               ),
                             ),
                           ],
@@ -556,7 +556,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                                 fontFamily: TaskEraTheme.of(context).fontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
-                                color: TaskEraColors.acc2,
+                                color: colors.textOrPlain(TaskEraColors.acc2),
                               ),
                             ),
                           ),
@@ -568,7 +568,7 @@ class _EditGoalScreenState extends ConsumerState<EditGoalScreen> {
                         style: TextStyle(
                           fontFamily: TaskEraTheme.of(context).fontFamily,
                           fontSize: 12,
-                          color: TaskEraColors.acc2,
+                          color: colors.textOrPlain(TaskEraColors.acc2),
                         ),
                       ),
                     ],
@@ -695,7 +695,7 @@ class _DeadlineChip extends StatelessWidget {
           style: TextStyle(
             fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
             fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
-            color: isActive ? TaskEraColors.acc2 : colors.ink3,
+            color: isActive ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3,
           ),
         ),
       ),
@@ -738,7 +738,7 @@ class _FormRow extends StatelessWidget {
               if (required)
                 TextSpan(
                   text: ' *',
-                  style: TextStyle(color: TaskEraColors.warn),
+                  style: TextStyle(color: colors.textOrPlain(TaskEraColors.warn)),
                 ),
               if (labelSuffix != null)
                 TextSpan(
@@ -837,7 +837,7 @@ class _Chip extends StatelessWidget {
           fontFamily: TaskEraTheme.of(context).fontFamily,
           fontSize: 12,
           fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-          color: color,
+          color: colors.textOrPlain(color),
         ),
       ),
     );

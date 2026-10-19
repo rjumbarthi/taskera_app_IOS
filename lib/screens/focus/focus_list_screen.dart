@@ -210,7 +210,7 @@ class _Pill extends StatelessWidget {
             fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: _active ? TaskEraColors.acc2 : colors.ink3,
+            color: _active ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3,
             height: 1,
           ),
         ),
@@ -624,7 +624,7 @@ class _TaskRow extends ConsumerWidget {
                     style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily,
                       fontSize: 11,
-                      color: task.isOverdue ? TaskEraColors.warn : colors.ink3,
+                      color: task.isOverdue ? colors.textOrPlain(TaskEraColors.warn) : colors.ink3,
                       height: 1.3,
                     ),
                   ),
@@ -653,7 +653,7 @@ class _TaskRow extends ConsumerWidget {
                       duration: const Duration(milliseconds: 2000),
                       action: SnackBarAction(
                         label: 'Undo',
-                        textColor: TaskEraColors.acc2,
+                        textColor: colors.textOrPlain(TaskEraColors.acc2),
                         onPressed: () {
                           ref.read(appDatabaseProvider).tasksDao.toggleDone(task.id, false);
                         },

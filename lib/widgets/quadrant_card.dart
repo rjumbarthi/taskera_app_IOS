@@ -90,6 +90,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
   @override
   Widget build(BuildContext context) {
     final q = widget.quadrant;
+    final colors = TaskEraTheme.of(context).colors;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -185,7 +186,7 @@ class _QuadrantCardState extends State<QuadrantCard> {
                             fontFamily: TaskEraTheme.of(context).fontFamily,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: _badgeFg(q),
+                            color: colors.textOrPlain(_badgeFg(q)),
                             height: 1,
                           ),
                         ),

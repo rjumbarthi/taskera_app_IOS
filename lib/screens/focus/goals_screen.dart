@@ -516,7 +516,7 @@ class _LinkBtn extends StatelessWidget {
             fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: fg,
+            color: TaskEraTheme.of(context).colors.textOrPlain(fg),
           ),
         ),
       ),

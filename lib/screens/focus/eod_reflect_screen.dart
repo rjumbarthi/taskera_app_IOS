@@ -381,7 +381,7 @@ class _StatItem extends StatelessWidget {
               fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
               fontSize: 19,
               fontWeight: FontWeight.w700,
-              color: valueColor,
+              color: TaskEraTheme.of(context).colors.textOrPlain(valueColor),
               height: 1,
             ),
           ),

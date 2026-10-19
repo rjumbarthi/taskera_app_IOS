@@ -153,7 +153,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
           child: Center(
             child: Text('$day',
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 8,
-                color: TaskEraColors.acc, height: 1)),
+                color: colors.textOrPlain(TaskEraColors.acc), height: 1)),
           ),
         );
       } else if (isPast) {
@@ -196,12 +196,20 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
     final meta    = habit?.frequencyLabel ?? '';
     final streak  = habit?.streakLabel   ?? '—';
     final accent  = habit != null ? Color(habit.accentColorValue) : const Color(0xFF9FCD44);
-    final filled  = habit?.weeklyFilledCount ?? 0;
 
     // ── 8-week completion chart ────────────────────────────────────────────
     final now    = DateTime.now();
     final today  = DateTime(now.year, now.month, now.day);
     final doneLogs = allLogs.where((l) => !l.isSkipped).toList();
+
+    // Last 7 calendar days (today + 6 before), not the stored weeklyFilledCount
+    // column — that one only changes on check/uncheck and never decays as
+    // days pass, so it'd show a permanently-full bar long after the week ends.
+    final weekStart = today.subtract(const Duration(days: 6));
+    final filled = doneLogs.where((l) {
+      final d = DateTime(l.logDate.year, l.logDate.month, l.logDate.day);
+      return !d.isBefore(weekStart) && !d.isAfter(today);
+    }).length;
 
     final weekBars   = <double>[];
     final weekLabels = <String>[];
@@ -612,7 +620,7 @@ class _HeroStat extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 17, fontWeight: FontWeight.w700, color: valueColor, height: 1)),
+            Text(value, style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily, fontSize: 17, fontWeight: FontWeight.w700, color: colors.textOrPlain(valueColor), height: 1)),
             const SizedBox(height: 3),
             Text(label, textAlign: TextAlign.center,
               style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.labelMuted, height: 1.2)),

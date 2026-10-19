@@ -195,7 +195,7 @@ class _IntegrationRow extends StatelessWidget {
             ),
             child: Text(AppL10n.of(context).connected,
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                    fontWeight: FontWeight.w600, color: TaskEraColors.q2, height: 1)),
+                    fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.q2), height: 1)),
           )
         else
           Container(
@@ -207,7 +207,7 @@ class _IntegrationRow extends StatelessWidget {
             ),
             child: Text(AppL10n.of(context).connect,
                 style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
-                    fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1)),
+                    fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc), height: 1)),
           ),
       ]),
     );
@@ -274,7 +274,7 @@ class _Step extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(n,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9,
-                fontWeight: FontWeight.w700, color: TaskEraColors.acc, height: 1)),
+                fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc), height: 1)),
       ),
       const SizedBox(width: 8),
       Expanded(

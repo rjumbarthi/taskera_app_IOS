@@ -104,7 +104,7 @@ class _Col extends StatelessWidget {
           Text(value,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).type.numberFontFamily,
                 fontVariations: const [FontVariation('wght', 700)],
-                fontSize: 15, color: color, height: 1)),
+                fontSize: 15, color: colors.textOrPlain(color), height: 1)),
           const SizedBox(height: 2),
           Text(label,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,

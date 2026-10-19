@@ -247,9 +247,9 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, color: colors.ink3, height: 1.6),
             children: [
               TextSpan(text: 'By continuing you confirm you are 13 or older and agree to our '),
-              TextSpan(text: 'Terms', style: TextStyle(color: TaskEraColors.acc2)),
+              TextSpan(text: 'Terms', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2))),
               TextSpan(text: ' and '),
-              TextSpan(text: 'Privacy Policy', style: TextStyle(color: TaskEraColors.acc2)),
+              TextSpan(text: 'Privacy Policy', style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2))),
               TextSpan(text: '.'),
             ],
           ),
@@ -429,6 +429,7 @@ class _QuadBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = TaskEraTheme.of(context).colors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -442,7 +443,7 @@ class _QuadBtn extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(quad.label, textAlign: TextAlign.center, style: TextStyle(
-                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: quad.color)),
+                fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(quad.color))),
             SizedBox(height: 2),
             Text(quad.sub, textAlign: TextAlign.center, style: TextStyle(
                 fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: Color(0xFF7A7A86))),

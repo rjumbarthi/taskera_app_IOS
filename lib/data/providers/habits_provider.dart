@@ -4,7 +4,7 @@ import 'database_provider.dart';
 
 /// Stream of all habits (in insertion order).
 final habitsProvider = StreamProvider<List<Habit>>((ref) {
-  return ref.watch(appDatabaseProvider).habitsDao.watchAll();
+  return ref.watch(appDatabaseProvider).habitsDao.watchAllWithWeeklyFill();
 });
 
 /// Stream of a single habit by id.

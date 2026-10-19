@@ -701,7 +701,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ]),
               ),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
-              _SwRow(settingKey: 'plainText', label: 'Plain text (no color)', colors: colors),
+              _VtRow(
+                label: 'Text style',
+                options: const ['Colored text', 'Plain text'],
+                selected: s.sw('plainText') ? 1 : 0,
+                colors: colors,
+                onTap: (i) => n.toggle('plainText', i == 1),
+              ),
               Divider(height: 0.5, thickness: 0.5, color: colors.bdr),
               SizedBox(
                 height: 108,

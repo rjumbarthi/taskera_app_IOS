@@ -308,7 +308,7 @@ class _ActionBtn extends StatelessWidget {
             fontFamily: TaskEraTheme.of(context).fontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: filled ? Colors.white : accent,
+            color: filled ? Colors.white : TaskEraTheme.of(context).colors.textOrPlain(accent),
           ),
         ),
       ),

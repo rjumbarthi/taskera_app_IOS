@@ -376,7 +376,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                   style: TextStyle(
                                     fontFamily: TaskEraTheme.of(context).fontFamily,
                                     fontSize: 12,
-                                    color: TaskEraColors.acc,
+                                    color: colors.textOrPlain(TaskEraColors.acc),
                                   ),
                                 ),
                               ],
@@ -484,7 +484,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                       fontFamily: TaskEraTheme.of(context).fontFamily,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: TaskEraColors.acc,
+                                      color: colors.textOrPlain(TaskEraColors.acc),
                                     ),
                                   ),
                                 ),
@@ -640,16 +640,16 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                                 color: colors.ink2,
                                 height: 1.5,
                               ),
-                              children: const [
-                                TextSpan(text: 'Tasks save '),
+                              children: [
+                                const TextSpan(text: 'Tasks save '),
                                 TextSpan(
                                   text: 'locally on this device',
-                                  style: TextStyle(color: TaskEraColors.acc),
+                                  style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc)),
                                 ),
-                                TextSpan(text: '. Sign in for free cloud sync. '),
+                                const TextSpan(text: '. Sign in for free cloud sync. '),
                                 TextSpan(
                                   text: 'Skip (local storage) requires a TaskEra Pro subscription.',
-                                  style: TextStyle(color: TaskEraColors.acc2, fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2), fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -687,14 +687,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen>
                               GestureDetector(
                                 onTap: () => context.push(TaskEraRoutes.legal),
                                 child: Text('Terms of Service',
-                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc), height: 1.45)),
                               ),
                               Text(' and ',
                                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),
                               GestureDetector(
                                 onTap: () => context.push('${TaskEraRoutes.legal}?tab=privacy'),
                                 child: Text('Privacy Policy',
-                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: TaskEraColors.acc, height: 1.45)),
+                                    style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc), height: 1.45)),
                               ),
                               Text('.',
                                   style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, color: colors.ink2, height: 1.45)),

@@ -271,7 +271,7 @@ class _MonthNav extends StatelessWidget {
                 border: Border.all(width: 0.5, color: const Color(0x400A84FF)),
               ),
               child: Text(AppL10n.of(context).today,
-                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: TaskEraColors.acc2, height: 1)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
             ),
           ),
           const Spacer(),
@@ -616,9 +616,9 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
         TextSpan(
             text:
                 '${conflicts.length} scheduling conflict${conflicts.length == 1 ? '' : 's'} this week — '),
-        TextSpan(text: c.a.title, style: TextStyle(color: TaskEraColors.acc2)),
+        TextSpan(text: c.a.title, style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2))),
         TextSpan(text: ' clashes with '),
-        TextSpan(text: c.b.title, style: TextStyle(color: TaskEraColors.acc2)),
+        TextSpan(text: c.b.title, style: TextStyle(color: colors.textOrPlain(TaskEraColors.acc2))),
         TextSpan(text: '. '),
         TextSpan(
             text: c.overlap ? 'Move one to resolve.' : 'Add a buffer between them.',
@@ -688,7 +688,7 @@ class _WeekInsightBannerState extends ConsumerState<_WeekInsightBanner> {
                 SizedBox(width: 5),
                 Text('This week', style: TextStyle(
                   fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
-                  color: TaskEraColors.acc2, letterSpacing: 0.3, height: 1,
+                  color: colors.textOrPlain(TaskEraColors.acc2), letterSpacing: 0.3, height: 1,
                 )),
               ],
             ),
@@ -1002,7 +1002,7 @@ class _EventBlock extends ConsumerWidget {
                             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 9, color: colors.ink3, height: 1),
                             children: [
                               TextSpan(text: '${event.subtitle} · '),
-                              TextSpan(text: 'Invite', style: TextStyle(color: TaskEraColors.q4)),
+                              TextSpan(text: 'Invite', style: TextStyle(color: colors.textOrPlain(TaskEraColors.q4))),
                             ],
                           ))
                         : Text(event.subtitle,

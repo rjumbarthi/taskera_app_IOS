@@ -109,7 +109,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
               Text((unlocked || _adUnlock) ? '✦ TASKERA AI' : '✦ TASKERA AI · PRO',
                   style: TextStyle(
                       fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11, fontWeight: FontWeight.w700,
-                      letterSpacing: 0.4, color: TaskEraColors.acc2, height: 1)),
+                      letterSpacing: 0.4, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
               if (isPro) ...[
                 SizedBox(width: 6),
                 Container(
@@ -168,7 +168,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
             child: Text('Upgrade →',
                 style: TextStyle(
                     fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
-                    color: TaskEraColors.acc2, height: 1)),
+                    color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
           ),
         ]),
       ),
@@ -230,7 +230,7 @@ class _AiInsightCardState extends ConsumerState<AiInsightCard> {
               border: Border.all(width: 0.5, color: const Color(0x4D0A84FF)),
             ),
             child: Text('Generate',
-                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: TaskEraColors.acc2, height: 1)),
+                style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: colors.textOrPlain(TaskEraColors.acc2), height: 1)),
           ),
         ]),
       );

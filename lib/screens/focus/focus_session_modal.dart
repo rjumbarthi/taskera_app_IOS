@@ -183,7 +183,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                       SizedBox(height: 2),
                       Text('Q$quad · Now focusing',
                           style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 11,
-                              fontWeight: FontWeight.w600, color: qColor, height: 1.2)),
+                              fontWeight: FontWeight.w600, color: colors.textOrPlain(qColor), height: 1.2)),
                     ],
                   ),
                 ),
@@ -251,7 +251,7 @@ class _FocusSessionModalState extends ConsumerState<_FocusSessionModal> {
                     alignment: Alignment.center,
                     child: Text('End',
                         style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 13,
-                            fontWeight: FontWeight.w700, color: TaskEraColors.warn)),
+                            fontWeight: FontWeight.w700, color: colors.textOrPlain(TaskEraColors.warn))),
                   ),
                 ),
               ],
@@ -288,7 +288,7 @@ class _DurPill extends StatelessWidget {
         ),
         child: Text(label,
             style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12, fontWeight: FontWeight.w600,
-                color: active ? color : colors.ink3)),
+                color: active ? colors.textOrPlain(color) : colors.ink3)),
       ),
     );
   }
