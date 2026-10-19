@@ -779,9 +779,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 color: s.font == i ? const Color(0x4D0A84FF) : colors.bdr0),
                           ),
                           child: Text(fonts[i], textAlign: TextAlign.center,
-                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: s.font == i ? TaskEraColors.acc2 : colors.ink2)),
+                              // Match _VtRow's size/weight exactly (10/w500) —
+                              // this row previously used 12/w600, making these
+                              // three buttons look bold and oversized next to
+                              // System/Serif/Rounded above.
+                              style: TextStyle(fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: s.font == i ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3)),
                         ),
                       ),
                     ),
@@ -1617,7 +1621,7 @@ class _VtRow extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: TaskEraTheme.of(context).fontFamily, fontSize: 10, fontWeight: FontWeight.w500,
-                            color: selected == i ? TaskEraColors.acc2 : colors.ink3,
+                            color: selected == i ? colors.textOrPlain(TaskEraColors.acc2) : colors.ink3,
                             height: 1,
                           )),
                     ),
